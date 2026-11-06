@@ -298,6 +298,10 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .acknowledge_effect(sequence),
+                7 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .acknowledge_movie(sequence, elapsed_ms),
                 6 => state
                     .as_mut()
                     .ok_or("no story session")?
@@ -363,4 +367,65 @@ pub unsafe extern "C" fn neko_probe_story(
     let pointer = bytes.as_mut_ptr();
     std::mem::forget(bytes);
     pointer
+}
+
+#[cfg(target_os = "android")]
+thread_local! {static MOVIE:std::cell::RefCell<Option<nekopack_video::Decoder<std::fs::File>>>=const {std::cell::RefCell::new(None)};}
+/// Movie operations share one dedicated decoder worker, separate from the VM worker.
+/// # Safety
+/// `fd` is borrowed and valid during open; `out_len` is writable.
+#[cfg(target_os = "android")]
+#[no_mangle]
+pub unsafe extern "C" fn neko_probe_movie(fd: i32, operation: i32, out_len: *mut usize) -> *mut u8 {
+    use std::os::fd::BorrowedFd;
+    let result = std::panic::catch_unwind(|| {
+        MOVIE.with(|cell|->Result<Vec<u8>,Box<dyn Error>> {
+        let mut state=cell.borrow_mut();
+        match operation {
+            0=>{
+                check(state.is_none(),"movie already open")?;
+                let file=std::fs::File::from(unsafe{BorrowedFd::borrow_raw(fd)}.try_clone_to_owned()?);
+                let decoder=nekopack_video::Decoder::open(file)?;
+                let i=decoder.info;
+                let bytes=format!("{{\"width\":{},\"height\":{},\"fps\":{},\"sample_rate\":{},\"duration\":{}}}\n",i.width,i.height,i.fps,i.sample_rate,i.duration).into_bytes();
+                *state=Some(decoder);Ok(bytes)
+            }
+            1=>{
+                let frame=state.as_mut().ok_or("no movie")?.step()?;
+                let mut bytes=format!("{{\"pcm_bytes\":{},\"rgba_bytes\":{},\"video_time\":{},\"ended\":{},\"peak_bytes\":{}}}\n",frame.pcm.len()*2,frame.rgba.len(),frame.video_time,frame.ended,frame.peak_bytes).into_bytes();
+                for sample in frame.pcm {bytes.extend_from_slice(&sample.to_le_bytes());}
+                bytes.extend_from_slice(&frame.rgba);Ok(bytes)
+            }
+            2=>{*state=None;check(nekopack_video::live_bytes()==0,"movie decoder leak")?;Ok(b"{\"closed\":true,\"decoder_live_bytes\":0}\n".to_vec())}
+            _=>Err("unknown movie operation".into())
+        }
+    })
+    });
+    let bytes = match result {
+        Ok(Ok(bytes)) => bytes,
+        failure => {
+            MOVIE.with(|cell| *cell.borrow_mut() = None);
+            let message = match failure {
+                Ok(Err(e)) => e.to_string(),
+                Err(p) => {
+                    std::mem::forget(p);
+                    "movie callback panic".into()
+                }
+                _ => unreachable!(),
+            };
+            format!(
+                "{{\"error\":\"{}\",\"closed\":true}}\n",
+                message
+                    .replace('\\', "\\\\")
+                    .replace('"', "\\\"")
+                    .replace(['\n', '\r', '\t'], " ")
+            )
+            .into_bytes()
+        }
+    };
+    let mut bytes = bytes.into_boxed_slice();
+    unsafe { *out_len = bytes.len() };
+    let ptr = bytes.as_mut_ptr();
+    std::mem::forget(bytes);
+    ptr
 }

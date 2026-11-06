@@ -29,6 +29,11 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private fun log(event:String,kind:String,token:Long,extra:Long=0) {
         File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",SystemClock.elapsedRealtime()).put("value",extra).toString()+"\n")
     }
+    fun beginMovie(token:Long){
+        for(kind in players.keys.toList())release(kind)
+        if(focused){audio.abandonAudioFocus(focus);focused=false}
+        log("stopped_all","movie",token,players.size.toLong())
+    }
     fun stopVoice(){ release("voice") }
     private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
     fun close(){

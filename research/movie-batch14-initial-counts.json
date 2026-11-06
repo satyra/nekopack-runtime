@@ -1,0 +1,33 @@
+{
+  "scope": "full-file independent FFmpeg decode counts, not physical playback or original DirectShow comparison",
+  "games": [
+    {
+      "game": 0,
+      "ffmpeg_frames": 2497,
+      "pl_mpeg_frames": 2497,
+      "ffmpeg_samples_per_channel": 4590720,
+      "pl_mpeg_samples_per_channel": 4590720
+    },
+    {
+      "game": 1,
+      "ffmpeg_frames": 4196,
+      "pl_mpeg_frames": 4195,
+      "ffmpeg_samples_per_channel": 6720768,
+      "pl_mpeg_samples_per_channel": 6720768
+    },
+    {
+      "game": 2,
+      "ffmpeg_frames": 3472,
+      "pl_mpeg_frames": 3472,
+      "ffmpeg_samples_per_channel": 5556096,
+      "pl_mpeg_samples_per_channel": 5556096
+    },
+    {
+      "game": 3,
+      "ffmpeg_frames": 4081,
+      "pl_mpeg_frames": 4081,
+      "ffmpeg_samples_per_channel": 5999616,
+      "pl_mpeg_samples_per_channel": 5999616
+    }
+  ]
+}

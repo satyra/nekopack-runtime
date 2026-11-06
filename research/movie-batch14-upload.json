@@ -1,0 +1,60 @@
+[
+  {
+    "serial": "SST89X85TC8TGUQO",
+    "files": [
+      {
+        "game": 0,
+        "bytes": 106680900,
+        "sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+        "path": "/sdcard/Documents/NekoPackValidation/0/op.mpg"
+      },
+      {
+        "game": 1,
+        "bytes": 217671684,
+        "sha256": "6717affa0fc4a18f66f44b12c2f6e90b2378e432ec5e2e7d9e13fcd9da377208",
+        "path": "/sdcard/Documents/NekoPackValidation/1/op.mpg"
+      },
+      {
+        "game": 2,
+        "bytes": 212027396,
+        "sha256": "8e270a51ac96f7264a7a66c393190ca0eaabc94b3236aa58f66e43577aff247c",
+        "path": "/sdcard/Documents/NekoPackValidation/2/op.mpg"
+      },
+      {
+        "game": 3,
+        "bytes": 269961220,
+        "sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+        "path": "/sdcard/Documents/NekoPackValidation/3/op.mpg"
+      }
+    ]
+  },
+  {
+    "serial": "emulator-5568",
+    "files": [
+      {
+        "game": 0,
+        "bytes": 106680900,
+        "sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+        "path": "/sdcard/Documents/NekoPackRaw/0/op.mpg"
+      },
+      {
+        "game": 1,
+        "bytes": 217671684,
+        "sha256": "6717affa0fc4a18f66f44b12c2f6e90b2378e432ec5e2e7d9e13fcd9da377208",
+        "path": "/sdcard/Documents/NekoPackRaw/1/op.mpg"
+      },
+      {
+        "game": 2,
+        "bytes": 212027396,
+        "sha256": "8e270a51ac96f7264a7a66c393190ca0eaabc94b3236aa58f66e43577aff247c",
+        "path": "/sdcard/Documents/NekoPackRaw/2/op.mpg"
+      },
+      {
+        "game": 3,
+        "bytes": 269961220,
+        "sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+        "path": "/sdcard/Documents/NekoPackRaw/3/op.mpg"
+      }
+    ]
+  }
+]

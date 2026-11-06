@@ -54,6 +54,7 @@ pub struct HostEffect {
     pub kind: String,
     pub name: String,
     pub duration_ms: u64,
+    pub movie_left_skip: bool,
     pub payload: Vec<u8>,
 }
 impl HostEffect {
@@ -61,9 +62,12 @@ impl HostEffect {
         self.packet_checkpoint(None)
     }
     fn packet_checkpoint(&self, checkpoint: Option<&str>) -> Result<Vec<u8>, String> {
-        let extra = checkpoint
+        let mut extra = checkpoint
             .map(|c| format!(",\"checkpoint\":{c}"))
             .unwrap_or_default();
+        if self.kind == "movie" {
+            extra.push_str(&format!(",\"movie_left_skip\":{}", self.movie_left_skip));
+        }
         let mut result = format!(
             "{{\"host_effect\":{},\"token\":{},\"name\":{},\"duration_ms\":{}{extra}}}\n",
             quote(self.kind.as_bytes())?,
@@ -219,6 +223,31 @@ impl<R: Read + Seek> StorySession<R> {
         }
     }
     pub fn acknowledge_effect(&mut self, token: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self
+            .pending_effect
+            .as_ref()
+            .is_some_and(|e| e.kind == "movie")
+        {
+            return Err("movie requires completion or explicit skip reason".into());
+        }
+        self.complete_effect(token)
+    }
+    pub fn acknowledge_movie(
+        &mut self,
+        token: u64,
+        reason: u64,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        let e = self.pending_effect.as_ref().ok_or("no movie request")?;
+        if e.kind != "movie"
+            || e.token != token
+            || reason > 2
+            || (reason == 1 && !e.movie_left_skip)
+        {
+            return Err("invalid movie completion or disabled primary skip".into());
+        }
+        self.complete_effect(token)
+    }
+    fn complete_effect(&mut self, token: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed {
             return Err("story session stopped after error".into());
         }
@@ -328,6 +357,7 @@ impl<R: Read + Seek> StorySession<R> {
             kind: kind.into(),
             name: name.into(),
             duration_ms: duration,
+            movie_left_skip: false,
             payload,
         });
         Ok(())
@@ -501,6 +531,36 @@ impl<R: Read + Seek> StorySession<R> {
                                 return Err("unsupported clear/overlay arguments".into());
                             }
                         }
+                        "movie" => {
+                            if args.is_empty()
+                                || args.len() > 2
+                                || (args.len() == 2 && args[1] != b"skip")
+                            {
+                                return Err("unsupported movie arguments".into());
+                            }
+                            let name = std::str::from_utf8(&args[0])?;
+                            if name.is_empty()
+                                || name.contains(['/', '\\', ':'])
+                                || name == "."
+                                || name == ".."
+                                || !name.to_ascii_lowercase().ends_with(".mpg")
+                            {
+                                return Err("unsupported movie resource name".into());
+                            }
+                            self.effects.push(format!("movie {name}"));
+                            if self.host_mode {
+                                self.host_sequence += 1;
+                                self.pending_effect = Some(HostEffect {
+                                    token: self.host_sequence,
+                                    kind: "movie".into(),
+                                    name: name.into(),
+                                    duration_ms: 0,
+                                    movie_left_skip: args.len() == 2,
+                                    payload: Vec::new(),
+                                });
+                                return Ok(());
+                            }
+                        }
                         "bgm" if args.is_empty() => {
                             self.effects.push("bgm_stop".into());
                             if self.host_mode {
@@ -547,6 +607,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     kind: "flash".into(),
                                     name: normalized,
                                     duration_ms: spec.duration_ms(),
+                                    movie_left_skip: false,
                                     payload: target,
                                 });
                                 return Ok(());
@@ -589,6 +650,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     kind: "shake".into(),
                                     name: options.join(" "),
                                     duration_ms: u64::from(motion.duration_ms()),
+                                    movie_left_skip: false,
                                     payload: target,
                                 });
                                 return Ok(());
@@ -650,6 +712,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     kind: "wipe".into(),
                                     name: name.into(),
                                     duration_ms: duration,
+                                    movie_left_skip: false,
                                     payload: target,
                                 });
                                 self.wipe = Some(wipe);
@@ -864,6 +927,54 @@ mod tests {
         assert!(s.scene.actors.is_empty());
     }
     #[test]
+    fn movie_waits_and_validates_skip_reason_without_loading_dat_audio() {
+        for (script, primary) in [
+            (".movie op.mpg\ntext", false),
+            (".movie op.mpg skip\ntext", true),
+        ] {
+            let mut s = session(script.as_bytes());
+            s.enable_host_effects();
+            let packet = s.poll_packet().unwrap();
+            let before = s.checkpoint().unwrap();
+            assert!(s.acknowledge_effect(1).is_err());
+            assert!(s.acknowledge_movie(2, 0).is_err());
+            assert!(s.acknowledge_movie(1, 3).is_err());
+            assert_eq!(s.poll_packet().unwrap(), packet);
+            assert_eq!(s.checkpoint().unwrap(), before);
+            if primary {
+                s.acknowledge_movie(1, 1).unwrap();
+            } else {
+                assert!(s.acknowledge_movie(1, 1).is_err());
+                s.acknowledge_movie(1, 2).unwrap();
+            }
+            assert!(s.page.is_some());
+            assert!(s.acknowledge_movie(1, 0).is_err());
+        }
+        let mut s = session(b".movie op.mpg\ntext");
+        s.enable_host_effects();
+        s.poll_packet().unwrap();
+        s.acknowledge_movie(1, 0).unwrap();
+        assert!(s.page.is_some());
+        let mut s = session(b".movie ../op.mpg\ntext");
+        assert!(s.poll_packet().is_err());
+    }
+    #[test]
+    fn each_movie_completion_resumes_only_its_own_pending_request() {
+        let mut s = session(b".movie op.mpg\n.movie op.mpg skip\ntext\n.unknown");
+        s.enable_host_effects();
+        s.poll_packet().unwrap();
+        let second = s.acknowledge_movie(1, 0).unwrap();
+        assert_eq!(s.machine.location().unwrap().1, 2);
+        assert!(s.acknowledge_movie(1, 2).is_err());
+        assert_eq!(s.poll_packet().unwrap(), second);
+        s.acknowledge_movie(2, 1).unwrap();
+        assert_eq!(s.page.as_ref().unwrap().text, "text");
+        assert!(s.acknowledge_movie(2, 0).is_err());
+        assert!(s.acknowledge_text(1).is_err());
+        assert!(s.failed);
+        assert!(s.acknowledge_movie(2, 0).is_err());
+    }
+    #[test]
     fn bare_bgm_stops_without_resource_and_waits_for_host_confirmation() {
         let mut s = session(b".bgm\n.bgm\ntext");
         s.enable_host_effects();
@@ -920,6 +1031,7 @@ mod tests {
             kind: "wipe".into(),
             name: "MASK".into(),
             duration_ms: 100,
+            movie_left_skip: false,
             payload: vec![],
         });
         let before = s.machine.steps();

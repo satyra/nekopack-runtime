@@ -1,0 +1,166 @@
+{
+  "scope": "FFmpeg independent first/24/240 decoded RGB frames and first 3 seconds PCM; not original DirectShow renderer parity",
+  "ffmpeg_sha256": "3256173f3f8bffd7df12227c68adf68025edb1832273a9530688a7bb1ed8edec",
+  "games": [
+    {
+      "game": 0,
+      "frames": [
+        {
+          "frame": 0,
+          "mae": 1.0,
+          "max_error": 1,
+          "p99": 1.0
+        },
+        {
+          "frame": 24,
+          "mae": 1.0,
+          "max_error": 1,
+          "p99": 1.0
+        },
+        {
+          "frame": 240,
+          "mae": 0.5347413917824074,
+          "max_error": 4,
+          "p99": 2.0
+        }
+      ],
+      "pcm": {
+        "rms_error": 2.1334945375601366,
+        "max_error": 14.0,
+        "reference_rms": 2340.0488367184803,
+        "correlation": 0.9999996030854844,
+        "relative_gain": 0.9999649929300212
+      },
+      "decoder": {
+        "width": 1280,
+        "height": 720,
+        "fps": 24,
+        "sample_rate": 44100,
+        "duration": 103.91666666666666,
+        "frames": 2497,
+        "samples_per_channel": 4590720,
+        "peak_bytes": 8523472
+      }
+    },
+    {
+      "game": 1,
+      "frames": [
+        {
+          "frame": 0,
+          "mae": 1.0,
+          "max_error": 1,
+          "p99": 1.0
+        },
+        {
+          "frame": 24,
+          "mae": 0.37808702256944443,
+          "max_error": 4,
+          "p99": 2.0
+        },
+        {
+          "frame": 240,
+          "mae": 0.4770764612268519,
+          "max_error": 20,
+          "p99": 2.0
+        }
+      ],
+      "pcm": {
+        "rms_error": 2.394224822359003,
+        "max_error": 16.0,
+        "reference_rms": 6061.130293740714,
+        "correlation": 0.9999999262067912,
+        "relative_gain": 0.9999507548637753
+      },
+      "decoder": {
+        "width": 1280,
+        "height": 720,
+        "fps": 29.97,
+        "sample_rate": 48000,
+        "duration": 139.9398,
+        "frames": 4196,
+        "samples_per_channel": 6720768,
+        "peak_bytes": 8916688
+      }
+    },
+    {
+      "game": 2,
+      "frames": [
+        {
+          "frame": 0,
+          "mae": 0.0,
+          "max_error": 0,
+          "p99": 0.0
+        },
+        {
+          "frame": 24,
+          "mae": 0.0,
+          "max_error": 0,
+          "p99": 0.0
+        },
+        {
+          "frame": 240,
+          "mae": 0.9726031268084491,
+          "max_error": 10,
+          "p99": 4.0
+        }
+      ],
+      "pcm": {
+        "rms_error": 1.8082910901363936,
+        "max_error": 10.0,
+        "reference_rms": 5073.100689623901,
+        "correlation": 0.9999999410074056,
+        "relative_gain": 0.99995375786826
+      },
+      "decoder": {
+        "width": 1024,
+        "height": 576,
+        "fps": 30,
+        "sample_rate": 48000,
+        "duration": 115.7,
+        "frames": 3472,
+        "samples_per_channel": 5556096,
+        "peak_bytes": 6096592
+      }
+    },
+    {
+      "game": 3,
+      "frames": [
+        {
+          "frame": 0,
+          "mae": 0.0,
+          "max_error": 0,
+          "p99": 0.0
+        },
+        {
+          "frame": 24,
+          "mae": 0.0,
+          "max_error": 0,
+          "p99": 0.0
+        },
+        {
+          "frame": 240,
+          "mae": 0.735433507848669,
+          "max_error": 8,
+          "p99": 3.0
+        }
+      ],
+      "pcm": {
+        "rms_error": 2.291893928125335,
+        "max_error": 13.0,
+        "reference_rms": 7949.535201614747,
+        "correlation": 0.9999999611040168,
+        "relative_gain": 0.9999503300273694
+      },
+      "decoder": {
+        "width": 1024,
+        "height": 576,
+        "fps": 30,
+        "sample_rate": 44100,
+        "duration": 135.79999999999998,
+        "frames": 4081,
+        "samples_per_channel": 5999616,
+        "peak_bytes": 8455888
+      }
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 # NekoPack Cross-Platform Runtime
 
-目标：共享 Rust 核心与独立平台宿主。Android ARM64（Kotlin + JNI）仍是首个交付目标，Android MVP 后验证 Windows，再推进 Linux/Steam Deck、macOS。跨平台方案已获审核，当前实施最小迁移 M1：变量/调用状态、系统脚本与标题执行链路；尚无 Android 工程或 APK。
+目标：共享 Rust 核心与独立平台宿主。Android ARM64（Kotlin + JNI）仍是首个交付目标，Android MVP 后验证 Windows，再推进 Linux/Steam Deck、macOS。跨平台方案已获审核。当前已有 Android 横屏验证壳及 APK，通过 SAF 读取原始 DAT 和 MPEG 视频；尚未形成完整游戏应用。
 
-当前四部曲均通过无窗口标题选择到首段剧情调用的验证，`def` 和 `.nut` 变量访问共用 Rust 状态。该结果不代表完整剧情、真实渲染/音频或 Android 已运行，详见 [执行链路验收](docs/Phase2_Title_Runtime.md)。目标架构、依赖审计、最小迁移与路线分别见根目录 [架构](CROSS_PLATFORM_ARCHITECTURE.md)、[审计](PLATFORM_DEPENDENCY_AUDIT.md)、[迁移](MIGRATION_PLAN.md)、[路线](DEVELOPMENT_ROADMAP.md)。
+当前四部曲支持标题到有界剧情执行，`def` 和 `.nut` 变量访问共用 Rust 状态。Android 已验证图像、音频、部分演出与 movie 播放/跳过/恢复；BLESS/BLACK 在电影返回后仍停于未实现的 `.route`。这不代表完整游戏兼容，当前范围与真机/翻译执行结果见 [movie 增量](docs/Phase2_Movie_Batch14.md)，早期标题链路见 [执行链路验收](docs/Phase2_Title_Runtime.md)。目标架构、依赖审计、最小迁移与路线分别见根目录 [架构](CROSS_PLATFORM_ARCHITECTURE.md)、[审计](PLATFORM_DEPENDENCY_AUDIT.md)、[迁移](MIGRATION_PLAN.md)、[路线](DEVELOPMENT_ROADMAP.md)。
 
 2026-11-06：完成公开源码调查后，新增无外部 crate 依赖的 `nekopack-archive` 和 `nekopack-cli`。Rust 资源层通过四部曲 22 个 DAT、51,201 个条目的差分验证；索引、全部条目元数据和前 16 字节与旧 Python 参考解码器一致。完整资源仅分层抽样，不代表所有图像/音频都已解码或游戏可运行。结果见 [Phase 1 验收](docs/Phase1_Archive_Increment.md)。
 
@@ -40,7 +40,7 @@ $env:CARGO_HOME="$env:LOCALAPPDATA/RustGNU/cargo"
 $env:Path="$env:CARGO_HOME/bin;$env:Path"
 ```
 
-其他已安装 Rust 的环境使用自己的工具链即可。当前系统解释器桥还需要 C++ 编译器/归档器；已验证 Windows GNU + Zig 0.14.1，参数和复现步骤见 [构建与验证](docs/Phase2_Title_Runtime.md)。尚未验证 Android target，目标感知构建与 parser-only 依赖隔离属于下一批 M2。
+其他已安装 Rust 的环境使用自己的工具链即可。当前系统解释器桥还需要 C++ 编译器/归档器；已验证 Windows GNU + Zig 0.14.1，参数和复现步骤见 [构建与验证](docs/Phase2_Title_Runtime.md)。Android ARM64 使用 NDK r27d 交叉编译；PGKM10 真机与 x86_64/libnb 翻译执行模拟器的结果分别记录，见上述 movie 增量。
 
 ## 调查文档
 

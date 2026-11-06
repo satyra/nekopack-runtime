@@ -1,0 +1,49 @@
+{
+  "scope": "desktop native decoder allocation, callback failure and early destruction with original movies",
+  "games": [
+    {
+      "game": 0,
+      "result": {
+        "allocation_budgets": 6,
+        "budget_failures": 6,
+        "io_failure_cases": 4,
+        "early_close_cycles": 16,
+        "live_bytes": 0
+      },
+      "panic_hook_messages": 2
+    },
+    {
+      "game": 1,
+      "result": {
+        "allocation_budgets": 6,
+        "budget_failures": 6,
+        "io_failure_cases": 4,
+        "early_close_cycles": 16,
+        "live_bytes": 0
+      },
+      "panic_hook_messages": 2
+    },
+    {
+      "game": 2,
+      "result": {
+        "allocation_budgets": 6,
+        "budget_failures": 5,
+        "io_failure_cases": 4,
+        "early_close_cycles": 16,
+        "live_bytes": 0
+      },
+      "panic_hook_messages": 2
+    },
+    {
+      "game": 3,
+      "result": {
+        "allocation_budgets": 6,
+        "budget_failures": 6,
+        "io_failure_cases": 4,
+        "early_close_cycles": 16,
+        "live_bytes": 0
+      },
+      "panic_hook_messages": 2
+    }
+  ]
+}

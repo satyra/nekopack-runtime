@@ -1,0 +1,3126 @@
+{
+  "scope": "bounded continuous pages; unsupported boundaries or explicit reference page limit",
+  "execution": "translated ARM64",
+  "device": {
+    "ro.product.cpu.abilist": "x86_64,x86,arm64-v8a,armeabi-v7a,armeabi",
+    "ro.dalvik.vm.native.bridge": "libnb.so",
+    "ro.build.version.sdk": "28",
+    "kernel_machine": "x86_64"
+  },
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "dc751f2083e6d7389bf194ee4cd77aa646ccba8bd0da36d24b2578aff4d11300",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "7d97ce202ad9a20ab7664623b6cb443bf76f473df2eccba0e0578e0f9ca41e03"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1907576 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06e72c 0x06e72c R   0x4000\n  LOAD           0x06e72c 0x000000000007272c 0x000000000007272c 0x0e7544 0x0e7544 R E 0x4000\n  LOAD           0x155c70 0x000000000015dc70 0x000000000015dc70 0x007b60 0x008390 RW  0x4000\n  LOAD           0x15d7d0 0x00000000001697d0 0x00000000001697d0 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x15d0c8 0x00000000001650c8 0x00000000001650c8 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x155c70 0x000000000015dc70 0x000000000015dc70 0x007b60 0x008390 R   0x1\n  GNU_EH_FRAME   0x04de90 0x000000000004de90 0x000000000004de90 0x004694 0x004694 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x15d0c8 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44040 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1821\n  0x0000000000000017 (JMPREL)       0xbdb0\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x165528\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x1650c0\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x1650b0\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "games": [
+    {
+      "index": 0,
+      "run_id": "story_79e95e85eaf345e8b45aa2a3a7fe22f3",
+      "movies": [
+        {
+          "token": 8,
+          "metadata": {
+            "host_effect": "movie",
+            "token": 8,
+            "name": "op.mpg",
+            "duration_ms": 0,
+            "movie_left_skip": false
+          },
+          "info": {
+            "width": 1280,
+            "height": 720,
+            "fps": 24,
+            "sample_rate": 44100,
+            "duration": 103.91666666666666,
+            "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+            "source_bytes": 106680900,
+            "left_skip": false
+          },
+          "events": [
+            {
+              "width": 1280,
+              "height": 720,
+              "fps": 24,
+              "sample_rate": 44100,
+              "duration": 103.91666666666666,
+              "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+              "source_bytes": 106680900,
+              "left_skip": false,
+              "event": "started",
+              "time_ms": 40527963
+            },
+            {
+              "frames": 120,
+              "samples": 220032,
+              "head": 217324,
+              "event": "progress",
+              "time_ms": 40533038
+            },
+            {
+              "frames": 120,
+              "samples": 220032,
+              "head": 218265,
+              "event": "progress",
+              "time_ms": 40533039
+            },
+            {
+              "frames": 120,
+              "samples": 221184,
+              "head": 218265,
+              "event": "progress",
+              "time_ms": 40533039
+            },
+            {
+              "frames": 240,
+              "samples": 440064,
+              "head": 437472,
+              "event": "progress",
+              "time_ms": 40538014
+            },
+            {
+              "frames": 240,
+              "samples": 441216,
+              "head": 438412,
+              "event": "progress",
+              "time_ms": 40538015
+            },
+            {
+              "frames": 360,
+              "samples": 660096,
+              "head": 656678,
+              "event": "progress",
+              "time_ms": 40543002
+            },
+            {
+              "frames": 360,
+              "samples": 661248,
+              "head": 657619,
+              "event": "progress",
+              "time_ms": 40543004
+            },
+            {
+              "frames": 480,
+              "samples": 881280,
+              "head": 877766,
+              "event": "progress",
+              "time_ms": 40548013
+            },
+            {
+              "frames": 480,
+              "samples": 881280,
+              "head": 878707,
+              "event": "progress",
+              "time_ms": 40548014
+            },
+            {
+              "frames": 600,
+              "samples": 1101312,
+              "head": 1098854,
+              "event": "progress",
+              "time_ms": 40553018
+            },
+            {
+              "frames": 600,
+              "samples": 1102464,
+              "head": 1099795,
+              "event": "progress",
+              "time_ms": 40553020
+            },
+            {
+              "frames": 600,
+              "samples": 1103616,
+              "head": 1099795,
+              "event": "progress",
+              "time_ms": 40553020
+            },
+            {
+              "frames": 720,
+              "samples": 1322496,
+              "head": 1319001,
+              "event": "progress",
+              "time_ms": 40558017
+            },
+            {
+              "frames": 720,
+              "samples": 1322496,
+              "head": 1319942,
+              "event": "progress",
+              "time_ms": 40558018
+            },
+            {
+              "frames": 720,
+              "samples": 1323648,
+              "head": 1319942,
+              "event": "progress",
+              "time_ms": 40558019
+            },
+            {
+              "frames": 840,
+              "samples": 1542528,
+              "head": 1539148,
+              "event": "progress",
+              "time_ms": 40563013
+            },
+            {
+              "frames": 840,
+              "samples": 1543680,
+              "head": 1540089,
+              "event": "progress",
+              "time_ms": 40563014
+            },
+            {
+              "frames": 840,
+              "samples": 1543680,
+              "head": 1540089,
+              "event": "progress",
+              "time_ms": 40563014
+            },
+            {
+              "frames": 960,
+              "samples": 1762560,
+              "head": 1760236,
+              "event": "progress",
+              "time_ms": 40568018
+            },
+            {
+              "frames": 960,
+              "samples": 1763712,
+              "head": 1761177,
+              "event": "progress",
+              "time_ms": 40568020
+            },
+            {
+              "frames": 960,
+              "samples": 1764864,
+              "head": 1761177,
+              "event": "progress",
+              "time_ms": 40568020
+            },
+            {
+              "frames": 1080,
+              "samples": 1983744,
+              "head": 1980384,
+              "event": "progress",
+              "time_ms": 40573020
+            },
+            {
+              "frames": 1080,
+              "samples": 1984896,
+              "head": 1981324,
+              "event": "progress",
+              "time_ms": 40573022
+            },
+            {
+              "frames": 1080,
+              "samples": 1984896,
+              "head": 1981324,
+              "event": "progress",
+              "time_ms": 40573022
+            },
+            {
+              "frames": 1200,
+              "samples": 2203776,
+              "head": 2201472,
+              "event": "progress",
+              "time_ms": 40578015
+            },
+            {
+              "frames": 1200,
+              "samples": 2204928,
+              "head": 2202412,
+              "event": "progress",
+              "time_ms": 40578017
+            },
+            {
+              "frames": 1200,
+              "samples": 2206080,
+              "head": 2202412,
+              "event": "progress",
+              "time_ms": 40578017
+            },
+            {
+              "frames": 1320,
+              "samples": 2424960,
+              "head": 2421619,
+              "event": "progress",
+              "time_ms": 40583015
+            },
+            {
+              "frames": 1320,
+              "samples": 2424960,
+              "head": 2422560,
+              "event": "progress",
+              "time_ms": 40583016
+            },
+            {
+              "frames": 1320,
+              "samples": 2426112,
+              "head": 2422560,
+              "event": "progress",
+              "time_ms": 40583017
+            },
+            {
+              "frames": 1440,
+              "samples": 2644992,
+              "head": 2641766,
+              "event": "progress",
+              "time_ms": 40588009
+            },
+            {
+              "frames": 1440,
+              "samples": 2646144,
+              "head": 2642707,
+              "event": "progress",
+              "time_ms": 40588010
+            },
+            {
+              "frames": 1440,
+              "samples": 2646144,
+              "head": 2642707,
+              "event": "progress",
+              "time_ms": 40588011
+            },
+            {
+              "frames": 1560,
+              "samples": 2866176,
+              "head": 2862854,
+              "event": "progress",
+              "time_ms": 40593026
+            },
+            {
+              "frames": 1560,
+              "samples": 2866176,
+              "head": 2863795,
+              "event": "progress",
+              "time_ms": 40593027
+            },
+            {
+              "frames": 1560,
+              "samples": 2867328,
+              "head": 2863795,
+              "event": "progress",
+              "time_ms": 40593027
+            },
+            {
+              "frames": 1680,
+              "samples": 3086208,
+              "head": 3083001,
+              "event": "progress",
+              "time_ms": 40598018
+            },
+            {
+              "frames": 1680,
+              "samples": 3087360,
+              "head": 3083942,
+              "event": "progress",
+              "time_ms": 40598019
+            },
+            {
+              "frames": 1680,
+              "samples": 3087360,
+              "head": 3083942,
+              "event": "progress",
+              "time_ms": 40598020
+            },
+            {
+              "frames": 1800,
+              "samples": 3306240,
+              "head": 3304089,
+              "event": "progress",
+              "time_ms": 40603018
+            },
+            {
+              "frames": 1800,
+              "samples": 3307392,
+              "head": 3304089,
+              "event": "progress",
+              "time_ms": 40603020
+            },
+            {
+              "frames": 1800,
+              "samples": 3308544,
+              "head": 3305971,
+              "event": "progress",
+              "time_ms": 40603042
+            },
+            {
+              "frames": 1920,
+              "samples": 3527424,
+              "head": 3524236,
+              "event": "progress",
+              "time_ms": 40608019
+            },
+            {
+              "frames": 1920,
+              "samples": 3527424,
+              "head": 3525177,
+              "event": "progress",
+              "time_ms": 40608021
+            },
+            {
+              "frames": 1920,
+              "samples": 3528576,
+              "head": 3525177,
+              "event": "progress",
+              "time_ms": 40608021
+            },
+            {
+              "frames": 2040,
+              "samples": 3747456,
+              "head": 3744384,
+              "event": "progress",
+              "time_ms": 40613023
+            },
+            {
+              "frames": 2040,
+              "samples": 3748608,
+              "head": 3746265,
+              "event": "progress",
+              "time_ms": 40613025
+            },
+            {
+              "frames": 2040,
+              "samples": 3748608,
+              "head": 3746265,
+              "event": "progress",
+              "time_ms": 40613025
+            },
+            {
+              "frames": 2160,
+              "samples": 3968640,
+              "head": 3965472,
+              "event": "progress",
+              "time_ms": 40618019
+            },
+            {
+              "frames": 2160,
+              "samples": 3968640,
+              "head": 3966412,
+              "event": "progress",
+              "time_ms": 40618020
+            },
+            {
+              "frames": 2160,
+              "samples": 3969792,
+              "head": 3966412,
+              "event": "progress",
+              "time_ms": 40618021
+            },
+            {
+              "frames": 2280,
+              "samples": 4188672,
+              "head": 4185619,
+              "event": "progress",
+              "time_ms": 40623013
+            },
+            {
+              "frames": 2280,
+              "samples": 4189824,
+              "head": 4186560,
+              "event": "progress",
+              "time_ms": 40623015
+            },
+            {
+              "frames": 2280,
+              "samples": 4189824,
+              "head": 4186560,
+              "event": "progress",
+              "time_ms": 40623016
+            },
+            {
+              "frames": 2400,
+              "samples": 4408704,
+              "head": 4406707,
+              "event": "progress",
+              "time_ms": 40628025
+            },
+            {
+              "frames": 2400,
+              "samples": 4409856,
+              "head": 4407648,
+              "event": "progress",
+              "time_ms": 40628027
+            },
+            {
+              "frames": 2400,
+              "samples": 4411008,
+              "head": 4407648,
+              "event": "progress",
+              "time_ms": 40628027
+            },
+            {
+              "reason": 0,
+              "frames": 2497,
+              "samples": 4590720,
+              "head": 4590720,
+              "peak_bytes": 8523472,
+              "elapsed_ms": 104906,
+              "error": null,
+              "event": "closed",
+              "time_ms": 40632210
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "width": 1280,
+        "height": 684,
+        "stage_width": 1280,
+        "stage_height": 579,
+        "orientation": 2
+      },
+      "wipes": [],
+      "shakes": [],
+      "flashes": [],
+      "final_visual_independent_pixels_equal": false,
+      "boundary": {
+        "checkpoint": {
+          "source": "story1",
+          "line": 12,
+          "depth": 1,
+          "steps": 198,
+          "slots": [
+            [
+              71,
+              800,
+              1
+            ],
+            [
+              71,
+              801,
+              0
+            ],
+            [
+              71,
+              802,
+              0
+            ],
+            [
+              71,
+              803,
+              0
+            ],
+            [
+              71,
+              804,
+              0
+            ],
+            [
+              71,
+              900,
+              0
+            ],
+            [
+              71,
+              901,
+              0
+            ],
+            [
+              71,
+              902,
+              0
+            ],
+            [
+              71,
+              903,
+              0
+            ],
+            [
+              71,
+              904,
+              0
+            ],
+            [
+              76,
+              100,
+              0
+            ],
+            [
+              76,
+              900,
+              0
+            ],
+            [
+              76,
+              901,
+              0
+            ],
+            [
+              76,
+              902,
+              0
+            ],
+            [
+              76,
+              903,
+              0
+            ]
+          ],
+          "scene": {
+            "size": [
+              1280,
+              720
+            ],
+            "background": null,
+            "background_color": null,
+            "overlay": null,
+            "visual": null,
+            "actors": []
+          },
+          "effects": [
+            "se SE_010",
+            "fade 3",
+            "movie op.mpg"
+          ],
+          "voice": ""
+        },
+        "vm_live_bytes": 0,
+        "error": "story story1:12 depth=1 steps=198: unsupported story preview command route"
+      },
+      "page_limit_reached": false,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "P01",
+          "line": 15,
+          "text_sha256": "be21f791a3341dad7a3146b07cfc41dfbb5dbb3b48d901fbb2b7430a398b1f90",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "411ac3257b316a9bd300b4d0bb220486663ed1a7cf05e202b18cd8a22b62bd49",
+          "effects": [
+            "fade 3"
+          ]
+        },
+        {
+          "sequence": 2,
+          "source": "P01",
+          "line": 18,
+          "text_sha256": "0b6113e004e6b7dab2038d693e90055cfce419152b4810f3d7d25cdd7f7b87d0",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "55b43e3b23ee36b3b0570aefa5c5b1c13089634115ce3022e3f11fefb9cd7946",
+          "effects": []
+        },
+        {
+          "sequence": 3,
+          "source": "P01",
+          "line": 21,
+          "text_sha256": "9f6cc8e99dce3a8a9d621495598c5b5c558e495764ed555f19594e4a68dbbf43",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "e207255f5869737f115cd3c6332fad93f4a64271997de8b54ea357f3fce36e68",
+          "effects": []
+        },
+        {
+          "sequence": 4,
+          "source": "P01",
+          "line": 26,
+          "text_sha256": "748c2266391562af508bf715a457192c47daf7f6fa42f9ab936a7f150d04a0c8",
+          "png_sha256": "9d7c717b31f75edbe48051785e9832940ede89c13d717cde5def12731a5c8526",
+          "metadata_sha256": "2369886a9f45bc951819b81403c9e2b70e5fbb3767e2fd4d3ba36f56b9225ede",
+          "effects": []
+        },
+        {
+          "sequence": 5,
+          "source": "P01",
+          "line": 32,
+          "text_sha256": "ce7904d64b407614b652850b2b823725a794f72b2d51bdce281ed189b4fc69b1",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "7119777a1bdf7e2299414039bf325a2909f56356356df6d1ee32605af4303a72",
+          "effects": []
+        },
+        {
+          "sequence": 6,
+          "source": "P01",
+          "line": 36,
+          "text_sha256": "13a2232438d5c767b1a5e17e74a64403245e21addb8b7d8d3db21303b62feb34",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "318d9acb3c5cea663cadb7bd61a7d9c37615036e1edb0cf55145930e62a443a7",
+          "effects": []
+        },
+        {
+          "sequence": 7,
+          "source": "P01",
+          "line": 39,
+          "text_sha256": "bdddbd3c63956955f9bea2f7e22c0a17a3daac890b94f02a74bbe1686333b1db",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "105936dac429e2cd3a0e997ba53b2c91908dc54a7916f97e15ab50f3e6f5a5cf",
+          "effects": []
+        },
+        {
+          "sequence": 8,
+          "source": "P01",
+          "line": 43,
+          "text_sha256": "4533536bbb047d7e282d95f7c997e6e89255cd384ec1db4b56c3e1eec7f35e55",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "e311fa3d47f6a4b141178457c0074dcd13590476f570ff0c3445bb0a5c08ab7f",
+          "effects": []
+        },
+        {
+          "sequence": 9,
+          "source": "P01",
+          "line": 46,
+          "text_sha256": "3ab408f3f9baf21a83af435b8cfa459d707bbd233ed9f839492750fd83604823",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "7e346af449f6932c40d1aeeaf293750798a8f201b53d44298bb9aa005506b4de",
+          "effects": []
+        },
+        {
+          "sequence": 10,
+          "source": "P01",
+          "line": 49,
+          "text_sha256": "cfd5cc123daae51edfb0d3b7da4259dc6626647f6d426fb234de50d4b2ed53ad",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "6390342b086b2e1109bb1ac61adbe7c3cd0c8c27142e99b59bc7b78188060e45",
+          "effects": []
+        },
+        {
+          "sequence": 11,
+          "source": "P01",
+          "line": 52,
+          "text_sha256": "0b8bc9f9d4b797bdf107a59555ad31e138b379b412f801ac39d69ec67a012b38",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "5977360d15bbfe5ee8db7501098c716bb83e6233a062ff95bcc37661a2d9d458",
+          "effects": []
+        },
+        {
+          "sequence": 12,
+          "source": "P01",
+          "line": 57,
+          "text_sha256": "4e949cee6472c48fee7bbd48bd3968f55847b89b27f32fb772e934cae69b1a83",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "538c6a82e6df176519157a4b2a981759e1952f1c7b358ef876ee3fd99d860fbb",
+          "effects": []
+        }
+      ],
+      "actual_ui_next": true,
+      "closed_vm_live_bytes": 0,
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 40494774,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 40495535,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 40497802,
+          "value": 3028
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 40497824,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 40497894,
+          "value": 3612
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 40497894,
+          "value": 70
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 40498096,
+          "value": 129
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40504484,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40504502,
+          "value": 5820
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40504502,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40504703,
+          "value": 120
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40506862,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40506876,
+          "value": 6212
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40506876,
+          "value": 14
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40507077,
+          "value": 143
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40521751,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40521762,
+          "value": 1804
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40521762,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40521963,
+          "value": 139
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40523624,
+          "value": 1803
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 40524167,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 40524181,
+          "value": 7140
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 40524181,
+          "value": 14
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 40524246,
+          "value": 3000
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 40524383,
+          "value": 150
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 40525002,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 40527256,
+          "value": 3010
+        },
+        {
+          "event": "stopped_all",
+          "kind": "movie",
+          "token": 8,
+          "time_ms": 40527272,
+          "value": 0
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 40632294,
+          "value": 0
+        }
+      ],
+      "audio": [
+        {
+          "kind": "voice",
+          "name": "KA_P01_0000",
+          "sha256": "3a238ecc0d82763aaf33aaaa70151938f058dabfb377a052c8c114d78ce0dfdb",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0001",
+          "sha256": "632794383e7e248b9589f60a1f2bf64c411b980fd250b80f4d1acd950ec9792b",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 4,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0002",
+          "sha256": "7640321c3177a1e7cb204024e30ee02686dcb534b28bde74b36f6fed5a8c5eb1",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0003",
+          "sha256": "87aa70580ff46a0d79585b5c0607897ab5c51a8c993bfc503429e6857e2c7ee4",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "se",
+          "name": "SE_010",
+          "sha256": "d3d451d7c074c0122517e4c171a83d30957396a8aa833f2c4318f7c90845a2e9",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "run_id": "story_c6de71e899df4019b38cf57a4474ba9c",
+      "movies": [
+        {
+          "token": 25,
+          "metadata": {
+            "host_effect": "movie",
+            "token": 25,
+            "name": "op.mpg",
+            "duration_ms": 0,
+            "movie_left_skip": false
+          },
+          "info": {
+            "width": 1024,
+            "height": 576,
+            "fps": 30,
+            "sample_rate": 44100,
+            "duration": 135.79999999999998,
+            "source_sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+            "source_bytes": 269961220,
+            "left_skip": false
+          },
+          "events": [
+            {
+              "width": 1024,
+              "height": 576,
+              "fps": 30,
+              "sample_rate": 44100,
+              "duration": 135.79999999999998,
+              "source_sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+              "source_bytes": 269961220,
+              "left_skip": false,
+              "event": "started",
+              "time_ms": 40764747
+            },
+            {
+              "frames": 120,
+              "samples": 176256,
+              "head": 172166,
+              "event": "progress",
+              "time_ms": 40768865
+            },
+            {
+              "frames": 120,
+              "samples": 177408,
+              "head": 173107,
+              "event": "progress",
+              "time_ms": 40768866
+            },
+            {
+              "frames": 240,
+              "samples": 352512,
+              "head": 349977,
+              "event": "progress",
+              "time_ms": 40772875
+            },
+            {
+              "frames": 240,
+              "samples": 353664,
+              "head": 349977,
+              "event": "progress",
+              "time_ms": 40772876
+            },
+            {
+              "frames": 360,
+              "samples": 528768,
+              "head": 524966,
+              "event": "progress",
+              "time_ms": 40776853
+            },
+            {
+              "frames": 360,
+              "samples": 528768,
+              "head": 525907,
+              "event": "progress",
+              "time_ms": 40776855
+            },
+            {
+              "frames": 480,
+              "samples": 705024,
+              "head": 701836,
+              "event": "progress",
+              "time_ms": 40780864
+            },
+            {
+              "frames": 480,
+              "samples": 705024,
+              "head": 702777,
+              "event": "progress",
+              "time_ms": 40780865
+            },
+            {
+              "frames": 600,
+              "samples": 881280,
+              "head": 878707,
+              "event": "progress",
+              "time_ms": 40784865
+            },
+            {
+              "frames": 600,
+              "samples": 881280,
+              "head": 878707,
+              "event": "progress",
+              "time_ms": 40784866
+            },
+            {
+              "frames": 720,
+              "samples": 1058688,
+              "head": 1055577,
+              "event": "progress",
+              "time_ms": 40788880
+            },
+            {
+              "frames": 720,
+              "samples": 1058688,
+              "head": 1055577,
+              "event": "progress",
+              "time_ms": 40788881
+            },
+            {
+              "frames": 840,
+              "samples": 1234944,
+              "head": 1231507,
+              "event": "progress",
+              "time_ms": 40792869
+            },
+            {
+              "frames": 840,
+              "samples": 1234944,
+              "head": 1232448,
+              "event": "progress",
+              "time_ms": 40792870
+            },
+            {
+              "frames": 960,
+              "samples": 1411200,
+              "head": 1408377,
+              "event": "progress",
+              "time_ms": 40796877
+            },
+            {
+              "frames": 960,
+              "samples": 1411200,
+              "head": 1408377,
+              "event": "progress",
+              "time_ms": 40796878
+            },
+            {
+              "frames": 1080,
+              "samples": 1587456,
+              "head": 1584307,
+              "event": "progress",
+              "time_ms": 40800876
+            },
+            {
+              "frames": 1080,
+              "samples": 1588608,
+              "head": 1585248,
+              "event": "progress",
+              "time_ms": 40800877
+            },
+            {
+              "frames": 1200,
+              "samples": 1763712,
+              "head": 1760236,
+              "event": "progress",
+              "time_ms": 40804853
+            },
+            {
+              "frames": 1200,
+              "samples": 1764864,
+              "head": 1762118,
+              "event": "progress",
+              "time_ms": 40804880
+            },
+            {
+              "frames": 1320,
+              "samples": 1939968,
+              "head": 1936166,
+              "event": "progress",
+              "time_ms": 40808863
+            },
+            {
+              "frames": 1320,
+              "samples": 1941120,
+              "head": 1937107,
+              "event": "progress",
+              "time_ms": 40808865
+            },
+            {
+              "frames": 1440,
+              "samples": 2116224,
+              "head": 2113036,
+              "event": "progress",
+              "time_ms": 40812868
+            },
+            {
+              "frames": 1440,
+              "samples": 2117376,
+              "head": 2113977,
+              "event": "progress",
+              "time_ms": 40812869
+            },
+            {
+              "frames": 1560,
+              "samples": 2292480,
+              "head": 2288966,
+              "event": "progress",
+              "time_ms": 40816853
+            },
+            {
+              "frames": 1560,
+              "samples": 2293632,
+              "head": 2289907,
+              "event": "progress",
+              "time_ms": 40816854
+            },
+            {
+              "frames": 1680,
+              "samples": 2469888,
+              "head": 2465836,
+              "event": "progress",
+              "time_ms": 40820869
+            },
+            {
+              "frames": 1680,
+              "samples": 2469888,
+              "head": 2466777,
+              "event": "progress",
+              "time_ms": 40820870
+            },
+            {
+              "frames": 1800,
+              "samples": 2646144,
+              "head": 2642707,
+              "event": "progress",
+              "time_ms": 40824868
+            },
+            {
+              "frames": 1800,
+              "samples": 2646144,
+              "head": 2642707,
+              "event": "progress",
+              "time_ms": 40824869
+            },
+            {
+              "frames": 1920,
+              "samples": 2822400,
+              "head": 2819577,
+              "event": "progress",
+              "time_ms": 40828880
+            },
+            {
+              "frames": 1920,
+              "samples": 2822400,
+              "head": 2820518,
+              "event": "progress",
+              "time_ms": 40828881
+            },
+            {
+              "frames": 2040,
+              "samples": 2998656,
+              "head": 2994566,
+              "event": "progress",
+              "time_ms": 40832847
+            },
+            {
+              "frames": 2040,
+              "samples": 2999808,
+              "head": 2996448,
+              "event": "progress",
+              "time_ms": 40832872
+            },
+            {
+              "frames": 2160,
+              "samples": 3174912,
+              "head": 3172377,
+              "event": "progress",
+              "time_ms": 40836887
+            },
+            {
+              "frames": 2160,
+              "samples": 3176064,
+              "head": 3173318,
+              "event": "progress",
+              "time_ms": 40836888
+            },
+            {
+              "frames": 2280,
+              "samples": 3351168,
+              "head": 3348307,
+              "event": "progress",
+              "time_ms": 40840872
+            },
+            {
+              "frames": 2280,
+              "samples": 3352320,
+              "head": 3349248,
+              "event": "progress",
+              "time_ms": 40840873
+            },
+            {
+              "frames": 2400,
+              "samples": 3527424,
+              "head": 3524236,
+              "event": "progress",
+              "time_ms": 40844860
+            },
+            {
+              "frames": 2400,
+              "samples": 3528576,
+              "head": 3525177,
+              "event": "progress",
+              "time_ms": 40844861
+            },
+            {
+              "frames": 2520,
+              "samples": 3703680,
+              "head": 3700166,
+              "event": "progress",
+              "time_ms": 40848859
+            },
+            {
+              "frames": 2520,
+              "samples": 3704832,
+              "head": 3701107,
+              "event": "progress",
+              "time_ms": 40848860
+            },
+            {
+              "frames": 2640,
+              "samples": 3881088,
+              "head": 3877036,
+              "event": "progress",
+              "time_ms": 40852854
+            },
+            {
+              "frames": 2640,
+              "samples": 3881088,
+              "head": 3877036,
+              "event": "progress",
+              "time_ms": 40852855
+            },
+            {
+              "frames": 2760,
+              "samples": 4057344,
+              "head": 4054848,
+              "event": "progress",
+              "time_ms": 40856898
+            },
+            {
+              "frames": 2760,
+              "samples": 4057344,
+              "head": 4055788,
+              "event": "progress",
+              "time_ms": 40856898
+            },
+            {
+              "frames": 2880,
+              "samples": 4233600,
+              "head": 4229836,
+              "event": "progress",
+              "time_ms": 40860872
+            },
+            {
+              "frames": 2880,
+              "samples": 4233600,
+              "head": 4230777,
+              "event": "progress",
+              "time_ms": 40860873
+            },
+            {
+              "frames": 3000,
+              "samples": 4409856,
+              "head": 4406707,
+              "event": "progress",
+              "time_ms": 40864869
+            },
+            {
+              "frames": 3000,
+              "samples": 4411008,
+              "head": 4407648,
+              "event": "progress",
+              "time_ms": 40864870
+            },
+            {
+              "frames": 3120,
+              "samples": 4586112,
+              "head": 4582636,
+              "event": "progress",
+              "time_ms": 40868872
+            },
+            {
+              "frames": 3120,
+              "samples": 4587264,
+              "head": 4583577,
+              "event": "progress",
+              "time_ms": 40868874
+            },
+            {
+              "frames": 3240,
+              "samples": 4762368,
+              "head": 4759507,
+              "event": "progress",
+              "time_ms": 40872876
+            },
+            {
+              "frames": 3240,
+              "samples": 4763520,
+              "head": 4760448,
+              "event": "progress",
+              "time_ms": 40872877
+            },
+            {
+              "frames": 3360,
+              "samples": 4938624,
+              "head": 4935436,
+              "event": "progress",
+              "time_ms": 40876860
+            },
+            {
+              "frames": 3360,
+              "samples": 4939776,
+              "head": 4935436,
+              "event": "progress",
+              "time_ms": 40876861
+            },
+            {
+              "frames": 3480,
+              "samples": 5114880,
+              "head": 5112307,
+              "event": "progress",
+              "time_ms": 40880874
+            },
+            {
+              "frames": 3480,
+              "samples": 5116032,
+              "head": 5113248,
+              "event": "progress",
+              "time_ms": 40880876
+            },
+            {
+              "frames": 3600,
+              "samples": 5292288,
+              "head": 5288236,
+              "event": "progress",
+              "time_ms": 40884866
+            },
+            {
+              "frames": 3600,
+              "samples": 5292288,
+              "head": 5289177,
+              "event": "progress",
+              "time_ms": 40884867
+            },
+            {
+              "frames": 3720,
+              "samples": 5468544,
+              "head": 5464166,
+              "event": "progress",
+              "time_ms": 40888847
+            },
+            {
+              "frames": 3720,
+              "samples": 5468544,
+              "head": 5464166,
+              "event": "progress",
+              "time_ms": 40888848
+            },
+            {
+              "frames": 3840,
+              "samples": 5644800,
+              "head": 5641977,
+              "event": "progress",
+              "time_ms": 40892883
+            },
+            {
+              "frames": 3840,
+              "samples": 5644800,
+              "head": 5642918,
+              "event": "progress",
+              "time_ms": 40892884
+            },
+            {
+              "frames": 3960,
+              "samples": 5821056,
+              "head": 5816966,
+              "event": "progress",
+              "time_ms": 40896846
+            },
+            {
+              "frames": 3960,
+              "samples": 5822208,
+              "head": 5818848,
+              "event": "progress",
+              "time_ms": 40896871
+            },
+            {
+              "frames": 4080,
+              "samples": 5996160,
+              "head": 5992896,
+              "event": "progress",
+              "time_ms": 40900832
+            },
+            {
+              "frames": 4080,
+              "samples": 5997312,
+              "head": 5994777,
+              "event": "progress",
+              "time_ms": 40900861
+            },
+            {
+              "reason": 0,
+              "frames": 4081,
+              "samples": 5999616,
+              "head": 5999616,
+              "peak_bytes": 8455888,
+              "elapsed_ms": 137740,
+              "error": null,
+              "event": "closed",
+              "time_ms": 40901036
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "width": 1280,
+        "height": 684,
+        "stage_width": 1280,
+        "stage_height": 579,
+        "orientation": 2
+      },
+      "wipes": [
+        {
+          "token": 10,
+          "name": "EF04",
+          "frames": [
+            {
+              "elapsed_ms": 1,
+              "rgba_sha256": "6b1a193f6863bc02a165a079b646c0f4841157b4c690066d9506cab9d525d2e9"
+            },
+            {
+              "elapsed_ms": 51,
+              "rgba_sha256": "7c487ae84ed6efc1711764e2f6218c198817cf1d36389ba9fdf1827ab98cc793"
+            },
+            {
+              "elapsed_ms": 100,
+              "rgba_sha256": "5127029e77b5f5617e26d3c740cb5727447f9029d384b093dba69411e101aa69"
+            }
+          ],
+          "independent_kernel_pixels_equal": true
+        },
+        {
+          "token": 19,
+          "name": "EF04",
+          "frames": [
+            {
+              "elapsed_ms": 0,
+              "rgba_sha256": "17a6a4258d4b16c33e17300e822a5d817e3d23768daee59f2324e731b7a92ab5"
+            },
+            {
+              "elapsed_ms": 64,
+              "rgba_sha256": "72cbc916599f800625a8491306e01960af3bb634b398e7fc472be0c317a81878"
+            },
+            {
+              "elapsed_ms": 100,
+              "rgba_sha256": "5127029e77b5f5617e26d3c740cb5727447f9029d384b093dba69411e101aa69"
+            }
+          ],
+          "independent_kernel_pixels_equal": true
+        }
+      ],
+      "shakes": [
+        {
+          "token": 8,
+          "name": "small",
+          "frames": [
+            {
+              "elapsed_ms": 3,
+              "rgba_sha256": "2868ba101bc1539e6539ac39000a201347ec4096ca582d70c728caef7118727f"
+            },
+            {
+              "elapsed_ms": 74,
+              "rgba_sha256": "68155dd64733c17682d74197fa9f82d9d475c6e9d87881625fb5986a636ad209"
+            },
+            {
+              "elapsed_ms": 141,
+              "rgba_sha256": "bda0abe690e4b35405e777ab3ec3a41d0b96d5fecf108f3f16a3c04028b95979"
+            },
+            {
+              "elapsed_ms": 191,
+              "rgba_sha256": "bda0abe690e4b35405e777ab3ec3a41d0b96d5fecf108f3f16a3c04028b95979"
+            },
+            {
+              "elapsed_ms": 241,
+              "rgba_sha256": "12b89d9d86f639cec8e77644eeec11da08e95c32d9c40c2da2407f96cecae581"
+            },
+            {
+              "elapsed_ms": 250,
+              "rgba_sha256": "12b89d9d86f639cec8e77644eeec11da08e95c32d9c40c2da2407f96cecae581"
+            }
+          ],
+          "independent_kernel_pixels_equal": true
+        },
+        {
+          "token": 12,
+          "name": "big",
+          "frames": [
+            {
+              "elapsed_ms": 12,
+              "rgba_sha256": "1e2fa012f174df488cd8fdec6dd7a31c0f54da61005bf8ad8f12e9db5e227818"
+            },
+            {
+              "elapsed_ms": 49,
+              "rgba_sha256": "d4c4a6b9d8da5f457f72cc8145912d65d5cf130b8159c20fed784f5dedfb4206"
+            },
+            {
+              "elapsed_ms": 100,
+              "rgba_sha256": "b60cf1c9ff3451a36c9ff24ff0ada998b424733c5a61310cc299b41b89a07b13"
+            },
+            {
+              "elapsed_ms": 150,
+              "rgba_sha256": "19d5ac0c6b5be2bf3b7628ec8f0b804d3c634f6ac749951cbcef059f771539e2"
+            },
+            {
+              "elapsed_ms": 201,
+              "rgba_sha256": "387e8d48c0105836f590035817e71805fcd21554117e40e26d8b31cae69a6661"
+            },
+            {
+              "elapsed_ms": 250,
+              "rgba_sha256": "387e8d48c0105836f590035817e71805fcd21554117e40e26d8b31cae69a6661"
+            }
+          ],
+          "independent_kernel_pixels_equal": true
+        },
+        {
+          "token": 17,
+          "name": "small",
+          "frames": [
+            {
+              "elapsed_ms": 17,
+              "rgba_sha256": "66cfb8d7501a0a04cccc65f9ac779a338f588ff4bc449e19cef735ab42230278"
+            },
+            {
+              "elapsed_ms": 71,
+              "rgba_sha256": "b946b133caf25f36a42adfe588ee04cd60ff68fce2c97e7a6e282994e3086ebb"
+            },
+            {
+              "elapsed_ms": 121,
+              "rgba_sha256": "7aab7060cf245b80ef5515cad526c60f7c4aec0295465776129ed0a6b713dd69"
+            },
+            {
+              "elapsed_ms": 171,
+              "rgba_sha256": "b946b133caf25f36a42adfe588ee04cd60ff68fce2c97e7a6e282994e3086ebb"
+            },
+            {
+              "elapsed_ms": 221,
+              "rgba_sha256": "1cbdd1eb35f9cf1290aceaba89bf26862db9179c544f9c32a8b25f4ea2907879"
+            },
+            {
+              "elapsed_ms": 250,
+              "rgba_sha256": "1cbdd1eb35f9cf1290aceaba89bf26862db9179c544f9c32a8b25f4ea2907879"
+            }
+          ],
+          "independent_kernel_pixels_equal": true
+        }
+      ],
+      "flashes": [
+        {
+          "token": 11,
+          "color": "ffffff",
+          "count": 1,
+          "phases": [
+            {
+              "phase": 0,
+              "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a"
+            },
+            {
+              "phase": 1,
+              "rgba_sha256": "5127029e77b5f5617e26d3c740cb5727447f9029d384b093dba69411e101aa69"
+            }
+          ],
+          "independent_phase_pixels_equal": true
+        },
+        {
+          "token": 20,
+          "color": "ffffff",
+          "count": 1,
+          "phases": [
+            {
+              "phase": 0,
+              "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a"
+            },
+            {
+              "phase": 1,
+              "rgba_sha256": "5127029e77b5f5617e26d3c740cb5727447f9029d384b093dba69411e101aa69"
+            }
+          ],
+          "independent_phase_pixels_equal": true
+        }
+      ],
+      "final_visual_independent_pixels_equal": false,
+      "boundary": {
+        "checkpoint": {
+          "source": "story1",
+          "line": 12,
+          "depth": 1,
+          "steps": 364,
+          "slots": [
+            [
+              71,
+              800,
+              1
+            ],
+            [
+              71,
+              801,
+              0
+            ],
+            [
+              71,
+              802,
+              0
+            ],
+            [
+              71,
+              803,
+              0
+            ],
+            [
+              71,
+              804,
+              0
+            ],
+            [
+              71,
+              900,
+              0
+            ],
+            [
+              71,
+              901,
+              0
+            ],
+            [
+              71,
+              902,
+              0
+            ],
+            [
+              71,
+              903,
+              0
+            ],
+            [
+              71,
+              904,
+              0
+            ],
+            [
+              76,
+              900,
+              0
+            ],
+            [
+              76,
+              901,
+              0
+            ],
+            [
+              76,
+              902,
+              0
+            ],
+            [
+              76,
+              903,
+              0
+            ]
+          ],
+          "scene": {
+            "size": [
+              1280,
+              720
+            ],
+            "background": null,
+            "background_color": null,
+            "overlay": null,
+            "visual": null,
+            "actors": []
+          },
+          "effects": [
+            "bgm_stop",
+            "fade 3",
+            "movie op.mpg"
+          ],
+          "voice": ""
+        },
+        "vm_live_bytes": 0,
+        "error": "story story1:12 depth=1 steps=364: unsupported story preview command route"
+      },
+      "page_limit_reached": false,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "P01",
+          "line": 14,
+          "text_sha256": "461d99cfe6a93fff1256f5305c010ca617af35b00dcca97d2d43618e382f8c4b",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "f9aeb163a86fcc5592c308ba8f2c83074e49becfc54ea8e821ca74dfa94cacb2",
+          "effects": [
+            "bgm BGM013",
+            "fade 2"
+          ]
+        },
+        {
+          "sequence": 2,
+          "source": "P01",
+          "line": 17,
+          "text_sha256": "4cb4e728a4553618af9e74366d748535b8f4dcdb2cabab47de47e06f20598cfa",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "dd8900b1a2aae538c6088aa069d41212cd0e1f3f537ccae92b437826071ca5d3",
+          "effects": []
+        },
+        {
+          "sequence": 3,
+          "source": "P01",
+          "line": 20,
+          "text_sha256": "35a3dff75089b77c8d71122f78898701db937f2ec266712376c69867b92e14b2",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "0e285373a9b1fd2f37589b00e68be72c8324accc861f20443f36656d5cf83db7",
+          "effects": []
+        },
+        {
+          "sequence": 4,
+          "source": "P01",
+          "line": 23,
+          "text_sha256": "7e0b8adda9a506331456df982381a9f1df4b8dde12650a01e828e16e70ee9cff",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "3fef6b67790e8b954265877d370eeaaa190b5a2373164717831a98aeed8bd25a",
+          "effects": []
+        },
+        {
+          "sequence": 5,
+          "source": "P01",
+          "line": 26,
+          "text_sha256": "04991b79d545b8d68c7664953a944b7686cf506e29c774165c735f84adbaa5bb",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "be5b8a02ce64d8b2f2df008765018d3cea73b6d5b35362e0ee6a5f8e16899825",
+          "effects": []
+        },
+        {
+          "sequence": 6,
+          "source": "P01",
+          "line": 29,
+          "text_sha256": "678b39a2f437654fcc9e1a3f96225363efa78796713b214a2257d8e98ddeb551",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "c245226f304cadea656a103b02085ba27fbf41b0be539378b2a6a4cfef1b6a15",
+          "effects": []
+        },
+        {
+          "sequence": 7,
+          "source": "P01",
+          "line": 33,
+          "text_sha256": "65e818b35887a0b44d115bcea5aa4d6a711181ef57a02b404c7500edb9a8e510",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "6a09378c75614ac642aedeefc4d293a1f4fa97814501ee0ce1090c205d48ff43",
+          "effects": []
+        },
+        {
+          "sequence": 8,
+          "source": "P01",
+          "line": 37,
+          "text_sha256": "312122819ef782ad429ea7804736484dc7c9ef9bc5d08deec6f12d4dee9ccdb4",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "7fef7820d04c122ac7fd5b82322783dbe17a05b08d2152a55644c3a1371b798b",
+          "effects": []
+        },
+        {
+          "sequence": 9,
+          "source": "P01",
+          "line": 40,
+          "text_sha256": "24046a0af447038459836aa10505940e1730bca3d465dcd08c301994d55e147c",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "7a4375476bd789e2e7ffaaef7f6c29a89473f8907436320125445c34262ccbb1",
+          "effects": []
+        },
+        {
+          "sequence": 10,
+          "source": "P01",
+          "line": 43,
+          "text_sha256": "9b4128cdd55028294744d0cc4bfadfc73a0b9f0099524ad23146bbc73ee6cca8",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "ce82ef1a5d5339b7f8de4032dee3d1b08f064fa626ae0672070b6e63a78a5a10",
+          "effects": []
+        },
+        {
+          "sequence": 11,
+          "source": "P01",
+          "line": 46,
+          "text_sha256": "bf428e8717f4c787448f458035f0b4bb44e64f0d9ed660e7f7b91d73b2e9993f",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "962db201f13c84cb8b60e30659f79459dcf30906db3817dc8207d45c5ea8f625",
+          "effects": []
+        },
+        {
+          "sequence": 12,
+          "source": "P01",
+          "line": 50,
+          "text_sha256": "1a899db027c57c664986ed8ef11ffa495f1418faeb6bbc8e1965107e6bfa3d1d",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "50ec08b3afc8ab030c87709e720422c383bb37f4ce38f77f32cb5eb02b9bd9f8",
+          "effects": []
+        },
+        {
+          "sequence": 13,
+          "source": "P01",
+          "line": 53,
+          "text_sha256": "a4327480001a8f90ffa8fb856cb2e63c1ec2e45260a3bf4635759c43267e9143",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "966ebf9e7749e9ad9aa5a4e15f497ef9511d2714a0b695221d8ec851ace85ff8",
+          "effects": []
+        },
+        {
+          "sequence": 14,
+          "source": "P01",
+          "line": 58,
+          "text_sha256": "cc2e2df936de0aa2b6495b588dbb8ab81d2e6be3b5857e522a21a5c5215e52b3",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "de97fba7517d2756076a71ab3b5b492990a73633584083c1c67a40176e656a27",
+          "effects": [
+            "bgm BGM014"
+          ]
+        },
+        {
+          "sequence": 15,
+          "source": "P01",
+          "line": 64,
+          "text_sha256": "3257b943215774f09b20b0e31f0062098addfc70a736ba701471001d877d66b4",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "5e575637f1be13ad9b7750e360769b7a0b58da4de6efe64ab7104a3c5e622fbe",
+          "effects": []
+        },
+        {
+          "sequence": 16,
+          "source": "P01",
+          "line": 67,
+          "text_sha256": "08924af114e9c10b7b870052a9ae76edd577957ad94c5936c5691f8d29d09d08",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "ec9d7f75f24f470dc18a27900718a940454e6f0961b7f4685e1e87bfb1564f08",
+          "effects": []
+        },
+        {
+          "sequence": 17,
+          "source": "P01",
+          "line": 76,
+          "text_sha256": "3e0fdeec89a9c52e3ae03253e082a7f34def84ab2e13a9b48b05ef03ad36dc4b",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "5a5f1ed565e155e62ef390a8ca562f04280c9bbd92113aaf64a8e1b6354e9a8b",
+          "effects": [
+            "fade 0.5",
+            "shake small"
+          ]
+        },
+        {
+          "sequence": 18,
+          "source": "P01",
+          "line": 79,
+          "text_sha256": "006bad94a671e76525282191614e24fb92ce2dd97d32756097dc3331d112efb0",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "0b05f81b1dde41ddfb9f7e07a7dc5970b98e246e9b96fe81a219ca6528ef7f62",
+          "effects": []
+        },
+        {
+          "sequence": 19,
+          "source": "P01",
+          "line": 82,
+          "text_sha256": "36e0af629c83105a601ad023e40fa949aa19e86748e1cb0d797c280e0f65c9a6",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "4674dc53ba600a4cb46aa8c0b3fba4bddc89e6a80599fce179282bd23872b3a2",
+          "effects": []
+        },
+        {
+          "sequence": 20,
+          "source": "P01",
+          "line": 96,
+          "text_sha256": "a730a2105ba7382ddab13712dc0f04840d8dac4547c179ed56095eb8e3b68ea0",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "e7592b1ca62c15e9dcae97b44844f5708912f76277da6f23fcc2d6dc6692377f",
+          "effects": [
+            "se SE_028",
+            "wipe EF04 100",
+            "flash ffffff 1",
+            "shake big",
+            "se SE_012"
+          ]
+        },
+        {
+          "sequence": 21,
+          "source": "P01",
+          "line": 102,
+          "text_sha256": "9c62109471891898058cefcf586fb5ad97f95c3ca2cb9e7b307cba83ab4a7913",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "dc5dbec5c8c6807d1cf472112fe42540cbd57baa96dc7c2b7d6af71896b360cc",
+          "effects": []
+        },
+        {
+          "sequence": 22,
+          "source": "P01",
+          "line": 106,
+          "text_sha256": "9f2cbf2578ef9f6620bee050cfa2d6e1f3086f6b54397ad4cfb5eb29d89e91c5",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "2eaba3e603f14da69e6dae81abb246e88a4ee1f88baf1539e0f5fe24148948b2",
+          "effects": []
+        },
+        {
+          "sequence": 23,
+          "source": "P01",
+          "line": 109,
+          "text_sha256": "7a2418169e7a67309dedf65af0bbeeba4a1a0e111da209983d3effbfd75da126",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "10d3a77fd2cd19d323c6aabfe64a612d3a44fea8bd338cb4549f07ee04c12dbc",
+          "effects": []
+        },
+        {
+          "sequence": 24,
+          "source": "P01",
+          "line": 112,
+          "text_sha256": "7569ec8cfb7791220549fc0232b7b1571b51dfd66fa71ae7b9e1912ee46a7256",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "9b6301cd14688c8a85bbffde36077f78af558c4dad47afb5d5a19dd80a1f7a34",
+          "effects": []
+        },
+        {
+          "sequence": 25,
+          "source": "P01",
+          "line": 115,
+          "text_sha256": "4a40f2ac84cbd13fd110cb3fac578a6387cd9af4e927507847816ecf899fc391",
+          "png_sha256": "823017acd95a3325758f533b0b21447857f05c81d46d1a04f815c7f1587eedf3",
+          "metadata_sha256": "efa3a69adbae2a07332ecb2650965c3885a035979d58afc57c86177ec1ebc943",
+          "effects": []
+        },
+        {
+          "sequence": 26,
+          "source": "P01",
+          "line": 121,
+          "text_sha256": "472e43009a63acea5d46a334d1580945e2acec83bfef6fb5fbc5c3e27bd8947b",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "8c90cda321a925fd38ceaf399c9989c44754a07f61ba4c9fd559100d7b31d11e",
+          "effects": []
+        },
+        {
+          "sequence": 27,
+          "source": "P01",
+          "line": 124,
+          "text_sha256": "c7f6b6c0a4708419a895382850f8b09f54cb596bc0016a69e6682857fd5767f4",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "d2187a249bd99faa636dd76a33493115f99c48a5a7a7e355d0407aae3d239a3f",
+          "effects": []
+        },
+        {
+          "sequence": 28,
+          "source": "P01",
+          "line": 127,
+          "text_sha256": "dd23f521bf47033108e0fa18dd92bfcb9d5dd9df9f0611879ec242da19c10703",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "6fe9ad0b304c9835b6e400040e894efbcae9f16028603d42ce0731cf94e111b0",
+          "effects": []
+        },
+        {
+          "sequence": 29,
+          "source": "P01",
+          "line": 130,
+          "text_sha256": "72945fca6a6aa6c363e05dff8d56095d0a0b6265e6d4ba1280bf22f2f4658297",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "14af599af412cd2da4928fdce60f4998c7a1b698b57ebc980f433d479f867899",
+          "effects": []
+        },
+        {
+          "sequence": 30,
+          "source": "P01",
+          "line": 133,
+          "text_sha256": "1eb2246e03c3de9e8bf45f68fab9232f213cd389cabf131660d07295085c1ece",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "acd0ab016de6dce9b74c77c41ef65e6a1557216b209595e263546eff5e33a1b4",
+          "effects": []
+        },
+        {
+          "sequence": 31,
+          "source": "P01",
+          "line": 136,
+          "text_sha256": "fa6224b6f1888f9a9b76e8c211aa4c27da8f803340d140b513a3d971b34cb316",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "254123ecd3a25930daba6815ee2ffe43b147dc39e9635209a00d5b5b2c2a0aed",
+          "effects": []
+        },
+        {
+          "sequence": 32,
+          "source": "P01",
+          "line": 140,
+          "text_sha256": "c7f48a461655f96251c2fa09f167fb1b5bca7d4e7f06c7250f0e7ddaca79bfc6",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "3c576af10bea1086bba56d0f7f3855ccfabbc4ad5e6db5878b409165f3fd9038",
+          "effects": []
+        },
+        {
+          "sequence": 33,
+          "source": "P01",
+          "line": 149,
+          "text_sha256": "b360ebae7b38066267c3e360eb953821dd5d937eaaee70cda6e1b58394a28bb9",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "5c68aabcf7c8ef77c7f41763cd2a12e52aeea15251add461125287c38c1817fe",
+          "effects": [
+            "fade 0.5",
+            "shake small"
+          ]
+        },
+        {
+          "sequence": 34,
+          "source": "P01",
+          "line": 152,
+          "text_sha256": "f3e7be4757f650b812d02e76685be17ab3474bcb621ad6175ea1d5248b2d9d96",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "29890df4c4ec230653353b2aec00df342dded77548f7882adf4ae68bb65bb16a",
+          "effects": []
+        },
+        {
+          "sequence": 35,
+          "source": "P01",
+          "line": 170,
+          "text_sha256": "e8ec23ce358e8f258a5d2bca49f0e91a17cb269627c169dc638e2ce91426fd61",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "77a02ca3571fda7dde94592b39f321ea5c507fc3dd5e1893963713cd30bbd9b1",
+          "effects": [
+            "se SE_028",
+            "wipe EF04 100",
+            "flash ffffff 1"
+          ]
+        },
+        {
+          "sequence": 36,
+          "source": "P01",
+          "line": 173,
+          "text_sha256": "5e6d2fb91810ded610e9affda1c978b2b1c282cd1eddbaf322e7fbf248769f4a",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "ad489f1c6f096abff0ff2c7142dc3de0810bc3bf63a02935b332345dba2c6936",
+          "effects": []
+        },
+        {
+          "sequence": 37,
+          "source": "P01",
+          "line": 176,
+          "text_sha256": "16e9f9a844855eb81b9d437b91e40925cbb6d9919a8d6cf3ed03d9f8ed70b385",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "da0cec372521e2c2ff6e16ee240a19336bd08850c898688b6164a1a4c34e439d",
+          "effects": []
+        },
+        {
+          "sequence": 38,
+          "source": "P01",
+          "line": 179,
+          "text_sha256": "b1625c44a12f9206b3faef762b30f25f9b5df8178260bc237d826cdac044de32",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "23adece48e0664d85b51f1cf1967d4d4463ccbc5d74664f9a58be7b447ff04dd",
+          "effects": []
+        },
+        {
+          "sequence": 39,
+          "source": "P01",
+          "line": 182,
+          "text_sha256": "64b4c9f1d4d0be0588312a2eae53db15adcc19fab66c97886062fe94c973d3eb",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "349e6ceee03a95fe054f2cd4ccd1677e0e4cde8961da619fd7c556ff07a6cc17",
+          "effects": []
+        },
+        {
+          "sequence": 40,
+          "source": "P01",
+          "line": 186,
+          "text_sha256": "b13abf6b85d6e4327ef393397418d7e44c6e85d17adf58dd8d14934f1a22492b",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "94b78302283b5f64679b45bda3c93591705ef415f0ae05f538741f911e68e721",
+          "effects": []
+        },
+        {
+          "sequence": 41,
+          "source": "P01",
+          "line": 189,
+          "text_sha256": "b80bf6082ac2109b57653516450607017412e8af9c5e2889546c7d8be835c6c6",
+          "png_sha256": "5685b3275df41105f061685fb8ad1733e73c462aa76eebb2d32842434a36fbb6",
+          "metadata_sha256": "77b16d26b1d8ca6029851c7da5afae43bfc32a77852738d7a133e7aaceceb6c2",
+          "effects": []
+        },
+        {
+          "sequence": 42,
+          "source": "P01",
+          "line": 194,
+          "text_sha256": "5349a425915b7365b5d1dd90e8cb6b9f400f373d38a83d3ad878b683c50d0905",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "fce221753c3383e5d07cada348667e6b815e13d12dc3025e5a9a318654fcd25a",
+          "effects": []
+        },
+        {
+          "sequence": 43,
+          "source": "P01",
+          "line": 198,
+          "text_sha256": "ce2dd8aaf56a931840f6ff1e8c07aa56eebe8a065fe470eb7a9466f966d8d08f",
+          "png_sha256": "c78e33a5a823ab285626b1034bb71b67a8fdc2bff0b6ef75252f0744af4110dc",
+          "metadata_sha256": "6786e8d62a0f596790cdb8284f5413186f53b9d0884debcfd80e05a451ad64ab",
+          "effects": []
+        },
+        {
+          "sequence": 44,
+          "source": "P01",
+          "line": 203,
+          "text_sha256": "fb27ad2202efa421ef73f0495cb68db3c39434a53a2e07b5c37d435b55c27880",
+          "png_sha256": "c9c055a91344544baaedca5c7c40ec6431bea8e91931d70ff36f73dd0442c296",
+          "metadata_sha256": "074176f49705189abebc3b44b90eb11baac83ada83e63a48f8a4b3ef7bb16ad4",
+          "effects": []
+        },
+        {
+          "sequence": 45,
+          "source": "P01",
+          "line": 206,
+          "text_sha256": "b95bcff2e06e3b3e9a182bc379b70ed9da7af26ac95077c22649b01328840ac8",
+          "png_sha256": "c9c055a91344544baaedca5c7c40ec6431bea8e91931d70ff36f73dd0442c296",
+          "metadata_sha256": "713493d8d47dbcb5343757afa57fcb1e87b0994610ba68afbf653cc9a93796b7",
+          "effects": []
+        },
+        {
+          "sequence": 46,
+          "source": "P01",
+          "line": 209,
+          "text_sha256": "c01c3c9c2c536a14f26c171b6e001b6766427820ad6c668b68e4d7053a9cbfd2",
+          "png_sha256": "c9c055a91344544baaedca5c7c40ec6431bea8e91931d70ff36f73dd0442c296",
+          "metadata_sha256": "0f672e0cad7218273e7e9bd4363fc1e234466f95016b346a53151e40621ee788",
+          "effects": []
+        },
+        {
+          "sequence": 47,
+          "source": "P01",
+          "line": 215,
+          "text_sha256": "1d4b623542f394195d9ccfd08906da7532c35690753669a5ea70b51f7f993b80",
+          "png_sha256": "8dc7e6f6a3de9794403a519ac8c155690f678bd794ffe2ee73ca4c64d3a3e518",
+          "metadata_sha256": "34c2f3ba5ced602dd156a5d6fff9f62082d9659b8a49ed2adff00233341fa575",
+          "effects": []
+        },
+        {
+          "sequence": 48,
+          "source": "P01",
+          "line": 221,
+          "text_sha256": "83fe39196c24ca1801627cbbcc381133b6e8779a2ab4d843b5a356d2aadcec8d",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "2beedaeaa5428acc9e42e1c61e2f9799ffd6d5181e1ff26819f1f45303331675",
+          "effects": []
+        },
+        {
+          "sequence": 49,
+          "source": "P01",
+          "line": 224,
+          "text_sha256": "d934f2e4851d83d160061a6773550cf89d784c223fec78d6f696eaae53864106",
+          "png_sha256": "8067594f1bc56ca99243e8b54d00068c2ae2ac9bc04f86b373bb777e0dd0c6c8",
+          "metadata_sha256": "44364f9a98360223e4fcea02a67a671ee0c5c0d72c43d834866a8c86e71a4f0c",
+          "effects": []
+        }
+      ],
+      "actual_ui_next": true,
+      "closed_vm_live_bytes": 0,
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 40637152,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 40637174,
+          "value": 137383
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 40637176,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 40637376,
+          "value": 130
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 40637799,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 40638319,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 40639839,
+          "value": 2040
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40654500,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40654513,
+          "value": 4388
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40654513,
+          "value": 13
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 40654714,
+          "value": 150
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40656893,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40656907,
+          "value": 12200
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40656907,
+          "value": 14
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 40657108,
+          "value": 155
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40666350,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40666362,
+          "value": 10540
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40666362,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 40666562,
+          "value": 134
+        },
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 6,
+          "time_ms": 40671134,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 6,
+          "time_ms": 40671159,
+          "value": 152561
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 6,
+          "time_ms": 40671159,
+          "value": 25
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 6,
+          "time_ms": 40671360,
+          "value": 148
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 40678447,
+          "value": 500
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 40678584,
+          "value": 266
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 40678953,
+          "value": 506
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679347,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679383,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679464,
+          "value": 74
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679507,
+          "value": 141
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679555,
+          "value": 191
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679608,
+          "value": 241
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679654,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 8,
+          "time_ms": 40679654,
+          "value": 307
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 40685634,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 40685646,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 40685646,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 40685846,
+          "value": 155
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 10,
+          "time_ms": 40686134,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 10,
+          "time_ms": 40686163,
+          "value": 1
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 10,
+          "time_ms": 40686209,
+          "value": 51
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 10,
+          "time_ms": 40686258,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 10,
+          "time_ms": 40686258,
+          "value": 124
+        },
+        {
+          "event": "begin",
+          "kind": "flash",
+          "token": 11,
+          "time_ms": 40686506,
+          "value": 60
+        },
+        {
+          "event": "frame",
+          "kind": "flash",
+          "token": 11,
+          "time_ms": 40686554,
+          "value": 0
+        },
+        {
+          "event": "frame",
+          "kind": "flash",
+          "token": 11,
+          "time_ms": 40686600,
+          "value": 1
+        },
+        {
+          "event": "ack",
+          "kind": "flash",
+          "token": 11,
+          "time_ms": 40686600,
+          "value": 94
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 40686795,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687336,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687364,
+          "value": 12
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687402,
+          "value": 49
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687458,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687502,
+          "value": 150
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687557,
+          "value": 201
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687603,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 12,
+          "time_ms": 40687603,
+          "value": 267
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 40688075,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 40688085,
+          "value": 2835
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 40688085,
+          "value": 10
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 40688286,
+          "value": 142
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 40690217,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 40690228,
+          "value": 868
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 40690228,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 40690429,
+          "value": 152
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 40690982,
+          "value": 2835
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 40691151,
+          "value": 868
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 40692600,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 40692612,
+          "value": 1175
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 40692612,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 40692812,
+          "value": 145
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 40693841,
+          "value": 1175
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 16,
+          "time_ms": 40718946,
+          "value": 500
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 16,
+          "time_ms": 40719081,
+          "value": 266
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 16,
+          "time_ms": 40719466,
+          "value": 520
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40719846,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40719881,
+          "value": 17
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40719935,
+          "value": 71
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40719986,
+          "value": 121
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40720035,
+          "value": 171
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40720085,
+          "value": 221
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40720132,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 17,
+          "time_ms": 40720132,
+          "value": 286
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 40724150,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 40724163,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 40724163,
+          "value": 13
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 40724363,
+          "value": 139
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 19,
+          "time_ms": 40724655,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 19,
+          "time_ms": 40724682,
+          "value": 0
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 19,
+          "time_ms": 40724740,
+          "value": 64
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 19,
+          "time_ms": 40724791,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 19,
+          "time_ms": 40724791,
+          "value": 136
+        },
+        {
+          "event": "begin",
+          "kind": "flash",
+          "token": 20,
+          "time_ms": 40725028,
+          "value": 60
+        },
+        {
+          "event": "frame",
+          "kind": "flash",
+          "token": 20,
+          "time_ms": 40725073,
+          "value": 0
+        },
+        {
+          "event": "frame",
+          "kind": "flash",
+          "token": 20,
+          "time_ms": 40725118,
+          "value": 1
+        },
+        {
+          "event": "ack",
+          "kind": "flash",
+          "token": 20,
+          "time_ms": 40725119,
+          "value": 91
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 40725319,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 40741887,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 40741898,
+          "value": 2839
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 40741898,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 40742098,
+          "value": 152
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 40746686,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 40746697,
+          "value": 2956
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 40746697,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 40746898,
+          "value": 151
+        },
+        {
+          "event": "begin",
+          "kind": "bgm_stop",
+          "token": 23,
+          "time_ms": 40760184,
+          "value": 0
+        },
+        {
+          "event": "stopped",
+          "kind": "bgm_stop",
+          "token": 23,
+          "time_ms": 40760195,
+          "value": 0
+        },
+        {
+          "event": "ack",
+          "kind": "bgm_stop",
+          "token": 23,
+          "time_ms": 40760195,
+          "value": 12
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 24,
+          "time_ms": 40760227,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 24,
+          "time_ms": 40760998,
+          "value": 255
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 24,
+          "time_ms": 40763247,
+          "value": 3020
+        },
+        {
+          "event": "stopped_all",
+          "kind": "movie",
+          "token": 25,
+          "time_ms": 40763249,
+          "value": 0
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 40901134,
+          "value": 0
+        }
+      ],
+      "audio": [
+        {
+          "kind": "bgm",
+          "name": "BGM013",
+          "sha256": "48a9f376ff8d0c106d5ac104f584ee3a3bcc2f1983b0fe7f65153d19fb6fabca",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 6,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "RA_P01_0000",
+          "sha256": "bbd1b6f3677e0048d74b79dc87a895d9daed3e15778d16629333be8d6e184671",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 4,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "RA_P01_0001",
+          "sha256": "6975fa8f0e405f07e0c870e2153851f3f70ad5ccb65ae0f84e8f85af3bb286f4",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 5,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "RA_P01_0002",
+          "sha256": "5cf35db09d6ad2826e7f5569f8088ba09ad055e45019869024af94dab597878e",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "bgm",
+          "name": "BGM014",
+          "sha256": "b7791df3e7aab971353adbf63de0a79cb055509e3e4189f8ed73d5905d87582d",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "se",
+          "name": "SE_028",
+          "sha256": "881eea617e436df8f5e977b24f58747e987029c48184a7b4580c58f0f76c6735",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "se",
+          "name": "SE_012",
+          "sha256": "c2582b00a9c11200d490c8d271160f8ed33e5c24ba138a5f25109e1557a82074",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KO_P01_0000",
+          "sha256": "eaffef8184eb74ef74da8a09c0c828fa899738af5ab2888fe689fdc89a1d520b",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "UR_P01_0000",
+          "sha256": "4b8d3aa364bb8d196032d9ea286494f91f7a43ee92be69a227b60a1b89885a6e",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "se",
+          "name": "SE_028",
+          "sha256": "881eea617e436df8f5e977b24f58747e987029c48184a7b4580c58f0f76c6735",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_P01_0000",
+          "sha256": "dc8eb9aebae9bb4f58c1400794eec1464a916ae578b4cf5e6621ae7da6f73ea9",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_P01_0001",
+          "sha256": "fabc5bcf0e65a235b42615a7110bd2dcbe787f0d8f201cdac132fd34dbd8de8f",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "scope": "301-page staged core regression followed by final decoder-specific movie, story return, input and destruction checks; not a claim that all 301 pages used the final APK",
+  "final_apk_sha256": "7d97ce202ad9a20ab7664623b6cb443bf76f473df2eccba0e0578e0f9ca41e03",
+  "devices": [
+    {
+      "device": "arm64",
+      "execution": "native ARM64",
+      "core_regression_pages": 301,
+      "core_regression_apk": "777ffc870e96a4719f50283f5c34bd215d6a20771f5c4a78471ff2711763f88d",
+      "final_movie_chain_pages": 61,
+      "final_birth_brave_smoke_pages": 4,
+      "final_original_movies": 4,
+      "final_skip_chain_pages": 12,
+      "final_background_did_not_resume": true,
+      "independent_static_snapshots": 85,
+      "final_scene_captures_equal_independently_checked_core": true
+    },
+    {
+      "device": "translated",
+      "execution": "translated ARM64",
+      "core_regression_pages": 301,
+      "core_regression_apk": "777ffc870e96a4719f50283f5c34bd215d6a20771f5c4a78471ff2711763f88d",
+      "final_movie_chain_pages": 61,
+      "final_birth_brave_smoke_pages": 4,
+      "final_original_movies": 4,
+      "final_skip_chain_pages": 12,
+      "final_background_did_not_resume": true,
+      "independent_static_snapshots": 85,
+      "final_scene_captures_equal_independently_checked_core": true
+    }
+  ],
+  "inputs": [
+    {
+      "file": "story-batch14-arm64-verification.json",
+      "sha256_lf": "863d7dfdb9fdca81820004d54a2b7e7377e92726fe7617a42d1113640d0003ea"
+    },
+    {
+      "file": "story-batch14-arm64-final-smoke-verification.json",
+      "sha256_lf": "195fe0f9aa9b46279723669de7f30601a8a2424cf02d599db66ca11874f22e4b"
+    },
+    {
+      "file": "story-batch14-arm64-movie-chain-verification.json",
+      "sha256_lf": "3cc7f76f2e4cb0edeadd9a4bf7bfc51761a3ea23c678e362f77431454b8c38fc"
+    },
+    {
+      "file": "story-batch14-arm64-movie-skip-verification.json",
+      "sha256_lf": "4f5b0ab8f0a37fa81b83e49001c82e5fd4812e8e7c30ef150767618578ff7328"
+    },
+    {
+      "file": "movie-batch14-arm64-verification.json",
+      "sha256_lf": "b0752196d69538b71cbafac0051b61c2e570a4e9171abf79ee0a481cde09725d"
+    },
+    {
+      "file": "movie-batch14-arm64-controls.json",
+      "sha256_lf": "e05114e5d20f0538dad9d6955a8bbb146236cc0b48f9ed4a59c23cfec5bb40bf"
+    },
+    {
+      "file": "movie-batch14-arm64-story-cancel.json",
+      "sha256_lf": "801316039d4d6fd51b5de1e372e3b1c9a1dd28876fc096de1305644cd6bf5bf9"
+    },
+    {
+      "file": "story-batch14-arm64-ffi-verification.json",
+      "sha256_lf": "35fb6c1cc7a7da046a747a821a3c35cd1be145a2947c93abaaa562558f7563dd"
+    },
+    {
+      "file": "story-batch14-arm64-snapshot-verification.json",
+      "sha256_lf": "35bd63c075f3f0389b7d06ce9bc7fca5be81e84ff212ccd8916fd651d9822c9b"
+    },
+    {
+      "file": "story-batch14-translated-verification.json",
+      "sha256_lf": "8278612caf200d2717702a7a22c91782293b79e58003a24c95ca4779b6fe72ff"
+    },
+    {
+      "file": "story-batch14-translated-final-smoke-verification.json",
+      "sha256_lf": "305ad81c7adbca8bb4f98e8f03c5fcd0bfb826d8a74aff7167b4a2bbd8013bd5"
+    },
+    {
+      "file": "story-batch14-translated-movie-chain-verification.json",
+      "sha256_lf": "0e408ca648d78dc6ba69f18dd4f43b98cc122ecb59b09b3955a31f5c633cccde"
+    },
+    {
+      "file": "story-batch14-translated-movie-skip-verification.json",
+      "sha256_lf": "5b0c42c79ac1ded0fc1d9e5ab3cb7e48d486aca1fa130892e388aa97fc1dacb0"
+    },
+    {
+      "file": "movie-batch14-translated-verification.json",
+      "sha256_lf": "e11396af909a0b9f996a1a0c30f922df5c3a3eb98ecf50cde69d4199bd81e7e1"
+    },
+    {
+      "file": "movie-batch14-translated-controls.json",
+      "sha256_lf": "3e04ebf02a7ba7d7fbd3785c29676179bedd3a75fbf601261b228818c5637760"
+    },
+    {
+      "file": "movie-batch14-translated-story-cancel.json",
+      "sha256_lf": "1ff4cb606c41236da0b853096656960a15ce3ba295d90eef2cb3178e7e0e04e8"
+    },
+    {
+      "file": "story-batch14-translated-ffi-verification.json",
+      "sha256_lf": "08dfd9c3074bf3c5feb32e281730ae8aaf74bff749e019817e2b6736bf918f1b"
+    },
+    {
+      "file": "story-batch14-translated-snapshot-verification.json",
+      "sha256_lf": "35bd63c075f3f0389b7d06ce9bc7fca5be81e84ff212ccd8916fd651d9822c9b"
+    }
+  ]
+}

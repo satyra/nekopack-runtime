@@ -1,0 +1,87 @@
+{
+  "scope": "prototype observations retained separately from final validation; initial APK hashes were not captured",
+  "phone": {
+    "runs": [
+      {
+        "run_id": "movie14-phone-0",
+        "events": [
+          {
+            "reason": 2,
+            "frames": 0,
+            "samples": 0,
+            "head": 0,
+            "peak_bytes": 0,
+            "elapsed_ms": 457,
+            "error": null,
+            "event": "closed",
+            "time_ms": 606438489
+          }
+        ]
+      },
+      {
+        "run_id": "movie14-phone-0b",
+        "events": [
+          {
+            "reason": 2,
+            "frames": 0,
+            "samples": 0,
+            "head": 0,
+            "peak_bytes": 0,
+            "elapsed_ms": 204,
+            "error": null,
+            "event": "closed",
+            "time_ms": 606459260
+          }
+        ]
+      },
+      {
+        "run_id": "movie14-phone-0c",
+        "events": [
+          {
+            "reason": 2,
+            "frames": 0,
+            "samples": 0,
+            "head": 0,
+            "peak_bytes": 0,
+            "elapsed_ms": 178,
+            "error": null,
+            "event": "closed",
+            "time_ms": 606535147
+          }
+        ]
+      }
+    ],
+    "enabled_accessibility_service": "li.songe.gkd/com.google.android.accessibility.selecttospeak.SelectToSpeakService",
+    "user_confirmed_no_manual_input": true,
+    "interpretation": "likely automatic skip-label rule; renaming the button removed observed interference"
+  },
+  "translated": {
+    "run_id": "movie14-emu-0",
+    "crash_excerpt": [
+      "11-07 02:38:11.431  4401  4425 F libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x41e00ec0 in tid 4425 (pool-1-thread-1), pid 4401 (.nekopack.probe)",
+      "11-07 02:38:11.563  4430  4430 F DEBUG   :     #00 pc 00000000000ae103  /system/lib64/libc.so (ifree+67)",
+      "11-07 02:38:11.563  4430  4430 F DEBUG   :     #01 pc 00000000000ae6a2  /system/lib64/libc.so (je_free+98)",
+      "11-07 02:38:11.563  4430  4430 F DEBUG   :     #02 pc 00000000003ab88b  /system/lib64/libart.so (art::JNI::ReleasePrimitiveArrayCritical(_JNIEnv*, _jarray*, void*, int)+939)",
+      "11-07 02:38:11.563  4430  4430 F DEBUG   :     #03 pc 00000000000f629b  /system/lib64/libart.so (art::(anonymous namespace)::CheckJNI::ReleasePrimitiveArrayCritical(_JNIEnv*, _jarray*, void*, int)+907)",
+      "11-07 02:38:11.563  4430  4430 F DEBUG   :     #04 pc 000000000012f268  /system/lib64/libandroid_runtime.so (android::AutoBufferPointer::~AutoBufferPointer()+40)",
+      "11-07 02:38:11.563  4430  4430 F DEBUG   :     #05 pc 000000000015138f  /system/lib64/libandroid_runtime.so (Bitmap_copyPixelsFromBuffer(_JNIEnv*, _jobject*, long, _jobject*)+127)"
+    ],
+    "resolution": "use a separate direct pixel buffer; hardware canvas removes the observed software upload bottleneck"
+  },
+  "verifier_launch_observation": {
+    "run_id": "movie_e46e97734eed40f0b9cd6fc8373be338",
+    "pidof_exit_code": 1,
+    "runtime_later_completed": {
+      "reason": 0,
+      "frames": 2497,
+      "samples": 4590720,
+      "head": 4590720,
+      "peak_bytes": 8523472,
+      "elapsed_ms": 105008,
+      "error": null,
+      "event": "closed",
+      "time_ms": 39513678
+    },
+    "resolution": "am -W plus complete per-run decode/close evidence; pidof is not a success predicate. Real missing completion still fails the bounded verification deadline."
+  }
+}

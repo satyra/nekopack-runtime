@@ -34,3 +34,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+视频增量使用 Dominic Szablewski 的 [pl_mpeg](https://github.com/phoboslab/pl_mpeg)，固定 revision `c871f2be022ece7ef4f64230b4fb8e1fb9eb6023`。带有明确标记的三处修正的头文件保存在 `vendor/pl_mpeg/pl_mpeg.h`，文件内保留 `SPDX-License-Identifier: MIT`；上游与本地 SHA-256 见同目录 `UPSTREAM.json`，具体改动见 `NEKOPACK_CHANGES.md`。上游没有单独 LICENSE 文件，分发所需的标准 MIT 许可文本和作者归属保存在 [LICENSE](vendor/pl_mpeg/LICENSE)，并随 Android APK 放入 `assets/licenses/pl_mpeg-MIT.txt`。预算、I/O 和 C ABI 封装由本仓库另行实现；这不是本项目原创的 MPEG 解码算法。FFmpeg 仅用于本地独立对照，不链接或打包进入运行器。

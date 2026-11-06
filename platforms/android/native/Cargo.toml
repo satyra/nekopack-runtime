@@ -10,3 +10,4 @@ crate-type = ["cdylib"]
 [dependencies]
 nekopack-script = { path = "../../../crates/nekopack-script", features = ["validation"] }
 nekopack-runtime = { path = "../../../crates/nekopack-runtime" }
+nekopack-video = { path = "../../../crates/nekopack-video" }

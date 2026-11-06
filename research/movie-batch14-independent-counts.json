@@ -1,0 +1,83 @@
+{
+  "scope": "independent whole-file frame/PCM counts and PCM regression tolerance; last-frame RGB diagnostics; not original DirectShow or physical AV parity",
+  "pcm_tolerance": {
+    "rms": 8,
+    "max": 64,
+    "relative_gain": [
+      0.999,
+      1.001
+    ]
+  },
+  "ffmpeg_sha256": "3256173f3f8bffd7df12227c68adf68025edb1832273a9530688a7bb1ed8edec",
+  "vendor_sha256_lf": "3c6bead6e8758331a25ed49dfb192bf3f11cf21116977e8b143baa018527bfe4",
+  "games": [
+    {
+      "game": 0,
+      "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+      "frames": 2497,
+      "samples_per_channel": 4590720,
+      "pcm": {
+        "rms_error": 2.3284782961387065,
+        "max_error": 15.0,
+        "relative_gain": 0.9999593007469857,
+        "reference_rms": 5266.632747013823
+      },
+      "last_frame": {
+        "mae": 0.7497781032986112,
+        "max_error": 1
+      },
+      "decoder_peak_bytes": 8523472
+    },
+    {
+      "game": 1,
+      "source_sha256": "6717affa0fc4a18f66f44b12c2f6e90b2378e432ec5e2e7d9e13fcd9da377208",
+      "frames": 4196,
+      "samples_per_channel": 6720768,
+      "pcm": {
+        "rms_error": 2.446745904965202,
+        "max_error": 17.0,
+        "relative_gain": 0.9999480803892866,
+        "reference_rms": 9111.319538857866
+      },
+      "last_frame": {
+        "mae": 0.75,
+        "max_error": 1
+      },
+      "decoder_peak_bytes": 8916688
+    },
+    {
+      "game": 2,
+      "source_sha256": "8e270a51ac96f7264a7a66c393190ca0eaabc94b3236aa58f66e43577aff247c",
+      "frames": 3472,
+      "samples_per_channel": 5556096,
+      "pcm": {
+        "rms_error": 1.7838214325433746,
+        "max_error": 12.0,
+        "relative_gain": 0.9999492537027088,
+        "reference_rms": 8656.797431322319
+      },
+      "last_frame": {
+        "mae": 0.0,
+        "max_error": 0
+      },
+      "decoder_peak_bytes": 6096592
+    },
+    {
+      "game": 3,
+      "source_sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+      "frames": 4081,
+      "samples_per_channel": 5999616,
+      "pcm": {
+        "rms_error": 2.2838890443451962,
+        "max_error": 15.0,
+        "relative_gain": 0.9999511701848038,
+        "reference_rms": 10025.994662055227
+      },
+      "last_frame": {
+        "mae": 0.0,
+        "max_error": 0
+      },
+      "decoder_peak_bytes": 8455888
+    }
+  ]
+}

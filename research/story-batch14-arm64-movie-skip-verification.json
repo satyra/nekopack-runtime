@@ -1,0 +1,589 @@
+{
+  "scope": "bounded continuous pages; unsupported boundaries or explicit reference page limit",
+  "execution": "native ARM64",
+  "device": {
+    "ro.product.cpu.abilist": "arm64-v8a,armeabi-v7a,armeabi",
+    "ro.dalvik.vm.native.bridge": "0",
+    "ro.build.version.sdk": "35",
+    "kernel_machine": "aarch64"
+  },
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "dc751f2083e6d7389bf194ee4cd77aa646ccba8bd0da36d24b2578aff4d11300",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "7d97ce202ad9a20ab7664623b6cb443bf76f473df2eccba0e0578e0f9ca41e03"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1907576 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06e72c 0x06e72c R   0x4000\n  LOAD           0x06e72c 0x000000000007272c 0x000000000007272c 0x0e7544 0x0e7544 R E 0x4000\n  LOAD           0x155c70 0x000000000015dc70 0x000000000015dc70 0x007b60 0x008390 RW  0x4000\n  LOAD           0x15d7d0 0x00000000001697d0 0x00000000001697d0 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x15d0c8 0x00000000001650c8 0x00000000001650c8 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x155c70 0x000000000015dc70 0x000000000015dc70 0x007b60 0x008390 R   0x1\n  GNU_EH_FRAME   0x04de90 0x000000000004de90 0x000000000004de90 0x004694 0x004694 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x15d0c8 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44040 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1821\n  0x0000000000000017 (JMPREL)       0xbdb0\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x165528\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x1650c0\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x1650b0\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "games": [
+    {
+      "index": 0,
+      "run_id": "story_29fa564fb8c2493ab68ced307c6b25f8",
+      "movies": [
+        {
+          "token": 8,
+          "metadata": {
+            "host_effect": "movie",
+            "token": 8,
+            "name": "op.mpg",
+            "duration_ms": 0,
+            "movie_left_skip": false
+          },
+          "info": {
+            "width": 1280,
+            "height": 720,
+            "fps": 24,
+            "sample_rate": 44100,
+            "duration": 103.91666666666666,
+            "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+            "source_bytes": 106680900,
+            "left_skip": false
+          },
+          "events": [
+            {
+              "width": 1280,
+              "height": 720,
+              "fps": 24,
+              "sample_rate": 44100,
+              "duration": 103.91666666666666,
+              "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+              "source_bytes": 106680900,
+              "left_skip": false,
+              "event": "started",
+              "time_ms": 610723397
+            },
+            {
+              "frames": 120,
+              "samples": 220032,
+              "head": 216384,
+              "event": "progress",
+              "time_ms": 610728329
+            },
+            {
+              "frames": 120,
+              "samples": 220032,
+              "head": 216384,
+              "event": "progress",
+              "time_ms": 610728330
+            },
+            {
+              "frames": 120,
+              "samples": 221184,
+              "head": 218265,
+              "event": "progress",
+              "time_ms": 610728357
+            },
+            {
+              "reason": 2,
+              "frames": 186,
+              "samples": 342144,
+              "head": 338688,
+              "peak_bytes": 8523472,
+              "elapsed_ms": 8069,
+              "error": null,
+              "event": "closed",
+              "time_ms": 610731087
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "width": 2184,
+        "height": 984,
+        "stage_width": 2184,
+        "stage_height": 775,
+        "orientation": 2
+      },
+      "wipes": [],
+      "shakes": [],
+      "flashes": [],
+      "final_visual_independent_pixels_equal": false,
+      "boundary": {
+        "checkpoint": {
+          "source": "story1",
+          "line": 12,
+          "depth": 1,
+          "steps": 198,
+          "slots": [
+            [
+              71,
+              800,
+              1
+            ],
+            [
+              71,
+              801,
+              0
+            ],
+            [
+              71,
+              802,
+              0
+            ],
+            [
+              71,
+              803,
+              0
+            ],
+            [
+              71,
+              804,
+              0
+            ],
+            [
+              71,
+              900,
+              0
+            ],
+            [
+              71,
+              901,
+              0
+            ],
+            [
+              71,
+              902,
+              0
+            ],
+            [
+              71,
+              903,
+              0
+            ],
+            [
+              71,
+              904,
+              0
+            ],
+            [
+              76,
+              100,
+              0
+            ],
+            [
+              76,
+              900,
+              0
+            ],
+            [
+              76,
+              901,
+              0
+            ],
+            [
+              76,
+              902,
+              0
+            ],
+            [
+              76,
+              903,
+              0
+            ]
+          ],
+          "scene": {
+            "size": [
+              1280,
+              720
+            ],
+            "background": null,
+            "background_color": null,
+            "overlay": null,
+            "visual": null,
+            "actors": []
+          },
+          "effects": [
+            "se SE_010",
+            "fade 3",
+            "movie op.mpg"
+          ],
+          "voice": ""
+        },
+        "vm_live_bytes": 0,
+        "error": "story story1:12 depth=1 steps=198: unsupported story preview command route"
+      },
+      "page_limit_reached": false,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "P01",
+          "line": 15,
+          "text_sha256": "be21f791a3341dad7a3146b07cfc41dfbb5dbb3b48d901fbb2b7430a398b1f90",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "411ac3257b316a9bd300b4d0bb220486663ed1a7cf05e202b18cd8a22b62bd49",
+          "effects": [
+            "fade 3"
+          ]
+        },
+        {
+          "sequence": 2,
+          "source": "P01",
+          "line": 18,
+          "text_sha256": "0b6113e004e6b7dab2038d693e90055cfce419152b4810f3d7d25cdd7f7b87d0",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "55b43e3b23ee36b3b0570aefa5c5b1c13089634115ce3022e3f11fefb9cd7946",
+          "effects": []
+        },
+        {
+          "sequence": 3,
+          "source": "P01",
+          "line": 21,
+          "text_sha256": "9f6cc8e99dce3a8a9d621495598c5b5c558e495764ed555f19594e4a68dbbf43",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "e207255f5869737f115cd3c6332fad93f4a64271997de8b54ea357f3fce36e68",
+          "effects": []
+        },
+        {
+          "sequence": 4,
+          "source": "P01",
+          "line": 26,
+          "text_sha256": "748c2266391562af508bf715a457192c47daf7f6fa42f9ab936a7f150d04a0c8",
+          "png_sha256": "9d7c717b31f75edbe48051785e9832940ede89c13d717cde5def12731a5c8526",
+          "metadata_sha256": "2369886a9f45bc951819b81403c9e2b70e5fbb3767e2fd4d3ba36f56b9225ede",
+          "effects": []
+        },
+        {
+          "sequence": 5,
+          "source": "P01",
+          "line": 32,
+          "text_sha256": "ce7904d64b407614b652850b2b823725a794f72b2d51bdce281ed189b4fc69b1",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "7119777a1bdf7e2299414039bf325a2909f56356356df6d1ee32605af4303a72",
+          "effects": []
+        },
+        {
+          "sequence": 6,
+          "source": "P01",
+          "line": 36,
+          "text_sha256": "13a2232438d5c767b1a5e17e74a64403245e21addb8b7d8d3db21303b62feb34",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "318d9acb3c5cea663cadb7bd61a7d9c37615036e1edb0cf55145930e62a443a7",
+          "effects": []
+        },
+        {
+          "sequence": 7,
+          "source": "P01",
+          "line": 39,
+          "text_sha256": "bdddbd3c63956955f9bea2f7e22c0a17a3daac890b94f02a74bbe1686333b1db",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "105936dac429e2cd3a0e997ba53b2c91908dc54a7916f97e15ab50f3e6f5a5cf",
+          "effects": []
+        },
+        {
+          "sequence": 8,
+          "source": "P01",
+          "line": 43,
+          "text_sha256": "4533536bbb047d7e282d95f7c997e6e89255cd384ec1db4b56c3e1eec7f35e55",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "e311fa3d47f6a4b141178457c0074dcd13590476f570ff0c3445bb0a5c08ab7f",
+          "effects": []
+        },
+        {
+          "sequence": 9,
+          "source": "P01",
+          "line": 46,
+          "text_sha256": "3ab408f3f9baf21a83af435b8cfa459d707bbd233ed9f839492750fd83604823",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "7e346af449f6932c40d1aeeaf293750798a8f201b53d44298bb9aa005506b4de",
+          "effects": []
+        },
+        {
+          "sequence": 10,
+          "source": "P01",
+          "line": 49,
+          "text_sha256": "cfd5cc123daae51edfb0d3b7da4259dc6626647f6d426fb234de50d4b2ed53ad",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "6390342b086b2e1109bb1ac61adbe7c3cd0c8c27142e99b59bc7b78188060e45",
+          "effects": []
+        },
+        {
+          "sequence": 11,
+          "source": "P01",
+          "line": 52,
+          "text_sha256": "0b8bc9f9d4b797bdf107a59555ad31e138b379b412f801ac39d69ec67a012b38",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "5977360d15bbfe5ee8db7501098c716bb83e6233a062ff95bcc37661a2d9d458",
+          "effects": []
+        },
+        {
+          "sequence": 12,
+          "source": "P01",
+          "line": 57,
+          "text_sha256": "4e949cee6472c48fee7bbd48bd3968f55847b89b27f32fb772e934cae69b1a83",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "538c6a82e6df176519157a4b2a981759e1952f1c7b358ef876ee3fd99d860fbb",
+          "effects": []
+        }
+      ],
+      "actual_ui_next": true,
+      "closed_vm_live_bytes": 0,
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 610680488,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 610681256,
+          "value": 255
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 610683519,
+          "value": 3031
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 610683541,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 610683630,
+          "value": 3612
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 610683630,
+          "value": 89
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 610683833,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 610684041,
+          "value": 194
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 610693083,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 610693110,
+          "value": 5820
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 610693110,
+          "value": 27
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 610693310,
+          "value": 30
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 610696094,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 610696111,
+          "value": 6212
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 610696111,
+          "value": 17
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 610696312,
+          "value": 41
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 610716851,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 610716873,
+          "value": 1804
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 610716874,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 610717075,
+          "value": 36
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 610718853,
+          "value": 1804
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 610719819,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 610719838,
+          "value": 7140
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 610719838,
+          "value": 19
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 610719882,
+          "value": 3000
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 610720038,
+          "value": 29
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 610720646,
+          "value": 252
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 610722904,
+          "value": 3021
+        },
+        {
+          "event": "stopped_all",
+          "kind": "movie",
+          "token": 8,
+          "time_ms": 610722977,
+          "value": 0
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 610731115,
+          "value": 0
+        }
+      ],
+      "audio": [
+        {
+          "kind": "voice",
+          "name": "KA_P01_0000",
+          "sha256": "3a238ecc0d82763aaf33aaaa70151938f058dabfb377a052c8c114d78ce0dfdb",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0001",
+          "sha256": "632794383e7e248b9589f60a1f2bf64c411b980fd250b80f4d1acd950ec9792b",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 4,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0002",
+          "sha256": "7640321c3177a1e7cb204024e30ee02686dcb534b28bde74b36f6fed5a8c5eb1",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0003",
+          "sha256": "87aa70580ff46a0d79585b5c0607897ab5c51a8c993bfc503429e6857e2c7ee4",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "se",
+          "name": "SE_010",
+          "sha256": "d3d451d7c074c0122517e4c171a83d30957396a8aa833f2c4318f7c90845a2e9",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        }
+      ]
+    }
+  ]
+}

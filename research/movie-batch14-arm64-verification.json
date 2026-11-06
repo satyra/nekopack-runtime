@@ -1,0 +1,2060 @@
+{
+  "scope": "four original MPEG files through SAF; standalone Android host, not four script-chain runs",
+  "serial": "SST89X85TC8TGUQO",
+  "execution": "native ARM64",
+  "kernel": "aarch64",
+  "native_bridge": "0",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "dc751f2083e6d7389bf194ee4cd77aa646ccba8bd0da36d24b2578aff4d11300",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "7d97ce202ad9a20ab7664623b6cb443bf76f473df2eccba0e0578e0f9ca41e03"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1907576 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06e72c 0x06e72c R   0x4000\n  LOAD           0x06e72c 0x000000000007272c 0x000000000007272c 0x0e7544 0x0e7544 R E 0x4000\n  LOAD           0x155c70 0x000000000015dc70 0x000000000015dc70 0x007b60 0x008390 RW  0x4000\n  LOAD           0x15d7d0 0x00000000001697d0 0x00000000001697d0 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x15d0c8 0x00000000001650c8 0x00000000001650c8 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x155c70 0x000000000015dc70 0x000000000015dc70 0x007b60 0x008390 R   0x1\n  GNU_EH_FRAME   0x04de90 0x000000000004de90 0x000000000004de90 0x004694 0x004694 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x15d0c8 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44040 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1821\n  0x0000000000000017 (JMPREL)       0xbdb0\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x165528\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x1650c0\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x1650b0\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "games": [
+    {
+      "game": 0,
+      "run_id": "movie_c89eac8af6814c16927f875ebb348503",
+      "info": {
+        "width": 1280,
+        "height": 720,
+        "fps": 24,
+        "sample_rate": 44100,
+        "duration": 103.91666666666666,
+        "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+        "source_bytes": 106680900,
+        "left_skip": false
+      },
+      "closed": {
+        "reason": 0,
+        "frames": 2497,
+        "samples": 4590720,
+        "head": 4590720,
+        "peak_bytes": 8523472,
+        "elapsed_ms": 104522,
+        "error": null,
+        "event": "closed",
+        "time_ms": 609798240
+      },
+      "events": [
+        {
+          "width": 1280,
+          "height": 720,
+          "fps": 24,
+          "sample_rate": 44100,
+          "duration": 103.91666666666666,
+          "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+          "source_bytes": 106680900,
+          "left_skip": false,
+          "event": "started",
+          "time_ms": 609694121
+        },
+        {
+          "frames": 120,
+          "samples": 220032,
+          "head": 214502,
+          "event": "progress",
+          "time_ms": 609698988
+        },
+        {
+          "frames": 120,
+          "samples": 220032,
+          "head": 216384,
+          "event": "progress",
+          "time_ms": 609698994
+        },
+        {
+          "frames": 120,
+          "samples": 221184,
+          "head": 216384,
+          "event": "progress",
+          "time_ms": 609698995
+        },
+        {
+          "frames": 240,
+          "samples": 440064,
+          "head": 434649,
+          "event": "progress",
+          "time_ms": 609703956
+        },
+        {
+          "frames": 240,
+          "samples": 441216,
+          "head": 438412,
+          "event": "progress",
+          "time_ms": 609704021
+        },
+        {
+          "frames": 360,
+          "samples": 660096,
+          "head": 656678,
+          "event": "progress",
+          "time_ms": 609708986
+        },
+        {
+          "frames": 360,
+          "samples": 661248,
+          "head": 656678,
+          "event": "progress",
+          "time_ms": 609708988
+        },
+        {
+          "frames": 480,
+          "samples": 881280,
+          "head": 878707,
+          "event": "progress",
+          "time_ms": 609714011
+        },
+        {
+          "frames": 480,
+          "samples": 881280,
+          "head": 878707,
+          "event": "progress",
+          "time_ms": 609714012
+        },
+        {
+          "frames": 600,
+          "samples": 1101312,
+          "head": 1098854,
+          "event": "progress",
+          "time_ms": 609719020
+        },
+        {
+          "frames": 600,
+          "samples": 1102464,
+          "head": 1098854,
+          "event": "progress",
+          "time_ms": 609719021
+        },
+        {
+          "frames": 600,
+          "samples": 1103616,
+          "head": 1098854,
+          "event": "progress",
+          "time_ms": 609719022
+        },
+        {
+          "frames": 720,
+          "samples": 1322496,
+          "head": 1317120,
+          "event": "progress",
+          "time_ms": 609723981
+        },
+        {
+          "frames": 720,
+          "samples": 1322496,
+          "head": 1317120,
+          "event": "progress",
+          "time_ms": 609723982
+        },
+        {
+          "frames": 720,
+          "samples": 1323648,
+          "head": 1320883,
+          "event": "progress",
+          "time_ms": 609724032
+        },
+        {
+          "frames": 840,
+          "samples": 1542528,
+          "head": 1539148,
+          "event": "progress",
+          "time_ms": 609729020
+        },
+        {
+          "frames": 840,
+          "samples": 1543680,
+          "head": 1539148,
+          "event": "progress",
+          "time_ms": 609729022
+        },
+        {
+          "frames": 840,
+          "samples": 1543680,
+          "head": 1539148,
+          "event": "progress",
+          "time_ms": 609729022
+        },
+        {
+          "frames": 960,
+          "samples": 1762560,
+          "head": 1761177,
+          "event": "progress",
+          "time_ms": 609734031
+        },
+        {
+          "frames": 960,
+          "samples": 1763712,
+          "head": 1761177,
+          "event": "progress",
+          "time_ms": 609734033
+        },
+        {
+          "frames": 960,
+          "samples": 1764864,
+          "head": 1761177,
+          "event": "progress",
+          "time_ms": 609734034
+        },
+        {
+          "frames": 1080,
+          "samples": 1983744,
+          "head": 1981324,
+          "event": "progress",
+          "time_ms": 609739021
+        },
+        {
+          "frames": 1080,
+          "samples": 1984896,
+          "head": 1981324,
+          "event": "progress",
+          "time_ms": 609739022
+        },
+        {
+          "frames": 1080,
+          "samples": 1984896,
+          "head": 1981324,
+          "event": "progress",
+          "time_ms": 609739022
+        },
+        {
+          "frames": 1200,
+          "samples": 2203776,
+          "head": 2201472,
+          "event": "progress",
+          "time_ms": 609744035
+        },
+        {
+          "frames": 1200,
+          "samples": 2204928,
+          "head": 2201472,
+          "event": "progress",
+          "time_ms": 609744037
+        },
+        {
+          "frames": 1200,
+          "samples": 2206080,
+          "head": 2201472,
+          "event": "progress",
+          "time_ms": 609744038
+        },
+        {
+          "frames": 1320,
+          "samples": 2424960,
+          "head": 2421619,
+          "event": "progress",
+          "time_ms": 609749013
+        },
+        {
+          "frames": 1320,
+          "samples": 2424960,
+          "head": 2421619,
+          "event": "progress",
+          "time_ms": 609749015
+        },
+        {
+          "frames": 1320,
+          "samples": 2426112,
+          "head": 2421619,
+          "event": "progress",
+          "time_ms": 609749015
+        },
+        {
+          "frames": 1440,
+          "samples": 2644992,
+          "head": 2641766,
+          "event": "progress",
+          "time_ms": 609753990
+        },
+        {
+          "frames": 1440,
+          "samples": 2646144,
+          "head": 2641766,
+          "event": "progress",
+          "time_ms": 609753992
+        },
+        {
+          "frames": 1440,
+          "samples": 2646144,
+          "head": 2641766,
+          "event": "progress",
+          "time_ms": 609753992
+        },
+        {
+          "frames": 1560,
+          "samples": 2866176,
+          "head": 2863795,
+          "event": "progress",
+          "time_ms": 609759031
+        },
+        {
+          "frames": 1560,
+          "samples": 2866176,
+          "head": 2863795,
+          "event": "progress",
+          "time_ms": 609759032
+        },
+        {
+          "frames": 1560,
+          "samples": 2867328,
+          "head": 2863795,
+          "event": "progress",
+          "time_ms": 609759033
+        },
+        {
+          "frames": 1680,
+          "samples": 3086208,
+          "head": 3082060,
+          "event": "progress",
+          "time_ms": 609763998
+        },
+        {
+          "frames": 1680,
+          "samples": 3087360,
+          "head": 3082060,
+          "event": "progress",
+          "time_ms": 609763999
+        },
+        {
+          "frames": 1680,
+          "samples": 3087360,
+          "head": 3082060,
+          "event": "progress",
+          "time_ms": 609764000
+        },
+        {
+          "frames": 1800,
+          "samples": 3306240,
+          "head": 3304089,
+          "event": "progress",
+          "time_ms": 609769029
+        },
+        {
+          "frames": 1800,
+          "samples": 3307392,
+          "head": 3304089,
+          "event": "progress",
+          "time_ms": 609769031
+        },
+        {
+          "frames": 1800,
+          "samples": 3308544,
+          "head": 3304089,
+          "event": "progress",
+          "time_ms": 609769032
+        },
+        {
+          "frames": 1920,
+          "samples": 3527424,
+          "head": 3524236,
+          "event": "progress",
+          "time_ms": 609774007
+        },
+        {
+          "frames": 1920,
+          "samples": 3527424,
+          "head": 3524236,
+          "event": "progress",
+          "time_ms": 609774008
+        },
+        {
+          "frames": 1920,
+          "samples": 3528576,
+          "head": 3524236,
+          "event": "progress",
+          "time_ms": 609774009
+        },
+        {
+          "frames": 2040,
+          "samples": 3747456,
+          "head": 3744384,
+          "event": "progress",
+          "time_ms": 609779017
+        },
+        {
+          "frames": 2040,
+          "samples": 3748608,
+          "head": 3744384,
+          "event": "progress",
+          "time_ms": 609779018
+        },
+        {
+          "frames": 2040,
+          "samples": 3748608,
+          "head": 3744384,
+          "event": "progress",
+          "time_ms": 609779019
+        },
+        {
+          "frames": 2160,
+          "samples": 3968640,
+          "head": 3964531,
+          "event": "progress",
+          "time_ms": 609784019
+        },
+        {
+          "frames": 2160,
+          "samples": 3968640,
+          "head": 3964531,
+          "event": "progress",
+          "time_ms": 609784020
+        },
+        {
+          "frames": 2160,
+          "samples": 3969792,
+          "head": 3964928,
+          "event": "progress",
+          "time_ms": 609784021
+        },
+        {
+          "frames": 2280,
+          "samples": 4188672,
+          "head": 4184678,
+          "event": "progress",
+          "time_ms": 609789005
+        },
+        {
+          "frames": 2280,
+          "samples": 4189824,
+          "head": 4184678,
+          "event": "progress",
+          "time_ms": 609789007
+        },
+        {
+          "frames": 2280,
+          "samples": 4189824,
+          "head": 4184678,
+          "event": "progress",
+          "time_ms": 609789007
+        },
+        {
+          "frames": 2400,
+          "samples": 4408704,
+          "head": 4404825,
+          "event": "progress",
+          "time_ms": 609793996
+        },
+        {
+          "frames": 2400,
+          "samples": 4409856,
+          "head": 4404825,
+          "event": "progress",
+          "time_ms": 609794003
+        },
+        {
+          "frames": 2400,
+          "samples": 4411008,
+          "head": 4407296,
+          "event": "progress",
+          "time_ms": 609794049
+        },
+        {
+          "reason": 0,
+          "frames": 2497,
+          "samples": 4590720,
+          "head": 4590720,
+          "peak_bytes": 8523472,
+          "elapsed_ms": 104522,
+          "error": null,
+          "event": "closed",
+          "time_ms": 609798240
+        }
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "sha256": "b004343d6d95cad7fd22169f199339e3bf9b1d08a1128107bb66effc124d91f8",
+          "desktop_equal": true
+        },
+        {
+          "frame": 24,
+          "sha256": "b004343d6d95cad7fd22169f199339e3bf9b1d08a1128107bb66effc124d91f8",
+          "desktop_equal": true
+        },
+        {
+          "frame": 240,
+          "sha256": "fe21ae4fc35d1e31a7a6cc80f13b4d19d272f99e6781fe5011f8c4c5b17adec0",
+          "desktop_equal": true
+        }
+      ],
+      "pcm_sha256": "9ce022c036a7d3bfca945c8fdd88b5af01f834a0898bf883ac45bec8fe964a1a",
+      "desktop_pcm_error": {
+        "max_error": 0,
+        "rms_error": 0.0
+      },
+      "display_captured": true
+    },
+    {
+      "game": 1,
+      "run_id": "movie_36ebd5cec0d44f9582e4172aa53c82c5",
+      "info": {
+        "width": 1280,
+        "height": 720,
+        "fps": 29.97,
+        "sample_rate": 48000,
+        "duration": 139.9398,
+        "source_sha256": "6717affa0fc4a18f66f44b12c2f6e90b2378e432ec5e2e7d9e13fcd9da377208",
+        "source_bytes": 217671684,
+        "left_skip": false
+      },
+      "closed": {
+        "reason": 0,
+        "frames": 4196,
+        "samples": 6720768,
+        "head": 6720768,
+        "peak_bytes": 8916688,
+        "elapsed_ms": 140470,
+        "error": null,
+        "event": "closed",
+        "time_ms": 609941418
+      },
+      "events": [
+        {
+          "width": 1280,
+          "height": 720,
+          "fps": 29.97,
+          "sample_rate": 48000,
+          "duration": 139.9398,
+          "source_sha256": "6717affa0fc4a18f66f44b12c2f6e90b2378e432ec5e2e7d9e13fcd9da377208",
+          "source_bytes": 217671684,
+          "left_skip": false,
+          "event": "started",
+          "time_ms": 609801357
+        },
+        {
+          "frames": 120,
+          "samples": 191232,
+          "head": 188416,
+          "event": "progress",
+          "time_ms": 609805274
+        },
+        {
+          "frames": 120,
+          "samples": 192384,
+          "head": 188416,
+          "event": "progress",
+          "time_ms": 609805275
+        },
+        {
+          "frames": 240,
+          "samples": 383616,
+          "head": 378880,
+          "event": "progress",
+          "time_ms": 609809251
+        },
+        {
+          "frames": 240,
+          "samples": 384768,
+          "head": 378880,
+          "event": "progress",
+          "time_ms": 609809252
+        },
+        {
+          "frames": 360,
+          "samples": 576000,
+          "head": 571392,
+          "event": "progress",
+          "time_ms": 609813265
+        },
+        {
+          "frames": 360,
+          "samples": 577152,
+          "head": 571392,
+          "event": "progress",
+          "time_ms": 609813267
+        },
+        {
+          "frames": 480,
+          "samples": 767232,
+          "head": 761856,
+          "event": "progress",
+          "time_ms": 609817219
+        },
+        {
+          "frames": 480,
+          "samples": 768384,
+          "head": 765952,
+          "event": "progress",
+          "time_ms": 609817281
+        },
+        {
+          "frames": 600,
+          "samples": 960768,
+          "head": 958464,
+          "event": "progress",
+          "time_ms": 609821297
+        },
+        {
+          "frames": 600,
+          "samples": 961920,
+          "head": 958464,
+          "event": "progress",
+          "time_ms": 609821299
+        },
+        {
+          "frames": 720,
+          "samples": 1152000,
+          "head": 1148928,
+          "event": "progress",
+          "time_ms": 609825280
+        },
+        {
+          "frames": 720,
+          "samples": 1153152,
+          "head": 1148928,
+          "event": "progress",
+          "time_ms": 609825281
+        },
+        {
+          "frames": 840,
+          "samples": 1344384,
+          "head": 1339392,
+          "event": "progress",
+          "time_ms": 609829260
+        },
+        {
+          "frames": 840,
+          "samples": 1345536,
+          "head": 1339392,
+          "event": "progress",
+          "time_ms": 609829262
+        },
+        {
+          "frames": 960,
+          "samples": 1536768,
+          "head": 1531904,
+          "event": "progress",
+          "time_ms": 609833273
+        },
+        {
+          "frames": 960,
+          "samples": 1537920,
+          "head": 1531904,
+          "event": "progress",
+          "time_ms": 609833274
+        },
+        {
+          "frames": 1080,
+          "samples": 1729152,
+          "head": 1724416,
+          "event": "progress",
+          "time_ms": 609837285
+        },
+        {
+          "frames": 1080,
+          "samples": 1730304,
+          "head": 1724416,
+          "event": "progress",
+          "time_ms": 609837287
+        },
+        {
+          "frames": 1200,
+          "samples": 1921536,
+          "head": 1916928,
+          "event": "progress",
+          "time_ms": 609841306
+        },
+        {
+          "frames": 1200,
+          "samples": 1922688,
+          "head": 1918976,
+          "event": "progress",
+          "time_ms": 609841308
+        },
+        {
+          "frames": 1320,
+          "samples": 2113920,
+          "head": 2111488,
+          "event": "progress",
+          "time_ms": 609845318
+        },
+        {
+          "frames": 1320,
+          "samples": 2113920,
+          "head": 2111488,
+          "event": "progress",
+          "time_ms": 609845319
+        },
+        {
+          "frames": 1440,
+          "samples": 2305152,
+          "head": 2299904,
+          "event": "progress",
+          "time_ms": 609849258
+        },
+        {
+          "frames": 1440,
+          "samples": 2306304,
+          "head": 2304000,
+          "event": "progress",
+          "time_ms": 609849325
+        },
+        {
+          "frames": 1560,
+          "samples": 2498688,
+          "head": 2496512,
+          "event": "progress",
+          "time_ms": 609853341
+        },
+        {
+          "frames": 1560,
+          "samples": 2498688,
+          "head": 2496512,
+          "event": "progress",
+          "time_ms": 609853342
+        },
+        {
+          "frames": 1680,
+          "samples": 2689920,
+          "head": 2684928,
+          "event": "progress",
+          "time_ms": 609857296
+        },
+        {
+          "frames": 1680,
+          "samples": 2691072,
+          "head": 2684928,
+          "event": "progress",
+          "time_ms": 609857297
+        },
+        {
+          "frames": 1800,
+          "samples": 2882304,
+          "head": 2879488,
+          "event": "progress",
+          "time_ms": 609861319
+        },
+        {
+          "frames": 1800,
+          "samples": 2883456,
+          "head": 2879488,
+          "event": "progress",
+          "time_ms": 609861321
+        },
+        {
+          "frames": 1920,
+          "samples": 3074688,
+          "head": 3069952,
+          "event": "progress",
+          "time_ms": 609865304
+        },
+        {
+          "frames": 1920,
+          "samples": 3074688,
+          "head": 3069952,
+          "event": "progress",
+          "time_ms": 609865305
+        },
+        {
+          "frames": 2040,
+          "samples": 3267072,
+          "head": 3262464,
+          "event": "progress",
+          "time_ms": 609869334
+        },
+        {
+          "frames": 2040,
+          "samples": 3268224,
+          "head": 3264512,
+          "event": "progress",
+          "time_ms": 609869335
+        },
+        {
+          "frames": 2160,
+          "samples": 3459456,
+          "head": 3457024,
+          "event": "progress",
+          "time_ms": 609873353
+        },
+        {
+          "frames": 2160,
+          "samples": 3459456,
+          "head": 3457024,
+          "event": "progress",
+          "time_ms": 609873354
+        },
+        {
+          "frames": 2280,
+          "samples": 3650688,
+          "head": 3645440,
+          "event": "progress",
+          "time_ms": 609877312
+        },
+        {
+          "frames": 2280,
+          "samples": 3651840,
+          "head": 3647488,
+          "event": "progress",
+          "time_ms": 609877313
+        },
+        {
+          "frames": 2400,
+          "samples": 3843072,
+          "head": 3837952,
+          "event": "progress",
+          "time_ms": 609881306
+        },
+        {
+          "frames": 2400,
+          "samples": 3844224,
+          "head": 3842048,
+          "event": "progress",
+          "time_ms": 609881367
+        },
+        {
+          "frames": 2520,
+          "samples": 4035456,
+          "head": 4030464,
+          "event": "progress",
+          "time_ms": 609885337
+        },
+        {
+          "frames": 2520,
+          "samples": 4036608,
+          "head": 4032512,
+          "event": "progress",
+          "time_ms": 609885339
+        },
+        {
+          "frames": 2640,
+          "samples": 4227840,
+          "head": 4222976,
+          "event": "progress",
+          "time_ms": 609889339
+        },
+        {
+          "frames": 2640,
+          "samples": 4228992,
+          "head": 4222976,
+          "event": "progress",
+          "time_ms": 609889341
+        },
+        {
+          "frames": 2760,
+          "samples": 4420224,
+          "head": 4415488,
+          "event": "progress",
+          "time_ms": 609893336
+        },
+        {
+          "frames": 2760,
+          "samples": 4420224,
+          "head": 4415488,
+          "event": "progress",
+          "time_ms": 609893337
+        },
+        {
+          "frames": 2880,
+          "samples": 4611456,
+          "head": 4605952,
+          "event": "progress",
+          "time_ms": 609897315
+        },
+        {
+          "frames": 2880,
+          "samples": 4612608,
+          "head": 4610048,
+          "event": "progress",
+          "time_ms": 609897367
+        },
+        {
+          "frames": 3000,
+          "samples": 4804992,
+          "head": 4800512,
+          "event": "progress",
+          "time_ms": 609901379
+        },
+        {
+          "frames": 3000,
+          "samples": 4804992,
+          "head": 4802560,
+          "event": "progress",
+          "time_ms": 609901381
+        },
+        {
+          "frames": 3120,
+          "samples": 4996224,
+          "head": 4993024,
+          "event": "progress",
+          "time_ms": 609905364
+        },
+        {
+          "frames": 3120,
+          "samples": 4997376,
+          "head": 4993024,
+          "event": "progress",
+          "time_ms": 609905365
+        },
+        {
+          "frames": 3240,
+          "samples": 5188608,
+          "head": 5183488,
+          "event": "progress",
+          "time_ms": 609909358
+        },
+        {
+          "frames": 3240,
+          "samples": 5189760,
+          "head": 5185536,
+          "event": "progress",
+          "time_ms": 609909365
+        },
+        {
+          "frames": 3360,
+          "samples": 5380992,
+          "head": 5376000,
+          "event": "progress",
+          "time_ms": 609913330
+        },
+        {
+          "frames": 3360,
+          "samples": 5380992,
+          "head": 5376000,
+          "event": "progress",
+          "time_ms": 609913331
+        },
+        {
+          "frames": 3480,
+          "samples": 5572224,
+          "head": 5568512,
+          "event": "progress",
+          "time_ms": 609917349
+        },
+        {
+          "frames": 3480,
+          "samples": 5573376,
+          "head": 5568512,
+          "event": "progress",
+          "time_ms": 609917350
+        },
+        {
+          "frames": 3600,
+          "samples": 5765760,
+          "head": 5761024,
+          "event": "progress",
+          "time_ms": 609921381
+        },
+        {
+          "frames": 3600,
+          "samples": 5765760,
+          "head": 5761024,
+          "event": "progress",
+          "time_ms": 609921382
+        },
+        {
+          "frames": 3720,
+          "samples": 5956992,
+          "head": 5953536,
+          "event": "progress",
+          "time_ms": 609925384
+        },
+        {
+          "frames": 3720,
+          "samples": 5958144,
+          "head": 5953536,
+          "event": "progress",
+          "time_ms": 609925385
+        },
+        {
+          "frames": 3840,
+          "samples": 6149376,
+          "head": 6144000,
+          "event": "progress",
+          "time_ms": 609929357
+        },
+        {
+          "frames": 3840,
+          "samples": 6150528,
+          "head": 6148096,
+          "event": "progress",
+          "time_ms": 609929409
+        },
+        {
+          "frames": 3960,
+          "samples": 6341760,
+          "head": 6336512,
+          "event": "progress",
+          "time_ms": 609933380
+        },
+        {
+          "frames": 3960,
+          "samples": 6341760,
+          "head": 6338560,
+          "event": "progress",
+          "time_ms": 609933382
+        },
+        {
+          "frames": 4080,
+          "samples": 6534144,
+          "head": 6529024,
+          "event": "progress",
+          "time_ms": 609937351
+        },
+        {
+          "frames": 4080,
+          "samples": 6535296,
+          "head": 6533120,
+          "event": "progress",
+          "time_ms": 609937431
+        },
+        {
+          "reason": 0,
+          "frames": 4196,
+          "samples": 6720768,
+          "head": 6720768,
+          "peak_bytes": 8916688,
+          "elapsed_ms": 140470,
+          "error": null,
+          "event": "closed",
+          "time_ms": 609941418
+        }
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "sha256": "b004343d6d95cad7fd22169f199339e3bf9b1d08a1128107bb66effc124d91f8",
+          "desktop_equal": true
+        },
+        {
+          "frame": 24,
+          "sha256": "5d6ff4f4cbca35cfc5919e720f8c9f89f1a80e8ffed8ca4c179b1266ba4a5f3c",
+          "desktop_equal": true
+        },
+        {
+          "frame": 240,
+          "sha256": "8e534e9bcd1e9641d24f8531fc4b22962292cc794db37f3ac2006acde46a33ea",
+          "desktop_equal": true
+        }
+      ],
+      "pcm_sha256": "f5c37029e133a6a53e48abb2e2a795b3a9271b282b3b759f6f3fd7f9ffd788c7",
+      "desktop_pcm_error": {
+        "max_error": 0,
+        "rms_error": 0.0
+      },
+      "display_captured": true
+    },
+    {
+      "game": 2,
+      "run_id": "movie_13857ca93b8c451bae202c838343c5f4",
+      "info": {
+        "width": 1024,
+        "height": 576,
+        "fps": 30,
+        "sample_rate": 48000,
+        "duration": 115.7,
+        "source_sha256": "8e270a51ac96f7264a7a66c393190ca0eaabc94b3236aa58f66e43577aff247c",
+        "source_bytes": 212027396,
+        "left_skip": false
+      },
+      "closed": {
+        "reason": 0,
+        "frames": 3472,
+        "samples": 5556096,
+        "head": 5556096,
+        "peak_bytes": 6096592,
+        "elapsed_ms": 116181,
+        "error": null,
+        "event": "closed",
+        "time_ms": 610061866
+      },
+      "events": [
+        {
+          "width": 1024,
+          "height": 576,
+          "fps": 30,
+          "sample_rate": 48000,
+          "duration": 115.7,
+          "source_sha256": "8e270a51ac96f7264a7a66c393190ca0eaabc94b3236aa58f66e43577aff247c",
+          "source_bytes": 212027396,
+          "left_skip": false,
+          "event": "started",
+          "time_ms": 609946096
+        },
+        {
+          "frames": 120,
+          "samples": 191232,
+          "head": 186368,
+          "event": "progress",
+          "time_ms": 609949980
+        },
+        {
+          "frames": 120,
+          "samples": 192384,
+          "head": 188416,
+          "event": "progress",
+          "time_ms": 609949981
+        },
+        {
+          "frames": 240,
+          "samples": 383616,
+          "head": 378880,
+          "event": "progress",
+          "time_ms": 609953968
+        },
+        {
+          "frames": 240,
+          "samples": 384768,
+          "head": 378880,
+          "event": "progress",
+          "time_ms": 609953969
+        },
+        {
+          "frames": 360,
+          "samples": 574848,
+          "head": 571392,
+          "event": "progress",
+          "time_ms": 609957987
+        },
+        {
+          "frames": 360,
+          "samples": 576000,
+          "head": 571392,
+          "event": "progress",
+          "time_ms": 609957988
+        },
+        {
+          "frames": 480,
+          "samples": 767232,
+          "head": 763904,
+          "event": "progress",
+          "time_ms": 609961987
+        },
+        {
+          "frames": 480,
+          "samples": 767232,
+          "head": 763904,
+          "event": "progress",
+          "time_ms": 609961988
+        },
+        {
+          "frames": 600,
+          "samples": 958464,
+          "head": 952320,
+          "event": "progress",
+          "time_ms": 609965924
+        },
+        {
+          "frames": 600,
+          "samples": 959616,
+          "head": 956416,
+          "event": "progress",
+          "time_ms": 609965981
+        },
+        {
+          "frames": 720,
+          "samples": 1152000,
+          "head": 1148928,
+          "event": "progress",
+          "time_ms": 609969996
+        },
+        {
+          "frames": 720,
+          "samples": 1152000,
+          "head": 1148928,
+          "event": "progress",
+          "time_ms": 609969997
+        },
+        {
+          "frames": 840,
+          "samples": 1343232,
+          "head": 1339392,
+          "event": "progress",
+          "time_ms": 609973972
+        },
+        {
+          "frames": 840,
+          "samples": 1344384,
+          "head": 1339392,
+          "event": "progress",
+          "time_ms": 609973973
+        },
+        {
+          "frames": 960,
+          "samples": 1535616,
+          "head": 1531904,
+          "event": "progress",
+          "time_ms": 609977980
+        },
+        {
+          "frames": 960,
+          "samples": 1536768,
+          "head": 1531904,
+          "event": "progress",
+          "time_ms": 609977982
+        },
+        {
+          "frames": 1080,
+          "samples": 1728000,
+          "head": 1724416,
+          "event": "progress",
+          "time_ms": 609982007
+        },
+        {
+          "frames": 1080,
+          "samples": 1728000,
+          "head": 1724416,
+          "event": "progress",
+          "time_ms": 609982008
+        },
+        {
+          "frames": 1200,
+          "samples": 1919232,
+          "head": 1916928,
+          "event": "progress",
+          "time_ms": 609986008
+        },
+        {
+          "frames": 1200,
+          "samples": 1920384,
+          "head": 1916928,
+          "event": "progress",
+          "time_ms": 609986010
+        },
+        {
+          "frames": 1320,
+          "samples": 2111616,
+          "head": 2107392,
+          "event": "progress",
+          "time_ms": 609989977
+        },
+        {
+          "frames": 1320,
+          "samples": 2112768,
+          "head": 2107392,
+          "event": "progress",
+          "time_ms": 609989979
+        },
+        {
+          "frames": 1440,
+          "samples": 2304000,
+          "head": 2297856,
+          "event": "progress",
+          "time_ms": 609993968
+        },
+        {
+          "frames": 1440,
+          "samples": 2304000,
+          "head": 2299904,
+          "event": "progress",
+          "time_ms": 609993969
+        },
+        {
+          "frames": 1560,
+          "samples": 2495232,
+          "head": 2492416,
+          "event": "progress",
+          "time_ms": 609997986
+        },
+        {
+          "frames": 1560,
+          "samples": 2496384,
+          "head": 2492416,
+          "event": "progress",
+          "time_ms": 609997988
+        },
+        {
+          "frames": 1680,
+          "samples": 2687616,
+          "head": 2682880,
+          "event": "progress",
+          "time_ms": 610001983
+        },
+        {
+          "frames": 1680,
+          "samples": 2688768,
+          "head": 2682880,
+          "event": "progress",
+          "time_ms": 610001984
+        },
+        {
+          "frames": 1800,
+          "samples": 2880000,
+          "head": 2875392,
+          "event": "progress",
+          "time_ms": 610005995
+        },
+        {
+          "frames": 1800,
+          "samples": 2880000,
+          "head": 2875392,
+          "event": "progress",
+          "time_ms": 610005997
+        },
+        {
+          "frames": 1920,
+          "samples": 3071232,
+          "head": 3065856,
+          "event": "progress",
+          "time_ms": 610009960
+        },
+        {
+          "frames": 1920,
+          "samples": 3072384,
+          "head": 3069952,
+          "event": "progress",
+          "time_ms": 610010013
+        },
+        {
+          "frames": 2040,
+          "samples": 3263616,
+          "head": 3258368,
+          "event": "progress",
+          "time_ms": 610013974
+        },
+        {
+          "frames": 2040,
+          "samples": 3264768,
+          "head": 3262464,
+          "event": "progress",
+          "time_ms": 610014024
+        },
+        {
+          "frames": 2160,
+          "samples": 3456000,
+          "head": 3450880,
+          "event": "progress",
+          "time_ms": 610017963
+        },
+        {
+          "frames": 2160,
+          "samples": 3456000,
+          "head": 3450880,
+          "event": "progress",
+          "time_ms": 610017965
+        },
+        {
+          "frames": 2280,
+          "samples": 3647232,
+          "head": 3643392,
+          "event": "progress",
+          "time_ms": 610021982
+        },
+        {
+          "frames": 2280,
+          "samples": 3648384,
+          "head": 3643392,
+          "event": "progress",
+          "time_ms": 610021984
+        },
+        {
+          "frames": 2400,
+          "samples": 3839616,
+          "head": 3835904,
+          "event": "progress",
+          "time_ms": 610025996
+        },
+        {
+          "frames": 2400,
+          "samples": 3840768,
+          "head": 3835904,
+          "event": "progress",
+          "time_ms": 610025997
+        },
+        {
+          "frames": 2520,
+          "samples": 4032000,
+          "head": 4028416,
+          "event": "progress",
+          "time_ms": 610030002
+        },
+        {
+          "frames": 2520,
+          "samples": 4032000,
+          "head": 4028416,
+          "event": "progress",
+          "time_ms": 610030003
+        },
+        {
+          "frames": 2640,
+          "samples": 4223232,
+          "head": 4220928,
+          "event": "progress",
+          "time_ms": 610034008
+        },
+        {
+          "frames": 2640,
+          "samples": 4224384,
+          "head": 4220928,
+          "event": "progress",
+          "time_ms": 610034009
+        },
+        {
+          "frames": 2760,
+          "samples": 4415616,
+          "head": 4413440,
+          "event": "progress",
+          "time_ms": 610038007
+        },
+        {
+          "frames": 2760,
+          "samples": 4416768,
+          "head": 4413440,
+          "event": "progress",
+          "time_ms": 610038008
+        },
+        {
+          "frames": 2880,
+          "samples": 4608000,
+          "head": 4603904,
+          "event": "progress",
+          "time_ms": 610041995
+        },
+        {
+          "frames": 2880,
+          "samples": 4608000,
+          "head": 4603904,
+          "event": "progress",
+          "time_ms": 610041996
+        },
+        {
+          "frames": 3000,
+          "samples": 4799232,
+          "head": 4796416,
+          "event": "progress",
+          "time_ms": 610045985
+        },
+        {
+          "frames": 3000,
+          "samples": 4800384,
+          "head": 4796416,
+          "event": "progress",
+          "time_ms": 610045986
+        },
+        {
+          "frames": 3120,
+          "samples": 4991616,
+          "head": 4986880,
+          "event": "progress",
+          "time_ms": 610049962
+        },
+        {
+          "frames": 3120,
+          "samples": 4992768,
+          "head": 4986880,
+          "event": "progress",
+          "time_ms": 610049963
+        },
+        {
+          "frames": 3240,
+          "samples": 5184000,
+          "head": 5179392,
+          "event": "progress",
+          "time_ms": 610053966
+        },
+        {
+          "frames": 3240,
+          "samples": 5184000,
+          "head": 5179392,
+          "event": "progress",
+          "time_ms": 610053967
+        },
+        {
+          "frames": 3360,
+          "samples": 5375232,
+          "head": 5369856,
+          "event": "progress",
+          "time_ms": 610057968
+        },
+        {
+          "frames": 3360,
+          "samples": 5376384,
+          "head": 5373952,
+          "event": "progress",
+          "time_ms": 610058013
+        },
+        {
+          "reason": 0,
+          "frames": 3472,
+          "samples": 5556096,
+          "head": 5556096,
+          "peak_bytes": 6096592,
+          "elapsed_ms": 116181,
+          "error": null,
+          "event": "closed",
+          "time_ms": 610061866
+        }
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "sha256": "e2005a6ab25eeb157251f882b0ca533f335f90a0ce933b09c5307390849916a1",
+          "desktop_equal": true
+        },
+        {
+          "frame": 24,
+          "sha256": "e2005a6ab25eeb157251f882b0ca533f335f90a0ce933b09c5307390849916a1",
+          "desktop_equal": true
+        },
+        {
+          "frame": 240,
+          "sha256": "7d093c205ef764ab972d498ffa7a054f5c3624ab760e93019620e6bcd3e5c304",
+          "desktop_equal": true
+        }
+      ],
+      "pcm_sha256": "48f6aac783e379e2ee81b8ac175c1c6fe85a728792fd5af56cf38146bbb9f817",
+      "desktop_pcm_error": {
+        "max_error": 0,
+        "rms_error": 0.0
+      },
+      "display_captured": true
+    },
+    {
+      "game": 3,
+      "run_id": "movie_ebd6c7825aac49759e8a58d400c5e336",
+      "info": {
+        "width": 1024,
+        "height": 576,
+        "fps": 30,
+        "sample_rate": 44100,
+        "duration": 135.79999999999998,
+        "source_sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+        "source_bytes": 269961220,
+        "left_skip": false
+      },
+      "closed": {
+        "reason": 0,
+        "frames": 4081,
+        "samples": 5999616,
+        "head": 5999616,
+        "peak_bytes": 8455888,
+        "elapsed_ms": 136591,
+        "error": null,
+        "event": "closed",
+        "time_ms": 610201824
+      },
+      "events": [
+        {
+          "width": 1024,
+          "height": 576,
+          "fps": 30,
+          "sample_rate": 44100,
+          "duration": 135.79999999999998,
+          "source_sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26",
+          "source_bytes": 269961220,
+          "left_skip": false,
+          "event": "started",
+          "time_ms": 610065749
+        },
+        {
+          "frames": 120,
+          "samples": 176256,
+          "head": 171225,
+          "event": "progress",
+          "time_ms": 610069637
+        },
+        {
+          "frames": 120,
+          "samples": 177408,
+          "head": 173107,
+          "event": "progress",
+          "time_ms": 610069638
+        },
+        {
+          "frames": 240,
+          "samples": 352512,
+          "head": 349977,
+          "event": "progress",
+          "time_ms": 610073649
+        },
+        {
+          "frames": 240,
+          "samples": 353664,
+          "head": 349977,
+          "event": "progress",
+          "time_ms": 610073651
+        },
+        {
+          "frames": 360,
+          "samples": 528768,
+          "head": 524966,
+          "event": "progress",
+          "time_ms": 610077629
+        },
+        {
+          "frames": 360,
+          "samples": 528768,
+          "head": 524966,
+          "event": "progress",
+          "time_ms": 610077630
+        },
+        {
+          "frames": 480,
+          "samples": 705024,
+          "head": 701836,
+          "event": "progress",
+          "time_ms": 610081628
+        },
+        {
+          "frames": 480,
+          "samples": 705024,
+          "head": 701836,
+          "event": "progress",
+          "time_ms": 610081629
+        },
+        {
+          "frames": 600,
+          "samples": 881280,
+          "head": 876825,
+          "event": "progress",
+          "time_ms": 610085605
+        },
+        {
+          "frames": 600,
+          "samples": 881280,
+          "head": 876825,
+          "event": "progress",
+          "time_ms": 610085608
+        },
+        {
+          "frames": 720,
+          "samples": 1058688,
+          "head": 1055577,
+          "event": "progress",
+          "time_ms": 610089651
+        },
+        {
+          "frames": 720,
+          "samples": 1058688,
+          "head": 1055577,
+          "event": "progress",
+          "time_ms": 610089652
+        },
+        {
+          "frames": 840,
+          "samples": 1234944,
+          "head": 1232448,
+          "event": "progress",
+          "time_ms": 610093660
+        },
+        {
+          "frames": 840,
+          "samples": 1234944,
+          "head": 1232448,
+          "event": "progress",
+          "time_ms": 610093661
+        },
+        {
+          "frames": 960,
+          "samples": 1411200,
+          "head": 1407436,
+          "event": "progress",
+          "time_ms": 610097641
+        },
+        {
+          "frames": 960,
+          "samples": 1411200,
+          "head": 1407436,
+          "event": "progress",
+          "time_ms": 610097642
+        },
+        {
+          "frames": 1080,
+          "samples": 1587456,
+          "head": 1584307,
+          "event": "progress",
+          "time_ms": 610101643
+        },
+        {
+          "frames": 1080,
+          "samples": 1588608,
+          "head": 1584307,
+          "event": "progress",
+          "time_ms": 610101645
+        },
+        {
+          "frames": 1200,
+          "samples": 1763712,
+          "head": 1761177,
+          "event": "progress",
+          "time_ms": 610105647
+        },
+        {
+          "frames": 1200,
+          "samples": 1764864,
+          "head": 1761177,
+          "event": "progress",
+          "time_ms": 610105648
+        },
+        {
+          "frames": 1320,
+          "samples": 1939968,
+          "head": 1938048,
+          "event": "progress",
+          "time_ms": 610109678
+        },
+        {
+          "frames": 1320,
+          "samples": 1941120,
+          "head": 1938048,
+          "event": "progress",
+          "time_ms": 610109680
+        },
+        {
+          "frames": 1440,
+          "samples": 2116224,
+          "head": 2113036,
+          "event": "progress",
+          "time_ms": 610113628
+        },
+        {
+          "frames": 1440,
+          "samples": 2117376,
+          "head": 2113036,
+          "event": "progress",
+          "time_ms": 610113630
+        },
+        {
+          "frames": 1560,
+          "samples": 2292480,
+          "head": 2289907,
+          "event": "progress",
+          "time_ms": 610117651
+        },
+        {
+          "frames": 1560,
+          "samples": 2293632,
+          "head": 2289907,
+          "event": "progress",
+          "time_ms": 610117653
+        },
+        {
+          "frames": 1680,
+          "samples": 2469888,
+          "head": 2464896,
+          "event": "progress",
+          "time_ms": 610121643
+        },
+        {
+          "frames": 1680,
+          "samples": 2469888,
+          "head": 2464896,
+          "event": "progress",
+          "time_ms": 610121644
+        },
+        {
+          "frames": 1800,
+          "samples": 2646144,
+          "head": 2641766,
+          "event": "progress",
+          "time_ms": 610125634
+        },
+        {
+          "frames": 1800,
+          "samples": 2646144,
+          "head": 2641766,
+          "event": "progress",
+          "time_ms": 610125635
+        },
+        {
+          "frames": 1920,
+          "samples": 2822400,
+          "head": 2818636,
+          "event": "progress",
+          "time_ms": 610129635
+        },
+        {
+          "frames": 1920,
+          "samples": 2822400,
+          "head": 2818636,
+          "event": "progress",
+          "time_ms": 610129636
+        },
+        {
+          "frames": 2040,
+          "samples": 2998656,
+          "head": 2993625,
+          "event": "progress",
+          "time_ms": 610133631
+        },
+        {
+          "frames": 2040,
+          "samples": 2999808,
+          "head": 2995507,
+          "event": "progress",
+          "time_ms": 610133633
+        },
+        {
+          "frames": 2160,
+          "samples": 3174912,
+          "head": 3170496,
+          "event": "progress",
+          "time_ms": 610137620
+        },
+        {
+          "frames": 2160,
+          "samples": 3176064,
+          "head": 3170496,
+          "event": "progress",
+          "time_ms": 610137621
+        },
+        {
+          "frames": 2280,
+          "samples": 3351168,
+          "head": 3349248,
+          "event": "progress",
+          "time_ms": 610141676
+        },
+        {
+          "frames": 2280,
+          "samples": 3352320,
+          "head": 3349248,
+          "event": "progress",
+          "time_ms": 610141677
+        },
+        {
+          "frames": 2400,
+          "samples": 3527424,
+          "head": 3524236,
+          "event": "progress",
+          "time_ms": 610145627
+        },
+        {
+          "frames": 2400,
+          "samples": 3528576,
+          "head": 3524236,
+          "event": "progress",
+          "time_ms": 610145629
+        },
+        {
+          "frames": 2520,
+          "samples": 3703680,
+          "head": 3701107,
+          "event": "progress",
+          "time_ms": 610149652
+        },
+        {
+          "frames": 2520,
+          "samples": 3704832,
+          "head": 3701107,
+          "event": "progress",
+          "time_ms": 610149654
+        },
+        {
+          "frames": 2640,
+          "samples": 3881088,
+          "head": 3876096,
+          "event": "progress",
+          "time_ms": 610153632
+        },
+        {
+          "frames": 2640,
+          "samples": 3881088,
+          "head": 3876096,
+          "event": "progress",
+          "time_ms": 610153636
+        },
+        {
+          "frames": 2760,
+          "samples": 4057344,
+          "head": 4052966,
+          "event": "progress",
+          "time_ms": 610157625
+        },
+        {
+          "frames": 2760,
+          "samples": 4057344,
+          "head": 4052966,
+          "event": "progress",
+          "time_ms": 610157626
+        },
+        {
+          "frames": 2880,
+          "samples": 4233600,
+          "head": 4229836,
+          "event": "progress",
+          "time_ms": 610161648
+        },
+        {
+          "frames": 2880,
+          "samples": 4233600,
+          "head": 4229836,
+          "event": "progress",
+          "time_ms": 610161649
+        },
+        {
+          "frames": 3000,
+          "samples": 4409856,
+          "head": 4406707,
+          "event": "progress",
+          "time_ms": 610165650
+        },
+        {
+          "frames": 3000,
+          "samples": 4411008,
+          "head": 4406707,
+          "event": "progress",
+          "time_ms": 610165652
+        },
+        {
+          "frames": 3120,
+          "samples": 4586112,
+          "head": 4581696,
+          "event": "progress",
+          "time_ms": 610169622
+        },
+        {
+          "frames": 3120,
+          "samples": 4587264,
+          "head": 4581696,
+          "event": "progress",
+          "time_ms": 610169624
+        },
+        {
+          "frames": 3240,
+          "samples": 4762368,
+          "head": 4758566,
+          "event": "progress",
+          "time_ms": 610173638
+        },
+        {
+          "frames": 3240,
+          "samples": 4763520,
+          "head": 4758566,
+          "event": "progress",
+          "time_ms": 610173639
+        },
+        {
+          "frames": 3360,
+          "samples": 4938624,
+          "head": 4935436,
+          "event": "progress",
+          "time_ms": 610177632
+        },
+        {
+          "frames": 3360,
+          "samples": 4939776,
+          "head": 4935436,
+          "event": "progress",
+          "time_ms": 610177634
+        },
+        {
+          "frames": 3480,
+          "samples": 5114880,
+          "head": 5112307,
+          "event": "progress",
+          "time_ms": 610181650
+        },
+        {
+          "frames": 3480,
+          "samples": 5116032,
+          "head": 5112307,
+          "event": "progress",
+          "time_ms": 610181652
+        },
+        {
+          "frames": 3600,
+          "samples": 5292288,
+          "head": 5287296,
+          "event": "progress",
+          "time_ms": 610185631
+        },
+        {
+          "frames": 3600,
+          "samples": 5292288,
+          "head": 5287296,
+          "event": "progress",
+          "time_ms": 610185633
+        },
+        {
+          "frames": 3720,
+          "samples": 5468544,
+          "head": 5464166,
+          "event": "progress",
+          "time_ms": 610189652
+        },
+        {
+          "frames": 3720,
+          "samples": 5468544,
+          "head": 5464166,
+          "event": "progress",
+          "time_ms": 610189654
+        },
+        {
+          "frames": 3840,
+          "samples": 5644800,
+          "head": 5639155,
+          "event": "progress",
+          "time_ms": 610193625
+        },
+        {
+          "frames": 3840,
+          "samples": 5644800,
+          "head": 5641036,
+          "event": "progress",
+          "time_ms": 610193625
+        },
+        {
+          "frames": 3960,
+          "samples": 5821056,
+          "head": 5816025,
+          "event": "progress",
+          "time_ms": 610197628
+        },
+        {
+          "frames": 3960,
+          "samples": 5822208,
+          "head": 5819788,
+          "event": "progress",
+          "time_ms": 610197677
+        },
+        {
+          "frames": 4080,
+          "samples": 5996160,
+          "head": 5992896,
+          "event": "progress",
+          "time_ms": 610201640
+        },
+        {
+          "frames": 4080,
+          "samples": 5997312,
+          "head": 5992896,
+          "event": "progress",
+          "time_ms": 610201641
+        },
+        {
+          "reason": 0,
+          "frames": 4081,
+          "samples": 5999616,
+          "head": 5999616,
+          "peak_bytes": 8455888,
+          "elapsed_ms": 136591,
+          "error": null,
+          "event": "closed",
+          "time_ms": 610201824
+        }
+      ],
+      "frames": [
+        {
+          "frame": 0,
+          "sha256": "e2005a6ab25eeb157251f882b0ca533f335f90a0ce933b09c5307390849916a1",
+          "desktop_equal": true
+        },
+        {
+          "frame": 24,
+          "sha256": "e2005a6ab25eeb157251f882b0ca533f335f90a0ce933b09c5307390849916a1",
+          "desktop_equal": true
+        },
+        {
+          "frame": 240,
+          "sha256": "e0a0b24480639f7a75962206112e9578ed191f30d1dece5af5ea99456f357877",
+          "desktop_equal": true
+        }
+      ],
+      "pcm_sha256": "027afa7b6ca0c5ded76498003e014c412be827b3a57889eb3041b6177f4d6d59",
+      "desktop_pcm_error": {
+        "max_error": 0,
+        "rms_error": 0.0
+      },
+      "display_captured": true
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "scope": "static disassembly of four local originals; not a captured original-player timing test",
+  "semantics": [
+    "stop all four sound channels on entry",
+    "primary mouse exits only with second argument skip",
+    "secondary mouse exits regardless of skip flag",
+    "player completion exits wait loop, cleanup precedes script return",
+    "Movie configuration gates playback; runtime currently assumes enabled"
+  ],
+  "games": [
+    {
+      "game": "Tiny_BoD.exe",
+      "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "parser": "0x461504",
+      "execute": "0x461d68",
+      "skip_string": "0x551fcd",
+      "absent_argument_empty": "0x551fd2",
+      "facts": [
+        {
+          "address": "0x4616e9",
+          "instruction": "sete dl"
+        },
+        {
+          "address": "0x461d81",
+          "instruction": "call 0x446870"
+        },
+        {
+          "address": "0x44688a",
+          "instruction": "cmp ebx, 4"
+        },
+        {
+          "address": "0x4623bd",
+          "instruction": "test bl, bl"
+        },
+        {
+          "address": "0x4623c9",
+          "instruction": "cmp eax, 0xff01"
+        },
+        {
+          "address": "0x4623d8",
+          "instruction": "cmp edx, 0xff03"
+        },
+        {
+          "address": "0x4623e5",
+          "instruction": "call 0x4722d0"
+        },
+        {
+          "address": "0x46240e",
+          "instruction": "call 0x4722bc"
+        },
+        {
+          "address": "0x448f29",
+          "instruction": "mov word ptr [0x588738], 0xff01"
+        },
+        {
+          "address": "0x448f39",
+          "instruction": "mov word ptr [0x588738], 0xff03"
+        },
+        {
+          "address": "0x448edc",
+          "instruction": "sub edx, 0x201"
+        }
+      ],
+      "movie_bytes": 106680900,
+      "movie_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b"
+    },
+    {
+      "game": "Tiny_BfY.exe",
+      "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "parser": "0x461504",
+      "execute": "0x461d68",
+      "skip_string": "0x551fcd",
+      "absent_argument_empty": "0x551fd2",
+      "facts": [
+        {
+          "address": "0x4616e9",
+          "instruction": "sete dl"
+        },
+        {
+          "address": "0x461d81",
+          "instruction": "call 0x446870"
+        },
+        {
+          "address": "0x44688a",
+          "instruction": "cmp ebx, 4"
+        },
+        {
+          "address": "0x4623bd",
+          "instruction": "test bl, bl"
+        },
+        {
+          "address": "0x4623c9",
+          "instruction": "cmp eax, 0xff01"
+        },
+        {
+          "address": "0x4623d8",
+          "instruction": "cmp edx, 0xff03"
+        },
+        {
+          "address": "0x4623e5",
+          "instruction": "call 0x4722d0"
+        },
+        {
+          "address": "0x46240e",
+          "instruction": "call 0x4722bc"
+        },
+        {
+          "address": "0x448f29",
+          "instruction": "mov word ptr [0x588738], 0xff01"
+        },
+        {
+          "address": "0x448f39",
+          "instruction": "mov word ptr [0x588738], 0xff03"
+        },
+        {
+          "address": "0x448edc",
+          "instruction": "sub edx, 0x201"
+        }
+      ],
+      "movie_bytes": 217671684,
+      "movie_sha256": "6717affa0fc4a18f66f44b12c2f6e90b2378e432ec5e2e7d9e13fcd9da377208"
+    },
+    {
+      "game": "Tiny_BoS.exe",
+      "exe_sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+      "parser": "0x4ef174",
+      "execute": "0x4f2090",
+      "skip_string": "0x64c624",
+      "absent_argument_empty": "0x64c629",
+      "facts": [
+        {
+          "address": "0x4f0194",
+          "instruction": "sete dl"
+        },
+        {
+          "address": "0x4f20a6",
+          "instruction": "call 0x4aff10"
+        },
+        {
+          "address": "0x4aff2a",
+          "instruction": "cmp ebx, 4"
+        },
+        {
+          "address": "0x4f35cd",
+          "instruction": "test bl, bl"
+        },
+        {
+          "address": "0x4f35d6",
+          "instruction": "cmp eax, 0xff01"
+        },
+        {
+          "address": "0x4f35e2",
+          "instruction": "cmp eax, 0xff03"
+        },
+        {
+          "address": "0x4f35ee",
+          "instruction": "call 0x50fd88"
+        },
+        {
+          "address": "0x4f3617",
+          "instruction": "call 0x50fd74"
+        },
+        {
+          "address": "0x4bdf47",
+          "instruction": "mov dword ptr [0x68f5d0], 0xff01"
+        },
+        {
+          "address": "0x4bdf62",
+          "instruction": "mov dword ptr [0x68f5d0], 0xff03"
+        },
+        {
+          "address": "0x4bd724",
+          "instruction": "sub edx, 0x201"
+        }
+      ],
+      "movie_bytes": 212027396,
+      "movie_sha256": "8e270a51ac96f7264a7a66c393190ca0eaabc94b3236aa58f66e43577aff247c"
+    },
+    {
+      "game": "Tiny_BaW.exe",
+      "exe_sha256": "c570d44929360672475db25ec22704ae06ffc20cbabf4a46d0e60325fbe908d0",
+      "parser": "0x4607a4",
+      "execute": "0x461008",
+      "skip_string": "0x550f97",
+      "absent_argument_empty": "0x550f9c",
+      "facts": [
+        {
+          "address": "0x460989",
+          "instruction": "sete dl"
+        },
+        {
+          "address": "0x461021",
+          "instruction": "call 0x4467bc"
+        },
+        {
+          "address": "0x4467d6",
+          "instruction": "cmp ebx, 4"
+        },
+        {
+          "address": "0x46165d",
+          "instruction": "test bl, bl"
+        },
+        {
+          "address": "0x461669",
+          "instruction": "cmp eax, 0xff01"
+        },
+        {
+          "address": "0x461678",
+          "instruction": "cmp edx, 0xff03"
+        },
+        {
+          "address": "0x461685",
+          "instruction": "call 0x47145c"
+        },
+        {
+          "address": "0x4616ae",
+          "instruction": "call 0x471448"
+        },
+        {
+          "address": "0x448e75",
+          "instruction": "mov word ptr [0x587704], 0xff01"
+        },
+        {
+          "address": "0x448e85",
+          "instruction": "mov word ptr [0x587704], 0xff03"
+        },
+        {
+          "address": "0x448e28",
+          "instruction": "sub edx, 0x201"
+        }
+      ],
+      "movie_bytes": 269961220,
+      "movie_sha256": "75f61bedf21a18964020a02fa60c4bc7cf173a9dfb56b4a32f732c38ec7d7e26"
+    }
+  ]
+}

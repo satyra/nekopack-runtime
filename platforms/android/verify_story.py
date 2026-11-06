@@ -34,6 +34,7 @@ def verify_bgm_stop(host,begin,ack):
 def main():
  p=argparse.ArgumentParser()
  for name in ['adb','desktop','fixtures','output']:p.add_argument('--'+name,type=Path,required=True)
+ p.add_argument('--movie-completion',choices=['natural','secondary'])
  p.add_argument('--audio-reference',type=Path)
  p.add_argument('--until-boundary',action='store_true')
  p.add_argument('--allow-page-limit',action='store_true')
@@ -100,8 +101,15 @@ def main():
    if n<count or to_boundary:tap('继续')
   boundary=None
   if to_boundary:
-   deadline=time.monotonic()+45
+   deadline=time.monotonic()+(700 if a.movie_completion else 45)
+   skipped=False
    while time.monotonic()<deadline:
+    if a.movie_completion=='secondary' and not skipped:
+     names=adb('shell','run-as',package,'ls','-1',f'files/{run}').decode().splitlines()
+     for name in names:
+      if re.fullmatch(r'movie-\d+-events.jsonl',name):
+       movie_events=[json.loads(x) for x in private(run,name).splitlines()]
+       if any(e['event']=='progress' and e['head']>0 for e in movie_events):tap('返回剧情');skipped=True;break
     raw=private(run,'boundary.json')
     if raw.startswith(b'{'):break
     time.sleep(.3)
@@ -111,6 +119,23 @@ def main():
    assert boundary['error']==(a.desktop/str(i)/'boundary.txt').read_text(encoding='utf8')
    assert boundary['vm_live_bytes']==0
    assert b'No such file' in private(run,f'page-{count+1}.json')
+  movies=[]
+  if a.movie_completion:
+   names=adb('shell','run-as',package,'ls','-1',f'files/{run}').decode().splitlines()
+   for name in names:
+    if not re.fullmatch(r'movie-\d+-info.json',name):continue
+    token=int(name.split('-')[1]);meta=json.loads(private(run,f'effect-{token}.json'))
+    info=json.loads(private(run,name));events=[json.loads(x) for x in private(run,f'movie-{token}-events.jsonl').splitlines()]
+    end=events[-1];assert end['event']=='closed' and end['error'] is None and end['frames']>0 and end['head']>0
+    assert end['reason']==(0 if a.movie_completion=='natural' else 2)
+    assert meta['host_effect']=='movie' and meta['name']=='op.mpg' and not meta['movie_left_skip']
+    upload=next(r for r in json.loads(Path('research/movie-batch14-upload.json').read_text()) if r['serial']==a.serial)
+    assert info['source_sha256']==upload['files'][i]['sha256']
+    if a.movie_completion=='natural':assert end['samples']/info['sample_rate']>=info['duration']-.1 and end['head']>=end['samples']
+    else:assert end['samples']/info['sample_rate']<info['duration']
+    movies.append(dict(token=token,metadata=meta,info=info,events=events))
+   wanted=sum(e.startswith('movie ') for page in pages+([boundary['checkpoint']] if boundary else []) for e in page['effects'])
+   assert len(movies)==wanted
   tap('结束运行' if a.audio_reference else '结束预览（无音频／转场）')
   deadline=time.monotonic()+15
   while time.monotonic()<deadline:
@@ -121,6 +146,12 @@ def main():
   host=[];audio=[]
   if a.audio_reference:
    host=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
+   movie_stops=[e for e in host if e['event']=='stopped_all' and e['kind']=='movie']
+   if a.movie_completion:
+    assert len(movie_stops)==len(movies)
+    for movie in movies:
+     stop=next(e for e in movie_stops if e['token']==movie['token']);started=next(e for e in movie['events'] if e['event']=='started')
+     assert stop['value']==0 and stop['time_ms']<=started['time_ms']
    stop_count=sum(effect=='bgm_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
    assert sum(e['event']=='begin' and e['kind']=='bgm_stop' for e in host)==stop_count, 'missing or duplicated BGM stop request'
    begins=[e for e in host if e['event']=='begin'];acks=[e for e in host if e['event']=='ack']
@@ -254,7 +285,7 @@ def main():
    expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
    assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
    visual=True
-  games.append(dict(index=i,run_id=run,layout=layout,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()

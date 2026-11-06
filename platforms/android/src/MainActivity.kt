@@ -23,6 +23,7 @@ import java.io.File
 class MainActivity : Activity() {
     private external fun story(descriptors:IntArray,operation:Int,sequence:Long,elapsedMillis:Long=0):ByteArray
     private var storyWorker:java.util.concurrent.ExecutorService?=null
+    private var movieHost:MovieHost?=null
     private var storyLoaded=false
     private var storyEffects:StoryEffects?=null
     private var storyRunRoot:File?=null
@@ -32,6 +33,20 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(intent.hasExtra("movie_probe_game")){
+            val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null) ?: error("select DAT tree through SAF first")
+            val game=intent.getIntExtra("movie_probe_game",0);require(game in 0..3)
+            val runId=intent.getStringExtra("run_id") ?: "movie-manual";require(Regex("[a-zA-Z0-9_-]{1,64}").matches(runId))
+            val root=File(filesDir,runId);root.mkdirs();storyRunRoot=root
+            val stage=FrameLayout(this);setContentView(stage)
+            val tree=Uri.parse(saved);val top=children(tree,DocumentsContract.getTreeDocumentId(tree))
+            val items=if(top.any{it.first.endsWith(".dat",true)})top else children(tree,DocumentsContract.getDocumentId(top.single{it.first==game.toString()}.second))
+            val uri=items.single{it.first.equals("op.mpg",true)}.second
+            System.loadLibrary("nekopack_host")
+            movieHost=MovieHost(this,stage,root)
+            movieHost!!.start(uri,1,intent.getBooleanExtra("movie_left_skip",false),{reason->File(root,"movie-complete.json").writeText(JSONObject().put("reason",reason).toString());val text=TextView(this);text.text="视频验证完成";setContentView(text)},{error->File(root,"error.txt").writeText(error.toString())})
+            return
+        }
         if(intent.hasExtra("story_game")) {
             val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null) ?: error("select DAT tree through SAF first")
             startStory(Uri.parse(saved),intent.getIntExtra("story_game",0))
@@ -145,13 +160,14 @@ class MainActivity : Activity() {
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
         var sequence=0L
+        var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
         lateinit var show:(ByteArray)->Unit
         fun fail(error:Throwable) {
             storyClosing=true
             File(root,"error.txt").writeText("${error.javaClass.name}: ${error.message}")
             if(storyLoaded)story(intArrayOf(),3,0)
-            runOnUiThread{storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
+            runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
         storyEffects=StoryEffects(this,image,overlay,root,{kind,token,elapsed,ready->
             worker.execute{try{
@@ -187,6 +203,7 @@ class MainActivity : Activity() {
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
                         File(root,"audio-$token.json").writeText(JSONObject().put("kind",kind).put("name",metadata.getString("name")).put("sha256",digest).toString())
                     } else null
+                    val movieUri=if(kind=="movie")selectedFiles.single{it.first.equals(metadata.getString("name"),true)}.second else null
                     runOnUiThread{
                         if(storyClosing){file?.delete()}else {
                             if(kind=="shake" || kind=="wipe") {
@@ -195,7 +212,13 @@ class MainActivity : Activity() {
                             }
                             // Probe-only lifecycle injection: preserve the original duration, background during the real request.
                             if((kind=="shake" && intent.getBooleanExtra("close_on_shake",false)) || (kind=="flash" && intent.getBooleanExtra("close_on_flash",false)))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},if(kind=="flash")5L else 35L)
-                            storyEffects!!.run(metadata,bitmap,file){
+                            if(kind=="movie"){
+                                storyEffects!!.beginMovie(token)
+                                movieHost=MovieHost(this,stage,root)
+                                movieHost!!.start(movieUri!!,token,metadata.getBoolean("movie_left_skip"),{reason->
+                                    if(!storyClosing)worker.execute{try{show(story(intArrayOf(),7,token,reason.toLong()))}catch(error:Throwable){fail(error)}}
+                                },{error->worker.execute{fail(error)}})
+                            }else storyEffects!!.run(metadata,bitmap,file){
                             if(!storyClosing)worker.execute{try{show(story(intArrayOf(),4,token))}catch(error:Throwable){fail(error)}}
                             }
                         }
@@ -216,6 +239,7 @@ class MainActivity : Activity() {
                     val child=top.single{it.first==game.toString()}
                     children(tree,DocumentsContract.getDocumentId(child.second))
                 }
+                selectedFiles=selected
                 val opened=mutableListOf<ParcelFileDescriptor>()
                 val packet=try {
                     for((_,uri) in selected.filter{it.first.endsWith(".dat",true)})opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
@@ -229,16 +253,16 @@ class MainActivity : Activity() {
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         }
         close.setOnClickListener {
-            next.isEnabled=false;close.isEnabled=false;storyClosing=true;storyEffects?.close()
+            next.isEnabled=false;close.isEnabled=false;storyClosing=true;movieHost?.close();storyEffects?.close()
             worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
         }
     }
     override fun onPause() {
         super.onPause()
-        if(storyWorker!=null && !isFinishing){File(storyRunRoot!!,"lifecycle-pause.json").writeText(org.json.JSONObject().put("time_ms",android.os.SystemClock.elapsedRealtime()).toString());storyClosing=true;storyEffects?.close();finish()}
+        if((storyWorker!=null || movieHost!=null) && !isFinishing){File(storyRunRoot!!,"lifecycle-pause.json").writeText(org.json.JSONObject().put("time_ms",android.os.SystemClock.elapsedRealtime()).toString());storyClosing=true;movieHost?.close();storyEffects?.close();finish()}
     }
     override fun onDestroy() {
-        storyClosing=true;storyEffects?.close()
+        storyClosing=true;movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()
     }

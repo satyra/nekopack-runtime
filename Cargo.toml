@@ -1,7 +1,7 @@
 [workspace]
-members = ["crates/nekopack-runtime", "crates/nekopack-archive", "crates/nekopack-cli", "crates/nekopack-resource", "crates/nekopack-image", "crates/nekopack-script", "platforms/android/native"]
+members = ["crates/nekopack-video", "crates/nekopack-runtime", "crates/nekopack-archive", "crates/nekopack-cli", "crates/nekopack-resource", "crates/nekopack-image", "crates/nekopack-script", "platforms/android/native"]
 resolver = "2"
-default-members = ["crates/nekopack-runtime", "crates/nekopack-archive", "crates/nekopack-cli", "crates/nekopack-resource", "crates/nekopack-image", "crates/nekopack-script"]
+default-members = ["crates/nekopack-video", "crates/nekopack-runtime", "crates/nekopack-archive", "crates/nekopack-cli", "crates/nekopack-resource", "crates/nekopack-image", "crates/nekopack-script"]
 
 [workspace.package]
 version = "0.1.0"

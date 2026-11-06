@@ -84,6 +84,7 @@ version = "0.1.0"
 dependencies = [
  "nekopack-runtime",
  "nekopack-script",
+ "nekopack-video",
 ]
 
 [[package]]
@@ -128,6 +129,10 @@ dependencies = [
 
 [[package]]
 name = "nekopack-script"
+version = "0.1.0"
+
+[[package]]
+name = "nekopack-video"
 version = "0.1.0"
 
 [[package]]
