@@ -10,6 +10,8 @@ Niflheim 的文本提取器用 CP932 读取 `.txt`，将 `@ ; . ? #` 开头行�
 
 ## 未知语义清单
 
+补充静态证据：BLESS 的 system.dat 中存在可按 CP932 读取的 `.nut` 系统脚本，包含 class、function、local 等 Squirrel 风格语法。config.nut 的 ViewConfigPage（111–139 行）选择 config/config1 素材并绑定控件，gui.nut 的 RadioButton（114–130 行）维护选项状态。不能因此认定具体解释器版本或完整语言语义。已用这些调用关系指导一次静态界面重建，详见 [画布增量](Phase1_Canvas_Increment.md)，尚未实现脚本执行。
+
 - 词法：注释、转义、字符串边界、多行语句与混合编码的完整规则未知。
 - 控制流：call/load 的栈和返回行为、条件短路、标签作用域、分支匹配与 loop 终止规则未知。
 - 变量：类型、作用域、默认值、持久化、表达式优先级与数值转换未知。

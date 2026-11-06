@@ -129,12 +129,58 @@ fn run() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     if args.len() < 2 {
         return Err(
-            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE"
+            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE | inspect-sprites FILE ENTRY | compose-mng FILE ENTRY:IMAGE..."
                 .into(),
         );
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
+        ("compose-mng", n) if n >= 3 => {
+            let mut a = open(Path::new(&args[1]))?;
+            let mut canvas = None;
+            for layer in &args[2..] {
+                let (entry, image) = layer
+                    .to_str()
+                    .ok_or("invalid layer")?
+                    .split_once(':')
+                    .ok_or("layer must be ENTRY:IMAGE")?;
+                let data = resource(&mut a, entry.parse()?)?;
+                let mng = Mng::parse(&data, 100_000)?;
+                let sprites = mng.sprites()?;
+                let ordinal: usize = image.parse()?;
+                let sprite = sprites.get(ordinal).ok_or("sprite ordinal out of range")?;
+                let target = match &mut canvas {
+                    Some(target) => target,
+                    None => canvas.insert(RgbaImage::transparent(
+                        mng.header[0],
+                        mng.header[1],
+                        PIXEL_BUDGET,
+                    )?),
+                };
+                if target.width() != mng.header[0] || target.height() != mng.header[1] {
+                    return Err("layer canvas dimensions differ".into());
+                }
+                target.draw(&mng.decode_image(ordinal, PIXEL_BUDGET)?, sprite.position);
+            }
+            let mut out = BufWriter::new(io::stdout().lock());
+            canvas.ok_or("no layers")?.write_png(&mut out)?;
+            out.flush()?;
+        }
+        ("inspect-sprites", 3) => {
+            let mut a = open(Path::new(&args[1]))?;
+            let data = resource(&mut a, args[2].to_str().ok_or("invalid entry")?.parse()?)?;
+            let mng = Mng::parse(&data, 100_000)?;
+            for sprite in mng.sprites()? {
+                print!(
+                    "{}\t{}\t{}\t",
+                    sprite.ordinal, sprite.position[0], sprite.position[1]
+                );
+                for byte in sprite.name {
+                    print!("{byte:02X}");
+                }
+                println!();
+            }
+        }
         ("decode-png", 2) => {
             let data = bounded_file(&args[1])?;
             let image = decode_png(&data, PIXEL_BUDGET)?;

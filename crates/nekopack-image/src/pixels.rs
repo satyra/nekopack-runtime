@@ -37,9 +37,9 @@ impl From<png::EncodingError> for PixelError {
 /// Pixels remain at their embedded image dimensions, not the MNG canvas size.
 #[derive(Debug, PartialEq, Eq)]
 pub struct RgbaImage {
-    width: u32,
-    height: u32,
-    pixels: Vec<u8>,
+    pub(crate) width: u32,
+    pub(crate) height: u32,
+    pub(crate) pixels: Vec<u8>,
 }
 impl RgbaImage {
     pub fn width(&self) -> u32 {

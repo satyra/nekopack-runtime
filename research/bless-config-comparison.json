@@ -1,0 +1,48 @@
+{
+  "scope": "single observed static config page; comparison fails pixel equivalence",
+  "archive_sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+  "screenshot_sha256": "0e97445ce074285db3cdacaffde7f3bb2436de96c35b36ae62294e876d512ad6",
+  "cli_sha256": "8b564b72a61d63de2e8572c4a0fc57d9afe88c31e5cf185033d4a942eec66f1a",
+  "layers": [
+    "24:0",
+    "19:0",
+    "24:2",
+    "24:4",
+    "24:6",
+    "19:34",
+    "19:2",
+    "19:3",
+    "19:31",
+    "19:5",
+    "19:6",
+    "19:28",
+    "19:8",
+    "19:26",
+    "19:25",
+    "19:11",
+    "19:23",
+    "19:13",
+    "19:21",
+    "19:15",
+    "19:19",
+    "19:17"
+  ],
+  "client_crop": [
+    1,
+    26,
+    1281,
+    746
+  ],
+  "comparison_roi": [
+    100,
+    200,
+    1170,
+    650
+  ],
+  "compared_pixels": 481500,
+  "different_pixels": 480695,
+  "max_channel_error": 132,
+  "mean_absolute_channel_error": 25.508830737279336,
+  "composed_rgb_sha256": "0979750e00904deb7c9eca67c8fb686a3f59d26b321ae6dc42f51514d5db3316",
+  "status": "unresolved color/edge differences; not original-rendering parity"
+}

@@ -6,7 +6,7 @@
 
 后续增量新增名称字节哈希、`nekopack-resource` 来源/覆盖分析和 `nekopack-image` MNG 元数据解析。四部曲全部 84 个 MNG、27,712 个块核对通过；第三部 32 对补丁资源均确认内容变化，第一部一组同优先级候选明确报告歧义。使用与验收见 [名称与 MNG 增量](docs/Phase1_Metadata_Increment.md)。
 
-最新增量加入 PNG/RGBA 像素解码与单图导出：四部曲 MNG 内全部 3,072 张图像、约 528 MB RGBA 与 Pillow 一致，84 次 PNG 导出复核通过。图像模块新增 `png` crate 依赖；尚未实现 MNG 画布合成或动画播放。见 [像素解码验收](docs/Phase1_Pixel_Increment.md)。
+像素增量加入 PNG/RGBA 解码与单图导出：四部曲 MNG 内全部 3,072 张图像、约 528 MB RGBA 与 Pillow 一致，84 次 PNG 导出复核通过。图像模块使用 `png` crate。见 [像素解码验收](docs/Phase1_Pixel_Increment.md)。最新增量支持素材坐标与指定图层画布合成，尚未实现动画播放或通过原版显示一致验收，见 [画布增量](docs/Phase1_Canvas_Increment.md)。
 
 ## 使用
 
@@ -25,6 +25,8 @@ cargo build --release --workspace
 新增命令：`hash-name SEED_HEX NAME_BYTES_HEX`、`lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE...`、`inspect-overlays FILE...`、`inspect-mng FILE`、`inspect-mng-archive FILE`。名称由调用方按实际编码提供 hex 字节，包的 source ID 对应参数列表顺序；最高 priority 并列时返回歧义。MNG inspect 命令只检查元数据，未知块不会被当成已经支持的动画命令。
 
 像素命令：`decode-png FILE`、`decode-mng-archive FILE` 输出二进制 RGBA 记录流；`export-mng-image FILE ENTRY IMAGE` 输出单图 PNG。详细协议及支持范围见像素验收文档。批量输出必须检查进程退出码；导出图不含原始 MNG 引擎元数据。
+
+画布命令：`inspect-sprites FILE ENTRY` 输出名称与坐标；`compose-mng FILE ENTRY:IMAGE [ENTRY:IMAGE ...]` 按给定顺序合成 PNG。它不自动播放 MNG，也不自动选择界面状态。
 
 本机 Rust 工具链位于用户目录，必要时在当前 PowerShell 会话设置：
 
@@ -49,6 +51,7 @@ $env:Path="$env:CARGO_HOME/bin;$env:Path"
 - [Phase 1 实施与验收](docs/Phase1_Archive_Increment.md)
 - [名称、覆盖关系与 MNG 验收](docs/Phase1_Metadata_Increment.md)
 - [PNG/RGBA 像素解码验收](docs/Phase1_Pixel_Increment.md)
+- [素材坐标与画布合成验收](docs/Phase1_Canvas_Increment.md)
 - [第三方算法来源声明](THIRD_PARTY_NOTICES.md)
 
 ## 调查复现
@@ -65,4 +68,4 @@ python research/verify_pixels.py --games 'D:\codex\电脑移植安卓\游戏' --
 
 脚本只读取游戏文件，输出文件哈希、计数和格式元数据，不导出剧情、图像、音频或引擎二进制。文件名中的汉化版本标记不等于已确认的原版版本号。完整资源解码、字符编码、脚本语义、启动流程、原版行为对照及真机测试仍待验证。
 
-下一步是 MNG 对象位置、画布合成、控制块行为与原版显示对照，以及脚本入口和补丁加载顺序实验。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。
+已增加素材坐标解析与显式图层合成：四部曲 3,072 个素材坐标验证通过，84 组画布与 Pillow 的最大通道差不超过 1。原版 BLESS 设置页已建立对照，但色彩与边缘差异尚未解决，不能视为显示一致。下一步继续隔离原版渲染差异，验证控制块、脚本入口与补丁加载顺序。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。

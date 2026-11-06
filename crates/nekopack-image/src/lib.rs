@@ -1,7 +1,9 @@
 //! Borrowed MNG metadata and bounded embedded PNG pixel decoding; no animation player.
 //! Full raw chunks remain available, including unknown critical chunks.
 use std::fmt;
+mod canvas;
 mod pixels;
+pub use canvas::Sprite;
 pub use pixels::{decode_png, EmbeddedImage, PixelError, RgbaImage};
 
 #[derive(Debug, PartialEq, Eq)]

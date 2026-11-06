@@ -2,6 +2,28 @@ use super::*;
 include!("pixel_fixtures.rs");
 
 #[test]
+fn sprite_positions_persist_and_names_are_not_deduplicated() {
+    let mut extra = chunk(b"FRAM", b"\x02same");
+    let mut defi = vec![0, 0, 0, 0];
+    defi.extend((-3i32).to_be_bytes());
+    defi.extend(7i32.to_be_bytes());
+    extra.extend(chunk(b"DEFI", &defi));
+    extra.extend(&RGBA[8..]);
+    extra.extend(chunk(b"FRAM", b"\x02same"));
+    extra.extend(&RGBA[8..]);
+    let data = image(&extra);
+    let m = Mng::parse(&data, 100).unwrap();
+    let sprites = m.sprites().unwrap();
+    assert_eq!(sprites.len(), 2);
+    assert_eq!(sprites[1].position, [-3, 7]);
+    assert_eq!(sprites[0].name, sprites[1].name);
+    for control in [chunk(b"DEFI", &[0, 1, 0, 0]), chunk(b"FRAM", b"\x01bad")] {
+        let data = image(&control);
+        assert!(Mng::parse(&data, 100).unwrap().sprites().is_err());
+    }
+}
+
+#[test]
 fn png_reference_pixels_alpha_palette_gray_and_adam7() {
     for (bytes, expected) in [
         (RGBA, RGBA_RGBA),
