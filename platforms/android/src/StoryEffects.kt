@@ -74,7 +74,15 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     player.setOnPreparedListener{
                         if(!closed && players[kind]?.first===it){
                             try{it.isLooping=kind=="bgm";it.start();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong());done()
-                                handler.postDelayed({if(!closed&&players[kind]?.first===player&&player.isPlaying)log("progress",kind,token,player.currentPosition.toLong())},200)}
+                                handler.postDelayed(object:Runnable {
+                                    private var samples=0
+                                    override fun run(){
+                                        if(closed||players[kind]?.first!==player||!player.isPlaying)return
+                                        val position=player.currentPosition.toLong();samples++
+                                        log("progress",kind,token,position)
+                                        if(position==0L&&samples<25)handler.postDelayed(this,200)
+                                    }
+                                },200)}
                             catch(error:Throwable){failure(error)}
                         }
                     }

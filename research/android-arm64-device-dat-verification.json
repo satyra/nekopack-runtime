@@ -1,0 +1,141 @@
+{
+  "scope": "full raw archive SHA-256 on physical ARM64 device compared with original archive audit",
+  "archives": [
+    {
+      "game": 0,
+      "name": "image.dat",
+      "bytes": 2080995642,
+      "sha256": "10499a9d839977153e2570274ed87cb325c0845b766083c175f346b754328e12",
+      "device_path": "/sdcard/Documents/NekoPackValidation/0/image.dat",
+      "verified": true
+    },
+    {
+      "game": 0,
+      "name": "sound.dat",
+      "bytes": 80828813,
+      "sha256": "67745244b294d9962fbed37311e83049e692ce4034764df4e8834a6a95f0c877",
+      "device_path": "/sdcard/Documents/NekoPackValidation/0/sound.dat",
+      "verified": true
+    },
+    {
+      "game": 0,
+      "name": "system.dat",
+      "bytes": 21652532,
+      "sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+      "device_path": "/sdcard/Documents/NekoPackValidation/0/system.dat",
+      "verified": true
+    },
+    {
+      "game": 0,
+      "name": "voice.dat",
+      "bytes": 415614650,
+      "sha256": "f447bc2cb02d77b6fce3e7658d648efa90ab521c853056cb69bf9531f148ab6e",
+      "device_path": "/sdcard/Documents/NekoPackValidation/0/voice.dat",
+      "verified": true
+    },
+    {
+      "game": 1,
+      "name": "image.dat",
+      "bytes": 2133373012,
+      "sha256": "8d5437f2a4ef9a7879b5edb13424bc17171046ce703b8ee295438689abe9e333",
+      "device_path": "/sdcard/Documents/NekoPackValidation/1/image.dat",
+      "verified": true
+    },
+    {
+      "game": 1,
+      "name": "patch101.dat",
+      "bytes": 310851,
+      "sha256": "38dca9b619e91331fa9edb8acd9da7804fd28f18395f3b4f58f3baf21897263c",
+      "device_path": "/sdcard/Documents/NekoPackValidation/1/patch101.dat",
+      "verified": true
+    },
+    {
+      "game": 1,
+      "name": "sound.dat",
+      "bytes": 80970301,
+      "sha256": "9419ee591dbac029aa034221880b018a592065ab9e4a694f73e672357f4aac27",
+      "device_path": "/sdcard/Documents/NekoPackValidation/1/sound.dat",
+      "verified": true
+    },
+    {
+      "game": 1,
+      "name": "system.dat",
+      "bytes": 25749835,
+      "sha256": "d09a29e6287394fff09535a14aef50e985f6e7df9a06265c2f979cd56bbcebc9",
+      "device_path": "/sdcard/Documents/NekoPackValidation/1/system.dat",
+      "verified": true
+    },
+    {
+      "game": 1,
+      "name": "voice.dat",
+      "bytes": 358843956,
+      "sha256": "9c659a75add75fa2ac0f11ceadff27f896a56b45fa94f176b53f90252f0f201a",
+      "device_path": "/sdcard/Documents/NekoPackValidation/1/voice.dat",
+      "verified": true
+    },
+    {
+      "game": 2,
+      "name": "image.dat",
+      "bytes": 2585441784,
+      "sha256": "4cd96091772ed431fa83ba0ba5d4887cf34e06e322320e7761fb2ccac0309869",
+      "device_path": "/sdcard/Documents/NekoPackValidation/2/image.dat",
+      "verified": true
+    },
+    {
+      "game": 2,
+      "name": "sound.dat",
+      "bytes": 95982174,
+      "sha256": "a006f4ae8937d5fee1fa5d32e7fdc7fe5862575a1a8b2feb833a203f306dd05b",
+      "device_path": "/sdcard/Documents/NekoPackValidation/2/sound.dat",
+      "verified": true
+    },
+    {
+      "game": 2,
+      "name": "system.dat",
+      "bytes": 25559659,
+      "sha256": "fdc80cbc4ba61e201ba41137d7e7ebc8aa92084f5a02a8254963dc0e334e8508",
+      "device_path": "/sdcard/Documents/NekoPackValidation/2/system.dat",
+      "verified": true
+    },
+    {
+      "game": 2,
+      "name": "voice.dat",
+      "bytes": 536509878,
+      "sha256": "af136e52adeb0a323608e2b8205a6f267f0978fcf55dc0c58f50c4067410ad27",
+      "device_path": "/sdcard/Documents/NekoPackValidation/2/voice.dat",
+      "verified": true
+    },
+    {
+      "game": 3,
+      "name": "image.dat",
+      "bytes": 1846935559,
+      "sha256": "237ae5d5839c202621a922e264c193f392686eb4f1cea66b852f50bba17038c2",
+      "device_path": "/sdcard/Documents/NekoPackValidation/3/image.dat",
+      "verified": true
+    },
+    {
+      "game": 3,
+      "name": "script.dat",
+      "bytes": 2013524,
+      "sha256": "41fe150a571e1f6d872e9f892574f85a09de2be2ce766891c6563535a5f73afb",
+      "device_path": "/sdcard/Documents/NekoPackValidation/3/script.dat",
+      "verified": true
+    },
+    {
+      "game": 3,
+      "name": "sound.dat",
+      "bytes": 80762951,
+      "sha256": "6e13ccf279bd4d19594d51408ccddfb76b205d219a3229c516fe4017e8274549",
+      "device_path": "/sdcard/Documents/NekoPackValidation/3/sound.dat",
+      "verified": true
+    },
+    {
+      "game": 3,
+      "name": "system.dat",
+      "bytes": 19360623,
+      "sha256": "fbd087a3f1b7500c7d271fc4ba83373c15468a0e859fcadb84a11077710af9ca",
+      "device_path": "/sdcard/Documents/NekoPackValidation/3/system.dat",
+      "verified": true
+    }
+  ]
+}

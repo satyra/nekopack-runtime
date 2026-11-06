@@ -41,5 +41,8 @@ def main():
  build=json.loads(Path('.local/android-probe/build.json').read_text())
  apk=adb('shell','pm','path',package).decode().strip().removeprefix('package:')
  if adb('shell','sha256sum',apk).decode().split()[0]!=build['sha256']['nekopack-arm64-probe.apk']:raise RuntimeError('APK mismatch')
- a.output.write_text(json.dumps(dict(scope='HOME during fade or BGM; onStop ends session, no resume/save claim',build=build,tests=results),indent=2)+'\n',encoding='utf8')
+ device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
+ device['kernel_machine']=adb('shell','uname','-m').decode().strip()
+ execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties')
+ a.output.write_text(json.dumps(dict(scope='HOME during fade or BGM; onStop ends session, no resume/save claim',device=device,execution=execution,build=build,tests=results),indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

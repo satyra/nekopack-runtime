@@ -37,7 +37,7 @@ def main():
   games.append(dict(index=i,archives=archives,trace_sha256=hashlib.sha256(raw).hexdigest(),boundary=[l for l in lines if l.startswith('story-boundary\t')],complete=[l for l in lines if l.startswith('complete\t')],state_sha256=hashlib.sha256('\n'.join(l for l in lines if l.startswith('slot\t')).encode()).hexdigest(),raw_fixture_android_byte_equal=True,invalid_choice_rejected=True))
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
- result=dict(scope='SAF original DAT title-to-first-story invocation; headless, no rendering or audio',execution='translated ARM64' if device['kernel_machine']=='x86_64' else 'inspect device properties',device=device,host_report=report,games=games,build=build)
+ result=dict(scope='SAF original DAT title-to-first-story invocation; headless, no rendering or audio',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,host_report=report,games=games,build=build)
  a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
  print('PASS: four raw DAT / fixture / Android traces byte-identical; device archives SHA-256 verified')
 if __name__=='__main__':main()

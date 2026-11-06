@@ -21,6 +21,15 @@ def main():
    if b'No such file' not in error:raise RuntimeError(error.decode())
    time.sleep(.3)
   raise RuntimeError('page timeout')
+ def wait_audio(run):
+  deadline=time.monotonic()+10
+  while time.monotonic()<deadline:
+   events=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
+   tokens={e['token'] for e in events if e['event']=='begin' and e['kind'] in ['bgm','se','voice']}
+   advanced={e['token'] for e in events if e['event'] in ['progress','completed'] and e['value']>0}
+   if tokens<=advanced:return
+   time.sleep(.2)
+  raise RuntimeError('audio did not advance within the observation window')
  def tap(text):
   deadline=time.monotonic()+15
   while time.monotonic()<deadline:
@@ -49,6 +58,7 @@ def main():
    source=next(f for f in (a.fixtures/str(i)/'script').iterdir() if f.name.lower()==(actual['source']+'.txt').lower())
    lines=source.read_bytes().split(b'\n');assert lines[actual['line']-1].strip().decode('utf8')==actual['text']
    pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=hashlib.sha256(png).hexdigest(),metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
+   if a.audio_reference:wait_audio(run)
    if n==1:tap('继续')
   tap('结束运行' if a.audio_reference else '结束预览（无音频／转场）')
   deadline=time.monotonic()+15
@@ -82,6 +92,6 @@ def main():
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
- result=dict(scope='two text pages per game; host-driven audio and timed fade' if a.audio_reference else 'two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else 'inspect device properties',device=device,build=build,games=games)
+ result=dict(scope='two text pages per game; host-driven audio and timed fade' if a.audio_reference else 'two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,games=games)
  a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

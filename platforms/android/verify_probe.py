@@ -93,7 +93,7 @@ def main():
     package=shell('dumpsys','package',PACKAGE)
     device['package_abi']=[s.strip() for s in package.splitlines() if 'primaryCpuAbi=' in s or 'secondaryCpuAbi=' in s]
     result=dict(scope='ARM64-only Kotlin/JNI validation; headless title paths, no game presentation',
-                execution='translated ARM64' if device['kernel_machine']=='x86_64' else 'device; inspect properties',
+                execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),
                 device=device,build=build,fixtures_verified_byte_for_byte=True,host_report=report,games=games)
     args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
     print('Android validation and four desktop comparisons passed')
