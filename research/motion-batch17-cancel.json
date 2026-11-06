@@ -1,0 +1,1256 @@
+{
+  "scope": "BLESS real title-to-page56 through explicit movie skip; probe requests background 80ms after scheduling page motion; onPause ends session, not resumable save",
+  "execution": "native ARM64",
+  "device": {
+    "ro.product.cpu.abilist": "arm64-v8a,armeabi-v7a,armeabi",
+    "ro.dalvik.vm.native.bridge": "0",
+    "ro.build.version.sdk": "35",
+    "kernel_machine": "aarch64"
+  },
+  "run_id": "motion_cancel_698e9f5f948b4966a729f360d3b36740",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "8cc1105216e8a2615ece3921564261213248df9d000bf03bdbefd0248a61f4ab",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "eead99233b927f27d04beb4249e91b02895d3d809abe492b32b4ecbc604e9040"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1921456 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06f178 0x06f178 R   0x4000\n  LOAD           0x06f178 0x0000000000073178 0x0000000000073178 0x0e9528 0x0e9528 R E 0x4000\n  LOAD           0x1586a0 0x00000000001606a0 0x00000000001606a0 0x007ba8 0x008960 RW  0x4000\n  LOAD           0x160248 0x000000000016c248 0x000000000016c248 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x15fb40 0x0000000000167b40 0x0000000000167b40 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x1586a0 0x00000000001606a0 0x00000000001606a0 0x007ba8 0x008960 R   0x1\n  GNU_EH_FRAME   0x04e490 0x000000000004e490 0x000000000004e490 0x004704 0x004704 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x15fb40 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44016 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1820\n  0x0000000000000017 (JMPREL)       0xbd98\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x167fa0\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x167b38\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x167b28\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "pages": [
+    {
+      "sequence": 1,
+      "source": "P01",
+      "line": 15,
+      "metadata_sha256": "c9b4ae9500147d338e910d1b538f8dd7abdb3f325392284f300921be09f7fe81"
+    },
+    {
+      "sequence": 2,
+      "source": "P01",
+      "line": 18,
+      "metadata_sha256": "07f33d54187ba3a0e2e1eb3135ef182fecd8ab2ecdd7a9aa0e37397d2e9a9525"
+    },
+    {
+      "sequence": 3,
+      "source": "P01",
+      "line": 21,
+      "metadata_sha256": "0d03cca85e179b85051566ef743f9924904679bc358f0cf3a87a3271c51f54f1"
+    },
+    {
+      "sequence": 4,
+      "source": "P01",
+      "line": 26,
+      "metadata_sha256": "b780466c12b4d26fa9992c86f1e4b236500dcd0262ae45ce573b1dcb421a960b"
+    },
+    {
+      "sequence": 5,
+      "source": "P01",
+      "line": 32,
+      "metadata_sha256": "4517c34dfda6f18d3be79be01bd4ef81100bb30445c5413cd3c1bb794f9ad5a7"
+    },
+    {
+      "sequence": 6,
+      "source": "P01",
+      "line": 36,
+      "metadata_sha256": "d3d4dc21c7ccd40d5bcbe2e009fff11e689062c9bf92cde0467b5cbd1001196a"
+    },
+    {
+      "sequence": 7,
+      "source": "P01",
+      "line": 39,
+      "metadata_sha256": "81feef98fbf686cebab3407dd73fe9eb79cd5c349d941bd17b8e80d3f049b463"
+    },
+    {
+      "sequence": 8,
+      "source": "P01",
+      "line": 43,
+      "metadata_sha256": "a52513d282630c6a22c4821bb26483b004522221e3fd2190895c0cd267eb14ef"
+    },
+    {
+      "sequence": 9,
+      "source": "P01",
+      "line": 46,
+      "metadata_sha256": "dee151a2c4b929456cb564badfb9609673e019397f1b3b7e0e620332c854569e"
+    },
+    {
+      "sequence": 10,
+      "source": "P01",
+      "line": 49,
+      "metadata_sha256": "9097426b2365db54b8e55dca9d4f57940aefd6ac0c1c08031b820708c50409ca"
+    },
+    {
+      "sequence": 11,
+      "source": "P01",
+      "line": 52,
+      "metadata_sha256": "3da6208351d8096a3b1e92c7018fa0f8fe1968477de4992948ad725c77068a34"
+    },
+    {
+      "sequence": 12,
+      "source": "P01",
+      "line": 57,
+      "metadata_sha256": "6a6025ee85b5dbccacd5ee158661a5110e8000c50f90eab19e595f00f6342a70"
+    },
+    {
+      "sequence": 13,
+      "source": "012401",
+      "line": 11,
+      "metadata_sha256": "122f9cca0648a1955ae29602a7a6697d57c98c72889f7e11cd75cc22c2c0c390"
+    },
+    {
+      "sequence": 14,
+      "source": "012401",
+      "line": 14,
+      "metadata_sha256": "7e5d67dee1152b9f8aab7c2e8ee96dd6ec95895aaf7828659519fb4dfd5a4621"
+    },
+    {
+      "sequence": 15,
+      "source": "012401",
+      "line": 17,
+      "metadata_sha256": "cfa8e5d746ccb15470a3edfa5b74740ab277cd2d5f4998d40cd8edfc6055e000"
+    },
+    {
+      "sequence": 16,
+      "source": "012401",
+      "line": 20,
+      "metadata_sha256": "104ddba20ad57d54401fa1b69736de131227b0f5661aef493d5f33515e2270f4"
+    },
+    {
+      "sequence": 17,
+      "source": "012401",
+      "line": 23,
+      "metadata_sha256": "2320c3f9e9da9cfde4be0547646ed6ba27fb81c6c4f79cd10818b503414f3d5e"
+    },
+    {
+      "sequence": 18,
+      "source": "012401",
+      "line": 26,
+      "metadata_sha256": "f80d96fde6309f41b597686d0316535557143f0982e4a7ce51ba9d0ae8efa87c"
+    },
+    {
+      "sequence": 19,
+      "source": "012401",
+      "line": 29,
+      "metadata_sha256": "e6e55cad99bf36985c3d1ba5c0b9be5a8a3f78efc25820eafa20298e00b3e764"
+    },
+    {
+      "sequence": 20,
+      "source": "012401",
+      "line": 32,
+      "metadata_sha256": "7c627e411d5aa40c8f64fcd08f658f2965629b841b3531ed48b8a7dad32c5b5f"
+    },
+    {
+      "sequence": 21,
+      "source": "012401",
+      "line": 35,
+      "metadata_sha256": "b8e3bd546b88b2536d2b7357cfef3ce18d9fcdf1cf89fff42d65ad8ed85926d1"
+    },
+    {
+      "sequence": 22,
+      "source": "012401",
+      "line": 38,
+      "metadata_sha256": "43b746a01aa9761861d1837cf77a9ca13a3df0e7f6594283554bb92ac4d0812e"
+    },
+    {
+      "sequence": 23,
+      "source": "012401",
+      "line": 41,
+      "metadata_sha256": "8679142cd160a692dcf348066800da0f9198a8c580c8b825c5cf52009fc60c26"
+    },
+    {
+      "sequence": 24,
+      "source": "012401",
+      "line": 44,
+      "metadata_sha256": "b176b876cbbc3184269c137c25e4d083d6baf58c23d1aae1fa8c188cf8113dfc"
+    },
+    {
+      "sequence": 25,
+      "source": "012401",
+      "line": 48,
+      "metadata_sha256": "c34e0af22d9909fc8f8143f1e934930795e5b9d54b6ab95aa2aab39cebac240c"
+    },
+    {
+      "sequence": 26,
+      "source": "012401",
+      "line": 51,
+      "metadata_sha256": "6a1b6a709c51c45fa0a0f05fd08a1caa6b5fedaef75092050f03af5af70de30f"
+    },
+    {
+      "sequence": 27,
+      "source": "012401",
+      "line": 54,
+      "metadata_sha256": "eac578977c2b2ca2d826d6a4c5a8c568a4bd4912171d35b1b371ca697e56f3b5"
+    },
+    {
+      "sequence": 28,
+      "source": "012401",
+      "line": 61,
+      "metadata_sha256": "5190f7dfec112e0924e2624713869b75f8e1c946136b3a90db1bf1a05338eac7"
+    },
+    {
+      "sequence": 29,
+      "source": "012401",
+      "line": 67,
+      "metadata_sha256": "8a797ddf062a4df4a7a1902b2c09f05f2e0bd3061bbdfda2f1bb49f274416a7e"
+    },
+    {
+      "sequence": 30,
+      "source": "012401",
+      "line": 74,
+      "metadata_sha256": "fb73989c35168689359d33e970a7085afdc3896705a7fc1156744c0b85ee3ae4"
+    },
+    {
+      "sequence": 31,
+      "source": "012401",
+      "line": 80,
+      "metadata_sha256": "6ad054514fc751e6b42646d5fc405762adce39ae3baef94ca0b999308df220f3"
+    },
+    {
+      "sequence": 32,
+      "source": "012401",
+      "line": 87,
+      "metadata_sha256": "b15be12ac1181210c20fb897ddb839c0eeeacfad93b882e4ca4fba88fb8af8d4"
+    },
+    {
+      "sequence": 33,
+      "source": "012401",
+      "line": 93,
+      "metadata_sha256": "b66b9595b91d8619773c7e5b32d265f432cba7d2a804fe287578997b3d414163"
+    },
+    {
+      "sequence": 34,
+      "source": "012401",
+      "line": 97,
+      "metadata_sha256": "b93c67ad1d302831093ec4cc76599d1d6cf7a6209cf21c25bcb95c56bb6a6e33"
+    },
+    {
+      "sequence": 35,
+      "source": "012401",
+      "line": 100,
+      "metadata_sha256": "6c69788803a130e9c6d6d50bae452f5368c57d6db64a6e6162787499282b0308"
+    },
+    {
+      "sequence": 36,
+      "source": "012401",
+      "line": 107,
+      "metadata_sha256": "728b4ab625408949f5b8d5af0dba155679ba4aedacaf139b047e47c799b5eb68"
+    },
+    {
+      "sequence": 37,
+      "source": "012401",
+      "line": 111,
+      "metadata_sha256": "b909b439b6d1ed7477f7ded1349ec3fbc57084cfe84915cf1832922c89ff0321"
+    },
+    {
+      "sequence": 38,
+      "source": "012401",
+      "line": 115,
+      "metadata_sha256": "ed491feb755409c4d8c5cab2d3d924073124e87c83b420803e7fb99c3edde9a1"
+    },
+    {
+      "sequence": 39,
+      "source": "012401",
+      "line": 119,
+      "metadata_sha256": "638e130a3ba7c8f19b9af2f366bc28390a946f471b1655c33f1af9b016416685"
+    },
+    {
+      "sequence": 40,
+      "source": "012401",
+      "line": 123,
+      "metadata_sha256": "99b8778167d1d390d19253c61874d9a842ad6bc3afd6d1c6b113db5f537a6e0a"
+    },
+    {
+      "sequence": 41,
+      "source": "012401",
+      "line": 126,
+      "metadata_sha256": "2e62f087b2d2c503e44da7d43661c1cda11d8c96e4a82f2c8364bddc5069b38d"
+    },
+    {
+      "sequence": 42,
+      "source": "012401",
+      "line": 129,
+      "metadata_sha256": "4ce9d4be3da89d2bcc1f25a6812645229c7f97e1235d65004d00682ddc4ea9c9"
+    },
+    {
+      "sequence": 43,
+      "source": "012402",
+      "line": 10,
+      "metadata_sha256": "2fafcbc22309248c4771fe12385b5a9834feff8814b7fd755fd713a1306a30df"
+    },
+    {
+      "sequence": 44,
+      "source": "012402",
+      "line": 15,
+      "metadata_sha256": "4b11009aeb7d66f5e765b1f7dd7a0216fd2a17675e2555a3a20ddf9e2fa7db9e"
+    },
+    {
+      "sequence": 45,
+      "source": "012402",
+      "line": 23,
+      "metadata_sha256": "c1fbb2e08f7a139b4eb5e9dbc3b2a3ca82605f8cec02b2ee88a3ce8ecbd86f37"
+    },
+    {
+      "sequence": 46,
+      "source": "012402",
+      "line": 31,
+      "metadata_sha256": "b7e1eaa0b4cb33cb039fd0b540633e4d2868a112013057f3828375be107bcaf8"
+    },
+    {
+      "sequence": 47,
+      "source": "012402",
+      "line": 35,
+      "metadata_sha256": "5e54ef182c02d1179088e4bff7dd88bd4383d0071b6666c5e646c8452806c0e5"
+    },
+    {
+      "sequence": 48,
+      "source": "012402",
+      "line": 39,
+      "metadata_sha256": "c0969764b27e76bc68172a6a96dd383c08d935218743fcc3ae96a5de005fbc5b"
+    },
+    {
+      "sequence": 49,
+      "source": "012402",
+      "line": 46,
+      "metadata_sha256": "85f56b7bafedb04d929f74912dd7bda097396c79a40e8783b726a310f053d333"
+    },
+    {
+      "sequence": 50,
+      "source": "012402",
+      "line": 49,
+      "metadata_sha256": "104bb24274ff3dcdff12b78bf4eb1ee35273bf4c16b1b43418bfea7f56ec3217"
+    },
+    {
+      "sequence": 51,
+      "source": "012402",
+      "line": 54,
+      "metadata_sha256": "58a9798962b090873c5acd4dd8daed2f44e7844d0518249edadf5bb3d5bc84df"
+    },
+    {
+      "sequence": 52,
+      "source": "012402",
+      "line": 57,
+      "metadata_sha256": "053aa3a52aac72ba0a27d846f3d838ab604b4f2d8c46ed8d2b84b177189b6c96"
+    },
+    {
+      "sequence": 53,
+      "source": "012402",
+      "line": 62,
+      "metadata_sha256": "bf7707793ca39443ff111cb7c2bbebb99de207c8197eec9b55c1fbdbd84212d2"
+    },
+    {
+      "sequence": 54,
+      "source": "012402",
+      "line": 65,
+      "metadata_sha256": "e89a4f652c192bbfc9a9160c4bc0b23dad5965185a5ff9293e3525f48225f57a"
+    },
+    {
+      "sequence": 55,
+      "source": "012402",
+      "line": 70,
+      "metadata_sha256": "8de03ad3da1a862ff8a6838e5f5d617a651c572b71285961ad1ac8c932fac93c"
+    },
+    {
+      "sequence": 56,
+      "source": "012402",
+      "line": 76,
+      "metadata_sha256": "2241111773206fc144758918d3a8e1a78549f63006c82319d2e790b87f94c983"
+    }
+  ],
+  "motion_events": [
+    {
+      "event": "begin",
+      "sequence": 56,
+      "elapsed_ms": 0,
+      "time_ms": 617966998
+    },
+    {
+      "event": "frame",
+      "sequence": 56,
+      "elapsed_ms": 0,
+      "time_ms": 617966999
+    },
+    {
+      "event": "frame",
+      "sequence": 56,
+      "elapsed_ms": 17,
+      "time_ms": 617967050
+    },
+    {
+      "event": "cancelled",
+      "sequence": 56,
+      "elapsed_ms": 0,
+      "time_ms": 617967056
+    }
+  ],
+  "pause": {
+    "time_ms": 617967055
+  },
+  "host_events": [
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 617794768,
+      "value": 3000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 617795549,
+      "value": 254
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 617797801,
+      "value": 3033
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 617797815,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 617797890,
+      "value": 3612
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 617797890,
+      "value": 75
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 617798093,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 617798297,
+      "value": 193
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 617805975,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 617805992,
+      "value": 5820
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 617805992,
+      "value": 17
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 617806194,
+      "value": 37
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 617808723,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 617808751,
+      "value": 6212
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 617808751,
+      "value": 29
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 617808954,
+      "value": 24
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 617827413,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 617827436,
+      "value": 1804
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 617827436,
+      "value": 23
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 617827637,
+      "value": 24
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 617829422,
+      "value": 1804
+    },
+    {
+      "event": "begin",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 617830119,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 617830148,
+      "value": 7140
+    },
+    {
+      "event": "ack",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 617830148,
+      "value": 29
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 617830191,
+      "value": 3000
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 617830349,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 617830552,
+      "value": 205
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 617830949,
+      "value": 251
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 617833204,
+      "value": 3013
+    },
+    {
+      "event": "stopped_all",
+      "kind": "movie",
+      "token": 8,
+      "time_ms": 617833255,
+      "value": 0
+    },
+    {
+      "event": "begin",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 617841476,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 617841510,
+      "value": 230497
+    },
+    {
+      "event": "ack",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 617841511,
+      "value": 36
+    },
+    {
+      "event": "progress",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 617841712,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 617841914,
+      "value": 218
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 617841980,
+      "value": 3000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 617842739,
+      "value": 251
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 617844996,
+      "value": 3016
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 617886253,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 617886279,
+      "value": 1801
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 617886280,
+      "value": 27
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 617886483,
+      "value": 29
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 617888256,
+      "value": 1801
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 617889151,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 617889176,
+      "value": 2830
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 617889176,
+      "value": 25
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 617889379,
+      "value": 25
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 617892025,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 617892047,
+      "value": 2342
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 617892047,
+      "value": 22
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 617892254,
+      "value": 41
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 617894557,
+      "value": 2342
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 617894908,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 617894933,
+      "value": 3746
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 617894933,
+      "value": 25
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 617895136,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 617895343,
+      "value": 228
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 617897809,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 617897835,
+      "value": 2127
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 617897835,
+      "value": 26
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 617898036,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 617898237,
+      "value": 221
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 617900145,
+      "value": 2127
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 617900708,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 617900733,
+      "value": 5716
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 617900734,
+      "value": 26
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 617900934,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 617901139,
+      "value": 222
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 617909159,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 617909184,
+      "value": 617
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 617909184,
+      "value": 25
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 617909386,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 617909593,
+      "value": 227
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 617909984,
+      "value": 617
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 617914728,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 617914752,
+      "value": 887
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 617914752,
+      "value": 24
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 617914953,
+      "value": 41
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 617915802,
+      "value": 887
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 19,
+      "time_ms": 617928492,
+      "value": 2000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 19,
+      "time_ms": 617929007,
+      "value": 254
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 19,
+      "time_ms": 617930505,
+      "value": 2013
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 617930537,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 617930599,
+      "value": 2055
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 617930600,
+      "value": 63
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 617930803,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 617931005,
+      "value": 221
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 617932842,
+      "value": 2055
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 617933542,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 617933570,
+      "value": 5350
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 617933570,
+      "value": 28
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 617933774,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 617933981,
+      "value": 210
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 617936251,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 617936278,
+      "value": 4543
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 617936279,
+      "value": 28
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 617936480,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 617936681,
+      "value": 223
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 617939146,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 617939175,
+      "value": 3861
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 617939175,
+      "value": 29
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 617939377,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 617939578,
+      "value": 218
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 617942052,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 617942072,
+      "value": 5760
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 617942072,
+      "value": 21
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 617942273,
+      "value": 55
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 617958058,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 617958085,
+      "value": 3268
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 617958085,
+      "value": 27
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 617958286,
+      "value": 24
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 617963575,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 617963601,
+      "value": 4598
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 617963601,
+      "value": 26
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 617963802,
+      "value": 36
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 617966496,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 617966519,
+      "value": 2483
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 617966520,
+      "value": 24
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 617966721,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 617966924,
+      "value": 214
+    },
+    {
+      "event": "released",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 617967141,
+      "value": 0
+    }
+  ],
+  "movie_end": {
+    "reason": 2,
+    "frames": 185,
+    "samples": 339840,
+    "head": 336806,
+    "peak_bytes": 8523472,
+    "elapsed_ms": 7935,
+    "error": null,
+    "event": "closed",
+    "time_ms": 617841222
+  },
+  "vm_live_bytes": 0,
+  "no_late_motion_after_close": true
+}

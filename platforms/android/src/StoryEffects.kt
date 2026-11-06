@@ -23,6 +23,40 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private var animator:ValueAnimator?=null
     private var bgmAnimator:ValueAnimator?=null
     private var closed=false
+    @Volatile private var motionSequence=0L
+    private var motionFinished=false
+    fun isMotionActive(sequence:Long)=!closed && motionSequence==sequence
+    private fun motionLog(event:String,sequence:Long,elapsed:Long) {
+        File(root,"motion-events.jsonl").appendText(JSONObject().put("event",event).put("sequence",sequence).put("elapsed_ms",elapsed).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
+    }
+    fun stopMotion(){
+        val old=motionSequence;motionSequence=0
+        if(old!=0L&&!motionFinished)motionLog("cancelled",old,0)
+    }
+    // Runs alongside the visible dialogue and voice; no host-effect ACK or script advancement.
+    fun runMotion(sequence:Long,duration:Long){
+        stopMotion();motionSequence=sequence;motionFinished=false
+        wipeFrame("motion",sequence,0){initial->
+            if(isMotionActive(sequence)){
+                image.setImageBitmap(initial)
+                val started=SystemClock.elapsedRealtime()
+                motionLog("begin",sequence,0);motionLog("frame",sequence,0)
+                fun frame(){
+                    if(!isMotionActive(sequence))return
+                    val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
+                    wipeFrame("motion",sequence,elapsed){value->
+                        if(isMotionActive(sequence)){
+                            image.setImageBitmap(value);motionLog("frame",sequence,elapsed)
+                            if(elapsed==duration){motionFinished=true;motionLog("finished",sequence,elapsed)}
+                            else handler.postDelayed({frame()},16)
+                        }
+                    }
+                }
+                handler.postDelayed({frame()},16)
+            }
+        }
+    }
+
     private val audio=context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var focused=false
     private val focus=AudioManager.OnAudioFocusChangeListener { change->if(change<0 && !closed)failure(IllegalStateException("音频焦点已丢失")) }
@@ -38,7 +72,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
     fun close(){
         if(closed)return
-        closed=true;handler.removeCallbacksAndMessages(null);animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
+        stopMotion();closed=true;handler.removeCallbacksAndMessages(null);animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
         val owned=players.values.toList();players.clear()
         for((player,_) in owned)player.release()
         if(focused)audio.abandonAudioFocus(focus)

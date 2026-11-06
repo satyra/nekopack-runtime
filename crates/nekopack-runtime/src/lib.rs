@@ -2,6 +2,7 @@
 pub mod dat;
 mod filter;
 pub mod flash;
+mod motion;
 mod scene;
 pub mod shake;
 pub mod story;

@@ -1,0 +1,2268 @@
+{
+  "scope": "bounded continuous pages; unsupported boundaries or explicit reference page limit",
+  "execution": "native ARM64",
+  "device": {
+    "ro.product.cpu.abilist": "arm64-v8a,armeabi-v7a,armeabi",
+    "ro.dalvik.vm.native.bridge": "0",
+    "ro.build.version.sdk": "35",
+    "kernel_machine": "aarch64"
+  },
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "8cc1105216e8a2615ece3921564261213248df9d000bf03bdbefd0248a61f4ab",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "eead99233b927f27d04beb4249e91b02895d3d809abe492b32b4ecbc604e9040"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1921456 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06f178 0x06f178 R   0x4000\n  LOAD           0x06f178 0x0000000000073178 0x0000000000073178 0x0e9528 0x0e9528 R E 0x4000\n  LOAD           0x1586a0 0x00000000001606a0 0x00000000001606a0 0x007ba8 0x008960 RW  0x4000\n  LOAD           0x160248 0x000000000016c248 0x000000000016c248 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x15fb40 0x0000000000167b40 0x0000000000167b40 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x1586a0 0x00000000001606a0 0x00000000001606a0 0x007ba8 0x008960 R   0x1\n  GNU_EH_FRAME   0x04e490 0x000000000004e490 0x000000000004e490 0x004704 0x004704 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x15fb40 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44016 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1820\n  0x0000000000000017 (JMPREL)       0xbd98\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x167fa0\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x167b38\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x167b28\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "games": [
+    {
+      "index": 0,
+      "run_id": "story_1563de4eb2e541f58b115ba17e3d9b63",
+      "movies": [
+        {
+          "token": 8,
+          "metadata": {
+            "host_effect": "movie",
+            "token": 8,
+            "name": "op.mpg",
+            "duration_ms": 0,
+            "movie_left_skip": false
+          },
+          "info": {
+            "width": 1280,
+            "height": 720,
+            "fps": 24,
+            "sample_rate": 44100,
+            "duration": 103.91666666666666,
+            "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+            "source_bytes": 106680900,
+            "left_skip": false
+          },
+          "events": [
+            {
+              "width": 1280,
+              "height": 720,
+              "fps": 24,
+              "sample_rate": 44100,
+              "duration": 103.91666666666666,
+              "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+              "source_bytes": 106680900,
+              "left_skip": false,
+              "event": "started",
+              "time_ms": 617506815
+            },
+            {
+              "frames": 120,
+              "samples": 220032,
+              "head": 216384,
+              "event": "progress",
+              "time_ms": 617511720
+            },
+            {
+              "frames": 120,
+              "samples": 220032,
+              "head": 216384,
+              "event": "progress",
+              "time_ms": 617511721
+            },
+            {
+              "frames": 120,
+              "samples": 221184,
+              "head": 218265,
+              "event": "progress",
+              "time_ms": 617511753
+            },
+            {
+              "frames": 240,
+              "samples": 440064,
+              "head": 436531,
+              "event": "progress",
+              "time_ms": 617516708
+            },
+            {
+              "frames": 240,
+              "samples": 441216,
+              "head": 438412,
+              "event": "progress",
+              "time_ms": 617516742
+            },
+            {
+              "frames": 360,
+              "samples": 660096,
+              "head": 656678,
+              "event": "progress",
+              "time_ms": 617521722
+            },
+            {
+              "frames": 360,
+              "samples": 661248,
+              "head": 658560,
+              "event": "progress",
+              "time_ms": 617521733
+            },
+            {
+              "frames": 480,
+              "samples": 881280,
+              "head": 878707,
+              "event": "progress",
+              "time_ms": 617526731
+            },
+            {
+              "frames": 480,
+              "samples": 881280,
+              "head": 878707,
+              "event": "progress",
+              "time_ms": 617526732
+            },
+            {
+              "frames": 600,
+              "samples": 1101312,
+              "head": 1096972,
+              "event": "progress",
+              "time_ms": 617531707
+            },
+            {
+              "frames": 600,
+              "samples": 1102464,
+              "head": 1098854,
+              "event": "progress",
+              "time_ms": 617531718
+            },
+            {
+              "frames": 600,
+              "samples": 1103616,
+              "head": 1100736,
+              "event": "progress",
+              "time_ms": 617531761
+            },
+            {
+              "frames": 720,
+              "samples": 1322496,
+              "head": 1319001,
+              "event": "progress",
+              "time_ms": 617536729
+            },
+            {
+              "frames": 720,
+              "samples": 1322496,
+              "head": 1319001,
+              "event": "progress",
+              "time_ms": 617536730
+            },
+            {
+              "frames": 720,
+              "samples": 1323648,
+              "head": 1320883,
+              "event": "progress",
+              "time_ms": 617536752
+            },
+            {
+              "frames": 840,
+              "samples": 1542528,
+              "head": 1539148,
+              "event": "progress",
+              "time_ms": 617541706
+            },
+            {
+              "frames": 840,
+              "samples": 1543680,
+              "head": 1541030,
+              "event": "progress",
+              "time_ms": 617541745
+            },
+            {
+              "frames": 840,
+              "samples": 1543680,
+              "head": 1541030,
+              "event": "progress",
+              "time_ms": 617541746
+            },
+            {
+              "frames": 960,
+              "samples": 1762560,
+              "head": 1759296,
+              "event": "progress",
+              "time_ms": 617546733
+            },
+            {
+              "frames": 960,
+              "samples": 1763712,
+              "head": 1761177,
+              "event": "progress",
+              "time_ms": 617546737
+            },
+            {
+              "frames": 960,
+              "samples": 1764864,
+              "head": 1761177,
+              "event": "progress",
+              "time_ms": 617546738
+            },
+            {
+              "frames": 1080,
+              "samples": 1983744,
+              "head": 1981324,
+              "event": "progress",
+              "time_ms": 617551735
+            },
+            {
+              "frames": 1080,
+              "samples": 1984896,
+              "head": 1981324,
+              "event": "progress",
+              "time_ms": 617551737
+            },
+            {
+              "frames": 1080,
+              "samples": 1984896,
+              "head": 1981324,
+              "event": "progress",
+              "time_ms": 617551737
+            },
+            {
+              "frames": 1200,
+              "samples": 2203776,
+              "head": 2199590,
+              "event": "progress",
+              "time_ms": 617556713
+            },
+            {
+              "frames": 1200,
+              "samples": 2204928,
+              "head": 2201472,
+              "event": "progress",
+              "time_ms": 617556720
+            },
+            {
+              "frames": 1200,
+              "samples": 2206080,
+              "head": 2203353,
+              "event": "progress",
+              "time_ms": 617556764
+            },
+            {
+              "frames": 1320,
+              "samples": 2424960,
+              "head": 2421619,
+              "event": "progress",
+              "time_ms": 617561723
+            },
+            {
+              "frames": 1320,
+              "samples": 2424960,
+              "head": 2421619,
+              "event": "progress",
+              "time_ms": 617561724
+            },
+            {
+              "frames": 1320,
+              "samples": 2426112,
+              "head": 2423500,
+              "event": "progress",
+              "time_ms": 617561755
+            },
+            {
+              "frames": 1440,
+              "samples": 2644992,
+              "head": 2641766,
+              "event": "progress",
+              "time_ms": 617566722
+            },
+            {
+              "frames": 1440,
+              "samples": 2646144,
+              "head": 2641766,
+              "event": "progress",
+              "time_ms": 617566723
+            },
+            {
+              "frames": 1440,
+              "samples": 2646144,
+              "head": 2641766,
+              "event": "progress",
+              "time_ms": 617566724
+            },
+            {
+              "frames": 1560,
+              "samples": 2866176,
+              "head": 2861913,
+              "event": "progress",
+              "time_ms": 617571727
+            },
+            {
+              "frames": 1560,
+              "samples": 2866176,
+              "head": 2861913,
+              "event": "progress",
+              "time_ms": 617571728
+            },
+            {
+              "frames": 1560,
+              "samples": 2867328,
+              "head": 2863795,
+              "event": "progress",
+              "time_ms": 617571739
+            },
+            {
+              "frames": 1680,
+              "samples": 3086208,
+              "head": 3082060,
+              "event": "progress",
+              "time_ms": 617576730
+            },
+            {
+              "frames": 1680,
+              "samples": 3087360,
+              "head": 3083942,
+              "event": "progress",
+              "time_ms": 617576731
+            },
+            {
+              "frames": 1680,
+              "samples": 3087360,
+              "head": 3083942,
+              "event": "progress",
+              "time_ms": 617576732
+            },
+            {
+              "frames": 1800,
+              "samples": 3306240,
+              "head": 3302208,
+              "event": "progress",
+              "time_ms": 617581716
+            },
+            {
+              "frames": 1800,
+              "samples": 3307392,
+              "head": 3304089,
+              "event": "progress",
+              "time_ms": 617581723
+            },
+            {
+              "frames": 1800,
+              "samples": 3308544,
+              "head": 3305971,
+              "event": "progress",
+              "time_ms": 617581766
+            },
+            {
+              "frames": 1920,
+              "samples": 3527424,
+              "head": 3524236,
+              "event": "progress",
+              "time_ms": 617586726
+            },
+            {
+              "frames": 1920,
+              "samples": 3527424,
+              "head": 3524236,
+              "event": "progress",
+              "time_ms": 617586727
+            },
+            {
+              "frames": 1920,
+              "samples": 3528576,
+              "head": 3524236,
+              "event": "progress",
+              "time_ms": 617586728
+            },
+            {
+              "frames": 2040,
+              "samples": 3747456,
+              "head": 3744384,
+              "event": "progress",
+              "time_ms": 617591730
+            },
+            {
+              "frames": 2040,
+              "samples": 3748608,
+              "head": 3744384,
+              "event": "progress",
+              "time_ms": 617591732
+            },
+            {
+              "frames": 2040,
+              "samples": 3748608,
+              "head": 3744384,
+              "event": "progress",
+              "time_ms": 617591732
+            },
+            {
+              "frames": 2160,
+              "samples": 3968640,
+              "head": 3964531,
+              "event": "progress",
+              "time_ms": 617596743
+            },
+            {
+              "frames": 2160,
+              "samples": 3968640,
+              "head": 3966412,
+              "event": "progress",
+              "time_ms": 617596745
+            },
+            {
+              "frames": 2160,
+              "samples": 3969792,
+              "head": 3966412,
+              "event": "progress",
+              "time_ms": 617596745
+            },
+            {
+              "frames": 2280,
+              "samples": 4188672,
+              "head": 4184678,
+              "event": "progress",
+              "time_ms": 617601732
+            },
+            {
+              "frames": 2280,
+              "samples": 4189824,
+              "head": 4186560,
+              "event": "progress",
+              "time_ms": 617601734
+            },
+            {
+              "frames": 2280,
+              "samples": 4189824,
+              "head": 4186560,
+              "event": "progress",
+              "time_ms": 617601735
+            },
+            {
+              "frames": 2400,
+              "samples": 4408704,
+              "head": 4404825,
+              "event": "progress",
+              "time_ms": 617606718
+            },
+            {
+              "frames": 2400,
+              "samples": 4409856,
+              "head": 4406707,
+              "event": "progress",
+              "time_ms": 617606726
+            },
+            {
+              "frames": 2400,
+              "samples": 4411008,
+              "head": 4406707,
+              "event": "progress",
+              "time_ms": 617606730
+            },
+            {
+              "reason": 0,
+              "frames": 2497,
+              "samples": 4590720,
+              "head": 4590720,
+              "peak_bytes": 8523472,
+              "elapsed_ms": 104408,
+              "error": null,
+              "event": "closed",
+              "time_ms": 617610958
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "width": 2184,
+        "height": 984,
+        "stage_width": 2184,
+        "stage_height": 775,
+        "orientation": 2
+      },
+      "motions": [
+        {
+          "sequence": 56,
+          "events": [
+            {
+              "event": "begin",
+              "sequence": 56,
+              "elapsed_ms": 0,
+              "time_ms": 617755529
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 0,
+              "time_ms": 617755530
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 17,
+              "time_ms": 617755569
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 57,
+              "time_ms": 617755608
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 96,
+              "time_ms": 617755649
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 136,
+              "time_ms": 617755688
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 175,
+              "time_ms": 617755727
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 215,
+              "time_ms": 617755766
+            },
+            {
+              "event": "frame",
+              "sequence": 56,
+              "elapsed_ms": 250,
+              "time_ms": 617755806
+            },
+            {
+              "event": "finished",
+              "sequence": 56,
+              "elapsed_ms": 250,
+              "time_ms": 617755807
+            }
+          ],
+          "captured_frames": 8
+        }
+      ],
+      "wipes": [],
+      "shakes": [],
+      "flashes": [],
+      "final_visual_independent_pixels_equal": false,
+      "boundary": {
+        "checkpoint": {
+          "source": "012402",
+          "line": 81,
+          "depth": 2,
+          "steps": 417,
+          "slots": [
+            [
+              71,
+              800,
+              1
+            ],
+            [
+              71,
+              801,
+              0
+            ],
+            [
+              71,
+              802,
+              0
+            ],
+            [
+              71,
+              803,
+              0
+            ],
+            [
+              71,
+              804,
+              0
+            ],
+            [
+              71,
+              900,
+              0
+            ],
+            [
+              71,
+              901,
+              0
+            ],
+            [
+              71,
+              902,
+              0
+            ],
+            [
+              71,
+              903,
+              0
+            ],
+            [
+              71,
+              904,
+              0
+            ],
+            [
+              76,
+              100,
+              0
+            ],
+            [
+              76,
+              900,
+              0
+            ],
+            [
+              76,
+              901,
+              0
+            ],
+            [
+              76,
+              902,
+              0
+            ],
+            [
+              76,
+              903,
+              0
+            ]
+          ],
+          "scene": {
+            "size": [
+              1280,
+              720
+            ],
+            "background": "BG201d",
+            "background_color": null,
+            "overlay": null,
+            "visual": null,
+            "actors": [
+              {
+                "slot": 6,
+                "name": "SGVE00Aa",
+                "folder": "image/actor",
+                "anchor": [
+                  990,
+                  360
+                ],
+                "offset": [
+                  -287,
+                  -142
+                ],
+                "filter": "night",
+                "filter_pending": false
+              },
+              {
+                "slot": 4,
+                "name": "SGUR203a",
+                "folder": "image/actor",
+                "anchor": [
+                  640,
+                  360
+                ],
+                "offset": [
+                  -203,
+                  -168
+                ],
+                "filter": null,
+                "filter_pending": true
+              }
+            ],
+            "filter": "night"
+          },
+          "effects": [],
+          "voice": "",
+          "labels": {
+            "title": "２４日目：水の曜日",
+            "route": "第１章",
+            "caption": "Tiny Dungeon ～BLESS of DRAGON～ 第１章 ２４日目：水の曜日",
+            "in_route": true
+          }
+        },
+        "vm_live_bytes": 0,
+        "error": "story 012402:81 depth=2 steps=417: unsupported actor modifier _"
+      },
+      "page_limit_reached": false,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "P01",
+          "line": 15,
+          "text_sha256": "be21f791a3341dad7a3146b07cfc41dfbb5dbb3b48d901fbb2b7430a398b1f90",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "9c2faa5abfe236f88eaf1ec0af4f889c8d79428694d81032363af8adb67c5f1c",
+          "effects": [
+            "fade 3"
+          ]
+        },
+        {
+          "sequence": 2,
+          "source": "P01",
+          "line": 18,
+          "text_sha256": "0b6113e004e6b7dab2038d693e90055cfce419152b4810f3d7d25cdd7f7b87d0",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "f9d0d0115110e5e58fdf7d64ba08b88befaf4798ac24e0831e4d99e8a66e548d",
+          "effects": []
+        },
+        {
+          "sequence": 3,
+          "source": "P01",
+          "line": 21,
+          "text_sha256": "9f6cc8e99dce3a8a9d621495598c5b5c558e495764ed555f19594e4a68dbbf43",
+          "png_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+          "metadata_sha256": "ba00ca5904c490829afd24d7edeff78fca3c98dc606639a5abebd4793caa66a3",
+          "effects": []
+        },
+        {
+          "sequence": 4,
+          "source": "P01",
+          "line": 26,
+          "text_sha256": "748c2266391562af508bf715a457192c47daf7f6fa42f9ab936a7f150d04a0c8",
+          "png_sha256": "9d7c717b31f75edbe48051785e9832940ede89c13d717cde5def12731a5c8526",
+          "metadata_sha256": "423f56127a82415e3007ae85a67829277f05352e909c8f10d304cfb9b4637620",
+          "effects": []
+        },
+        {
+          "sequence": 5,
+          "source": "P01",
+          "line": 32,
+          "text_sha256": "ce7904d64b407614b652850b2b823725a794f72b2d51bdce281ed189b4fc69b1",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "b54abe973a8799d42e8e3a8bfa259a806d33fe0997233b75b3a236c06a0374ec",
+          "effects": []
+        },
+        {
+          "sequence": 6,
+          "source": "P01",
+          "line": 36,
+          "text_sha256": "13a2232438d5c767b1a5e17e74a64403245e21addb8b7d8d3db21303b62feb34",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "2a522949230514e89ec456f0576a936b9299e5c8f0d3da5d947db3c62a865032",
+          "effects": []
+        },
+        {
+          "sequence": 7,
+          "source": "P01",
+          "line": 39,
+          "text_sha256": "bdddbd3c63956955f9bea2f7e22c0a17a3daac890b94f02a74bbe1686333b1db",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "441c5969352492dc13bc3bfa72a8d2339fef136ba0ece51a6ec78e0fb8ec94fb",
+          "effects": []
+        },
+        {
+          "sequence": 8,
+          "source": "P01",
+          "line": 43,
+          "text_sha256": "4533536bbb047d7e282d95f7c997e6e89255cd384ec1db4b56c3e1eec7f35e55",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "13b7c67e92cb6321e1f9c389ff64901d647888e8b4427353e154a652a987da26",
+          "effects": []
+        },
+        {
+          "sequence": 9,
+          "source": "P01",
+          "line": 46,
+          "text_sha256": "3ab408f3f9baf21a83af435b8cfa459d707bbd233ed9f839492750fd83604823",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "120caf4761adf8c03a48ce7c954c5d272b0487e85ee8874fbce0b54a45f90f4f",
+          "effects": []
+        },
+        {
+          "sequence": 10,
+          "source": "P01",
+          "line": 49,
+          "text_sha256": "cfd5cc123daae51edfb0d3b7da4259dc6626647f6d426fb234de50d4b2ed53ad",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "a808dc3f8675eabad09209ed2cc45086db786f28fc90eca4bbbb7314f6f7c064",
+          "effects": []
+        },
+        {
+          "sequence": 11,
+          "source": "P01",
+          "line": 52,
+          "text_sha256": "0b8bc9f9d4b797bdf107a59555ad31e138b379b412f801ac39d69ec67a012b38",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "c22d3a5fef3ad3f0f79a2cedb1049d01f4ce8fdbbefc159f40b7f956693f092b",
+          "effects": []
+        },
+        {
+          "sequence": 12,
+          "source": "P01",
+          "line": 57,
+          "text_sha256": "4e949cee6472c48fee7bbd48bd3968f55847b89b27f32fb772e934cae69b1a83",
+          "png_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561",
+          "metadata_sha256": "4b6a99a25dc20f3ca3ca926787ca9e3abbbfa0d7c426f944c2100cff506a3536",
+          "effects": []
+        },
+        {
+          "sequence": 13,
+          "source": "012401",
+          "line": 11,
+          "text_sha256": "fbc5167f10fc37499a22ca74bf3f9dc18e3772c9968cc961a0e48e85839c81cb",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "6dd66e682c2c6706746c8b7e9c5f0169c56f8516cf0ad4b5cd2448ccb5245b07",
+          "effects": [
+            "se SE_010",
+            "fade 3",
+            "movie op.mpg",
+            "bgm BGM016",
+            "fade 3"
+          ]
+        },
+        {
+          "sequence": 14,
+          "source": "012401",
+          "line": 14,
+          "text_sha256": "0273bfcf1caf7165350725542b8b5cb04a1154556d421252f7ab517a6df7cdde",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "9135e60fa59f56e981857dc1662af8e4d3dc839570531beab43f499e59b2d2c5",
+          "effects": []
+        },
+        {
+          "sequence": 15,
+          "source": "012401",
+          "line": 17,
+          "text_sha256": "cfcb9274bda8faeac4db763d14757d0cde3bba8f4ad5abe5fdb9e5de0b8f6118",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "cc14181800bb58a0302772fe904c8c445eaa4b2dc6b98a397e2efcc51fe87b2d",
+          "effects": []
+        },
+        {
+          "sequence": 16,
+          "source": "012401",
+          "line": 20,
+          "text_sha256": "ffe9e64788017b029b0d0779b4a280030a49a7dbf0eeeb3308eb527c0d790832",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "16c097958b81cdef4ff0653b15349ad224a43318ea23b3ed2f178b98b5355357",
+          "effects": []
+        },
+        {
+          "sequence": 17,
+          "source": "012401",
+          "line": 23,
+          "text_sha256": "a34d328b72995d4da72887ae835d1c0033609eca23eec1c3d046a96c326538d1",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "d1516f8acfb2359cb73fe56051927e379761f5976e03e602c2321cd316f92c54",
+          "effects": []
+        },
+        {
+          "sequence": 18,
+          "source": "012401",
+          "line": 26,
+          "text_sha256": "2dc2e9bdab549634e0bc91a4951ec7119943dfa06018e0e100021b348d391f4a",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "abfbbacc467ffe04f42e669326070a181feedc81f175f5c580face986e3bdeee",
+          "effects": []
+        },
+        {
+          "sequence": 19,
+          "source": "012401",
+          "line": 29,
+          "text_sha256": "c7e9c06c197f1f16a7364b6bf315a6d8251ea52aa22512d7a5abd72d4d949655",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "a750eb49e4a0c167e8ccc1221c8c433ecca87dd4cead36ca07515c97b2752e0e",
+          "effects": []
+        },
+        {
+          "sequence": 20,
+          "source": "012401",
+          "line": 32,
+          "text_sha256": "63fc6958cdec4dde9d5421d7ced6e54d55fdcc7a10d2f3cfd40eeba3ee71b992",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "f966db813b7fee517c2cb3c48e78de09d7ee522051fcc1b786bdcd08994312d2",
+          "effects": []
+        },
+        {
+          "sequence": 21,
+          "source": "012401",
+          "line": 35,
+          "text_sha256": "1f82f5a81d6af7f6b8ed5520e7c84fe311ba5886e8c81633fb7a017dd736d39c",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "7230abb7fa9a3334e098c2d314ae00219dcabb2d5a122f5952f78522f3649485",
+          "effects": []
+        },
+        {
+          "sequence": 22,
+          "source": "012401",
+          "line": 38,
+          "text_sha256": "58cde08ce15ce6bf374c05a3d3303413999f98a62ea6ff7e4ac9c0525b935137",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "8f2219f539fa8893111b820d17efb2e8b78febd6b6aabcae1463602248113ee3",
+          "effects": []
+        },
+        {
+          "sequence": 23,
+          "source": "012401",
+          "line": 41,
+          "text_sha256": "c1ef1cc3347b2a4bef49c90b14312bb11d842040a15e2b25e944f94c3ed53b8f",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "a9f1dc60b2af795f80a2ef7e309fa746216f6611d122cb64a81350bd08f0ed2c",
+          "effects": []
+        },
+        {
+          "sequence": 24,
+          "source": "012401",
+          "line": 44,
+          "text_sha256": "bc1d6e17a7de043f4d2091e5ed8444369ddb561add57d7e5a7a5b80430c1044c",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "dcd3ddf765e1b60bf96c0bfaec89a8f42233c1e9682a52329009733157fa3607",
+          "effects": []
+        },
+        {
+          "sequence": 25,
+          "source": "012401",
+          "line": 48,
+          "text_sha256": "96efa70b1fb410cb1e5b95f396b7939bcb90341011704a441fbf6c6435259e4e",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "aefa5bffc731dc2a388a5519d2355b4790e4aeb1abc0066030dcbc45804a0838",
+          "effects": []
+        },
+        {
+          "sequence": 26,
+          "source": "012401",
+          "line": 51,
+          "text_sha256": "64cd2d41ca6ebba54ac9187f82310389506cb7b07489624a8ff4b92c84630d0b",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "a1019db9ef7125f8cae997e009c6dd695527d4cf775ae9e6cf618e96e0233080",
+          "effects": []
+        },
+        {
+          "sequence": 27,
+          "source": "012401",
+          "line": 54,
+          "text_sha256": "90be73559ddd7828edfb0ba077977c573d1f406cf4cfde64c4cdf451470462cb",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "24bce180dec84441d38b55bb3f765552d46801c99e6c289d2227e98580fafaa9",
+          "effects": []
+        },
+        {
+          "sequence": 28,
+          "source": "012401",
+          "line": 61,
+          "text_sha256": "6c97ad05ea7e20c749e90874347a666640a3ca7175955123eec5c615470e5f39",
+          "png_sha256": "374b47b83397a1f8891783dbd817f2b224c36b87435091ab0d52dd73722a89d7",
+          "metadata_sha256": "9918c5b27da6df1d1f026fc6a77f0d31cb2df4622e0a0602ddb9133c87670b48",
+          "effects": []
+        },
+        {
+          "sequence": 29,
+          "source": "012401",
+          "line": 67,
+          "text_sha256": "6a7decf06bbabaf5658bf2bf4e034538f89b03985a6ea2f7bfbcbefb030b82d9",
+          "png_sha256": "1f2771927aec0f395298732a999820dc965e629dbf4fc7d3c9d7d0c890c82b7a",
+          "metadata_sha256": "404c9c334e0ad298ead04bddf41541b34cf9fc424f3fbe66ea7d43a5af16f66e",
+          "effects": []
+        },
+        {
+          "sequence": 30,
+          "source": "012401",
+          "line": 74,
+          "text_sha256": "5ffcdfdaf3bfcbc78d0bd928d9f5c45f2ff19014a1d667a25118054e22ea658e",
+          "png_sha256": "b2276a41ad9b4854699345cacd5fb3e5a0bc4963624ef5e63e26bc71147addd3",
+          "metadata_sha256": "fd3531ae33c0ac5db6c9022a00dd0d93cf3cc517b02783307a54a9d0b4fff3db",
+          "effects": []
+        },
+        {
+          "sequence": 31,
+          "source": "012401",
+          "line": 80,
+          "text_sha256": "568cdb7dfcc78f46222e8693e23b08e259f3424d71b56a1e797cceae03b16060",
+          "png_sha256": "ede2e87dccd3201461256e69c85b9f7a082fac5b5abf83df54bb63820892e23f",
+          "metadata_sha256": "fef494afa41c5d01abf15bf77e600267c09c64d09d2db47f13bc5365d266bf4c",
+          "effects": []
+        },
+        {
+          "sequence": 32,
+          "source": "012401",
+          "line": 87,
+          "text_sha256": "cabb4ecac8f7349fd92ea47297f84b23a06dffbd487fba879d62ca9c4d2b02d8",
+          "png_sha256": "a06b509e36823fe4f5e83f4223731d4d3611284fb0c71f2225235d62cabc64c4",
+          "metadata_sha256": "a77248bc827f91fa32e02f834fecfd86658fab88f56b27d4803e5ec8dde20dec",
+          "effects": []
+        },
+        {
+          "sequence": 33,
+          "source": "012401",
+          "line": 93,
+          "text_sha256": "b6fb2559cfb762ad7606f28270989d8967dc65a42a6986db3bac565c5f1cf7bc",
+          "png_sha256": "e38d1647737256d12345e50b0cd54d15e6204b5767aa9fff6168bde7cfae1628",
+          "metadata_sha256": "943e26dea6fc4e016afe93fc5fa8070f61004e4f10cd4200ede57ae5dfbebbf5",
+          "effects": []
+        },
+        {
+          "sequence": 34,
+          "source": "012401",
+          "line": 97,
+          "text_sha256": "cd77ca2624ef9a1627433a27d6c4b0f60f0c1a89bc888906d32d097a6b31f6d7",
+          "png_sha256": "e38d1647737256d12345e50b0cd54d15e6204b5767aa9fff6168bde7cfae1628",
+          "metadata_sha256": "3dcac1a4b5e1ca18956162f86afe6c25043c29db4e3dbbb36fbf500e2f32d493",
+          "effects": []
+        },
+        {
+          "sequence": 35,
+          "source": "012401",
+          "line": 100,
+          "text_sha256": "e00bd153b9ce383426a28fe5b5931f25013f38e3cea842884b69e5fc4e9a0cbb",
+          "png_sha256": "e38d1647737256d12345e50b0cd54d15e6204b5767aa9fff6168bde7cfae1628",
+          "metadata_sha256": "db8eb5d1b3f51cde1fe6125bea95ff02067796a90924ed73bc4b870c6f42d761",
+          "effects": []
+        },
+        {
+          "sequence": 36,
+          "source": "012401",
+          "line": 107,
+          "text_sha256": "073a57699d281ed20b8c512d48f66c71da9071dc8730e6cbcf271bd3089f2076",
+          "png_sha256": "debb2296d1d047a09462d7bb837b5fc625fd3d3105510b5738cd1f417e2dcc56",
+          "metadata_sha256": "1a1d28844bdf919b1177cde147582d19e897e4ee28d669d59d625f0ac8536bd1",
+          "effects": []
+        },
+        {
+          "sequence": 37,
+          "source": "012401",
+          "line": 111,
+          "text_sha256": "27e1d7049f7644d265df3d1ae97bec7fb94a803a1ed5b3305ef0e15391c26e09",
+          "png_sha256": "fe367a39f751249ccc919c1cfe8cc09dacf1f8673cbeb039eb650e6400f88dc1",
+          "metadata_sha256": "126d3cbb21ec296d4163b421b31cbdb8d3ff189927190f0ecb1612f299b80705",
+          "effects": []
+        },
+        {
+          "sequence": 38,
+          "source": "012401",
+          "line": 115,
+          "text_sha256": "91575421021dbadfd5f40290f0aa0357b63e9dd4a03330304511a2d2ecc36fb2",
+          "png_sha256": "fe367a39f751249ccc919c1cfe8cc09dacf1f8673cbeb039eb650e6400f88dc1",
+          "metadata_sha256": "7ade0fe26d87fdeb5c1fb2eb1b470bbffab1e2fd7f7a72b264da9616031d059a",
+          "effects": []
+        },
+        {
+          "sequence": 39,
+          "source": "012401",
+          "line": 119,
+          "text_sha256": "d589db665ac2b3730879758d30957fc625640e4ee283c6d29203f5ee7183833b",
+          "png_sha256": "fe367a39f751249ccc919c1cfe8cc09dacf1f8673cbeb039eb650e6400f88dc1",
+          "metadata_sha256": "1a5b6b6dedc5d90002293f7ac4c6b4b9fa4db71072e4c2fe538f466b821ed076",
+          "effects": []
+        },
+        {
+          "sequence": 40,
+          "source": "012401",
+          "line": 123,
+          "text_sha256": "8d07e8102a58722fe00057bdcd4c4eb99b8a605faf91037b9abe7d1aa668b855",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "f0b25bf923ddc2dc09acfd514f7c3490a417a029edffcc8e348e9fb5e0d36002",
+          "effects": []
+        },
+        {
+          "sequence": 41,
+          "source": "012401",
+          "line": 126,
+          "text_sha256": "c3da2e08d56880317706700bca681edad0794593f4944e3e1318915db0dee41e",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "678c04c21c9878d6c5128b8cca26b00636e70e4f8410844bc6b71a1c86ad6428",
+          "effects": []
+        },
+        {
+          "sequence": 42,
+          "source": "012401",
+          "line": 129,
+          "text_sha256": "6273c63b6de3f7bc11b4bed88c4bcfcdc21c2ec79e23051deb6ce2e74532a167",
+          "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+          "metadata_sha256": "1d244df98233430bd5ca0679304773cc22ab2241765a28e9e3203b44e0035f0d",
+          "effects": []
+        },
+        {
+          "sequence": 43,
+          "source": "012402",
+          "line": 10,
+          "text_sha256": "6f0da48436f3787844f8918ac4d962c6f8ef3edd51e596aedd12916bc8668763",
+          "png_sha256": "66cb5e818208cf7719539a3dbbb7289d31968b0e8affe1eae88f4d3bb518dcef",
+          "metadata_sha256": "706968a43dc3f7ab8d13875764008c99e898fbdb08c10e62f531d2426021a2ae",
+          "effects": [
+            "fade 2"
+          ]
+        },
+        {
+          "sequence": 44,
+          "source": "012402",
+          "line": 15,
+          "text_sha256": "7adadb88aa67ca14528a1a811a9e19f0db61a068e7fa4e5ea05b904af4c54cc3",
+          "png_sha256": "107d5c081596b91c69468f5e4f771edee80c3bc1ec73eb345dda2e54ab8b9a8b",
+          "metadata_sha256": "51c2aa60058a3bd9d3a269ae1a25c05c7145d35187fce73027c32d34010c01f4",
+          "effects": []
+        },
+        {
+          "sequence": 45,
+          "source": "012402",
+          "line": 23,
+          "text_sha256": "663da041842ce287c0ee21623ba44863d4833c629f8825a0f1048ffd9c538c2b",
+          "png_sha256": "c1f68de6a63aadc2a32afb96e541e7baf2c2de6a0ea1831b3a816a87ed14ba08",
+          "metadata_sha256": "2a2b6c2d60c8452fa46bf9e9672f0a89885468450972b556de19ce207e3ab8c2",
+          "effects": []
+        },
+        {
+          "sequence": 46,
+          "source": "012402",
+          "line": 31,
+          "text_sha256": "ff20e82c6cec1729b6e7149f2e6595603070cf3f9c4d391565807e21a674bd46",
+          "png_sha256": "d6582dfe34ad7c6bbecd139454e45b9d6edde9e60bedcc3f4529c4d881704456",
+          "metadata_sha256": "945b4456843dcf23211087135733dade9a054c795b0ad0b611418d9a34b84d7a",
+          "effects": []
+        },
+        {
+          "sequence": 47,
+          "source": "012402",
+          "line": 35,
+          "text_sha256": "1d9a78dec137d77df0a62d06bb322a7f58767d7ab3ca20f932482b1cee846e98",
+          "png_sha256": "d6582dfe34ad7c6bbecd139454e45b9d6edde9e60bedcc3f4529c4d881704456",
+          "metadata_sha256": "daed50aef3867423a75611e64f3f2a5ba8c9d9c97a9bb25efb44ad5412421de0",
+          "effects": []
+        },
+        {
+          "sequence": 48,
+          "source": "012402",
+          "line": 39,
+          "text_sha256": "738c7fbccf52200609c86c464895b632f43ddc33422b3b1b7c51217519e00a92",
+          "png_sha256": "d6582dfe34ad7c6bbecd139454e45b9d6edde9e60bedcc3f4529c4d881704456",
+          "metadata_sha256": "e193e17bf831a1f4feeb3e05596529b36cd7d4259e36408635bdc95a56c67beb",
+          "effects": []
+        },
+        {
+          "sequence": 49,
+          "source": "012402",
+          "line": 46,
+          "text_sha256": "fb4c1f55cafee8117153781c3d97466cc428e88df0655122bc4d2c053c0c554e",
+          "png_sha256": "4d4c9507ac6e5e73ae44f96855bb5bfff574d96e2e722b37a1725e84a4e25c1d",
+          "metadata_sha256": "9373e7c2935b8e785609671f6cbf2bf2a3edf8527cec061137950bd81f575720",
+          "effects": []
+        },
+        {
+          "sequence": 50,
+          "source": "012402",
+          "line": 49,
+          "text_sha256": "385e6ff3f9e1b9d0f0bd822ffa1758078dcdba7a4665c57a33c98c870438afcf",
+          "png_sha256": "4d4c9507ac6e5e73ae44f96855bb5bfff574d96e2e722b37a1725e84a4e25c1d",
+          "metadata_sha256": "91d50a86fdb7c92000e192c58a2e2bc2b039de43a512c07915afc2f4c9fc87aa",
+          "effects": []
+        },
+        {
+          "sequence": 51,
+          "source": "012402",
+          "line": 54,
+          "text_sha256": "06365d3e7a9dcf564a3cb283a815f5ac4b53ac1f0331f2bb86a6e2f13eba9859",
+          "png_sha256": "56e76b08f48551a9b700d9d3e323f37af354f71ae249f0951b99740112e03041",
+          "metadata_sha256": "feb462b69d6550b6afb320b2e666b4c3b1b294b37c7cff8e0debaaeaf9800351",
+          "effects": []
+        },
+        {
+          "sequence": 52,
+          "source": "012402",
+          "line": 57,
+          "text_sha256": "b6eb2b0e99059590104c2addd1a6ba9603516245ee3a5bd0f10c464611955f39",
+          "png_sha256": "56e76b08f48551a9b700d9d3e323f37af354f71ae249f0951b99740112e03041",
+          "metadata_sha256": "6fbeffc826e4aa42e7cf958c890c5374a20a84ca0a943fd7b481cfaf02d08556",
+          "effects": []
+        },
+        {
+          "sequence": 53,
+          "source": "012402",
+          "line": 62,
+          "text_sha256": "11bf6187bc2ebfb1542da4b70a5f790ae07ee9562714a364bb360d703af39ecd",
+          "png_sha256": "fed8c8d3d8423dc4be0210d015136d4fd8fb4915e9911dcb5d3904948b797829",
+          "metadata_sha256": "d8020511f2171e23a091514bf789f2fe738fdaeb8ac6753916f6a01cf21e3712",
+          "effects": []
+        },
+        {
+          "sequence": 54,
+          "source": "012402",
+          "line": 65,
+          "text_sha256": "6e32068a396848a33661bd6cb93f5c45b6a23b97f50148f2da35ea8276edbe0b",
+          "png_sha256": "fed8c8d3d8423dc4be0210d015136d4fd8fb4915e9911dcb5d3904948b797829",
+          "metadata_sha256": "f9f7b9e1acd7f06560afdfb1da388edcab4127699c50202df58f8961534edbee",
+          "effects": []
+        },
+        {
+          "sequence": 55,
+          "source": "012402",
+          "line": 70,
+          "text_sha256": "50d42514e844a42b32773ce60126052c9e34bca3cb0d207d3cd0bdac65aa8860",
+          "png_sha256": "0f895fb45ce0d51cdd22a6e78087a8b8f042067a3d9a0a613016507b0d44735e",
+          "metadata_sha256": "f4cfd0a36dd472ac6b131621924dc97a748ac6e3f8e2d0528ff1ea31358005a2",
+          "effects": []
+        },
+        {
+          "sequence": 56,
+          "source": "012402",
+          "line": 76,
+          "text_sha256": "1e0bfd468b3dfdcd03836b7ca73f58902a79672ce1055bff99996dcbee33dcbb",
+          "png_sha256": "09e2137f9b9d091792da43876c8ef00c0e0b1143a75d197cfef9982c0bb6fc82",
+          "metadata_sha256": "7f15103dc5ee39dbc5ea36b9b5950ffc906d60b43d09ab9a4f1619ec4c62338f",
+          "effects": [],
+          "screen": {
+            "dialogue_visible": true,
+            "landscape": true,
+            "sha256": "8b3d7d901c448315f34a28ca96370b6e26646c1bb482e70161d27772045c057a"
+          }
+        }
+      ],
+      "actual_ui_next": true,
+      "closed_vm_live_bytes": 0,
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 617464290,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 617465048,
+          "value": 251
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 617467308,
+          "value": 3018
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 617467322,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 617467399,
+          "value": 3612
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 617467399,
+          "value": 77
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 617467602,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 617467805,
+          "value": 183
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 617476767,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 617476789,
+          "value": 5820
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 617476789,
+          "value": 22
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 3,
+          "time_ms": 617476995,
+          "value": 37
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 617479782,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 617479801,
+          "value": 6212
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 617479801,
+          "value": 20
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 617480003,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 617480204,
+          "value": 216
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 617500408,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 617500429,
+          "value": 1804
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 617500429,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 617500630,
+          "value": 31
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 5,
+          "time_ms": 617502410,
+          "value": 1804
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 617503378,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 617503407,
+          "value": 7140
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 617503408,
+          "value": 30
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 617503449,
+          "value": 3000
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 6,
+          "time_ms": 617503609,
+          "value": 36
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 617504210,
+          "value": 252
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 7,
+          "time_ms": 617506462,
+          "value": 3013
+        },
+        {
+          "event": "stopped_all",
+          "kind": "movie",
+          "token": 8,
+          "time_ms": 617506520,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 9,
+          "time_ms": 617611208,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 9,
+          "time_ms": 617611303,
+          "value": 230497
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 9,
+          "time_ms": 617611304,
+          "value": 96
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 9,
+          "time_ms": 617611508,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 9,
+          "time_ms": 617611712,
+          "value": 145
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 10,
+          "time_ms": 617611785,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 10,
+          "time_ms": 617612549,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 10,
+          "time_ms": 617614802,
+          "value": 3018
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 11,
+          "time_ms": 617662633,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 11,
+          "time_ms": 617662654,
+          "value": 1801
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 11,
+          "time_ms": 617662654,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 11,
+          "time_ms": 617662855,
+          "value": 47
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 11,
+          "time_ms": 617664615,
+          "value": 1801
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 12,
+          "time_ms": 617665622,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 12,
+          "time_ms": 617665641,
+          "value": 2830
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 12,
+          "time_ms": 617665641,
+          "value": 19
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 12,
+          "time_ms": 617665842,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 12,
+          "time_ms": 617666044,
+          "value": 207
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 12,
+          "time_ms": 617668669,
+          "value": 2830
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 13,
+          "time_ms": 617669205,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 13,
+          "time_ms": 617669223,
+          "value": 2342
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 13,
+          "time_ms": 617669223,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 13,
+          "time_ms": 617669423,
+          "value": 44
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 13,
+          "time_ms": 617671726,
+          "value": 2342
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 617672734,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 617672758,
+          "value": 3746
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 617672759,
+          "value": 25
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 14,
+          "time_ms": 617672961,
+          "value": 41
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 617675779,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 617675799,
+          "value": 2127
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 617675799,
+          "value": 20
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 617676000,
+          "value": 50
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 617678084,
+          "value": 2127
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 16,
+          "time_ms": 617679331,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 16,
+          "time_ms": 617679357,
+          "value": 5716
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 16,
+          "time_ms": 617679357,
+          "value": 27
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 16,
+          "time_ms": 617679557,
+          "value": 24
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 17,
+          "time_ms": 617688918,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 17,
+          "time_ms": 617688942,
+          "value": 617
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 17,
+          "time_ms": 617688942,
+          "value": 24
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 17,
+          "time_ms": 617689147,
+          "value": 56
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 17,
+          "time_ms": 617689709,
+          "value": 617
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 18,
+          "time_ms": 617695475,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 18,
+          "time_ms": 617695496,
+          "value": 887
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 18,
+          "time_ms": 617695496,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 18,
+          "time_ms": 617695698,
+          "value": 36
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 18,
+          "time_ms": 617696552,
+          "value": 887
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 19,
+          "time_ms": 617710992,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 19,
+          "time_ms": 617711503,
+          "value": 252
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 19,
+          "time_ms": 617713014,
+          "value": 2022
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 20,
+          "time_ms": 617713044,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 20,
+          "time_ms": 617713110,
+          "value": 2055
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 20,
+          "time_ms": 617713111,
+          "value": 67
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 20,
+          "time_ms": 617713314,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 20,
+          "time_ms": 617713517,
+          "value": 191
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 20,
+          "time_ms": 617715384,
+          "value": 2055
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 617716483,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 617716513,
+          "value": 5350
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 617716513,
+          "value": 30
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 617716713,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 21,
+          "time_ms": 617716913,
+          "value": 217
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 617719515,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 617719545,
+          "value": 4543
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 617719545,
+          "value": 30
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 617719746,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 22,
+          "time_ms": 617719948,
+          "value": 222
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 23,
+          "time_ms": 617723061,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 23,
+          "time_ms": 617723084,
+          "value": 3861
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 23,
+          "time_ms": 617723084,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 23,
+          "time_ms": 617723285,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 23,
+          "time_ms": 617723492,
+          "value": 225
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 24,
+          "time_ms": 617726598,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 24,
+          "time_ms": 617726625,
+          "value": 5760
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 24,
+          "time_ms": 617726625,
+          "value": 27
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 24,
+          "time_ms": 617726826,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 24,
+          "time_ms": 617727031,
+          "value": 223
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 25,
+          "time_ms": 617745009,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 25,
+          "time_ms": 617745025,
+          "value": 3268
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 25,
+          "time_ms": 617745025,
+          "value": 16
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 25,
+          "time_ms": 617745226,
+          "value": 29
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 25,
+          "time_ms": 617748467,
+          "value": 3268
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 26,
+          "time_ms": 617751466,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 26,
+          "time_ms": 617751486,
+          "value": 4598
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 26,
+          "time_ms": 617751486,
+          "value": 20
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 26,
+          "time_ms": 617751687,
+          "value": 47
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 617755025,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 617755049,
+          "value": 2483
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 617755049,
+          "value": 24
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 617755250,
+          "value": 26
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 617757713,
+          "value": 2483
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 617764476,
+          "value": 0
+        }
+      ],
+      "audio": [
+        {
+          "kind": "voice",
+          "name": "KA_P01_0000",
+          "sha256": "3a238ecc0d82763aaf33aaaa70151938f058dabfb377a052c8c114d78ce0dfdb",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0001",
+          "sha256": "632794383e7e248b9589f60a1f2bf64c411b980fd250b80f4d1acd950ec9792b",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 4,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0002",
+          "sha256": "7640321c3177a1e7cb204024e30ee02686dcb534b28bde74b36f6fed5a8c5eb1",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KA_P01_0003",
+          "sha256": "87aa70580ff46a0d79585b5c0607897ab5c51a8c993bfc503429e6857e2c7ee4",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "se",
+          "name": "SE_010",
+          "sha256": "d3d451d7c074c0122517e4c171a83d30957396a8aa833f2c4318f7c90845a2e9",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "bgm",
+          "name": "BGM016",
+          "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_012401_0000",
+          "sha256": "b18e7d99d947264dcb38a3c33708c6df1b62a5db81a9f7d2153a0ca7643492c4",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KO_012401_0000",
+          "sha256": "ce012350bb88c963b2eaa68e73976006349590ddddeadab4f749d61bc49124fa",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "NO_012401_0000",
+          "sha256": "cf0fc08081eec19d30e3fc5abe6521166f40235acd1387fbeb719858a90d7a36",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "AM_012401_0000",
+          "sha256": "6eb3162f62a54d392b9b5578a727422aa5590a11165471bcf031f0e9eb8a313c",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 15,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "UR_012401_0000",
+          "sha256": "b69fd6820c21a604c5394e8f3da091927140c1a212d79ce5f0e04bff0776d323",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "OP_012401_0000",
+          "sha256": "c951e06a0ad923096651f39cbd3e77af7aaa207dc3e5f1e28464683c8557f671",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_012401_0001",
+          "sha256": "46ff6b7ca7c070b507e2e1f54198fcc2f530a7590f6d2b1eb3a6ab0be0958af9",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_012401_0002",
+          "sha256": "d3296988bf99dc8e07794c1e291faa267ce5effb6760d68eea74571acb2ed383",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "AM_012402_0000",
+          "sha256": "2a0d90c70f0c14a871708613471b3111a74ef911f81f12706c1c1cfa967c5430",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "NO_012402_0000",
+          "sha256": "99f7ef615d458d62001d9d129ed1bcfc052ba6252265e8a531063c77e3b59db5",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 22,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "KO_012402_0000",
+          "sha256": "ab72649e60f4f21e1c72f0c359d279d8722c5df2fb7c9980912fd54ba5e4edb1",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 23,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "UR_012402_0000",
+          "sha256": "b4d5918405f2e8cc740c4971a5b787eb03725b0e3e1547de6df668ed9e1c1e49",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 24,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "OP_012402_0000",
+          "sha256": "c5a62480ff500e1bdf0ba3b92b942097b822b1835bf813fb372a1380d11f9a13",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_012402_0000",
+          "sha256": "c735704a7da9b598bf962dd8843e7445e4b9aae545f1db239389473241afa25a",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "VE_012402_0001",
+          "sha256": "d7cdba15794c964076423743dbb822de91ad961c08c13c9a63e9f7d70a14f681",
+          "progress_observed": true,
+          "completed_after_duration": false,
+          "replaced_by_token": 27,
+          "ended_in_terminal_span": false
+        },
+        {
+          "kind": "voice",
+          "name": "UR_012402_0001",
+          "sha256": "4f896acd370ab76c161533a91a311e819aed78a6c33d484eeb758b5db0b61eb6",
+          "progress_observed": true,
+          "completed_after_duration": true,
+          "replaced_by_token": null,
+          "ended_in_terminal_span": false
+        }
+      ]
+    }
+  ]
+}

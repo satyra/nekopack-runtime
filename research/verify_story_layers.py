@@ -10,6 +10,7 @@ def main():
  for name in ['games','reference-root','pages','output']:p.add_argument('--'+name,type=Path,required=True)
  p.add_argument('--effects',action='store_true')
  p.add_argument('--actor-filter',action='store_true')
+ p.add_argument('--rightward-motion',action='store_true')
  p.add_argument('--games-selected',type=int,nargs='+',choices=range(4),default=list(range(4)))
  a=p.parse_args();sys.path.insert(0,str(a.reference_root));from portkit.neko import Archive,png_geometry
  manifest=json.loads(Path('research/metadata-verification.json').read_text(encoding='utf8'));results=[]
@@ -48,15 +49,16 @@ def main():
      if not args or args==['clear']:
       layers=[l for l in layers if l['slot']!=slot];continue
      tokens=[token for word in args for token in macros.get(word,[word])]
-     names=[t for t in tokens if t not in ['front','back','keep','center','/','/big'] and not re.fullmatch(r'(left|right)[1-4]?',t)]
+     names=[t for t in tokens if t not in ['front','back','keep','center','/','/big'] and not re.fullmatch(r'(left|right)[1-4]?',t) and not (a.rightward_motion and re.fullmatch(r'>+',t))]
      assert len(names)<=1
      name=names[0] if names else old['name']
      folder=('image/actor' if names else old['folder'])
      anchor=list(old['anchor']) if old else [size[0]//2,size[1]//2]
-     order='front'
+     order='keep' if a.rightward_motion and any(re.fullmatch(r'>+',t) for t in tokens) and not names else 'front'
      for t in tokens:
       if t in ['front','back','keep']:order=t
       elif t in ['/','/big']:folder='image/actor'+t.rstrip('/')
+      elif a.rightward_motion and re.fullmatch(r'>+',t):anchor[0]+=len(t)*50
       elif t=='center':anchor[0]=size[0]//2
       elif re.fullmatch(r'(left|right)[1-4]?',t):anchor[0]=size[0]//2+(-1 if t.startswith('left') else 1)*160*(int(t[-1]) if t[-1].isdigit() else 1)
      raw=read(folder+'/'+name+'.png');geo=png_geometry(raw)
@@ -93,5 +95,5 @@ def main():
    record['effect_token' if a.effects else 'page']=int(path.stem)+(0 if a.effects else 1)
    results.append(record)
   print('PASS independent layers/pixels',i,flush=True)
- a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',actor_filter_profile=a.actor_filter,**{'snapshots' if a.effects else 'pages':results}),indent=2)+'\n',encoding='utf8')
+ a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',actor_filter_profile=a.actor_filter,rightward_motion_endpoint_profile=a.rightward_motion,**{'snapshots' if a.effects else 'pages':results}),indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

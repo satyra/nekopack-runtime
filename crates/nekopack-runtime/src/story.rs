@@ -50,6 +50,7 @@ impl StoryLabels {
     }
 }
 pub struct Page {
+    pub motion: Option<String>,
     pub labels: StoryLabels,
     pub sequence: u64,
     pub source: String,
@@ -72,7 +73,12 @@ impl Page {
             .map(|(b, i, v)| format!("[{}, {i}, {v}]", b))
             .collect::<Vec<_>>()
             .join(",");
-        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}],\"labels\":{}}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,self.scene,self.depth,self.steps,slots,self.labels.metadata()?))
+        let motion = self
+            .motion
+            .as_ref()
+            .map(|m| format!(",\"motion\":{m}"))
+            .unwrap_or_default();
+        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}],\"labels\":{}{motion}}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,self.scene,self.depth,self.steps,slots,self.labels.metadata()?))
     }
     pub fn packet(&self) -> Result<Vec<u8>, String> {
         let mut bytes = self.metadata()?.into_bytes();
@@ -143,6 +149,8 @@ pub struct StorySession<R: Read + Seek> {
     system: SystemVm,
     labels: StoryLabels,
     scene: Scene,
+    motions: Vec<crate::motion::Motion>,
+    motion_elapsed: u64,
     presented: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
     shake: Option<crate::shake::Frames>,
@@ -185,6 +193,8 @@ impl<R: Read + Seek> StorySession<R> {
             system,
             labels,
             scene: Scene::new([mng.header[0], mng.header[1]]),
+            motions: Vec::new(),
+            motion_elapsed: 0,
             presented: None,
             wipe: None,
             shake: None,
@@ -224,6 +234,8 @@ impl<R: Read + Seek> StorySession<R> {
         }
         self.machine.complete(None)?;
         self.page = None;
+        self.motions.clear();
+        self.motion_elapsed = 0;
         self.speaker.clear();
         self.voice.clear();
         self.page()
@@ -317,9 +329,37 @@ impl<R: Read + Seek> StorySession<R> {
         }
         self.machine.complete(None)?;
         self.page = None;
+        self.motions.clear();
+        self.motion_elapsed = 0;
         self.speaker.clear();
         self.voice.clear();
         self.poll_packet()
+    }
+    /// Concurrent dialogue animation: never completes a script request or changes the cached page.
+    pub fn page_frame(
+        &mut self,
+        sequence: u64,
+        elapsed_ms: u64,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+            || self.motions.is_empty()
+        {
+            return Err("stale or missing dialogue motion request".into());
+        }
+        if elapsed_ms < self.motion_elapsed || elapsed_ms > crate::motion::DURATION_MS {
+            return Err("invalid dialogue motion clock".into());
+        }
+        let positions = self
+            .motions
+            .iter()
+            .map(|m| (m.slot, m.x(elapsed_ms)))
+            .collect::<Vec<_>>();
+        let frame = self.scene.render_pixels(&positions)?;
+        self.motion_elapsed = elapsed_ms;
+        let mut packet = format!("{{\"frame_kind\":\"motion\",\"sequence\":{sequence},\"elapsed_ms\":{elapsed_ms},\"width\":{},\"height\":{},\"format\":\"RGBA8\"}}\n", frame.width(), frame.height()).into_bytes();
+        packet.extend_from_slice(frame.pixels());
+        Ok(packet)
     }
     pub fn flash_frame(&mut self, token: u64, phase: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed
@@ -432,6 +472,11 @@ impl<R: Read + Seek> StorySession<R> {
             i32::try_from(self.scene.dimensions[1] / 2)?,
         ];
         let p = plan(args, &self.image_macros, center[0])?;
+        if self.motions.iter().any(|m| m.slot == slot) {
+            return Err(
+                "multiple operations on a moving actor before dialogue are unsupported".into(),
+            );
+        }
         if p.clear {
             self.scene.actors.retain(|l| l.slot != slot);
             return Ok(());
@@ -453,6 +498,13 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(x) = p.x {
             anchor[0] = x;
         }
+        let motion = p
+            .rightward
+            .map(|dx| crate::motion::Motion::new(slot, anchor[0], dx, center[0]))
+            .transpose()?;
+        if let Some(m) = &motion {
+            anchor[0] = m.end;
+        }
         if p.name.is_none() && p.folder.is_none() {
             let index = self
                 .scene
@@ -464,6 +516,9 @@ impl<R: Read + Seek> StorySession<R> {
             if p.order != crate::scene::Order::Keep {
                 let layer = self.scene.actors.remove(index);
                 self.scene.put(layer, p.order)?;
+            }
+            if let Some(m) = motion {
+                self.motions.push(m);
             }
             return Ok(());
         }
@@ -483,6 +538,9 @@ impl<R: Read + Seek> StorySession<R> {
             },
             p.order,
         )?;
+        if let Some(m) = motion {
+            self.motions.push(m);
+        }
         Ok(())
     }
     fn advance(&mut self) -> Result<(), Box<dyn Error>> {
@@ -503,7 +561,21 @@ impl<R: Read + Seek> StorySession<R> {
                     let (source, line) = self.machine.location().unwrap();
                     self.sequence += 1;
                     self.presented = Some(png.clone());
+                    let motion = if self.motions.is_empty() {
+                        None
+                    } else {
+                        Some(format!(
+                            "{{\"duration_ms\":{},\"actors\":[{}]}}",
+                            crate::motion::DURATION_MS,
+                            self.motions
+                                .iter()
+                                .map(|m| m.metadata())
+                                .collect::<Vec<_>>()
+                                .join(",")
+                        ))
+                    };
                     self.page = Some(Page {
+                        motion,
                         labels: self.labels.clone(),
                         sequence: self.sequence,
                         source: String::from_utf8(source.to_vec())?,
@@ -528,6 +600,25 @@ impl<R: Read + Seek> StorySession<R> {
                 }
                 Step::Request(Request::Command { name, args, .. }) => {
                     let command = std::str::from_utf8(&name)?;
+                    if !self.motions.is_empty()
+                        && !matches!(
+                            command,
+                            "img1"
+                                | "img2"
+                                | "img3"
+                                | "img4"
+                                | "img5"
+                                | "img6"
+                                | "img7"
+                                | "img8"
+                                | "img9"
+                        )
+                    {
+                        return Err(format!(
+                            "unsupported command {command} between actor motion and dialogue"
+                        )
+                        .into());
+                    }
                     match command {
                         "title" | "route" => {
                             self.system.eval_with_resources(
@@ -886,6 +977,8 @@ mod tests {
             system: SystemVm::new(),
             labels: StoryLabels::default(),
             scene: Scene::new([1, 1]),
+            motions: Vec::new(),
+            motion_elapsed: 0,
             presented: None,
             wipe: None,
             shake: None,
@@ -1228,6 +1321,84 @@ mod tests {
             .to_string()
             .contains("unsupported story preview command"));
         assert!(s.page().err().unwrap().to_string().contains("stopped"));
+    }
+    fn moving_session(text: &[u8]) -> StorySession<std::io::Cursor<Vec<u8>>> {
+        let mut s = session(text);
+        s.scene.dimensions = [800, 1];
+        s.scene.actors.push(Layer {
+            filter: crate::filter::Filter::Night,
+            filter_pending: false,
+            slot: 6,
+            name: "cached".into(),
+            folder: "image/actor".into(),
+            image: RgbaImage::filled(1, 1, [83, 88, 137, 255], PIXELS).unwrap(),
+            offset: [0, 0],
+            anchor: [400, 0],
+        });
+        s.enable_host_effects();
+        s
+    }
+    #[test]
+    fn dialogue_motion_is_concurrent_tokened_monotonic_and_keeps_cached_filter() {
+        let mut s = moving_session(b".img6 >>>>>>>\nfirst\nsecond");
+        let packet = s.poll_packet().unwrap();
+        let location = (
+            s.machine.location().map(|(n, l)| (n.to_vec(), l)),
+            s.machine.steps(),
+        );
+        assert_eq!(s.page.as_ref().unwrap().text, "first");
+        assert!(s.pending_effect.is_none());
+        assert!(s.page_frame(2, 0).is_err());
+        assert!(s.acknowledge_effect(1).is_err());
+        for (time, x) in [(0, 400), (50, 433), (125, 575), (250, 750)] {
+            let bytes = s.page_frame(1, time).unwrap();
+            let split = bytes.iter().position(|b| *b == b'\n').unwrap();
+            let pixels = &bytes[split + 1..];
+            assert_eq!(&pixels[x * 4..x * 4 + 4], [83, 88, 137, 255]);
+            assert_eq!(
+                pixels
+                    .as_chunks::<4>()
+                    .0
+                    .iter()
+                    .filter(|p| **p != [0, 0, 0, 255])
+                    .count(),
+                1
+            );
+            assert_eq!(s.page_frame(1, time).unwrap(), bytes);
+            assert_eq!(s.poll_packet().unwrap(), packet);
+        }
+        assert!(s.page_frame(1, 249).is_err());
+        assert!(s.page_frame(1, 251).is_err());
+        assert_eq!(
+            location,
+            (
+                s.machine.location().map(|(n, l)| (n.to_vec(), l)),
+                s.machine.steps()
+            )
+        );
+        s.acknowledge_text(1).unwrap();
+        assert_eq!(s.page.as_ref().unwrap().text, "second");
+        assert_eq!(s.scene.actors[0].anchor, [750, 0]);
+        assert!(s.motions.is_empty());
+        assert!(s.page_frame(1, 250).is_err());
+        assert!(s.acknowledge_text(1).is_err());
+    }
+    #[test]
+    fn motion_early_next_finishes_position_and_unverified_queue_combinations_stop() {
+        let mut s = moving_session(b".img6 >\nfirst\nsecond");
+        s.poll_packet().unwrap();
+        s.page_frame(1, 0).unwrap();
+        s.acknowledge_text(1).unwrap();
+        assert_eq!(s.scene.actors[0].anchor, [450, 0]);
+        assert!(s.page_frame(1, 50).is_err());
+        for text in [
+            b".img6 >\n.img6 >\ntext".as_slice(),
+            b".img6 >\n.fade\ntext",
+        ] {
+            let mut s = moving_session(text);
+            assert!(s.poll_packet().is_err());
+            assert!(s.failed);
+        }
     }
     #[test]
     fn actor_offsets_use_canvas_center_and_solid_overlay_retains_layers() {

@@ -1,0 +1,178 @@
+{
+  "scope": "BLESS original static disassembly and original DAT system script; not dynamic original screen parity",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "message_sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+  "facts": [
+    {
+      "va": "0x43cf73",
+      "instruction": "cmp eax, 0x3e"
+    },
+    {
+      "va": "0x43cf78",
+      "instruction": "je 0x43cfd7"
+    },
+    {
+      "va": "0x43cfda",
+      "instruction": "add dword ptr [ebp - 0x50], ecx"
+    },
+    {
+      "va": "0x43d02d",
+      "instruction": "mov eax, dword ptr [ebp - 0x50]"
+    },
+    {
+      "va": "0x43d033",
+      "instruction": "add eax, eax"
+    },
+    {
+      "va": "0x43d035",
+      "instruction": "lea eax, [eax + eax*4]"
+    },
+    {
+      "va": "0x43d038",
+      "instruction": "lea eax, [eax + eax*4]"
+    },
+    {
+      "va": "0x43d03b",
+      "instruction": "mov dword ptr [edx + 4], eax"
+    },
+    {
+      "va": "0x4389a2",
+      "instruction": "mov dword ptr [ebp - 0x1c4], 0xfa"
+    },
+    {
+      "va": "0x4389b7",
+      "instruction": "mov byte ptr [ebp - 0x1c9], 0"
+    },
+    {
+      "va": "0x438f34",
+      "instruction": "mov dword ptr [ebp - 0x198], ecx"
+    },
+    {
+      "va": "0x439726",
+      "instruction": "call 0x43cea4"
+    },
+    {
+      "va": "0x43974d",
+      "instruction": "call 0x43ab98"
+    },
+    {
+      "va": "0x437c20",
+      "instruction": "add dword ptr [edi + 0x98], eax"
+    },
+    {
+      "va": "0x438555",
+      "instruction": "test edx, edx"
+    },
+    {
+      "va": "0x438557",
+      "instruction": "je 0x437c1d"
+    },
+    {
+      "va": "0x438561",
+      "instruction": "call 0x4b5558"
+    },
+    {
+      "va": "0x438669",
+      "instruction": "call 0x4b556c"
+    },
+    {
+      "va": "0x438674",
+      "instruction": "cmp edx, eax"
+    },
+    {
+      "va": "0x438679",
+      "instruction": "call 0x437c0c"
+    },
+    {
+      "va": "0x4386df",
+      "instruction": "fdivp st(1)"
+    },
+    {
+      "va": "0x438708",
+      "instruction": "jb 0x438714"
+    },
+    {
+      "va": "0x438717",
+      "instruction": "fsub dword ptr [0x438830]"
+    },
+    {
+      "va": "0x43871d",
+      "instruction": "fmul qword ptr [0x438834]"
+    },
+    {
+      "va": "0x438729",
+      "instruction": "call 0x5061f8"
+    },
+    {
+      "va": "0x50620d",
+      "instruction": "fsin"
+    },
+    {
+      "va": "0x438731",
+      "instruction": "fadd dword ptr [0x43883c]"
+    },
+    {
+      "va": "0x438737",
+      "instruction": "fmul dword ptr [0x438830]"
+    },
+    {
+      "va": "0x43876a",
+      "instruction": "call 0x504990"
+    },
+    {
+      "va": "0x50499f",
+      "instruction": "or dword ptr [ebp - 4], 0xc01"
+    },
+    {
+      "va": "0x438818",
+      "instruction": "mov dword ptr [edx + 0xa0], ebx"
+    },
+    {
+      "va": "0x44100b",
+      "instruction": "call 0x43e610"
+    },
+    {
+      "va": "0x40c83b",
+      "instruction": "call 0x440fec"
+    }
+  ],
+  "spans": [
+    {
+      "va": "0x43cea4",
+      "length": 494,
+      "sha256": "d4e21c59856366435fc9a912b30b94f4804f06ff382df7cf7bad134b326a14b0"
+    },
+    {
+      "va": "0x438640",
+      "length": 516,
+      "sha256": "c38673f8f8cf82074c3eeb1b34c0833f28ba53ab4de2f0dbd4bbbdf8de799b3a"
+    },
+    {
+      "va": "0x437c0c",
+      "length": 2404,
+      "sha256": "b7d002ab129da9d5575072190a4ef5a9f4e09a62eb5f92718d35880bacec23a1"
+    },
+    {
+      "va": "0x440f80",
+      "length": 383,
+      "sha256": "22614f46522690f173869a015a3376c38ab11d68495853f04fbef753a57ce041"
+    }
+  ],
+  "semantics": {
+    "right_arrow_pixels": 50,
+    "seven_arrows_pixels": 350,
+    "default_duration_ms": 250,
+    "default_curve": "(sin((elapsed/duration - 0.5)*pi)+1)*0.5",
+    "rounding": "truncate toward zero in centered coordinates, then add canvas center",
+    "scheduling": "image operations enqueue; Screen.Render updates while dialogue/voice run; no dedicated movement wait",
+    "source_lines": [
+      286,
+      291,
+      313
+    ]
+  },
+  "limits": [
+    "No dynamic original screen comparison",
+    "Only terminal repeated >, default timing/curve implemented; numeric counts, other symbols, repeated queued operations on same actor, and explicit transition interactions remain rejected"
+  ]
+}

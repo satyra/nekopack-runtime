@@ -1,0 +1,52 @@
+{
+  "scope": "BLESS only, native ARM64 PGKM10; no emulator or other trilogy runs; static original-code semantics, not dynamic original screen parity",
+  "apk_sha256": "eead99233b927f27d04beb4249e91b02895d3d809abe492b32b4ecbc604e9040",
+  "unchanged_prefix_pages": 55,
+  "total_pages": 56,
+  "new_dialogue": {
+    "source": "012402",
+    "line": 76
+  },
+  "next_boundary": {
+    "source": "012402",
+    "line": 81,
+    "steps": 417,
+    "unsupported": "_"
+  },
+  "independent_motion_frames": 8,
+  "independent_scene_pages": 56,
+  "independent_transition_snapshots": 4,
+  "audio_requests": 22,
+  "natural_movie_frames": 2497,
+  "normal_and_cancel_vm_live_bytes": 0,
+  "cancel_after_intermediate_frame": true,
+  "checks": {
+    "workspace_tests": {
+      "log_sha256": "9c62ca425aabeadbb247fff075b7c8a3dc38c63a9b5ee75ceb27b473297eca11",
+      "passed": true
+    },
+    "runtime_final": {
+      "log_sha256": "d65ba326cab399a8e2b532e3e084b9f12e100d89d658ea214d2d7af076b2a74b",
+      "passed": true
+    },
+    "clippy": {
+      "log_sha256": "caf576b66d50c745cefe0ec48581a6ae3cde031da61a16cd21b2a2700dafbd8f",
+      "passed": true
+    },
+    "python_tests": {
+      "log_sha256": "58ab61bef8964691dd1f5d61b343021330490a3e559e9b350bbf7e4d1bf9fbf2",
+      "passed": true
+    }
+  },
+  "reports": {
+    "motion-batch17-audio-evidence.json": "5871eb6ebd57340e0aa27d34dab847ac059953a5b8fb095038ec6d128281de66",
+    "motion-batch17-audio-reference.json": "33dde2ef9fe2aed9a7d4d41d60f685c07182dd8ff2e9047d9d96ed239b29d2ab",
+    "motion-batch17-cancel.json": "3bb78c3d96e1156f3cfb86eede1d1bef423b8078145bc66dfbf322d632dfbd31",
+    "motion-batch17-desktop.json": "038ae1747d6fc60ba62ba37c3d9bf6d36c069138171b2ff6fba11c72c7c5619d",
+    "motion-batch17-effects.json": "0393afc072a2238886dc83f5a7d037c52f2dcb9a0650de23f20e3d96cd650e94",
+    "motion-batch17-frames.json": "ca0531773e88606db1ff3deaf8a4f801892dce65428d3d15f3c6cd66ad3f7b3d",
+    "motion-batch17-layers.json": "ec96d664a6110f4e14a4af9829a3a41a48300a1764d0789661182cbf2ceb79a8",
+    "motion-batch17-native.json": "6d65791faeaea93b1e7974958a49389a2764a401154ee3fb9c4d6876be068aa3",
+    "motion-batch17-original.json": "abc496997586e862d7030cefd8cf1dbc01c0479e040fe214141092809aca5086"
+  }
+}

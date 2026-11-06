@@ -1,4 +1,4 @@
-//! Observed Tiny Dungeon static layer profile. Motion/conditions remain unsupported.
+//! Observed Tiny Dungeon layer profile. Only the verified default rightward motion is supported.
 use crate::quote;
 use nekopack_image::RgbaImage;
 use std::collections::BTreeMap;
@@ -70,7 +70,7 @@ mod tests {
         assert_eq!(s.actors[0].image.pixels(), [100, 110, 120, 128]);
     }
     #[test]
-    fn macros_and_position_are_explicit_and_motion_is_rejected() {
+    fn macros_and_position_are_explicit_and_unknown_motion_is_rejected() {
         let macros = BTreeMap::from([("large".into(), vec!["front".into(), "/big".into()])]);
         let p = plan(
             &[b"face".to_vec(), b"large".to_vec(), b"left2".to_vec()],
@@ -78,12 +78,19 @@ mod tests {
             640,
         )
         .unwrap();
+        let move_plan = plan(&[b">>>>>>>".to_vec()], &macros, 640).unwrap();
+        assert_eq!(move_plan.rightward, Some(350));
+        assert_eq!(move_plan.order, Order::Keep);
         assert_eq!(p.name.as_deref(), Some("face"));
         assert_eq!(p.folder.as_deref(), Some("image/actor/big"));
         assert_eq!(p.x, Some(320));
         assert_eq!(plan(&[b"face".to_vec()], &macros, 640).unwrap().x, None);
         for args in [
             vec![b"to".to_vec()],
+            vec![b">2".to_vec()],
+            vec![b">".to_vec(), b"face".to_vec()],
+            vec![b"center".to_vec(), b">".to_vec()],
+            vec![b"_".to_vec()],
             vec![b"left9".to_vec()],
             vec![b"clear".to_vec(), b"face".to_vec()],
         ] {
@@ -96,6 +103,7 @@ pub(crate) struct Plan {
     pub name: Option<String>,
     pub folder: Option<String>,
     pub x: Option<i32>,
+    pub rightward: Option<i32>,
     pub order: Order,
     pub clear: bool,
 }
@@ -120,10 +128,23 @@ pub(crate) fn plan(
         name: None,
         folder: None,
         x: None,
+        rightward: None,
         order: Order::Front,
         clear: words.is_empty(),
     };
-    for word in &words {
+    for (index, word) in words.iter().enumerate() {
+        if !word.is_empty() && word.bytes().all(|b| b == b'>') {
+            if index + 1 != words.len() || p.rightward.is_some() || p.x.is_some() {
+                return Err("rightward motion must be the sole terminal position modifier".into());
+            }
+            p.rightward = Some(
+                i32::try_from(word.len())
+                    .ok()
+                    .and_then(|n| n.checked_mul(50))
+                    .ok_or("actor motion overflow")?,
+            );
+            continue;
+        }
         if macros.contains_key(word) {
             return Err("nested image macros are unsupported".into());
         }
@@ -176,6 +197,14 @@ pub(crate) fn plan(
                 }
             }
         }
+    }
+    if p.rightward.is_some()
+        && p.name.is_none()
+        && !words
+            .iter()
+            .any(|w| matches!(w.as_str(), "front" | "back" | "keep"))
+    {
+        p.order = Order::Keep;
     }
     Ok(p)
 }
@@ -292,6 +321,15 @@ impl Scene {
         Ok(())
     }
     pub fn render(&mut self) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+        let canvas = self.render_pixels(&[])?;
+        let mut png = Vec::new();
+        canvas.write_png(&mut png)?;
+        Ok(png)
+    }
+    pub fn render_pixels(
+        &mut self,
+        positions: &[(u8, i32)],
+    ) -> Result<RgbaImage, Box<dyn std::error::Error>> {
         let mut canvas = RgbaImage::filled(
             self.dimensions[0],
             self.dimensions[1],
@@ -310,7 +348,10 @@ impl Scene {
                     l.filter = self.filter;
                     l.filter_pending = false;
                 }
-                let x = l.anchor[0]
+                let x = positions
+                    .iter()
+                    .find(|(slot, _)| *slot == l.slot)
+                    .map_or(l.anchor[0], |(_, x)| *x)
                     .checked_add(l.offset[0])
                     .ok_or("actor x overflow")?;
                 let y = l.anchor[1]
@@ -324,9 +365,7 @@ impl Scene {
                 canvas.draw(visual, [0, 0]);
             }
         }
-        let mut png = Vec::new();
-        canvas.write_png(&mut png)?;
-        Ok(png)
+        Ok(canvas)
     }
     pub fn metadata(&self) -> Result<String, String> {
         let actors=self.actors.iter().map(|l|Ok(format!("{{\"slot\":{},\"name\":{},\"folder\":{},\"anchor\":[{},{}],\"offset\":[{},{}],\"filter\":{},\"filter_pending\":{}}}",l.slot,quote(l.name.as_bytes())?,quote(l.folder.as_bytes())?,l.anchor[0],l.anchor[1],l.offset[0],l.offset[1],l.filter.metadata(),l.filter_pending))).collect::<Result<Vec<_>,String>>()?;

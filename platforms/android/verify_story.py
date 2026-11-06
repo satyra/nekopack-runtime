@@ -40,6 +40,7 @@ def main():
  p.add_argument('--allow-page-limit',action='store_true')
  p.add_argument('--wipe-reference',type=Path)
  p.add_argument('--effect-captures',type=Path)
+ p.add_argument('--motion-captures',type=Path)
  p.add_argument('--screen-captures',type=Path)
  p.add_argument('--screen-pages',type=int,nargs='+',default=[])
  p.add_argument('--games',type=int,nargs='+',choices=range(4),default=list(range(4)))
@@ -94,7 +95,7 @@ def main():
  for i in a.games:
   run='story_'+uuid.uuid4().hex
   adb('shell','am','start','-S','-n',package+'/.MainActivity','--ei','story_game',str(i),'--es','run_id',run)
-  pages=[]
+  pages=[];motions=[]
   to_boundary=a.until_boundary and (a.desktop/str(i)/'boundary.json').exists()
   if a.until_boundary and not to_boundary:assert a.allow_page_limit, 'missing expected boundary'
   count=len(list((a.desktop/str(i)).glob('[0-9]*.json'))) if a.until_boundary else 2
@@ -110,6 +111,31 @@ def main():
    source=next(f for f in (a.fixtures/str(i)/'script').iterdir() if f.name.lower()==(actual['source']+'.txt').lower())
    lines=source.read_bytes().split(b'\n');assert lines[actual['line']-1].strip().decode('utf8')==actual['text']
    pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=hashlib.sha256(png).hexdigest(),metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
+   if 'motion' in actual:
+    assert a.motion_captures, 'motion pages require frame capture and verification'
+    deadline=time.monotonic()+20
+    while time.monotonic()<deadline:
+     raw=private(run,'motion-events.jsonl')
+     events=[json.loads(line) for line in raw.splitlines()] if raw.startswith(b'{') else []
+     selected=[e for e in events if e['sequence']==n]
+     if any(e['event']=='finished' for e in selected):break
+     time.sleep(.1)
+    else:raise RuntimeError('dialogue motion never completed')
+    assert selected[0]['event']=='begin' and selected[-1]['event']=='finished'
+    assert not any(e['event']=='cancelled' for e in selected)
+    frames=[e for e in selected if e['event']=='frame'];duration=actual['motion']['duration_ms']
+    assert frames[0]['elapsed_ms']==0 and frames[-1]['elapsed_ms']==duration
+    assert any(0<e['elapsed_ms']<duration for e in frames)
+    assert [e['elapsed_ms'] for e in frames]==sorted(set(e['elapsed_ms'] for e in frames))
+    assert selected[-1]['time_ms']-selected[0]['time_ms']>=duration
+    folder=a.motion_captures/str(i)/str(n);folder.mkdir(parents=True,exist_ok=True)
+    (folder/'page.json').write_text(json.dumps(actual,ensure_ascii=False),encoding='utf8')
+    (folder/'events.json').write_text(json.dumps(selected),encoding='utf8')
+    for event in frames:
+     elapsed=event['elapsed_ms'];rgba=private(run,f'motion-{n}-{elapsed}.rgba')
+     assert len(rgba)==actual['scene']['size'][0]*actual['scene']['size'][1]*4
+     (folder/f'{elapsed}.rgba').write_bytes(rgba)
+    motions.append(dict(sequence=n,events=selected,captured_frames=len(frames)))
    if n in a.screen_pages:
     import io
     from PIL import Image
@@ -307,7 +333,7 @@ def main():
    expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
    assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
    visual=True
-  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,motions=motions,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()

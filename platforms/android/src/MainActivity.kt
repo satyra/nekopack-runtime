@@ -171,8 +171,8 @@ class MainActivity : Activity() {
         }
         storyEffects=StoryEffects(this,image,overlay,root,{kind,token,elapsed,ready->
             worker.execute{try{
-                if(!storyClosing){
-                    val packet=story(intArrayOf(),if(kind=="flash")6 else 5,token,elapsed);val split=packet.indexOf(10.toByte());check(split>=0)
+                if(!storyClosing && (kind!="motion" || storyEffects!!.isMotionActive(token))){
+                    val packet=story(intArrayOf(),if(kind=="motion")8 else if(kind=="flash")6 else 5,token,elapsed);val split=packet.indexOf(10.toByte());check(split>=0)
                     val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.optString("error")}
                     check(meta.getString("format")=="RGBA8")
                     val width=meta.getInt("width");val height=meta.getInt("height")
@@ -227,7 +227,11 @@ class MainActivity : Activity() {
                     val token=metadata.getLong("sequence")
                     val bitmap=BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid story bitmap")
                     File(root,"page-$token.json").writeText(metadata.toString());File(root,"page-$token.png").writeBytes(payload)
-                    runOnUiThread {if(!isDestroyed&&!storyClosing){sequence=token;image.setImageBitmap(bitmap);text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true}}
+                    runOnUiThread {if(!isDestroyed&&!storyClosing){sequence=token;text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true
+                        if(metadata.has("motion")){
+                            storyEffects!!.runMotion(token,metadata.getJSONObject("motion").getLong("duration_ms"))
+                            if(intent.getBooleanExtra("close_on_motion",false))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
+                        }else image.setImageBitmap(bitmap)}}
                 }
             }
         }
@@ -249,7 +253,7 @@ class MainActivity : Activity() {
             }catch(error:Throwable){fail(error)}
         }
         next.setOnClickListener {
-            next.isEnabled=false;storyEffects?.stopVoice();val token=sequence
+            next.isEnabled=false;storyEffects?.stopMotion();storyEffects?.stopVoice();val token=sequence
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         }
         close.setOnClickListener {
