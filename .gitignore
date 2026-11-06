@@ -1,0 +1,12 @@
+/target/
+/.local/
+__pycache__/
+*.pyc
+*.dat
+*.exe
+*.dll
+*.apk
+*.mng
+*.ogg
+/games/
+/samples/
