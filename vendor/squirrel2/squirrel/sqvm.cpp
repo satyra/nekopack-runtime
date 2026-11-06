@@ -1,5 +1,6 @@
 // NekoPack portability: system headers precede internal type() macro.
 #include <math.h>
+#include <limits>
 /*
 	see copyright notice in squirrel.h
 */
@@ -33,19 +34,33 @@ void SQVM::ClearStack(SQInteger last_top)
 	}
 }
 
+// NekoPack numeric profile: checked arithmetic, fixed-width bit operations.
+// This defines runtime behavior; equivalence to the original engine is unverified.
+static SQInteger signed_bits(SQUnsignedInteger value)
+{
+	const SQUnsignedInteger maximum = (SQUnsignedInteger)std::numeric_limits<SQInteger>::max();
+	return value <= maximum ? (SQInteger)value : -1 - (SQInteger)(~value);
+}
+
 bool SQVM::BW_OP(SQUnsignedInteger op,SQObjectPtr &trg,const SQObjectPtr &o1,const SQObjectPtr &o2)
 {
 	SQInteger res;
-	SQInteger i1 = _integer(o1), i2 = _integer(o2);
 	if((type(o1)==OT_INTEGER) && (type(o2)==OT_INTEGER))
 	{
+		SQInteger i1 = _integer(o1), i2 = _integer(o2);
+		const SQInteger bits = sizeof(SQInteger)*8;
+		if((op==BW_SHIFTL || op==BW_SHIFTR || op==BW_USHIFTR) && (i2<0 || i2>=bits)) {
+			Raise_Error(_SC("shift count outside integer width")); return false;
+		}
+		SQUnsignedInteger u1 = (SQUnsignedInteger)i1;
 		switch(op) {
 			case BW_AND:	res = i1 & i2; break;
 			case BW_OR:		res = i1 | i2; break;
 			case BW_XOR:	res = i1 ^ i2; break;
-			case BW_SHIFTL:	res = i1 << i2; break;
-			case BW_SHIFTR:	res = i1 >> i2; break;
-			case BW_USHIFTR:res = (SQInteger)(*((SQUnsignedInteger*)&i1) >> i2); break;
+			case BW_SHIFTL:	res = signed_bits(u1 << i2); break;
+			case BW_SHIFTR:
+				res = signed_bits((u1 >> i2) | ((i1<0 && i2!=0) ? (~SQUnsignedInteger(0) << (bits-i2)) : 0)); break;
+			case BW_USHIFTR:res = signed_bits(u1 >> i2); break;
 			default: { Raise_Error(_SC("internal vm error bitwise op failed")); return false; }
 		}
 	} 
@@ -59,6 +74,15 @@ bool SQVM::ARITH_OP(SQUnsignedInteger op,SQObjectPtr &trg,const SQObjectPtr &o1,
 	if(sq_isnumeric(o1) && sq_isnumeric(o2)) {
 			if((type(o1)==OT_INTEGER) && (type(o2)==OT_INTEGER)) {
 				SQInteger res, i1 = _integer(o1), i2 = _integer(o2);
+				const SQInteger minimum = std::numeric_limits<SQInteger>::min();
+				const SQInteger maximum = std::numeric_limits<SQInteger>::max();
+				bool overflow = false;
+				if(op=='+') overflow = (i2>0 && i1>maximum-i2) || (i2<0 && i1<minimum-i2);
+				if(op=='-') overflow = (i2>0 && i1<minimum+i2) || (i2<0 && i1>maximum+i2);
+				if(op=='*') overflow = i1>0 ? ((i2>0 && i1>maximum/i2) || (i2<0 && i2<minimum/i1))
+					: (i1<0 && ((i2>0 && i1<minimum/i2) || (i2<0 && i1<maximum/i2)));
+				if(op=='/') overflow = i1==minimum && i2==-1;
+				if(overflow) {Raise_Error(_SC("integer arithmetic overflow")); return false;}
 				switch(op) {
 				case '+': res = i1 + i2; break;
 				case '-': res = i1 - i2; break;
@@ -67,7 +91,7 @@ bool SQVM::ARITH_OP(SQUnsignedInteger op,SQObjectPtr &trg,const SQObjectPtr &o1,
 					break;
 				case '*': res = i1 * i2; break;
 				case '%': if(i2 == 0) { Raise_Error(_SC("modulo by zero")); return false; }
-					res = i1 % i2; 
+					res = (i1==minimum && i2==-1) ? 0 : i1 % i2;
 					break;
 				default: res = 0xDEADBEEF;
 				}
@@ -154,6 +178,9 @@ bool SQVM::NEG_OP(SQObjectPtr &trg,const SQObjectPtr &o)
 	
 	switch(type(o)) {
 	case OT_INTEGER:
+		if(_integer(o)==std::numeric_limits<SQInteger>::min()) {
+			Raise_Error(_SC("integer arithmetic overflow")); return false;
+		}
 		trg = -_integer(o);
 		return true;
 	case OT_FLOAT:
@@ -185,7 +212,7 @@ bool SQVM::ObjCmp(const SQObjectPtr &o1,const SQObjectPtr &o2,SQInteger &result)
 		case OT_STRING:
 			_RET_SUCCEED(scstrcmp(_stringval(o1),_stringval(o2)));
 		case OT_INTEGER:
-			_RET_SUCCEED(_integer(o1)-_integer(o2));
+			_RET_SUCCEED((_integer(o1)>_integer(o2)) - (_integer(o1)<_integer(o2)));
 		case OT_FLOAT:
 			_RET_SUCCEED((_float(o1)<_float(o2))?-1:1);
 		case OT_TABLE:
@@ -456,6 +483,9 @@ bool SQVM::DerefInc(SQInteger op,SQObjectPtr &target, SQObjectPtr &self, SQObjec
 
 SQRESULT SQVM::Suspend()
 {
+	// The host has no root continuation protocol. Reject before mutating state.
+	if (this == _thread(_ss(this)->_root_vm))
+		return sq_throwerror(this, _SC("root VM suspension is unsupported"));
 	if (_suspended)
 		return sq_throwerror(this, _SC("cannot suspend an already suspended vm"));
 	if (_nnativecalls!=2)
@@ -717,6 +747,14 @@ exception_restore:
 	{
 		for(;;)
 		{
+			if(_ss(this)->_execution_limited) {
+				if(_ss(this)->_execution_remaining == 0) {
+					_ss(this)->_execution_exhausted = true;
+					Raise_Error(_SC("Squirrel instruction budget exceeded"));
+					SQ_THROW();
+				}
+				--_ss(this)->_execution_remaining;
+			}
 			const SQInstruction &_i_ = *ci->_ip++;
 			//dumpstack(_stackbase);
 			//scprintf("\n[%d] %s %d %d %d %d\n",ci->_ip-ci->_iv->_vals,g_InstrDesc[_i_.op].name,arg0,arg1,arg2,arg3);
@@ -1007,7 +1045,7 @@ exception_trap:
 		SQInteger n = 0;
 		SQInteger last_top = _top;
 		if(ci) {
-			if(_ss(this)->_notifyallexceptions) CallErrorHandler(currerror);
+			if(_ss(this)->_notifyallexceptions && !_ss(this)->_execution_exhausted) CallErrorHandler(currerror);
 
 			if(traps) {
 				do {
@@ -1032,7 +1070,7 @@ exception_trap:
 			}
 			else {
 				//call the hook
-				if(raiseerror && !_ss(this)->_notifyallexceptions)
+				if(raiseerror && !_ss(this)->_notifyallexceptions && !_ss(this)->_execution_exhausted)
 					CallErrorHandler(currerror);
 			}
 			//remove call stack until a C function is found or the cstack is empty

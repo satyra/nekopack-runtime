@@ -24,6 +24,9 @@ SQSharedState::SQSharedState()
 	_printfunc = NULL;
 	_debuginfo = false;
 	_notifyallexceptions = false;
+	_execution_limited = false;
+	_execution_exhausted = false;
+	_execution_remaining = 0;
 }
 
 #define newsysstring(s) {	\

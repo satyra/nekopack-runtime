@@ -80,7 +80,7 @@ struct Frame {
     source: Source,
     lines: Vec<(usize, Vec<u8>)>,
     pc: usize,
-    branch_end: Option<usize>,
+    branch_ends: Vec<usize>,
 }
 impl Frame {
     fn new(source: Source) -> Self {
@@ -94,7 +94,7 @@ impl Frame {
             source,
             lines,
             pc: 0,
-            branch_end: None,
+            branch_ends: Vec::new(),
         }
     }
 }
@@ -119,7 +119,7 @@ pub struct Machine {
     pub variables: Variables,
     stack: Vec<Frame>,
     pending: Option<Request>,
-    pub steps: usize,
+    steps: usize,
     max_steps: usize,
     max_depth: usize,
 }
@@ -145,7 +145,13 @@ impl Machine {
     pub fn depth(&self) -> usize {
         self.stack.len()
     }
+    pub fn steps(&self) -> usize {
+        self.steps
+    }
     pub fn advance(&mut self, scripts: &mut impl Scripts) -> Result<Step, String> {
+        if self.stack.len() > self.max_depth {
+            return Err("call depth exceeded".into());
+        }
         if let Some(request) = &self.pending {
             return Ok(Step::Request(request.clone()));
         }
@@ -157,24 +163,21 @@ impl Machine {
                 self.stack.pop();
                 continue;
             }
-            if self.steps == self.max_steps {
-                return Err("instruction budget exceeded".into());
-            }
+            charge(&mut self.steps, self.max_steps)?;
             let raw = frame.lines[frame.pc].1.clone();
             if raw.is_empty() || raw.starts_with(b";") {
                 frame.pc += 1;
                 continue;
             }
-            self.steps += 1;
-            if raw.starts_with(b".case ") || raw == b".end" {
+            let word = raw.split(|b| b.is_ascii_whitespace()).next().unwrap();
+            if word == b".case" || raw == b".end" {
                 let end = frame
-                    .branch_end
-                    .take()
+                    .branch_ends
+                    .pop()
                     .ok_or("case/end outside selected map branch")?;
                 frame.pc = end + 1;
                 continue;
             }
-            let word = raw.split(|b| b.is_ascii_whitespace()).next().unwrap();
             if [b".def".as_slice(), b".var", b".call", b".load", b".system"].contains(&word)
                 || raw.starts_with(b"?")
             {
@@ -239,6 +242,7 @@ impl Machine {
                 let mut rows = Vec::new();
                 if name == b"map" {
                     for (_, row) in &frame.lines[frame.pc + 1..] {
+                        charge(&mut self.steps, self.max_steps)?;
                         if row.starts_with(b".") {
                             break;
                         }
@@ -266,12 +270,27 @@ impl Machine {
             let choice = result.ok_or("map requires integer result")?;
             let mut selected = None;
             let mut end = None;
+            let mut nesting = 0usize;
             for (i, (_, line)) in frame.lines.iter().enumerate().skip(frame.pc + 1) {
+                charge(&mut self.steps, self.max_steps)?;
+                let word = line
+                    .split(|b| b.is_ascii_whitespace())
+                    .next()
+                    .unwrap_or_default();
+                if word == b".map" {
+                    nesting += 1;
+                    continue;
+                }
                 if line == b".end" {
+                    if nesting != 0 {
+                        nesting -= 1;
+                        continue;
+                    }
                     end = Some(i);
                     break;
                 }
-                if let Some(value) = line.strip_prefix(b".case ") {
+                if nesting == 0 && word == b".case" {
+                    let value = &line[word.len()..];
                     let id = std::str::from_utf8(value)
                         .map_err(|_| "non-ASCII case")?
                         .trim()
@@ -288,7 +307,7 @@ impl Machine {
             let end = end.ok_or("unterminated map cases")?;
             let pc = selected.ok_or("map result has no matching case")?;
             frame.pc = pc;
-            frame.branch_end = Some(end);
+            frame.branch_ends.push(end);
         } else {
             if result.is_some() {
                 return Err("unexpected host result".into());
@@ -298,6 +317,14 @@ impl Machine {
         self.pending = None;
         Ok(())
     }
+}
+
+fn charge(steps: &mut usize, limit: usize) -> Result<(), String> {
+    if *steps >= limit {
+        return Err("instruction budget exceeded".into());
+    }
+    *steps += 1;
+    Ok(())
 }
 
 #[cfg(test)]
@@ -349,6 +376,100 @@ mod tests {
         vm.complete(None).unwrap();
         assert_eq!(vm.advance(&mut store).unwrap(), Step::Finished);
         assert_eq!(vm.variables.get(b"x").unwrap(), 7);
+    }
+    #[test]
+    fn nested_maps_keep_outer_boundaries_and_call_context() {
+        let mut vm = Machine::new(
+            Source {
+                name: b"nested".to_vec(),
+                bytes: br#".var L1 x
+.map outer
+.case 1
+.map inner
+.case 2
+.call patch
+.case 1
+? x = 99
+.end
+.observe
+.case 2
+? x = 88
+.end
+.done"#
+                    .to_vec(),
+            },
+            200,
+            4,
+        );
+        let mut store = Store;
+        vm.advance(&mut store).unwrap();
+        // Inner .case 1 must not count as a duplicate outer case.
+        vm.complete(Some(1)).unwrap();
+        vm.advance(&mut store).unwrap();
+        let location = vm.location().unwrap().1;
+        assert!(vm.complete(Some(9)).is_err());
+        assert_eq!(vm.location().unwrap().1, location);
+        vm.complete(Some(2)).unwrap();
+        assert!(
+            matches!(vm.advance(&mut store).unwrap(),Step::Request(Request::Command{name,..}) if name==b"observe")
+        );
+        assert_eq!(vm.variables.get(b"x").unwrap(), 7);
+        assert_eq!(vm.depth(), 1);
+        vm.complete(None).unwrap();
+        assert!(
+            matches!(vm.advance(&mut store).unwrap(),Step::Request(Request::Command{name,..}) if name==b"done")
+        );
+        assert_eq!(vm.variables.get(b"x").unwrap(), 7);
+        vm.complete(None).unwrap();
+        assert_eq!(vm.advance(&mut store).unwrap(), Step::Finished);
+    }
+    #[test]
+    fn malformed_maps_and_scan_budget_do_not_acknowledge_requests() {
+        for text in [
+            ".map x\n.case 1\n.map inner\n.case 1\n.end",
+            ".map x\n.case 1\n.case 1\n.end",
+        ] {
+            let mut vm = Machine::new(
+                Source {
+                    name: vec![],
+                    bytes: text.as_bytes().to_vec(),
+                },
+                100,
+                4,
+            );
+            let pending = vm.advance(&mut Store).unwrap();
+            assert!(vm.complete(Some(1)).is_err());
+            assert_eq!(vm.location().unwrap().1, 1);
+            assert_eq!(vm.advance(&mut Store).unwrap(), pending);
+        }
+        let mut vm = Machine::new(
+            Source {
+                name: vec![],
+                bytes: b".map x\n.case 1\n; a\n; b\n.end".to_vec(),
+            },
+            3,
+            4,
+        );
+        let pending = vm.advance(&mut Store).unwrap();
+        assert!(vm.complete(Some(1)).unwrap_err().contains("budget"));
+        assert_eq!(vm.location().unwrap().1, 1);
+        assert_eq!(vm.advance(&mut Store).unwrap(), pending);
+        assert!(vm.complete(Some(1)).is_err());
+        assert_eq!(vm.steps(), 3);
+    }
+    #[test]
+    fn scenario_budget_counts_empty_lines_and_zero_depth_is_rejected() {
+        let source = Source {
+            name: vec![],
+            bytes: b"; comment\n\n.done".to_vec(),
+        };
+        let mut vm = Machine::new(source.clone(), 2, 1);
+        assert!(vm.advance(&mut Store).unwrap_err().contains("budget"));
+        assert_eq!(vm.location().unwrap().1, 3);
+        assert_eq!(vm.steps(), 2);
+        assert!(vm.advance(&mut Store).is_err());
+        let mut vm = Machine::new(source, 10, 0);
+        assert!(vm.advance(&mut Store).unwrap_err().contains("depth"));
     }
     #[test]
     fn errors_do_not_skip_calls_or_effects() {

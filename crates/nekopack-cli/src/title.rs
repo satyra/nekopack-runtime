@@ -164,7 +164,7 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
     println!("registered\t{}", system.result());
     println!(
         "complete\t{modules}\t{}\t{}",
-        machine.steps,
+        machine.steps(),
         machine.variables.slots.len()
     );
     for ((bank, index), value) in &machine.variables.slots {

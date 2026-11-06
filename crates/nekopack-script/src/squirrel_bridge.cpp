@@ -17,9 +17,21 @@ void operator delete[](void* p, size_t) noexcept { free(p); }
 extern "C" void __cxa_pure_virtual() { abort(); }
 
 typedef const char* (*VariableCallback)(void*,int,const char*,size_t,const char*,size_t,int32_t*);
-struct Context { HSQUIRRELVM vm; char error[2048]; char* result; void* variables; VariableCallback variable; };
+struct Context { HSQUIRRELVM vm; char error[2048]; char* result; void* variables; VariableCallback variable; bool failed; };
+// The registry is shared by the root VM and its coroutines. Context outlives
+// sq_close (including every child VM); it never owns a persistent Rust borrow.
+static char context_key;
+static Context* context(HSQUIRRELVM v) {
+    sq_pushregistrytable(v);
+    sq_pushuserpointer(v,&context_key);
+    sq_rawget(v,-2);
+    SQUserPointer pointer;
+    sq_getuserpointer(v,-1,&pointer);
+    sq_pop(v,2);
+    return static_cast<Context*>(pointer);
+}
 static SQInteger variable_call(HSQUIRRELVM v, int operation) {
-    auto* c=static_cast<Context*>(sq_getforeignptr(v));
+    auto* c=context(v);
     if(!c->variable) return sq_throwerror(v,"variable state is not bound");
     const SQChar *name=nullptr,*alias=nullptr;
     if(sq_gettop(v)!=(operation==0?2:3) || sq_gettype(v,2)!=OT_STRING)
@@ -44,13 +56,16 @@ static SQInteger variable_get(HSQUIRRELVM v) {return variable_call(v,0);}
 static SQInteger variable_set(HSQUIRRELVM v) {return variable_call(v,1);}
 static SQInteger variable_def(HSQUIRRELVM v) {return variable_call(v,2);}
 static void compiler_error(HSQUIRRELVM v, const SQChar* desc, const SQChar*, SQInteger line, SQInteger column) {
-    auto* c = static_cast<Context*>(sq_getforeignptr(v));
+    auto* c = context(v);
     snprintf(c->error,sizeof(c->error),"line %lld col %lld: %s",(long long)line,(long long)column,desc);
 }
 extern "C" {
 void* neko_sq_open() {
     auto* c = new Context{}; c->vm=sq_open(1024);
-    sq_setforeignptr(c->vm,c); sq_setcompilererrorhandler(c->vm,compiler_error);
+    sq_pushregistrytable(c->vm);
+    sq_pushuserpointer(c->vm,&context_key);sq_pushuserpointer(c->vm,c);
+    sq_rawset(c->vm,-3);sq_pop(c->vm,1);
+    sq_setcompilererrorhandler(c->vm,compiler_error);
     sq_pushroottable(c->vm); sqstd_register_stringlib(c->vm); sq_pop(c->vm,1);
     sq_pushroottable(c->vm);
     const char* names[]={"NekoVariableGet","NekoVariableSet","def"};
@@ -63,13 +78,22 @@ void neko_sq_close(Context* c) { sq_close(c->vm); free(c->result); delete c; }
 const char* neko_sq_result(Context* c) { return c->result ? c->result : ""; }
 const char* neko_sq_error(Context* c) { return c->error; }
 void neko_sq_bind(Context* c, void* variables, VariableCallback callback) {c->variables=variables;c->variable=callback;}
-int neko_sq_eval(Context* c, const char* source, size_t length, const char* name) {
+int neko_sq_eval(Context* c, const char* source, size_t length, const char* name, size_t budget) {
+    if(c->failed) {strcpy(c->error,"VM stopped after execution limit; create a new VM");return -1;}
     auto v=c->vm; auto top=sq_gettop(v); c->error[0]=0;
+    free(c->result); c->result=nullptr;
     if(SQ_FAILED(sq_compilebuffer(v,source,static_cast<SQInteger>(length),name,SQTrue))) {
         sq_settop(v,top); return -1;
     }
     sq_pushroottable(v);
-    if(SQ_FAILED(sq_call(v,1,SQTrue,SQTrue))) {
+    sq_setexecutionbudget(v,static_cast<SQUnsignedInteger>(budget));
+    SQRESULT status=sq_call(v,1,SQTrue,SQTrue);
+    if(sq_executionexhausted(v) || sq_getvmstate(v)==SQ_VMSTATE_SUSPENDED) {
+        c->failed=true;
+        strcpy(c->error,sq_executionexhausted(v) ? "Squirrel instruction budget exceeded" : "unsupported root VM suspension");
+        return -1;
+    }
+    if(SQ_FAILED(status)) {
         sq_getlasterror(v); const SQChar* text=nullptr;
         if(SQ_SUCCEEDED(sq_getstring(v,-1,&text))) {
             strncpy(c->error,text,sizeof(c->error)-1); c->error[sizeof(c->error)-1]=0;

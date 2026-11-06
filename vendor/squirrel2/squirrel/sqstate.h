@@ -104,6 +104,10 @@ public:
 	SQPRINTFUNCTION _printfunc;
 	bool _debuginfo;
 	bool _notifyallexceptions;
+	// NekoPack: one host-call budget shared by all coroutines.
+	bool _execution_limited;
+	bool _execution_exhausted;
+	SQUnsignedInteger _execution_remaining;
 private:
 	SQChar *_scratchpad;
 	SQInteger _scratchpadsize;

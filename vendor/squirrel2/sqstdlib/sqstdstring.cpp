@@ -1,4 +1,5 @@
 /* see copyright notice in squirrel.h */
+// Altered for NekoPack: bounded format parsing/output and width-correct varargs.
 #include <squirrel.h>
 #include <sqstdstring.h>
 #include <string.h>
@@ -28,8 +29,8 @@ static SQInteger validate_format(HSQUIRRELVM v, SQChar *fmt, const SQChar *src, 
 	SQInteger wc = 0;
 	SQInteger start = n;
 	fmt[0] = '%';
-	while (scstrchr(_SC("-+ #0"), src[n])) n++;
-	while (scisdigit(src[n])) {
+	while (src[n] != 0 && scstrchr(_SC("-+ #0"), src[n])) n++;
+	while (src[n] >= '0' && src[n] <= '9') {
 		swidth[wc] = src[n];
 		n++;
 		wc++;
@@ -46,7 +47,7 @@ static SQInteger validate_format(HSQUIRRELVM v, SQChar *fmt, const SQChar *src, 
 	    n++;
     	
 		wc = 0;
-		while (scisdigit(src[n])) {
+		while (src[n] >= '0' && src[n] <= '9') {
 			swidth[wc] = src[n];
 			n++;
 			wc++;
@@ -58,10 +59,18 @@ static SQInteger validate_format(HSQUIRRELVM v, SQChar *fmt, const SQChar *src, 
 			width += scatoi(swidth);
 		}
 	}
-	if (n-start > MAX_FORMAT_LEN )
+	if(src[n] == 0) return sq_throwerror(v,_SC("incomplete format"));
+	SQInteger length_modifier = 0;
+#ifdef _SQ64
+	if(scstrchr(_SC("idouxX"),src[n])) length_modifier = 2;
+#endif
+	// %, flags/width/precision, optional ll, conversion, terminating NUL.
+	if (n-start + length_modifier + 3 > MAX_FORMAT_LEN )
 		return sq_throwerror(v,_SC("format too long"));
-	memcpy(&fmt[1],&src[start],((n-start)+1)*sizeof(SQChar));
-	fmt[(n-start)+2] = '\0';
+	memcpy(&fmt[1],&src[start],(n-start)*sizeof(SQChar));
+	SQInteger end = n-start+1;
+	if(length_modifier) {fmt[end++]='l';fmt[end++]='l';}
+	fmt[end++]=src[n];fmt[end]=0;
 	return n;
 }
 
@@ -104,10 +113,10 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
 				valtype = 's';
 				break;
 			case 'i': case 'd': case 'c':case 'o':  case 'u':  case 'x':  case 'X':
-				if(SQ_FAILED(sq_getinteger(v,nparam,&ti))) 
+				if(sq_gettype(v,nparam)!=OT_INTEGER || SQ_FAILED(sq_getinteger(v,nparam,&ti)))
 					return sq_throwerror(v,_SC("integer expected for the specified format"));
 				addlen = (ADDITIONAL_FORMAT_SPACE)+((w+1)*sizeof(SQChar));
-				valtype = 'i';
+				valtype = format[n]=='c' ? 'c' : (format[n]=='i' || format[n]=='d' ? 'i' : 'u');
 				break;
 			case 'f': case 'g': case 'G': case 'e':  case 'E':
 				if(SQ_FAILED(sq_getfloat(v,nparam,&tf))) 
@@ -121,11 +130,17 @@ SQRESULT sqstd_format(HSQUIRRELVM v,SQInteger nformatstringidx,SQInteger *outlen
 			n++;
 			allocated += addlen + sizeof(SQChar);
 			dest = sq_getscratchpad(v,allocated);
+			SQInteger capacity = allocated/sizeof(SQChar)-i;
+			int written = -1;
 			switch(valtype) {
-			case 's': i += scsprintf(&dest[i],fmt,ts); break;
-			case 'i': i += scsprintf(&dest[i],fmt,ti); break;
-			case 'f': i += scsprintf(&dest[i],fmt,tf); break;
+			case 's': written = scsnprintf(&dest[i],capacity,fmt,ts); break;
+			case 'i': written = scsnprintf(&dest[i],capacity,fmt,ti); break;
+			case 'u': written = scsnprintf(&dest[i],capacity,fmt,(SQUnsignedInteger)ti); break;
+			case 'c': written = scsnprintf(&dest[i],capacity,fmt,(int)(unsigned char)ti); break;
+			case 'f': written = scsnprintf(&dest[i],capacity,fmt,(double)tf); break;
 			};
+			if(written<0 || written>=capacity) return sq_throwerror(v,_SC("formatted output exceeds buffer"));
+			i += written;
 			nparam ++;
 		}
 	}

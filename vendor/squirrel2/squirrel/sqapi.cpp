@@ -13,6 +13,15 @@
 #include "sqfuncstate.h"
 #include "sqclass.h"
 
+void sq_setexecutionbudget(HSQUIRRELVM v, SQUnsignedInteger budget) {
+	_ss(v)->_execution_limited = true;
+	_ss(v)->_execution_exhausted = false;
+	_ss(v)->_execution_remaining = budget;
+}
+SQBool sq_executionexhausted(HSQUIRRELVM v) {
+	return _ss(v)->_execution_exhausted;
+}
+
 bool sq_aux_gettypedarg(HSQUIRRELVM v,SQInteger idx,SQObjectType type,SQObjectPtr **o)
 {
 	*o = &stack_get(v,idx);

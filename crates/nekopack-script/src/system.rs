@@ -25,6 +25,7 @@ unsafe extern "C" {
         source: *const c_char,
         length: usize,
         name: *const c_char,
+        budget: usize,
     ) -> i32;
 }
 struct Binding<'a> {
@@ -61,6 +62,7 @@ unsafe extern "C" fn variable_callback(
 }
 pub struct SystemVm {
     raw: *mut c_void,
+    instruction_budget: usize,
     _thread: PhantomData<Rc<()>>,
 }
 impl Default for SystemVm {
@@ -72,14 +74,15 @@ impl SystemVm {
     pub fn new() -> Self {
         let mut vm = Self {
             raw: unsafe { neko_sq_open() },
+            instruction_budget: 1_000_000,
             _thread: PhantomData,
         };
         vm.eval(
             "variable-access",
             r#"
             class NekoVariableAccess {
-                function _get(name) { return NekoVariableGet(name) }
-                function _set(name,value) { NekoVariableSet(name,value) }
+                function _get(name) { return ::NekoVariableGet(name) }
+                function _set(name,value) { ::NekoVariableSet(name,value) }
             }
             var <- NekoVariableAccess()
         "#,
@@ -91,6 +94,11 @@ impl SystemVm {
         unsafe { CStr::from_ptr(neko_sq_result(self.raw)) }
             .to_string_lossy()
             .into_owned()
+    }
+    /// Bytecodes per eval, shared by child VMs. Exhaustion stops this VM permanently.
+    /// Compilation, native-library work and allocation are not metered by this limit.
+    pub fn set_instruction_budget(&mut self, budget: usize) {
+        self.instruction_budget = budget;
     }
     /// Bind the authoritative Rust state for this call only, including error paths.
     pub fn eval_with_variables(
@@ -127,6 +135,7 @@ impl SystemVm {
                 source.as_ptr().cast(),
                 source.len(),
                 name.as_ptr(),
+                self.instruction_budget,
             )
         };
         if result == 0 {
