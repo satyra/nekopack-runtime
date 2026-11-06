@@ -1,10 +1,94 @@
 //! BRAVE shake options and the shared TD logical-pixel displacement formula.
-//! This is not wired into StorySession until snapshot/edge behaviour is verified.
+//! Snapshot blits preserve destination pixels outside the clipped rectangle.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Shake {
     horizontal: i32,
     vertical: i32,
     duration_ms: u32,
+}
+
+pub(crate) struct Frames {
+    motion: Shake,
+    source: nekopack_image::RgbaImage,
+    pixels: Vec<u8>,
+    elapsed: Option<u64>,
+}
+
+impl Frames {
+    pub(crate) fn new(
+        motion: Shake,
+        source: nekopack_image::RgbaImage,
+        old: nekopack_image::RgbaImage,
+    ) -> Result<Self, String> {
+        if (source.width(), source.height()) != (old.width(), old.height()) {
+            return Err("shake image dimensions mismatch".into());
+        }
+        if source.pixels().len() + old.pixels().len() > 64 * 1024 * 1024 {
+            return Err("shake retained pixel budget exceeded".into());
+        }
+        // The current Scene renderer supplies an opaque flattened snapshot.
+        // Original translucent row blits use a different alpha kernel.
+        if source
+            .pixels()
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .any(|p| p[3] != 255)
+        {
+            return Err("unsupported translucent shake snapshot".into());
+        }
+        Ok(Self {
+            motion,
+            source,
+            pixels: old.pixels().to_vec(),
+            elapsed: None,
+        })
+    }
+    pub(crate) fn frame(&mut self, elapsed: u64) -> Result<&[u8], String> {
+        if self.elapsed.is_some_and(|last| elapsed < last) {
+            return Err("shake frame time moved backwards".into());
+        }
+        if self.elapsed != Some(elapsed) {
+            if let Some([dx, dy]) = self.motion.displacement(elapsed) {
+                let (w, h) = (
+                    i64::from(self.source.width()),
+                    i64::from(self.source.height()),
+                );
+                let (dx, dy) = (i64::from(dx), i64::from(dy));
+                let (left, right) = (dx.max(0), (w + dx).min(w));
+                let (top, bottom) = (dy.max(0), (h + dy).min(h));
+                if left < right && top < bottom {
+                    let bytes = ((right - left) * 4) as usize;
+                    for y in top..bottom {
+                        let target = ((y * w + left) * 4) as usize;
+                        let source = (((y - dy) * w + left - dx) * 4) as usize;
+                        self.pixels[target..target + bytes]
+                            .copy_from_slice(&self.source.pixels()[source..source + bytes]);
+                    }
+                }
+            }
+            self.elapsed = Some(elapsed);
+        }
+        Ok(&self.pixels)
+    }
+    pub(crate) fn finished(&self) -> bool {
+        self.elapsed
+            .is_some_and(|t| t >= u64::from(self.motion.duration_ms()))
+    }
+    pub(crate) fn dimensions(&self) -> (u32, u32) {
+        (self.source.width(), self.source.height())
+    }
+    pub(crate) fn into_png(self) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+        let mut png = Vec::new();
+        nekopack_image::RgbaImage::from_rgba(
+            self.source.width(),
+            self.source.height(),
+            self.pixels,
+            64 * 1024 * 1024,
+        )?
+        .write_png(&mut png)?;
+        Ok(png)
+    }
 }
 
 impl Shake {
@@ -72,6 +156,35 @@ impl Shake {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn clipped_frames_preserve_edges_and_last_frame_at_expiry() {
+        use nekopack_image::RgbaImage;
+        let source = RgbaImage::filled(12, 12, [90, 80, 70, 255], 4096).unwrap();
+        let old = RgbaImage::filled(12, 12, [1, 2, 3, 255], 4096).unwrap();
+        let mut frames = Frames::new(Shake::parse(["small"]).unwrap(), source, old).unwrap();
+        let first = frames.frame(7).unwrap().to_vec(); // offset (3,3)
+        assert_eq!(&first[..4], &[1, 2, 3, 255]);
+        assert_eq!(
+            &first[(3 * 12 + 3) * 4..(3 * 12 + 4) * 4],
+            &[90, 80, 70, 255]
+        );
+        assert_eq!(frames.frame(7).unwrap(), first);
+        let second = frames.frame(28).unwrap().to_vec(); // offset (-3,-1)
+        assert_eq!(&second[..4], &[90, 80, 70, 255]);
+        assert_eq!(&second[11 * 4..12 * 4], &[1, 2, 3, 255]);
+        assert_eq!(&second[(11 * 12 + 11) * 4..], &[90, 80, 70, 255]);
+        assert!(frames.frame(27).is_err());
+        assert_eq!(frames.frame(250).unwrap(), second);
+        assert!(frames.finished());
+        assert_eq!(frames.frame(u64::MAX).unwrap(), second);
+    }
+    #[test]
+    fn snapshot_contract_rejects_transparency_and_size_mismatch() {
+        use nekopack_image::RgbaImage;
+        let image = |w, alpha| RgbaImage::filled(w, 1, [10, 20, 30, alpha], 64).unwrap();
+        assert!(Frames::new(Shake::parse([]).unwrap(), image(1, 128), image(1, 255)).is_err());
+        assert!(Frames::new(Shake::parse([]).unwrap(), image(2, 255), image(1, 255)).is_err());
+    }
     #[test]
     fn original_phase_and_truncation() {
         let shake = Shake::parse([]).unwrap();

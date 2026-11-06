@@ -299,9 +299,9 @@ pub unsafe extern "C" fn neko_probe_story(
                     .ok_or("no story session")?
                     .acknowledge_effect(sequence),
                 5 => state
-                    .as_ref()
+                    .as_mut()
                     .ok_or("no story session")?
-                    .wipe_frame(sequence, elapsed_ms),
+                    .effect_frame(sequence, elapsed_ms),
                 3 => {
                     *state = None;
                     check(

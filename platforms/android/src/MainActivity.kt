@@ -164,7 +164,7 @@ class MainActivity : Activity() {
                     val pixels=IntArray(width*height)
                     for(index in pixels.indices){val at=index*4;pixels[index]=((rgba[at+3].toInt() and 255) shl 24) or ((rgba[at].toInt() and 255) shl 16) or ((rgba[at+1].toInt() and 255) shl 8) or (rgba[at+2].toInt() and 255)}
                     val bitmap=android.graphics.Bitmap.createBitmap(pixels,width,height,android.graphics.Bitmap.Config.ARGB_8888)
-                    File(root,"wipe-$token-$elapsed.rgba").writeBytes(rgba)
+                    File(root,"${meta.optString("frame_kind","wipe")}-$token-$elapsed.rgba").writeBytes(rgba)
                     runOnUiThread{if(!storyClosing)ready(bitmap)}
                 }
             }catch(error:Throwable){fail(error)}}
@@ -180,16 +180,24 @@ class MainActivity : Activity() {
                 if(metadata.has("host_effect")) {
                     val token=metadata.getLong("token");val kind=metadata.getString("host_effect")
                     File(root,"effect-$token.json").writeText(metadata.toString())
-                    if(kind in listOf("fade","wipe"))File(root,"effect-$token.png").writeBytes(payload)
-                    val bitmap=if(kind in listOf("fade","wipe"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
+                    if(kind in listOf("fade","wipe","shake"))File(root,"effect-$token.png").writeBytes(payload)
+                    val bitmap=if(kind in listOf("fade","wipe","shake"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
                     val file=if(kind in listOf("bgm","se","voice"))File(root,"audio-$token.ogg").also{
                         it.writeBytes(payload)
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
                         File(root,"audio-$token.json").writeText(JSONObject().put("kind",kind).put("name",metadata.getString("name")).put("sha256",digest).toString())
                     } else null
                     runOnUiThread{
-                        if(storyClosing){file?.delete()}else storyEffects!!.run(metadata,bitmap,file){
+                        if(storyClosing){file?.delete()}else {
+                            if(kind=="shake" || kind=="wipe") {
+                                val old=(image.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
+                                if(old!=null)File(root,"$kind-$token-old.png").outputStream().use{check(old.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
+                            }
+                            // Probe-only lifecycle injection: preserve the original duration, background during the real request.
+                            if(kind=="shake" && intent.getBooleanExtra("close_on_shake",false))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},35)
+                            storyEffects!!.run(metadata,bitmap,file){
                             if(!storyClosing)worker.execute{try{show(story(intArrayOf(),4,token))}catch(error:Throwable){fail(error)}}
+                            }
                         }
                     }
                 }else {
@@ -225,9 +233,9 @@ class MainActivity : Activity() {
             worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
         }
     }
-    override fun onStop() {
-        super.onStop()
-        if(storyWorker!=null && !isFinishing){storyClosing=true;storyEffects?.close();finish()}
+    override fun onPause() {
+        super.onPause()
+        if(storyWorker!=null && !isFinishing){File(storyRunRoot!!,"lifecycle-pause.json").writeText(org.json.JSONObject().put("time_ms",android.os.SystemClock.elapsedRealtime()).toString());storyClosing=true;storyEffects?.close();finish()}
     }
     override fun onDestroy() {
         storyClosing=true;storyEffects?.close()

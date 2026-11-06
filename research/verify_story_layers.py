@@ -8,6 +8,7 @@ from PIL import Image
 def main():
  p=argparse.ArgumentParser()
  for name in ['games','reference-root','pages','output']:p.add_argument('--'+name,type=Path,required=True)
+ p.add_argument('--effects',action='store_true')
  a=p.parse_args();sys.path.insert(0,str(a.reference_root));from portkit.neko import Archive,png_geometry
  manifest=json.loads(Path('research/metadata-verification.json').read_text(encoding='utf8'));results=[]
  for i,g in enumerate(manifest['games']):
@@ -74,7 +75,9 @@ def main():
    if visual and not overlay:canvas.alpha_composite(Image.open(io.BytesIO(read('image/visual/'+visual+'.png'))).convert('RGBA'))
    actual=Image.open(path.with_suffix('.png')).convert('RGBA')
    assert actual.size==canvas.size and actual.tobytes()==canvas.tobytes(),f'pixel mismatch game {i} page {path.stem}'
-   results.append(dict(game=i,page=int(path.stem)+1,source=page['source'],line=page['line'],actor_slots=[l['slot'] for l in layers],rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest(),independent_pixels_equal=True,independent_layers_equal=True))
+   record=dict(game=i,source=page['source'],line=page['line'],actor_slots=[l['slot'] for l in layers],rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest(),independent_pixels_equal=True,independent_layers_equal=True)
+   record['effect_token' if a.effects else 'page']=int(path.stem)+(0 if a.effects else 1)
+   results.append(record)
   print('PASS independent layers/pixels',i,flush=True)
- a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',pages=results),indent=2)+'\n',encoding='utf8')
+ a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',**{'snapshots' if a.effects else 'pages':results}),indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

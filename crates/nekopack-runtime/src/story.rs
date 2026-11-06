@@ -58,8 +58,14 @@ pub struct HostEffect {
 }
 impl HostEffect {
     pub fn packet(&self) -> Result<Vec<u8>, String> {
+        self.packet_checkpoint(None)
+    }
+    fn packet_checkpoint(&self, checkpoint: Option<&str>) -> Result<Vec<u8>, String> {
+        let extra = checkpoint
+            .map(|c| format!(",\"checkpoint\":{c}"))
+            .unwrap_or_default();
         let mut result = format!(
-            "{{\"host_effect\":{},\"token\":{},\"name\":{},\"duration_ms\":{}}}\n",
+            "{{\"host_effect\":{},\"token\":{},\"name\":{},\"duration_ms\":{}{extra}}}\n",
             quote(self.kind.as_bytes())?,
             self.token,
             quote(self.name.as_bytes())?,
@@ -70,6 +76,7 @@ impl HostEffect {
         Ok(result)
     }
 }
+
 fn duration_ms(text: &str) -> Result<u64, String> {
     let (whole, fraction) = text.split_once('.').unwrap_or((text, ""));
     if whole.is_empty()
@@ -100,6 +107,7 @@ pub struct StorySession<R: Read + Seek> {
     scene: Scene,
     presented: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
+    shake: Option<crate::shake::Frames>,
     image_macros: BTreeMap<String, Vec<String>>,
     page: Option<Page>,
     speaker: String,
@@ -138,6 +146,7 @@ impl<R: Read + Seek> StorySession<R> {
             scene: Scene::new([mng.header[0], mng.header[1]]),
             presented: None,
             wipe: None,
+            shake: None,
             image_macros,
             page: None,
             speaker: String::new(),
@@ -192,7 +201,12 @@ impl<R: Read + Seek> StorySession<R> {
             }
         }
         if let Some(effect) = &self.pending_effect {
-            Ok(effect.packet()?)
+            let checkpoint = if matches!(effect.kind.as_str(), "shake" | "wipe" | "fade") {
+                Some(self.checkpoint()?)
+            } else {
+                None
+            };
+            Ok(effect.packet_checkpoint(checkpoint.as_deref())?)
         } else {
             Ok(self
                 .page
@@ -208,8 +222,14 @@ impl<R: Read + Seek> StorySession<R> {
         if self.pending_effect.as_ref().map(|e| e.token) != Some(token) {
             return Err("stale or missing host acknowledgement".into());
         }
+        if self.shake.as_ref().is_some_and(|s| !s.finished()) {
+            return Err("shake acknowledged before final frame".into());
+        }
         self.machine.complete(None)?;
         let effect = self.pending_effect.take().unwrap();
+        if let Some(shake) = self.shake.take() {
+            self.presented = Some(shake.into_png()?);
+        }
         if effect.kind == "fade" || effect.kind == "wipe" {
             self.presented = Some(effect.payload);
         }
@@ -228,6 +248,20 @@ impl<R: Read + Seek> StorySession<R> {
         self.speaker.clear();
         self.voice.clear();
         self.poll_packet()
+    }
+    pub fn effect_frame(&mut self, token: u64, elapsed_ms: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed || self.pending_effect.as_ref().map(|e| e.token) != Some(token) {
+            return Err("stale or missing effect frame request".into());
+        }
+        if let Some(shake) = &mut self.shake {
+            let (width, height) = shake.dimensions();
+            let pixels = shake.frame(elapsed_ms)?;
+            let mut packet=format!("{{\"frame_kind\":\"shake\",\"token\":{token},\"elapsed_ms\":{elapsed_ms},\"width\":{width},\"height\":{height},\"format\":\"RGBA8\"}}\n").into_bytes();
+            packet.extend_from_slice(pixels);
+            Ok(packet)
+        } else {
+            self.wipe_frame(token, elapsed_ms)
+        }
     }
     pub fn wipe_frame(&self, token: u64, elapsed_ms: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed
@@ -455,6 +489,47 @@ impl<R: Read + Seek> StorySession<R> {
                                 return Ok(());
                             }
                         }
+                        "shake" => {
+                            let options = args
+                                .iter()
+                                .map(|a| std::str::from_utf8(a))
+                                .collect::<Result<Vec<_>, _>>()?;
+                            let motion = crate::shake::Shake::parse(options.iter().copied())?;
+                            self.effects.push(format!(
+                                "shake{}",
+                                if options.is_empty() {
+                                    String::new()
+                                } else {
+                                    format!(" {}", options.join(" "))
+                                }
+                            ));
+                            if self.host_mode {
+                                let target = self.render()?;
+                                let old = match &self.presented {
+                                    Some(png) => decode_png(png, PIXELS)?,
+                                    None => nekopack_image::RgbaImage::filled(
+                                        self.scene.dimensions[0],
+                                        self.scene.dimensions[1],
+                                        [0, 0, 0, 255],
+                                        PIXELS,
+                                    )?,
+                                };
+                                self.shake = Some(crate::shake::Frames::new(
+                                    motion,
+                                    decode_png(&target, PIXELS)?,
+                                    old,
+                                )?);
+                                self.host_sequence += 1;
+                                self.pending_effect = Some(HostEffect {
+                                    token: self.host_sequence,
+                                    kind: "shake".into(),
+                                    name: options.join(" "),
+                                    duration_ms: u64::from(motion.duration_ms()),
+                                    payload: target,
+                                });
+                                return Ok(());
+                            }
+                        }
                         "wipe" => {
                             let mut name = None;
                             let mut duration = 500u64;
@@ -624,6 +699,7 @@ mod tests {
             scene: Scene::new([1, 1]),
             presented: None,
             wipe: None,
+            shake: None,
             image_macros: BTreeMap::new(),
             page: None,
             speaker: String::new(),
@@ -637,6 +713,25 @@ mod tests {
         }
     }
 
+    #[test]
+    fn shake_frames_require_matching_token_and_completion_without_advancing_pc() {
+        let mut s = session(b".shake once\ntext");
+        s.enable_host_effects();
+        let pending = s.poll_packet().unwrap();
+        let before = s.checkpoint().unwrap();
+        assert_eq!(s.poll_packet().unwrap(), pending);
+        assert!(s.acknowledge_effect(1).is_err());
+        assert!(s.effect_frame(2, 7).is_err());
+        let frame = s.effect_frame(1, 7).unwrap();
+        assert_eq!(s.effect_frame(1, 7).unwrap(), frame);
+        assert!(s.effect_frame(1, 6).is_err());
+        assert_eq!(s.checkpoint().unwrap(), before);
+        s.effect_frame(1, 50).unwrap();
+        s.acknowledge_effect(1).unwrap();
+        assert!(s.shake.is_none());
+        assert!(s.effect_frame(1, 50).is_err());
+        assert!(s.acknowledge_effect(1).is_err());
+    }
     #[test]
     fn host_wait_requires_matching_completion_before_text() {
         let mut s = session(b".wait 0.125\nfirst\n.wait 0\nsecond");

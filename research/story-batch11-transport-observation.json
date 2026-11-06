@@ -1,0 +1,10 @@
+{
+  "scope": "A failed validation transport read; not a passing game regression",
+  "serial": "emulator-5568",
+  "remote": "files/story_c74626afc7c94a64a4d8f9fd57913a20/shake-55-110.rgba",
+  "initial_timeout_seconds": 90,
+  "recheck_bytes": 3686400,
+  "recheck_seconds": 0.20300000003771856,
+  "recheck_sha256": "05aface02a13d86d09611a0e881d614109816182445cf70f92792aa308d70e92",
+  "action": "Re-run the complete emulator regression with the same APK and unchanged pixel assertions"
+}

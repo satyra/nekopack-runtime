@@ -72,19 +72,19 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                         animation.start();done()
                     }
                 }
-                "wipe"->{
+                "wipe","shake"->{
                     check(bitmap!=null)
                     fun frame(){
                         if(closed)return
                         val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
                         wipeFrame(token,elapsed){value->
                             if(!closed){image.setImageBitmap(value);log("frame",kind,token,elapsed)
-                                if(elapsed==duration){image.setImageBitmap(bitmap);done()}
+                                if(elapsed==duration){if(kind=="wipe")image.setImageBitmap(bitmap);done()}
                                 else handler.postDelayed({frame()},16)
                             }
                         }
                     }
-                    frame()
+                    image.postOnAnimation{frame()}
                 }
                 "fade"->{
                     check(bitmap!=null);overlay.setImageBitmap(bitmap);overlay.alpha=0f

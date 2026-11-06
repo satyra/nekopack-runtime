@@ -13,7 +13,9 @@ def main():
  for name in ['adb','desktop','fixtures','output']:p.add_argument('--'+name,type=Path,required=True)
  p.add_argument('--audio-reference',type=Path)
  p.add_argument('--until-boundary',action='store_true')
+ p.add_argument('--allow-page-limit',action='store_true')
  p.add_argument('--wipe-reference',type=Path)
+ p.add_argument('--effect-captures',type=Path)
  p.add_argument('--games',type=int,nargs='+',choices=range(4),default=list(range(4)))
  p.add_argument('--serial',required=True);a=p.parse_args()
  prefix=[str(a.adb),'-s',a.serial];package='org.nekopack.probe'
@@ -55,6 +57,8 @@ def main():
   run='story_'+uuid.uuid4().hex
   adb('shell','am','start','-S','-n',package+'/.MainActivity','--ei','story_game',str(i),'--es','run_id',run)
   pages=[]
+  to_boundary=a.until_boundary and (a.desktop/str(i)/'boundary.json').exists()
+  if a.until_boundary and not to_boundary:assert a.allow_page_limit, 'missing expected boundary'
   count=len(list((a.desktop/str(i)).glob('[0-9]*.json'))) if a.until_boundary else 2
   assert count>0
   last_page_audio=set()
@@ -70,9 +74,9 @@ def main():
    pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=hashlib.sha256(png).hexdigest(),metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
    if a.audio_reference:wait_audio(run)
    if a.audio_reference:last_page_audio={e['token'] for e in [json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()] if e['event']=='begin' and e['kind'] in ['bgm','se','voice']}
-   if n<count or a.until_boundary:tap('继续')
+   if n<count or to_boundary:tap('继续')
   boundary=None
-  if a.until_boundary:
+  if to_boundary:
    deadline=time.monotonic()+45
    while time.monotonic()<deadline:
     raw=private(run,'boundary.json')
@@ -90,7 +94,7 @@ def main():
    if private(run,'closed.txt')==b'closed; VM live bytes=0':break
    time.sleep(.2)
   else:raise RuntimeError('session did not close cleanly')
-  if not a.until_boundary and b'No such file' not in private(run,'error.txt'):raise RuntimeError('host reported a story error')
+  if not to_boundary and b'No such file' not in private(run,'error.txt'):raise RuntimeError('host reported a story error')
   host=[];audio=[]
   if a.audio_reference:
    host=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
@@ -98,7 +102,7 @@ def main():
    if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
    reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
    for begin,ack in zip(begins,acks):
-    if begin['kind'] in ['fade','wait','wipe']:
+    if begin['kind'] in ['fade','wait','wipe','shake']:
      if ack['value']<begin['value']:raise RuntimeError('premature timed completion')
      if begin['kind']=='fade' and not any(e['event']=='frame' and e['token']==begin['token'] and 0<e['value']<1000 for e in host):raise RuntimeError('fade had no intermediate frame')
     elif begin['kind']=='bgm_fade':
@@ -126,28 +130,67 @@ def main():
    if not host or host[-1]['event']!='released' or host[-1]['value']!=0:raise RuntimeError('audio not released')
    if b'.ogg' in adb('shell','run-as',package,'ls',f'files/{run}'):raise RuntimeError('audio cache was not removed')
   layout=json.loads(private(run,'layout.json'));assert layout['width']>layout['height'] and layout['orientation']==2 and layout['stage_height']>0
-  wipes=[]
-  for begin in [e for e in host if e['event']=='begin' and e['kind']=='wipe']:
-   assert a.wipe_reference is not None, 'wipe oracle is required'
-   import io,numpy as np
+  if a.effect_captures:
+   folder=a.effect_captures/str(i);folder.mkdir(parents=True,exist_ok=True)
+   for begin in [e for e in host if e['event']=='begin' and e['kind'] in ['fade','wipe','shake']]:
+    token=begin['token'];meta=json.loads(private(run,f'effect-{token}.json'))
+    (folder/f'{token}.json').write_text(json.dumps(meta['checkpoint']),encoding='utf8')
+    (folder/f'{token}.png').write_bytes(private(run,f'effect-{token}.png'))
+  wipes=[];shakes=[]
+  for begin in [e for e in host if e['event']=='begin' and e['kind'] in ['wipe','shake']]:
+   import io,math,numpy as np
    from PIL import Image
-   meta=json.loads(private(run,f"effect-{begin['token']}.json"));mask_name=meta['name']
-   folder=a.wipe_reference/str(i)/mask_name
-   old=np.array(Image.open(folder/'old.png').convert('RGBA')).astype('int32')
-   target=np.array(Image.open(folder/'target.png').convert('RGBA')).astype('int32')
-   mask=np.array(Image.open(folder/'mask.png').convert('RGBA')).astype('int32')
-   frames=[e for e in host if e['event']=='frame' and e['kind']=='wipe' and e['token']==begin['token']]
-   assert any(0<e['value']<begin['value'] for e in frames), 'wipe never displayed an intermediate frame'
-   hashes=[]
+   kind=begin['kind'];token=begin['token']
+   meta=json.loads(private(run,f"effect-{token}.json"))
+   if a.effect_captures:
+    folder=a.effect_captures/str(i);folder.mkdir(parents=True,exist_ok=True)
+    (folder/f'{token}.json').write_text(json.dumps(meta['checkpoint']),encoding='utf8')
+    (folder/f'{token}.png').write_bytes(private(run,f'effect-{token}.png'))
+    old=np.array(Image.open(io.BytesIO(private(run,f'{kind}-{token}-old.png'))).convert('RGBA')).astype('int32')
+    target=np.array(Image.open(io.BytesIO(private(run,f'effect-{token}.png'))).convert('RGBA')).astype('int32')
+   else:
+    assert kind=='wipe' and a.wipe_reference is not None
+    folder=a.wipe_reference/str(i)/meta['name']
+    old=np.array(Image.open(folder/'old.png').convert('RGBA')).astype('int32')
+    target=np.array(Image.open(folder/'target.png').convert('RGBA')).astype('int32')
+   if kind=='wipe':
+    mask=np.array(Image.open(a.wipe_reference/str(i)/meta['name']/'mask.png').convert('RGBA')).astype('int32')
+   else:
+    ax=ay=8;span=250;once=False
+    for option in meta['name'].split():
+     if option=='once':once=True
+     elif option=='short':span//=2
+     elif option=='long':span*=2
+     elif option=='honly':ay=0
+     elif option=='vonly':ax=0
+     elif option=='big':ax*=2;ay*=2
+     elif option=='small':ax//=2;ay//=2
+     else:raise RuntimeError('unknown shake option')
+    if once:span=50
+    assert span==begin['value']
+   frames=[e for e in host if e['event']=='frame' and e['kind']==kind and e['token']==token]
+   assert any(0<e['value']<begin['value'] for e in frames), kind+' never displayed an intermediate frame'
+   assert frames[-1]['value']==begin['value']
+   hashes=[];expected=old.copy();moved=False
    for frame in frames:
-    elapsed=frame['value'];q=min(256,elapsed*256//begin['value'])
-    expected=old if q==0 else target if q>=255 else np.where(mask+q>=255,target,old)
-    raw=private(run,f"wipe-{begin['token']}-{elapsed}.rgba");actual=np.frombuffer(raw,dtype=np.uint8).reshape(old.shape)
-    assert np.array_equal(actual,expected), 'wipe kernel/reference mismatch'
+    elapsed=frame['value']
+    if kind=='wipe':
+     q=min(256,elapsed*256//begin['value'])
+     # Metadata currently names the mask; softness is recorded by the source effect.
+     soft=meta.get('checkpoint',{}).get('effects',[''])[-1].endswith(' fade')
+     alpha=np.clip(mask+2*q-255,0,255)
+     expected=old if q==0 else target if q>=255 else old+((target-old)*alpha)//256 if soft else np.where(mask+q>=255,target,old)
+    elif elapsed<span:
+     dx=int(math.sin(elapsed/7)*ax);dy=int(math.sin(elapsed/8)*ay);moved|=bool(dx or dy)
+     h,w=expected.shape[:2];left=max(0,dx);right=min(w,w+dx);top=max(0,dy);bottom=min(h,h+dy)
+     if left<right and top<bottom:expected[top:bottom,left:right]=target[top-dy:bottom-dy,left-dx:right-dx]
+    raw=private(run,f"{kind}-{token}-{elapsed}.rgba");actual=np.frombuffer(raw,dtype=np.uint8).reshape(old.shape)
+    assert np.array_equal(actual,expected), kind+' kernel/reference mismatch'
     hashes.append(dict(elapsed_ms=elapsed,rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest()))
-   wipes.append(dict(token=begin['token'],name=mask_name,frames=hashes,independent_pixels_equal=True))
+   if kind=='shake':assert moved, 'shake never produced a nonzero displacement'
+   (wipes if kind=='wipe' else shakes).append(dict(token=token,name=meta['name'],frames=hashes,independent_kernel_pixels_equal=True))
   visual=False
-  if boundary and boundary['checkpoint']['scene'].get('visual'):
+  if boundary and boundary['checkpoint']['scene'].get('visual') and not a.effect_captures:
    from PIL import Image
    import io
    assert a.wipe_reference is not None
@@ -156,10 +199,10 @@ def main():
    expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
    assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
    visual=True
-  games.append(dict(index=i,run_id=run,layout=layout,wipes=wipes,final_visual_independent_pixels_equal=visual,boundary=boundary,pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  games.append(dict(index=i,run_id=run,layout=layout,wipes=wipes,shakes=shakes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
- result=dict(scope=('continuous pages to explicit unsupported boundary' if a.until_boundary else 'two text pages per game; host-driven audio and timed fade') if a.audio_reference else 'two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,games=games)
+ result=dict(scope=('bounded continuous pages; unsupported boundaries or explicit reference page limit' if a.until_boundary else 'two text pages per game; host-driven audio and timed fade') if a.audio_reference else 'two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,games=games)
  a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

@@ -14,7 +14,7 @@ def main():
    page=json.loads(file.read_text(encoding='utf8'))
    if page['voice']:wanted.add(('voice',page['voice']))
    for effect in page['effects']:
-    kind,name=effect.split(' ',1)
+    kind,_,name=effect.partition(' ')
     if kind in ['bgm','se'] and not name.startswith('fade '):wanted.add((kind,name))
   rows={}
   for kind,name in sorted(wanted):
