@@ -17,4 +17,6 @@
 
 本地研究工具来自 `D:\codex\电脑移植安卓\research\inspect_neko.py`。其解密来自 GARbro 算法；本轮不是独立双实现差分测试。仅对所有 payload 解密前 16 字节以分类，完整读取 script/system 文本候选并对每包最多 3 个 MNG 做块结构与 CRC 检查。没有完整解码所有 PNG/Ogg/MNG，没有验证 DAT parity，没有验证所有脚本文字编码。
 
+以上段落描述 Phase 0。**L2（Phase 1 新增）**：[rust-archive-verification.json](../research/rust-archive-verification.json)，由 [verify_rust_archive.py](../research/verify_rust_archive.py) 生成。Rust 按逐字节/u16 lane 反馈实现，旧 Python 按 u64 分组实现；二者独立代码路径，但依据相同公开格式，不是原版引擎 oracle。逐包核对原始文件 SHA-256、完整解密索引、全部条目元数据和前缀，并对选中资源做完整字节相等比较。Rust 另外校验全部非零 parity。报告记录参考工具与 CLI 的 SHA-256；没有验证完整游戏行为。
+
 Niflheim 克隆中未发现独立 LICENSE 文件，因此只作证据引用，不把其源码或专用词表直接纳入本项目。仓库当前不分发游戏数据、参考工具二进制或上游源码。

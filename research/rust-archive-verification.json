@@ -1,0 +1,1679 @@
+{
+  "scope": "/1 archive static differential verification; no gameplay verification",
+  "reference": "Existing local GARbro-derived inspect_neko.py u64 decoder versus Rust u16 lane decoder",
+  "reference_sha256": "9a7f4c9886dc7176bd2d68aa5bef8085ca4d62bf05d6dd7fbe7e5985be22fca0",
+  "cli_sha256": "9a656986eb0e2aa0922f3f68f03d8639f581f4ea4f931284f6653bd9e38422bc",
+  "archives": [
+    {
+      "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/image.dat",
+      "sha256": "10499a9d839977153e2570274ed87cb325c0845b766083c175f346b754328e12",
+      "entries_compared": 4698,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 755098,
+          "sha256": "b2f49faa369d8b4481ac0e3d6c5e830b2363589cb88a4d4dbc3e33d48e19e58c"
+        },
+        {
+          "ordinal": 1,
+          "length": 634008,
+          "sha256": "229819814fd9974c2fedf0ffc65355845424c77692f4c699ce075a7d558f516a"
+        },
+        {
+          "ordinal": 2,
+          "length": 335270,
+          "sha256": "ab332a9e3cbc8b12486a96b8de526738860fcceff3060bf20c2de16212e2730f"
+        },
+        {
+          "ordinal": 3,
+          "length": 792772,
+          "sha256": "937121e16c37c7bbc27f7ef40e7765d36ad1e6385002d39a5e2d4ddc86f0de50"
+        },
+        {
+          "ordinal": 5,
+          "length": 249203,
+          "sha256": "97176a76d8f9d4ab91997fa9a6716f738584bf5e26860e25e3380699c21b7d8f"
+        },
+        {
+          "ordinal": 9,
+          "length": 347805,
+          "sha256": "7a663b513918519f955a03433c98fe85c5e36e7451f35c17238fb9d1e57ab308"
+        },
+        {
+          "ordinal": 17,
+          "length": 291249,
+          "sha256": "94d1e542cbc2dfaabe5e6996b7866e3e18d030d89f3a25079d1693098d623037"
+        },
+        {
+          "ordinal": 22,
+          "length": 412247,
+          "sha256": "34817fbfc9e03e74850f2fb4fee8204f973c324110bc26f82e00b8c27605edd6"
+        },
+        {
+          "ordinal": 2349,
+          "length": 726715,
+          "sha256": "09d8d82f91132eb82cf71cb162c0974669fde48a55f697a87a94bad8e7a6f701"
+        },
+        {
+          "ordinal": 2475,
+          "length": 1592688,
+          "sha256": "c7cf61ee52475d761419f798983bb1ff502faef72ee2cb4b59db60d475ff546a"
+        },
+        {
+          "ordinal": 4697,
+          "length": 390717,
+          "sha256": "444b3c67248a0578e10c400bbbd4a0e1faf99e48ff102eaa72cd71a28407de46"
+        }
+      ]
+    },
+    {
+      "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/sound.dat",
+      "sha256": "67745244b294d9962fbed37311e83049e692ce4034764df4e8834a6a95f0c877",
+      "entries_compared": 89,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 4460166,
+          "sha256": "1ea96930fbe5fb88d9c20687c4a68bc6388ff05e42f941f1b4eb80e10c2b5a65"
+        },
+        {
+          "ordinal": 1,
+          "length": 2904944,
+          "sha256": "fe2cdc654f353abba8cad336f99986d034e2a1b48533f31df2879238920dada1"
+        },
+        {
+          "ordinal": 2,
+          "length": 2554613,
+          "sha256": "b32fb682af8c88e7fe01b556d27aaf4bf12376e2125f435e1d7041ba7058dcb5"
+        },
+        {
+          "ordinal": 3,
+          "length": 3699378,
+          "sha256": "815b3f23e190eee7cc0b5e07e3127b2bce1bd7be4f8aeb29eaaa8c87adbf6d8f"
+        },
+        {
+          "ordinal": 6,
+          "length": 4656535,
+          "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576"
+        },
+        {
+          "ordinal": 7,
+          "length": 5428339,
+          "sha256": "75455ff3d3f8f472a4c04e7ddbce13cf0d964c402cac89c1c899e7158e434074"
+        },
+        {
+          "ordinal": 8,
+          "length": 3257452,
+          "sha256": "b7791df3e7aab971353adbf63de0a79cb055509e3e4189f8ed73d5905d87582d"
+        },
+        {
+          "ordinal": 9,
+          "length": 5731376,
+          "sha256": "1efaab20edb930410eea33ab89c41ee5a7db29e0b43262e70eaddb72eb82f5cd"
+        },
+        {
+          "ordinal": 12,
+          "length": 2371377,
+          "sha256": "8fc32cd7888daae228d5b7fd4bee85f156874ce2c690989196f409d4094da940"
+        },
+        {
+          "ordinal": 44,
+          "length": 286241,
+          "sha256": "99e66cf2befe78e5880bf028c37dedae931fa2fb2690c501243d072eee999c01"
+        },
+        {
+          "ordinal": 88,
+          "length": 42868,
+          "sha256": "9ff80516ae4e03cab6626cda9d8addcf24f0f2ddcf640909961742543094098c"
+        }
+      ]
+    },
+    {
+      "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+      "sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+      "entries_compared": 212,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 334249,
+          "sha256": "ac971878087f0ca04c728a218066f0003aca80a5d37e2b87f0346a308e19deea"
+        },
+        {
+          "ordinal": 1,
+          "length": 7054,
+          "sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d"
+        },
+        {
+          "ordinal": 2,
+          "length": 175213,
+          "sha256": "8a75979637d911088e6fcd3d2851303828560938115a05a2c7ce25ed666fcea1"
+        },
+        {
+          "ordinal": 3,
+          "length": 343592,
+          "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab"
+        },
+        {
+          "ordinal": 4,
+          "length": 8595,
+          "sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a"
+        },
+        {
+          "ordinal": 5,
+          "length": 196,
+          "sha256": "685e4149d34fe9e0b72e604c4178451246e2ca889501178e8f4a08dbd06b35d4"
+        },
+        {
+          "ordinal": 7,
+          "length": 328,
+          "sha256": "f39718c20879100707cb2f971f21a77b29ceca7a5393daeb87d69f369f3ea4b7"
+        },
+        {
+          "ordinal": 9,
+          "length": 92,
+          "sha256": "80a09549c157ca46d0905248848853f38853e64486e76a5c6c08019481391f1e"
+        },
+        {
+          "ordinal": 12,
+          "length": 2588095,
+          "sha256": "6d43481961832a3bacdc1ec802998a6e43c09339518e618c51afa3c23477e9ee"
+        },
+        {
+          "ordinal": 13,
+          "length": 461,
+          "sha256": "36fc03289288bfb9460576e2b4edf6055bf671c65e07dda9decde77fa154277c"
+        },
+        {
+          "ordinal": 18,
+          "length": 632,
+          "sha256": "5bca63702cafcf234c3cd648de7c4d31723a88991984134419f86c42adbda59d"
+        },
+        {
+          "ordinal": 19,
+          "length": 387298,
+          "sha256": "92a6c41c8db42a359c3ae2997d61af554858c359c7d22dc2c510b9350a2bc6cf"
+        },
+        {
+          "ordinal": 21,
+          "length": 7868361,
+          "sha256": "2818cab3f043a38d15cb3513c57c88ad7eeb1ad90bb50ed883e2b430635bf088"
+        },
+        {
+          "ordinal": 28,
+          "length": 771,
+          "sha256": "e1b85b26e0ac621f4668e7108be4401ef2610c0c15b3ded6dea82c0fac4478cb"
+        },
+        {
+          "ordinal": 30,
+          "length": 596,
+          "sha256": "848a29d9889e5702ab6f8a0e7c15066da77509fc07e9c91086c24f9056429e01"
+        },
+        {
+          "ordinal": 33,
+          "length": 248,
+          "sha256": "3c6e62426ca6698884f5695efa32b8e09ca1b5a38a22ee2b23aef790c56975a8"
+        },
+        {
+          "ordinal": 38,
+          "length": 6468,
+          "sha256": "4cc63879570ae3b83cc00b392174287ef7aff61fd8fbb12369230d3d3f9facdb"
+        },
+        {
+          "ordinal": 39,
+          "length": 12158,
+          "sha256": "859eb08997f0abee3957833168cad5fadbaecf7fa8c3e272f315b5bcb4774b26"
+        },
+        {
+          "ordinal": 66,
+          "length": 486,
+          "sha256": "60945b52bde9636d5590357c0e38a85c858a06b316c7b286247848de4e1501ae"
+        },
+        {
+          "ordinal": 80,
+          "length": 712,
+          "sha256": "4ecac59dae505b570740b0149266de1bd82cad00ad7cc0aacc687a25d16a2631"
+        },
+        {
+          "ordinal": 106,
+          "length": 6512,
+          "sha256": "ad84bb7e2a81d811177ec458bed3477e745b9143a6a604fe3398428f39b99131"
+        },
+        {
+          "ordinal": 108,
+          "length": 5991,
+          "sha256": "dc8cb8a35da2880cde0d66079d1a87efa89618d50da545aaf8681f79c113c7a9"
+        },
+        {
+          "ordinal": 211,
+          "length": 2287,
+          "sha256": "f5cb0aa473fc413a212723a6d9353eecf6a38c930889b2dcccca46302193b547"
+        }
+      ]
+    },
+    {
+      "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/voice.dat",
+      "sha256": "f447bc2cb02d77b6fce3e7658d648efa90ab521c853056cb69bf9531f148ab6e",
+      "entries_compared": 6020,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 9956,
+          "sha256": "5ee18b929a8ebe2e402d7dc8bbe5ee65d80fbe393b9b836e6e853c8d42fe4488"
+        },
+        {
+          "ordinal": 1,
+          "length": 48955,
+          "sha256": "b930d49d6a3b718731d82758d8c242958fc721215b8c8dfbbaef53fe6351a233"
+        },
+        {
+          "ordinal": 3,
+          "length": 105255,
+          "sha256": "d78b5f2b246cb7f71d7f49432f878b84b603af79fe7a79239c8ae52d2ae2567c"
+        },
+        {
+          "ordinal": 5,
+          "length": 100802,
+          "sha256": "7ba7d633bda7cdfb74678c13a93b52d54e6fc3eeed1e9c2b51e699bdc80d4441"
+        },
+        {
+          "ordinal": 8,
+          "length": 44789,
+          "sha256": "7ec99b4e1770d405ac157d8ced43418556f6123ed26f593ed17fae6b1b076dba"
+        },
+        {
+          "ordinal": 12,
+          "length": 64528,
+          "sha256": "8c7ecd970889026a38b9e887f94de6e87e0ba26574295d0f8ca97fb5eca8dd4f"
+        },
+        {
+          "ordinal": 15,
+          "length": 103129,
+          "sha256": "dca23d36e3c8fb81e79d4de53e1fac84daebfc24eb83a0d3188c7851864c1022"
+        },
+        {
+          "ordinal": 27,
+          "length": 113350,
+          "sha256": "c75e3196e1321f4d66f743243fc2a94ef326700eb7df6805f16a13cf57e74332"
+        },
+        {
+          "ordinal": 3010,
+          "length": 29872,
+          "sha256": "d9cf4ce42d2beff7c2df18f590f0978ea1e8303050b7bdf9814ef03c87dfe635"
+        },
+        {
+          "ordinal": 4058,
+          "length": 233176,
+          "sha256": "27c33b6ab4e6eed7abc60e0c69c58d20136f36a880fb5977ae6745f31445dcba"
+        },
+        {
+          "ordinal": 6019,
+          "length": 47415,
+          "sha256": "9561bdd495bd5a7e5b87058c842e5411655c48ee462a577d575a6330430cc169"
+        }
+      ]
+    },
+    {
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/image.dat",
+      "sha256": "8d5437f2a4ef9a7879b5edb13424bc17171046ce703b8ee295438689abe9e333",
+      "entries_compared": 4819,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 755098,
+          "sha256": "b2f49faa369d8b4481ac0e3d6c5e830b2363589cb88a4d4dbc3e33d48e19e58c"
+        },
+        {
+          "ordinal": 1,
+          "length": 634008,
+          "sha256": "229819814fd9974c2fedf0ffc65355845424c77692f4c699ce075a7d558f516a"
+        },
+        {
+          "ordinal": 2,
+          "length": 335270,
+          "sha256": "ab332a9e3cbc8b12486a96b8de526738860fcceff3060bf20c2de16212e2730f"
+        },
+        {
+          "ordinal": 3,
+          "length": 792772,
+          "sha256": "937121e16c37c7bbc27f7ef40e7765d36ad1e6385002d39a5e2d4ddc86f0de50"
+        },
+        {
+          "ordinal": 4,
+          "length": 331039,
+          "sha256": "efb9b7809dab508f392fca87da3a0409715cb17420ee4adcfd30051703e46435"
+        },
+        {
+          "ordinal": 6,
+          "length": 249203,
+          "sha256": "97176a76d8f9d4ab91997fa9a6716f738584bf5e26860e25e3380699c21b7d8f"
+        },
+        {
+          "ordinal": 10,
+          "length": 347805,
+          "sha256": "7a663b513918519f955a03433c98fe85c5e36e7451f35c17238fb9d1e57ab308"
+        },
+        {
+          "ordinal": 18,
+          "length": 291249,
+          "sha256": "94d1e542cbc2dfaabe5e6996b7866e3e18d030d89f3a25079d1693098d623037"
+        },
+        {
+          "ordinal": 2409,
+          "length": 943395,
+          "sha256": "4e28c533541843df7c713ef5abb5797b33b7c921fa7f50d13d90caeca1d2b4e7"
+        },
+        {
+          "ordinal": 2548,
+          "length": 1592688,
+          "sha256": "c7cf61ee52475d761419f798983bb1ff502faef72ee2cb4b59db60d475ff546a"
+        },
+        {
+          "ordinal": 4818,
+          "length": 410916,
+          "sha256": "0e769082ee9ee9dc76b66d71c9d1984332d0920c9e8d6f4708f6e1a99659d074"
+        }
+      ]
+    },
+    {
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/patch101.dat",
+      "sha256": "38dca9b619e91331fa9edb8acd9da7804fd28f18395f3b4f58f3baf21897263c",
+      "entries_compared": 32,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 16152,
+          "sha256": "a81aab4971aa5f93007e8e202b1d4ab7e245ffd62facdce647884b5994818092"
+        },
+        {
+          "ordinal": 1,
+          "length": 13084,
+          "sha256": "05dc28c8aed4a86de80a0a36760db13c3387c2eea19acb3882ec96bbb4303c71"
+        },
+        {
+          "ordinal": 2,
+          "length": 6677,
+          "sha256": "aa3824b0ce24619d6d679f73d84409f7dd87ccdcd6eb6cf124ee640faf8c2c32"
+        },
+        {
+          "ordinal": 3,
+          "length": 4106,
+          "sha256": "b69e3a1620e5b8cd37fe3fef7ee9ef737209719455d6b2a4f72a3ff893a99ed3"
+        },
+        {
+          "ordinal": 6,
+          "length": 3014,
+          "sha256": "ab4d9e64cf0f4bc1477f2640b05e8f31dac2069908c69094e59bdcc01fcfc58a"
+        },
+        {
+          "ordinal": 7,
+          "length": 2011,
+          "sha256": "4edf9ba164f67480016bffa71f723a8d10d7acb43f665030450b7c88a2d328a5"
+        },
+        {
+          "ordinal": 13,
+          "length": 11697,
+          "sha256": "b31d4276a2ff508d9802097e512e2b7613e9ceb8e41cf1a4e5dd3c0290061402"
+        },
+        {
+          "ordinal": 16,
+          "length": 15670,
+          "sha256": "760c001d02a21965208cc1ae9a07a8a12f02b4e3ea65ebeca7663966938a44d3"
+        },
+        {
+          "ordinal": 19,
+          "length": 44886,
+          "sha256": "dac8332a8d99163680324d35566afc306c2e431cbb521c5e17cbb6eab9f989c6"
+        },
+        {
+          "ordinal": 22,
+          "length": 3199,
+          "sha256": "5aef49700d83cdd143f77b75e352cd5047c34e5a166464daca2e785753260570"
+        },
+        {
+          "ordinal": 31,
+          "length": 4682,
+          "sha256": "5aab123e55dba1268f51c345160157a957fad9198089824b04f9962df072b94a"
+        }
+      ]
+    },
+    {
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/sound.dat",
+      "sha256": "9419ee591dbac029aa034221880b018a592065ab9e4a694f73e672357f4aac27",
+      "entries_compared": 93,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 4460166,
+          "sha256": "1ea96930fbe5fb88d9c20687c4a68bc6388ff05e42f941f1b4eb80e10c2b5a65"
+        },
+        {
+          "ordinal": 1,
+          "length": 2904944,
+          "sha256": "fe2cdc654f353abba8cad336f99986d034e2a1b48533f31df2879238920dada1"
+        },
+        {
+          "ordinal": 2,
+          "length": 2554613,
+          "sha256": "b32fb682af8c88e7fe01b556d27aaf4bf12376e2125f435e1d7041ba7058dcb5"
+        },
+        {
+          "ordinal": 3,
+          "length": 3699378,
+          "sha256": "815b3f23e190eee7cc0b5e07e3127b2bce1bd7be4f8aeb29eaaa8c87adbf6d8f"
+        },
+        {
+          "ordinal": 6,
+          "length": 4656535,
+          "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576"
+        },
+        {
+          "ordinal": 7,
+          "length": 5428339,
+          "sha256": "75455ff3d3f8f472a4c04e7ddbce13cf0d964c402cac89c1c899e7158e434074"
+        },
+        {
+          "ordinal": 8,
+          "length": 3257452,
+          "sha256": "b7791df3e7aab971353adbf63de0a79cb055509e3e4189f8ed73d5905d87582d"
+        },
+        {
+          "ordinal": 9,
+          "length": 5731376,
+          "sha256": "1efaab20edb930410eea33ab89c41ee5a7db29e0b43262e70eaddb72eb82f5cd"
+        },
+        {
+          "ordinal": 12,
+          "length": 2371377,
+          "sha256": "8fc32cd7888daae228d5b7fd4bee85f156874ce2c690989196f409d4094da940"
+        },
+        {
+          "ordinal": 46,
+          "length": 51173,
+          "sha256": "de09031219b003c7cc13d6f5151bf44c16c8abd299a0d5b72b3812e2642a9f12"
+        },
+        {
+          "ordinal": 92,
+          "length": 42868,
+          "sha256": "9ff80516ae4e03cab6626cda9d8addcf24f0f2ddcf640909961742543094098c"
+        }
+      ]
+    },
+    {
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+      "sha256": "d09a29e6287394fff09535a14aef50e985f6e7df9a06265c2f979cd56bbcebc9",
+      "entries_compared": 198,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 334249,
+          "sha256": "ac971878087f0ca04c728a218066f0003aca80a5d37e2b87f0346a308e19deea"
+        },
+        {
+          "ordinal": 1,
+          "length": 7054,
+          "sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d"
+        },
+        {
+          "ordinal": 2,
+          "length": 175213,
+          "sha256": "8a75979637d911088e6fcd3d2851303828560938115a05a2c7ce25ed666fcea1"
+        },
+        {
+          "ordinal": 3,
+          "length": 343592,
+          "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab"
+        },
+        {
+          "ordinal": 4,
+          "length": 8595,
+          "sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a"
+        },
+        {
+          "ordinal": 5,
+          "length": 214,
+          "sha256": "5a4a4b328e0bbad40297a334be9a681c6bd5328b81fc661a0f18e6ccd0055474"
+        },
+        {
+          "ordinal": 7,
+          "length": 328,
+          "sha256": "f39718c20879100707cb2f971f21a77b29ceca7a5393daeb87d69f369f3ea4b7"
+        },
+        {
+          "ordinal": 9,
+          "length": 94,
+          "sha256": "1d06fde1f01e57761ac05cdfded4420dead704e668860a897e6ac38325b537b3"
+        },
+        {
+          "ordinal": 11,
+          "length": 4957676,
+          "sha256": "9fcb9ace5bcd9b1bc39b8d186de7a1ce99a64a5d25b565f6855fe9d5abbfb2cb"
+        },
+        {
+          "ordinal": 13,
+          "length": 2784959,
+          "sha256": "af5d45672fce45d59f370f745ee5ce4222bef7c399d57756e5a8ff77ab18817c"
+        },
+        {
+          "ordinal": 14,
+          "length": 190,
+          "sha256": "646015c08efb59fab37e9434dff46ab41c99e2adcea99bcfafddb5768c5f563c"
+        },
+        {
+          "ordinal": 19,
+          "length": 933,
+          "sha256": "3ba226d44a0f4b747fbd06ec18c33726f9857d1119f7e67c0658f143ca571dfe"
+        },
+        {
+          "ordinal": 20,
+          "length": 387298,
+          "sha256": "92a6c41c8db42a359c3ae2997d61af554858c359c7d22dc2c510b9350a2bc6cf"
+        },
+        {
+          "ordinal": 22,
+          "length": 7897717,
+          "sha256": "da0446201e282fae0bd1bdb55e50846e40925d5e3d95802ba64779667d36e2e2"
+        },
+        {
+          "ordinal": 29,
+          "length": 822,
+          "sha256": "b7d831b7c2774dd473e26ac1d61c84abb8873a4e32e1bc573a46913241f14e1d"
+        },
+        {
+          "ordinal": 31,
+          "length": 846,
+          "sha256": "32880b1684391da47e76c066fe0b76afb5faec43d02f246e874b7d00ef870160"
+        },
+        {
+          "ordinal": 34,
+          "length": 259,
+          "sha256": "b5110407a9a1f49f0618a97707dcc0189c5243fbeb4474af5cd1297d6dec622a"
+        },
+        {
+          "ordinal": 39,
+          "length": 2279,
+          "sha256": "8f10510f3e7f727894987798bd51bb56012db0510719e4e3bc14ab0ed816a008"
+        },
+        {
+          "ordinal": 40,
+          "length": 16152,
+          "sha256": "24b9da1656c9b8e574970738947eb48f7d8350a040c4782016b0ee9792563506"
+        },
+        {
+          "ordinal": 58,
+          "length": 413,
+          "sha256": "76ae566c9553f12da68083245f3e12c96b99e1bd4938aee036adfc126e57063c"
+        },
+        {
+          "ordinal": 73,
+          "length": 712,
+          "sha256": "4ecac59dae505b570740b0149266de1bd82cad00ad7cc0aacc687a25d16a2631"
+        },
+        {
+          "ordinal": 99,
+          "length": 20450,
+          "sha256": "717567714290e8cdd5c6125f9ce391c54fdae46a41d0ce885b7f829f7d4e6c51"
+        },
+        {
+          "ordinal": 121,
+          "length": 7175,
+          "sha256": "291e41abcb751654ce2f84206e853d557e06d263a1410ca06964dc04f4187dd8"
+        },
+        {
+          "ordinal": 197,
+          "length": 4678,
+          "sha256": "68f7c4302f57e61124f787f048e8ca48940f9132a4434dd2fd8265512721f172"
+        }
+      ]
+    },
+    {
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/voice.dat",
+      "sha256": "9c659a75add75fa2ac0f11ceadff27f896a56b45fa94f176b53f90252f0f201a",
+      "entries_compared": 5907,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 36291,
+          "sha256": "890e56289e39f017c6e6adb5defffff0bbd7dbc4ac513c69f7cc600002bdda27"
+        },
+        {
+          "ordinal": 1,
+          "length": 117034,
+          "sha256": "6f5b88cf875081b772ffc38d8382f369276686f2c026d819a0d623e279662bf4"
+        },
+        {
+          "ordinal": 2,
+          "length": 103654,
+          "sha256": "29bf0454dcbb10ac2253dcea281cb65629ccf4e947ab5772d0189bb35c74e9fb"
+        },
+        {
+          "ordinal": 4,
+          "length": 52260,
+          "sha256": "08fc8aceee5690c9993022773e9cd0f91c997cf21b57ce83a794193c9353a376"
+        },
+        {
+          "ordinal": 5,
+          "length": 86493,
+          "sha256": "a6d0577be0f225329755d7eefa9358675d1b8bb4735ac90df4dd5507fe0a8615"
+        },
+        {
+          "ordinal": 8,
+          "length": 79032,
+          "sha256": "65b5b45c6e79e15d8bf8563470adbe81a159a227a9f58c63416f36d32266df32"
+        },
+        {
+          "ordinal": 16,
+          "length": 41687,
+          "sha256": "f1154b2903eee5706f2fc00fe7fab26cb17632e29d97e085232553defc0cad71"
+        },
+        {
+          "ordinal": 24,
+          "length": 118065,
+          "sha256": "ed78159e63638fd791666eea8179bd0b5e2979138190343eb82cd4e8216afb48"
+        },
+        {
+          "ordinal": 2717,
+          "length": 211466,
+          "sha256": "ec3d0658d09547980189f201cb3ac9635187c9f54d1117f8fa173c86439d5a1e"
+        },
+        {
+          "ordinal": 2953,
+          "length": 72293,
+          "sha256": "9524f829d3f2e7c1180f0049d9e635f82604d139e74eefda4c0a990a991ef4f1"
+        },
+        {
+          "ordinal": 5906,
+          "length": 88101,
+          "sha256": "5169a98586502104f4805f35ceecd892d055288e090de680cde6e1fcd8d322ef"
+        }
+      ]
+    },
+    {
+      "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/image.dat",
+      "sha256": "4cd96091772ed431fa83ba0ba5d4887cf34e06e322320e7761fb2ccac0309869",
+      "entries_compared": 5529,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 1232315,
+          "sha256": "73f24964284af29cd6eaf13dc46a789da9fd8772b44ccffb13a59f034dbe3ca1"
+        },
+        {
+          "ordinal": 1,
+          "length": 1009888,
+          "sha256": "379c3e35e566f675ff7c9a45440476b96954d5b3246716221987d7dc375a09cb"
+        },
+        {
+          "ordinal": 2,
+          "length": 1505575,
+          "sha256": "b696f840a9580e1110de26395f90aecaf995462f0065b980ad858ddd4078bc28"
+        },
+        {
+          "ordinal": 5,
+          "length": 1087612,
+          "sha256": "81d1de330b8e6b7e2e419e5f575a673baf8c5b869577d2cfeeca93decfa787a7"
+        },
+        {
+          "ordinal": 6,
+          "length": 922493,
+          "sha256": "35d2f451a90df728970ff5a3a6ebc1674052cbd9a783d243128859bcc6cfc9a3"
+        },
+        {
+          "ordinal": 7,
+          "length": 1252166,
+          "sha256": "8804b7ca668bfbd8246f78ff57a0a2ddb0625cc2a03ded41ad0b1258c7cfea41"
+        },
+        {
+          "ordinal": 8,
+          "length": 1324434,
+          "sha256": "7df468dbdd48eecd9ff795dfcde11472abbb44784cd55e9078e8390ddc55e7ff"
+        },
+        {
+          "ordinal": 19,
+          "length": 1072641,
+          "sha256": "69d89774e6fff02f9ddf76c5b61c11813e0a9df5be3463f0efda28fbe76b0e04"
+        },
+        {
+          "ordinal": 106,
+          "length": 1592688,
+          "sha256": "c7cf61ee52475d761419f798983bb1ff502faef72ee2cb4b59db60d475ff546a"
+        },
+        {
+          "ordinal": 2764,
+          "length": 337256,
+          "sha256": "7a907879958370e483e6e89342538abeabdd446ee23ad09de7083a0fc813f99a"
+        },
+        {
+          "ordinal": 5528,
+          "length": 412577,
+          "sha256": "ab8d8c2efa6132a06ea43803efe263ad11d217487eafdc82978268a37ab2ad1b"
+        }
+      ]
+    },
+    {
+      "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/sound.dat",
+      "sha256": "a006f4ae8937d5fee1fa5d32e7fdc7fe5862575a1a8b2feb833a203f306dd05b",
+      "entries_compared": 96,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 121434,
+          "sha256": "37436e708c94f117fc3e9eb3a4ce7cefdff68da2e780a059af3a67e795fa5141"
+        },
+        {
+          "ordinal": 1,
+          "length": 55565,
+          "sha256": "c4cadcf347a331205fef343850afbcbda8cbd057fcd4059ddca9d25c6a734b0d"
+        },
+        {
+          "ordinal": 2,
+          "length": 110558,
+          "sha256": "ece9e2ed4c22586129c836c9b9edb8b4f7ad55cfb24449ca7917c6b7356a0f50"
+        },
+        {
+          "ordinal": 3,
+          "length": 26488,
+          "sha256": "653deaf8846ace7c32eda5eb7ac36392117d6428eb613855e2ad6223e15475a2"
+        },
+        {
+          "ordinal": 5,
+          "length": 19823,
+          "sha256": "16952fb730cb68fd5a64241865255ac30e472f844f0a8d10d374faeb413c135b"
+        },
+        {
+          "ordinal": 8,
+          "length": 14891,
+          "sha256": "0a88c7e4595292678fe79879412e09cda161b2db3bee56844aeb5ef502e96d5a"
+        },
+        {
+          "ordinal": 18,
+          "length": 27729,
+          "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11"
+        },
+        {
+          "ordinal": 21,
+          "length": 22620,
+          "sha256": "06ce03e2cf3610dca6b3a7de76cc0ca37e68a784072ad5c7ffb7b06502f21f65"
+        },
+        {
+          "ordinal": 48,
+          "length": 64468,
+          "sha256": "6e59b67bc23f7cbce9991e967d8c49b7fcb391e5d3e02ee128441a11ff73f62a"
+        },
+        {
+          "ordinal": 74,
+          "length": 6034557,
+          "sha256": "6b696c09ddf0494f0a49956776a4ee87a36f4a8ba8ef636ca3db5ec4521b9b25"
+        },
+        {
+          "ordinal": 95,
+          "length": 299893,
+          "sha256": "12bfa406a3c8b0effca1c35f1c2959b9bf4bf2ee1f492b7adf3bd4d80e04a34f"
+        }
+      ]
+    },
+    {
+      "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+      "sha256": "fdc80cbc4ba61e201ba41137d7e7ebc8aa92084f5a02a8254963dc0e334e8508",
+      "entries_compared": 249,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 3639,
+          "sha256": "1a96f739897060b443f1d4e4226388ff130b79f0cc809d6896a845bb6f43ecdd"
+        },
+        {
+          "ordinal": 1,
+          "length": 11484,
+          "sha256": "f88addd617ad5c28a7bd1a992f6b228c22c3da5d754c6da8e602eb36348258c2"
+        },
+        {
+          "ordinal": 2,
+          "length": 16442,
+          "sha256": "dfd6a3f6c8deda442550fab8496aa8e7733cbbeb007377e87b31345bf016f147"
+        },
+        {
+          "ordinal": 3,
+          "length": 210,
+          "sha256": "9ad1a390cdb4959bce4ff4ef39e4f4c51e8e765b14e54dce8ecc90f0bfae0cc3"
+        },
+        {
+          "ordinal": 4,
+          "length": 6569,
+          "sha256": "6cdf49d433a5a277c0b7696dce0cee5c1e680fe650e6ec8a5d4c7869f70d2bef"
+        },
+        {
+          "ordinal": 6,
+          "length": 25971,
+          "sha256": "995269c8216dc51db956d242cdbda4c6aa539442df58e9083b5718ce84799a20"
+        },
+        {
+          "ordinal": 8,
+          "length": 4608,
+          "sha256": "99ff47d4c24b389db8d92e347de8a597eac8eef16b0e30e5ff60abdfbf88be21"
+        },
+        {
+          "ordinal": 9,
+          "length": 71,
+          "sha256": "49fcaa6ea3bbe2da01fd38268f3c4e1d034dad7fba94c60ba6c63a0dc2b4ae3f"
+        },
+        {
+          "ordinal": 10,
+          "length": 2461,
+          "sha256": "229c6b3a88b703634b9ddf6985f6813d55c904709372da42947aef6be8adec77"
+        },
+        {
+          "ordinal": 13,
+          "length": 2598,
+          "sha256": "b6cafdbcf3799066ca2f8d1743661f6d91d8f67f11b771ef5d3fa5cd8b16fe70"
+        },
+        {
+          "ordinal": 72,
+          "length": 17395,
+          "sha256": "b8f1b9308b70bde9605da3613430476f67a471c189fa879ff3bef309dc540202"
+        },
+        {
+          "ordinal": 124,
+          "length": 28667,
+          "sha256": "dcb963fbf0790057d880811f2ce39e0bd23ceda22013a720ec7b5fb573af06eb"
+        },
+        {
+          "ordinal": 201,
+          "length": 827,
+          "sha256": "68035c83fd5391ef2bbc4c87e20edf693af50a7e42cbfca4dbfbc8232b115a59"
+        },
+        {
+          "ordinal": 203,
+          "length": 154180,
+          "sha256": "42829ede9966843e9b7be50fb3425e93109922b2b797451ef77a4b7dc265c966"
+        },
+        {
+          "ordinal": 204,
+          "length": 234,
+          "sha256": "e7518664423373a6810d98110b7e0af57418ca5a32e08a45b78f3f36f71ef816"
+        },
+        {
+          "ordinal": 205,
+          "length": 1735,
+          "sha256": "ec894d49de9e117a1ce994c4d87e0ce77791314b14650b047de3da49ea07278b"
+        },
+        {
+          "ordinal": 206,
+          "length": 1017,
+          "sha256": "fbce7dc70f52cefe04409a8c2765f3e662500e68a3f4721125703a7ea26ddb2d"
+        },
+        {
+          "ordinal": 209,
+          "length": 7054,
+          "sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d"
+        },
+        {
+          "ordinal": 214,
+          "length": 255,
+          "sha256": "4054c089f1950295a38d3004f620ed7a40fcff21884899f1fb0c4294320a3559"
+        },
+        {
+          "ordinal": 219,
+          "length": 909,
+          "sha256": "9ccad3591527f8a4dff97d5d4b6290f002c4701966708ddc464378fd9ce49db2"
+        },
+        {
+          "ordinal": 223,
+          "length": 214,
+          "sha256": "5a4a4b328e0bbad40297a334be9a681c6bd5328b81fc661a0f18e6ccd0055474"
+        },
+        {
+          "ordinal": 225,
+          "length": 328,
+          "sha256": "f39718c20879100707cb2f971f21a77b29ceca7a5393daeb87d69f369f3ea4b7"
+        },
+        {
+          "ordinal": 231,
+          "length": 927,
+          "sha256": "b8c4e1c73990117f29400b04af9e0d6fb889d3053892296f951848d90e158d58"
+        },
+        {
+          "ordinal": 233,
+          "length": 325,
+          "sha256": "68d00a1d24ce0f72fc8ba93423be244c00b4aafb032a0a99656ae7f1343ce644"
+        },
+        {
+          "ordinal": 235,
+          "length": 891,
+          "sha256": "ae2afd9f693c7d884b1d1ceaa721f1e21fb3de7767c83f6aa33e9d84e98b9a16"
+        },
+        {
+          "ordinal": 238,
+          "length": 240,
+          "sha256": "c9e262a4ee0318790443e677a7e7fd4254fdd6b80c8d67d196a2378d5c04bb6f"
+        },
+        {
+          "ordinal": 242,
+          "length": 188,
+          "sha256": "2f215256d8eec320f6caf45a92ceb2b8e4b82749643a4adf9b9cb63d2909e7d9"
+        },
+        {
+          "ordinal": 244,
+          "length": 9107118,
+          "sha256": "e0c98b65fa78ec561ee647cb784d4b6599ef466e5dd0d4d028924adec7ca68e5"
+        },
+        {
+          "ordinal": 248,
+          "length": 220331,
+          "sha256": "2c04ca9bb4b7f27bb7b31a3152ff63f48f3dd98251adc51aad73e45294f97964"
+        }
+      ]
+    },
+    {
+      "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/voice.dat",
+      "sha256": "af136e52adeb0a323608e2b8205a6f267f0978fcf55dc0c58f50c4067410ad27",
+      "entries_compared": 9623,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 21753,
+          "sha256": "5fbbbfba7b23ebbe844661eab4096e09128a73d775faa49cd28c7287fae47c44"
+        },
+        {
+          "ordinal": 1,
+          "length": 27562,
+          "sha256": "1485f9d0af1ecc7507c93131da70b13b4023f9a918c565ca89d4023b73d1edf9"
+        },
+        {
+          "ordinal": 2,
+          "length": 66131,
+          "sha256": "5e27a90a7192f91c42abc3e98c827a037edceb1c5fafffe859d689d0ba75b17b"
+        },
+        {
+          "ordinal": 3,
+          "length": 117565,
+          "sha256": "bb56077354cb1b68367e84d603d691d669df5ece4b4c6cf14999db31804fab3c"
+        },
+        {
+          "ordinal": 4,
+          "length": 63696,
+          "sha256": "eabafd9c0444621d26db334deededc5ea40b95bbb1e9f9fabf3063c5abc10c7c"
+        },
+        {
+          "ordinal": 7,
+          "length": 37454,
+          "sha256": "dfa94a05a27842fc0eb299bce0258a651adcd1bdec044de62b29aaf123504108"
+        },
+        {
+          "ordinal": 13,
+          "length": 112879,
+          "sha256": "4fbce6782a3c3713a932a9984436f26b63dbd674d4fb2dd19da33bed9c8e776f"
+        },
+        {
+          "ordinal": 16,
+          "length": 106108,
+          "sha256": "b4fa6fda4574bc232dba90a198c0aa14eb03ced81477a0003bd70f49e3f4393f"
+        },
+        {
+          "ordinal": 4811,
+          "length": 28935,
+          "sha256": "bf6b7481b234a2170bbef33088ee6c11f0fccd540ed415deca0dca0ac7f4dd89"
+        },
+        {
+          "ordinal": 7794,
+          "length": 222700,
+          "sha256": "9f50a1d02644d6dbfe631419abbb5ce4f3593c4bc2a64a4e723539179d5ea87a"
+        },
+        {
+          "ordinal": 9622,
+          "length": 97934,
+          "sha256": "09b92a01c472700640a071b58eef768168bc9ffa7d7e4bfcefbd64507f7a87e6"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/image.dat",
+      "sha256": "237ae5d5839c202621a922e264c193f392686eb4f1cea66b852f50bba17038c2",
+      "entries_compared": 4106,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 625831,
+          "sha256": "d09fabded0b5cccdbf446e28723a923995d258ce1f11ddbe33f860b318749c09"
+        },
+        {
+          "ordinal": 1,
+          "length": 838067,
+          "sha256": "937f103c0a7f9756cce45b735ddb0b3e962e3f6cb864e5c4cc0479df00ae03df"
+        },
+        {
+          "ordinal": 5,
+          "length": 1090778,
+          "sha256": "27cfc1dec76e5bf8fb681ef6e7ffb20e3c4bfe6baf8c0fc526e95e727231f8a2"
+        },
+        {
+          "ordinal": 8,
+          "length": 803165,
+          "sha256": "fe3ffa36b3c650cab6eb2c3b3f3efdf8aac1f7bbb4aae500a08783e0fdc3d397"
+        },
+        {
+          "ordinal": 11,
+          "length": 1089606,
+          "sha256": "e7d9549f08856eebb8ee8aae8680307adabdb179b7895fa4c8972732d99d8c19"
+        },
+        {
+          "ordinal": 16,
+          "length": 1520305,
+          "sha256": "7f84b6d9c48c52e5418dae7ea31abf4bbe27cda7bf4625895a7c4e8d96aad045"
+        },
+        {
+          "ordinal": 21,
+          "length": 1188588,
+          "sha256": "5795e0b816a22b2ed835527258cc2a65d2b06a567685002efc1683b8d93dcada"
+        },
+        {
+          "ordinal": 28,
+          "length": 1065768,
+          "sha256": "0abfc3295afd30e6f9254a416caa4f0368332c278a7c8b6cd1db2316b24b3313"
+        },
+        {
+          "ordinal": 91,
+          "length": 1592688,
+          "sha256": "c7cf61ee52475d761419f798983bb1ff502faef72ee2cb4b59db60d475ff546a"
+        },
+        {
+          "ordinal": 2053,
+          "length": 435841,
+          "sha256": "3f0e1ac348ac38ad0ac7e14aa77da728bd1399b684dec70b8ebab216acbe35e4"
+        },
+        {
+          "ordinal": 4105,
+          "length": 1010776,
+          "sha256": "03fd845266279ee5c745506c28939e2f0331d4c37be67b51c5a10c3e2416752d"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+      "sha256": "41fe150a571e1f6d872e9f892574f85a09de2be2ce766891c6563535a5f73afb",
+      "entries_compared": 254,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 12852,
+          "sha256": "10128ad2ca2889b6cb3e862f79c13868ce919d07c0a3696cf500fcf1699dd509"
+        },
+        {
+          "ordinal": 2,
+          "length": 4480,
+          "sha256": "b1ed5767594eb0045b6ab5e3fa7196b731b65bba90697692ca075c9740ef2e9d"
+        },
+        {
+          "ordinal": 3,
+          "length": 11001,
+          "sha256": "65ea3696091463f9f92aaf7afbc3c902c7166869cc388e0ad9a04f91c90b4725"
+        },
+        {
+          "ordinal": 4,
+          "length": 9766,
+          "sha256": "47998225f851cce3d20bf9ec5d2e994168981b1c1fca060a2ff49157b207154f"
+        },
+        {
+          "ordinal": 5,
+          "length": 7092,
+          "sha256": "76a68967f67ad1c6ec504f342ba3d7ee49073b6c5061a69e6ba69357571682db"
+        },
+        {
+          "ordinal": 6,
+          "length": 1025,
+          "sha256": "8dfb60513ed72825e73f64e0658745c5e302188cfc635538b3198d44b5a08ecd"
+        },
+        {
+          "ordinal": 10,
+          "length": 8051,
+          "sha256": "4ece08900e49d89d9a2e24d8734e78aaeea6288eb3915632c075f1aef84e4601"
+        },
+        {
+          "ordinal": 12,
+          "length": 1999,
+          "sha256": "f818580d78bbe1ae6ce314ff030762b9ff43a505b34d7f922632162a6b0acf19"
+        },
+        {
+          "ordinal": 15,
+          "length": 56097,
+          "sha256": "35e4ffa9afe55fdfdef92bb168525f5c0a81a033076641b91454d1ce68914197"
+        },
+        {
+          "ordinal": 17,
+          "length": 11298,
+          "sha256": "fbe2369a891a2b5567120bb24adf590675429b924acc081e7416b20f72f25b02"
+        },
+        {
+          "ordinal": 21,
+          "length": 516,
+          "sha256": "44bde84e69b85abf7617be7a4146fd503fb41d8ae0166f80334f8bd6a4a6ce83"
+        },
+        {
+          "ordinal": 24,
+          "length": 3245,
+          "sha256": "4d3e296ded0b2d1629d07ad9b28c863595a9278fb9d3ab9ca5d7d9ae1984b2f9"
+        },
+        {
+          "ordinal": 127,
+          "length": 17104,
+          "sha256": "8ae84e4e06d4ccaf44ad8651d3c1f237bf112f6f93a63b9a3e23dd448981ddfb"
+        },
+        {
+          "ordinal": 232,
+          "length": 7876,
+          "sha256": "3688b9075e0b11b9dd2c5f45eaba96525eda4d48ea95ef2a5246fddbb61c8b62"
+        },
+        {
+          "ordinal": 253,
+          "length": 2223,
+          "sha256": "748deea331628b834a5f6de626f04741531d40cb55d2054d9b7632d931a3b8f0"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/sound.dat",
+      "sha256": "6e13ccf279bd4d19594d51408ccddfb76b205d219a3229c516fe4017e8274549",
+      "entries_compared": 84,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 281951,
+          "sha256": "8420dc09d45984e112626498612fbdd71127ae77e46fdae5844cba629a16bc29"
+        },
+        {
+          "ordinal": 1,
+          "length": 157690,
+          "sha256": "b9a9f84db7c60d86b56b501607acf8e98368ca357d1339da73268c06cd3d0c92"
+        },
+        {
+          "ordinal": 2,
+          "length": 212769,
+          "sha256": "ed687f0fe24274eeddc20348ddbcc03533aea2e31ff5a62204fe34971740d921"
+        },
+        {
+          "ordinal": 4,
+          "length": 577622,
+          "sha256": "76f6f842b29c342f150e9867595307b1eb4dd229bb0c4293ce86fb6c0d1ca569"
+        },
+        {
+          "ordinal": 5,
+          "length": 299893,
+          "sha256": "12bfa406a3c8b0effca1c35f1c2959b9bf4bf2ee1f492b7adf3bd4d80e04a34f"
+        },
+        {
+          "ordinal": 7,
+          "length": 104251,
+          "sha256": "d676a2107d88f6a3bb3a537a38eb5ba547be2c768bc8068b02deaa3369bd0e64"
+        },
+        {
+          "ordinal": 8,
+          "length": 2904944,
+          "sha256": "fe2cdc654f353abba8cad336f99986d034e2a1b48533f31df2879238920dada1"
+        },
+        {
+          "ordinal": 9,
+          "length": 5731376,
+          "sha256": "1efaab20edb930410eea33ab89c41ee5a7db29e0b43262e70eaddb72eb82f5cd"
+        },
+        {
+          "ordinal": 16,
+          "length": 3257452,
+          "sha256": "b7791df3e7aab971353adbf63de0a79cb055509e3e4189f8ed73d5905d87582d"
+        },
+        {
+          "ordinal": 42,
+          "length": 15270,
+          "sha256": "aa5f76fc5e79cf88efba45b053421543eff87970c0dbc3912352fddadbd319ef"
+        },
+        {
+          "ordinal": 83,
+          "length": 114874,
+          "sha256": "196514dc88a0e770809df35cb3442ceb845e420669a390bd782b97eb4e64e547"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+      "sha256": "fbd087a3f1b7500c7d271fc4ba83373c15468a0e859fcadb84a11077710af9ca",
+      "entries_compared": 39,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 198,
+          "sha256": "190bc5bf84761b023b937ce55544d93dac5591beed30a80018a296207897c909"
+        },
+        {
+          "ordinal": 1,
+          "length": 530456,
+          "sha256": "5456e476b269c076ccdb382fecf9961cc2c648914f57ceb3c2e6349b24991486"
+        },
+        {
+          "ordinal": 2,
+          "length": 89,
+          "sha256": "210e0dbec96d4f493888e3744bcc5c9bf306b1c095ad2a08947678a4980c9d36"
+        },
+        {
+          "ordinal": 3,
+          "length": 1148663,
+          "sha256": "316440dc451d49d6aec212d6ebe6a53dbc14f2e0b5ce93b243278ee86e351555"
+        },
+        {
+          "ordinal": 4,
+          "length": 7536024,
+          "sha256": "c97854fc3f49da8f5a012c68ab4928c111a48f2f99d08c3419d9fdbb0d415d58"
+        },
+        {
+          "ordinal": 5,
+          "length": 451,
+          "sha256": "5be5aa4025eab89d0b934f6861f76950fe95fbe4c74d086184341420bdb685d3"
+        },
+        {
+          "ordinal": 7,
+          "length": 328,
+          "sha256": "f39718c20879100707cb2f971f21a77b29ceca7a5393daeb87d69f369f3ea4b7"
+        },
+        {
+          "ordinal": 8,
+          "length": 3009,
+          "sha256": "8ae14e1b766d50d5cb12c4ec01de9b1827acfa0a6af38724c2ccbafde28f66ea"
+        },
+        {
+          "ordinal": 10,
+          "length": 666,
+          "sha256": "647616cde80cdda8562a4fda7e9cb08dc5204c51759f59bc79553292fca62444"
+        },
+        {
+          "ordinal": 13,
+          "length": 121933,
+          "sha256": "f6857d807eb891e4773bf695a10812e7bb112c3ef46a0174ea509214e390c8f5"
+        },
+        {
+          "ordinal": 17,
+          "length": 675,
+          "sha256": "866f2206c59818f46c2f9d579f319b798b7be0ea5d58b45e4b1a1fa687d4e3ad"
+        },
+        {
+          "ordinal": 19,
+          "length": 154180,
+          "sha256": "700fd009870f1a26ff02a19bb8d8b06a938cf88906e062e4c651eff21cc8abd4"
+        },
+        {
+          "ordinal": 26,
+          "length": 231,
+          "sha256": "9d13e8ac1b0df8810a09a4ae6bf4c9dfc707de47ff0b601aaa84c5f01a216960"
+        },
+        {
+          "ordinal": 31,
+          "length": 775,
+          "sha256": "bba647a8d71ffca8446ef4c8eec6671a139ce0e293d7e2a81fcb28b60550780d"
+        },
+        {
+          "ordinal": 32,
+          "length": 702,
+          "sha256": "5b1939e805bea96b077b62a2022f4ad979ae1ac3a44de7baba5cd85239224211"
+        },
+        {
+          "ordinal": 38,
+          "length": 194202,
+          "sha256": "d767e461050d945a945c1b86aafaeafbf0266e559dc5e2245742c4460e50a7da"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice1.dat",
+      "sha256": "9f7c622458057bd56d4e7f5042520bcbf99fd674df84901baf05966aabe91cc1",
+      "entries_compared": 978,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 17283,
+          "sha256": "971a0b62ce926fe202efea81eb8ea01ba27a51eb980710528867ff76b41d8df3"
+        },
+        {
+          "ordinal": 1,
+          "length": 113880,
+          "sha256": "cce1ec82f9b11b395db172313860356ea38cbca621970f7687a562f33e5a8223"
+        },
+        {
+          "ordinal": 2,
+          "length": 148410,
+          "sha256": "569dcb17e01a02b24c8e7053e42ee12154247f4a4160e83a30dab19fa138d979"
+        },
+        {
+          "ordinal": 4,
+          "length": 37911,
+          "sha256": "dc83ba2d756a34a99aea6f4dd751966901f685c755db7f75296b2c8879206747"
+        },
+        {
+          "ordinal": 9,
+          "length": 63446,
+          "sha256": "7c49eae74db1042a03749636b23ab289a92e163d02c764f29e3b1b73186f4cbc"
+        },
+        {
+          "ordinal": 11,
+          "length": 133964,
+          "sha256": "868c45063d060b70bd584f9680b7a4b257e839f84cd4c6a0067f92af8c1d45c7"
+        },
+        {
+          "ordinal": 13,
+          "length": 67401,
+          "sha256": "4fa8bedc9f19c92e02e110214cd335eb36be52b52d57eb5ff4ba97b8c3ae460a"
+        },
+        {
+          "ordinal": 22,
+          "length": 86341,
+          "sha256": "0b87f201b07344ee69bfd1b30de7ba43744f7c41ca5d075d302d6570afe7c448"
+        },
+        {
+          "ordinal": 489,
+          "length": 138527,
+          "sha256": "2baf9aaf2fded91aec340f4a55158498bd7a92c52f50cd868511a4039236a8c6"
+        },
+        {
+          "ordinal": 977,
+          "length": 193148025,
+          "sha256": "d90ef3c6dc05bf20f3b095743ea606ca90db941b80c8d4f56bc3e4d49ec62221"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice2.dat",
+      "sha256": "fb6d199e6a4210558d43e8c3fb6b9f899a4a029f4fa63b92e810c4e41a7acd9e",
+      "entries_compared": 4691,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 45867,
+          "sha256": "878a7661d69dbaf6e6b8f55951a76c4d3052f82fd0ebaa394219187be2442596"
+        },
+        {
+          "ordinal": 1,
+          "length": 41743,
+          "sha256": "1ddeca21870a320476a57c0e09b1d3b9cd231d311414c9ea6fcdeb678fe743d5"
+        },
+        {
+          "ordinal": 3,
+          "length": 52998,
+          "sha256": "2d7974e5fe471e908c1815e27049cbeba2ba16c0ed1af98cfca95265983cd6f1"
+        },
+        {
+          "ordinal": 4,
+          "length": 117532,
+          "sha256": "303d46f3c426c435188fc7db201dcf57aea2e12b194c68652cab798a5bba802e"
+        },
+        {
+          "ordinal": 6,
+          "length": 48697,
+          "sha256": "27b386bcaf3b741aeb2fb789d2242944891b1a852bfd15193401b8c2a3d41a16"
+        },
+        {
+          "ordinal": 9,
+          "length": 64834,
+          "sha256": "7a1a05c5eadd704b0d4107683c2e989a96c4ac30f056ddae36c1e9854890ecf3"
+        },
+        {
+          "ordinal": 13,
+          "length": 38677,
+          "sha256": "a786dd036e9bde46579e056a8fe8ba4c83468bb6ced6eb9614f1545f94200b01"
+        },
+        {
+          "ordinal": 21,
+          "length": 64048,
+          "sha256": "1fb21e6e809a96335bce23b6b019dcb5ef94fbd623cd2df0a99da8148f6f16af"
+        },
+        {
+          "ordinal": 2345,
+          "length": 79290,
+          "sha256": "af4928569a256d11db5c21505c719dd45a544bd7a9627b3880a013ecc344ef6b"
+        },
+        {
+          "ordinal": 4690,
+          "length": 193148025,
+          "sha256": "d90ef3c6dc05bf20f3b095743ea606ca90db941b80c8d4f56bc3e4d49ec62221"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice3.dat",
+      "sha256": "6f6fdb90fe7d56995cb7134abc78c9e2f2e0ef3e5e615dc98b3b0407541dbbf9",
+      "entries_compared": 2681,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 149645,
+          "sha256": "1e0b9314f5cfc619795c467828f9e3bd36e9defcf0eedbb28bd003f223414faf"
+        },
+        {
+          "ordinal": 1,
+          "length": 138159,
+          "sha256": "fd2d60d8015ff00113edd6795b20b86efc6abe1b9d84a9ca4b04f0252506b991"
+        },
+        {
+          "ordinal": 3,
+          "length": 25760,
+          "sha256": "bd5ca830c58d4228e8fe1ef2a447bffc291149c85ed4e9baf8d7492e5d22fd03"
+        },
+        {
+          "ordinal": 4,
+          "length": 55265,
+          "sha256": "4a3c8f2488c432a532dfb1b7c617da0a173acc0f69a7610bcf2d20c583417d75"
+        },
+        {
+          "ordinal": 5,
+          "length": 36870,
+          "sha256": "519fac5dc169b3187757f889300b91bacfe5b16f85da59de7bd35b0d87abd094"
+        },
+        {
+          "ordinal": 8,
+          "length": 68466,
+          "sha256": "5e35829e4743faa6d5be1eee5f1c0adaac621529a607673a1d4e01ca8a3b605e"
+        },
+        {
+          "ordinal": 12,
+          "length": 13619,
+          "sha256": "f2a2fb5598a2b1c2020230ba6b658751298cddbcb384a10e881648f0d816af9f"
+        },
+        {
+          "ordinal": 16,
+          "length": 64540,
+          "sha256": "8c663290d58c16d0e6d7764b241314c0aa05a06d6287b3c2b55c6c33bc9b18f6"
+        },
+        {
+          "ordinal": 1340,
+          "length": 39223,
+          "sha256": "68a4afdebab3d3f3392376869d7eaa79cea5370459958b10a816fc00a0254a9e"
+        },
+        {
+          "ordinal": 2680,
+          "length": 193148025,
+          "sha256": "d90ef3c6dc05bf20f3b095743ea606ca90db941b80c8d4f56bc3e4d49ec62221"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice4.dat",
+      "sha256": "dcfe2c369be4e80022260e989885216ca2fd52461298113181732a88b19db72c",
+      "entries_compared": 758,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 95920,
+          "sha256": "3269ff49992ffe654e3e9778f58775a5699011cd34dc8e8696908aa7dbc913c3"
+        },
+        {
+          "ordinal": 1,
+          "length": 117538,
+          "sha256": "0c8d62dd7b8cfeefbda8920c975523f6c192e541345f3c554c4926e36cb29dbc"
+        },
+        {
+          "ordinal": 3,
+          "length": 64467,
+          "sha256": "debb6246e18bb4f626cab1c3ba2040025ebcdd121841f634f4cc6bd8c1643c5e"
+        },
+        {
+          "ordinal": 4,
+          "length": 24644,
+          "sha256": "d0c1248f7a9ac1d1fc91034a24d6073ea9bf896cbf34ae9fd81bbd961bd00641"
+        },
+        {
+          "ordinal": 5,
+          "length": 110734,
+          "sha256": "29d0d82a50a1343cce72a69c341654877a6b0a25d659a900342ed557949cb736"
+        },
+        {
+          "ordinal": 8,
+          "length": 72077,
+          "sha256": "65a8d3475a86cd40caf781883dd32c26a31f780bae8821f13fa7478ed3f3b828"
+        },
+        {
+          "ordinal": 12,
+          "length": 33703,
+          "sha256": "bcb6172d50bc5bf23982ef450b4e59c97bfabf9d13a35724bcff35b924483e05"
+        },
+        {
+          "ordinal": 22,
+          "length": 22089,
+          "sha256": "8e1477fac2ddef06cd2519bd82b95654bfaf8c8a82e4e7c645475d31f5d23180"
+        },
+        {
+          "ordinal": 379,
+          "length": 200020,
+          "sha256": "b2c827bec5a3185945bcfee6323c780e491540652f0e1b1a5344ff077ad3c1dd"
+        },
+        {
+          "ordinal": 757,
+          "length": 193148025,
+          "sha256": "d90ef3c6dc05bf20f3b095743ea606ca90db941b80c8d4f56bc3e4d49ec62221"
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice5.dat",
+      "sha256": "b6bc2048cf1ce6f52f991e58f12c0be72d98ea3706f76cf584d687a5256fc80f",
+      "entries_compared": 45,
+      "decoded_index_equal": true,
+      "all_entry_metadata_and_prefixes_equal": true,
+      "all_parity_checks_passed": true,
+      "full_payload_samples": [
+        {
+          "ordinal": 0,
+          "length": 38649,
+          "sha256": "21993c130960b53ed37cb42dadb8926f1a3adf39c6f70445c9ca07038bd87c7a"
+        },
+        {
+          "ordinal": 1,
+          "length": 95754,
+          "sha256": "05b5d1fcac84ebfd91f8084cf30c7fc9a868070d0d6de842beb805aa6636867e"
+        },
+        {
+          "ordinal": 2,
+          "length": 103415,
+          "sha256": "fadd4ba5ed489a08a5585ef37edd77c6bddb821c0e60852e46009c231a0ead24"
+        },
+        {
+          "ordinal": 4,
+          "length": 30016,
+          "sha256": "0bf8ef3dce7090c68ff53f64b20574fcd1ed9b59d240b02965a49215ea16688b"
+        },
+        {
+          "ordinal": 6,
+          "length": 66253,
+          "sha256": "e51ee9bfeaa1af3995d00f3009973ad737ea6969411e8d583c8eeb17e014546f"
+        },
+        {
+          "ordinal": 9,
+          "length": 105059,
+          "sha256": "8b8a18efba8827b94f90016e9c212f24abc5e713501e2e4a29ac9582ac2f3118"
+        },
+        {
+          "ordinal": 10,
+          "length": 55588,
+          "sha256": "e64660bf18cd4c66dae24e1438bda49cfe0402f1dadb77c95fd91cb60b382334"
+        },
+        {
+          "ordinal": 11,
+          "length": 39862,
+          "sha256": "768655238a26f3450458b33412de944e13abf826b7d4bf70c98e0a1d43c094e2"
+        },
+        {
+          "ordinal": 22,
+          "length": 56611,
+          "sha256": "72eaad4d2d7b56275154182994171b896cd545f7936d9015828a594c9d6786d2"
+        },
+        {
+          "ordinal": 44,
+          "length": 193148025,
+          "sha256": "d90ef3c6dc05bf20f3b095743ea606ca90db941b80c8d4f56bc3e4d49ec62221"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "archives": 22,
+    "entries": 51201,
+    "full_payload_samples": 289,
+    "full_payload_bytes": 1147356707
+  }
+}

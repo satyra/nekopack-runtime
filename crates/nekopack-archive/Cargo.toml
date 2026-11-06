@@ -1,0 +1,4 @@
+[package]
+name = "nekopack-archive"
+version.workspace = true
+edition.workspace = true

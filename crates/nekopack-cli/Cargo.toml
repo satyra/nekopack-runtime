@@ -1,0 +1,7 @@
+[package]
+name = "nekopack-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+nekopack-archive = { path = "../nekopack-archive" }
