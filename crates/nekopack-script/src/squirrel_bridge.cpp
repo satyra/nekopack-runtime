@@ -10,7 +10,8 @@
 #include <neko_limits.h>
 
 typedef const char* (*VariableCallback)(void*,int,const char*,size_t,const char*,size_t,int32_t*);
-struct Context { HSQUIRRELVM vm; char error[2048]; char* result; void* variables; VariableCallback variable; bool failed; NekoArena arena; };
+typedef const char* (*ResourceCallback)(void*,const char*,size_t,const char*,size_t,const char**,size_t*);
+struct Context { HSQUIRRELVM vm; char error[2048]; char* result; void* variables; VariableCallback variable; bool failed; NekoArena arena; void* resources; ResourceCallback resource; };
 // The registry is shared by the root VM and its coroutines. Context outlives
 // sq_close (including every child VM); it never owns a persistent Rust borrow.
 static char context_key;
@@ -48,6 +49,17 @@ static SQInteger variable_call(HSQUIRRELVM v, int operation) {
 static SQInteger variable_get(HSQUIRRELVM v) {return variable_call(v,0);}
 static SQInteger variable_set(HSQUIRRELVM v) {return variable_call(v,1);}
 static SQInteger variable_def(HSQUIRRELVM v) {return variable_call(v,2);}
+static SQInteger resource_get(HSQUIRRELVM v) {
+    auto* c=context(v);
+    if(!c->resource) return sq_throwerror(v,"resource state is not bound");
+    if(sq_gettop(v)!=3 || sq_gettype(v,2)!=OT_STRING || sq_gettype(v,3)!=OT_STRING)
+        return sq_throwerror(v,"invalid resource arguments");
+    const char *kind,*name,*data=nullptr; size_t length=0;
+    sq_getstring(v,2,&kind);sq_getstring(v,3,&name);
+    const char* error=c->resource(c->resources,kind,(size_t)sq_getsize(v,2),name,(size_t)sq_getsize(v,3),&data,&length);
+    if(error) return sq_throwerror(v,error);
+    sq_pushstring(v,data,(SQInteger)length);return 1;
+}
 static void compiler_error(HSQUIRRELVM v, const SQChar* desc, const SQChar*, SQInteger line, SQInteger column) {
     auto* c = context(v);
     snprintf(c->error,sizeof(c->error),"line %lld col %lld: %s",(long long)line,(long long)column,desc);
@@ -66,6 +78,7 @@ void* neko_sq_open() {
     const char* names[]={"NekoVariableGet","NekoVariableSet","def"};
     SQFUNCTION functions[]={variable_get,variable_set,variable_def};
     for(int i=0;i<3;++i) {sq_pushstring(c->vm,names[i],-1);sq_newclosure(c->vm,functions[i],0);sq_newslot(c->vm,-3,SQFalse);}
+    sq_pushstring(c->vm,"NekoResource",-1);sq_newclosure(c->vm,resource_get,0);sq_newslot(c->vm,-3,SQFalse);
     sq_pop(c->vm,1);
     return c;
     } catch(...) { delete c; return nullptr; }
@@ -79,6 +92,7 @@ void neko_sq_close(Context* c) {
 const char* neko_sq_result(Context* c) { return c->result ? c->result : ""; }
 const char* neko_sq_error(Context* c) { return c->error; }
 void neko_sq_bind(Context* c, void* variables, VariableCallback callback) {c->variables=variables;c->variable=callback;}
+void neko_sq_bind_resources(Context* c, void* resources, ResourceCallback callback) {c->resources=resources;c->resource=callback;}
 static int eval_impl(Context* c, const char* source, size_t length, const char* name, size_t budget) {
     if(c->failed) {strcpy(c->error,"VM stopped after execution limit; create a new VM");return -1;}
     auto v=c->vm; auto top=sq_gettop(v); c->error[0]=0;

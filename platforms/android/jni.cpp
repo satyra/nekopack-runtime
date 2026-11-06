@@ -25,3 +25,19 @@ Java_org_nekopack_probe_MainActivity_runChecks(JNIEnv* env, jobject, jbyteArray 
     neko_probe_free(output,output_length);
     return result;
 }
+
+extern "C" uint8_t* neko_probe_dat(const int32_t*,size_t,int32_t,size_t*);
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_org_nekopack_probe_MainActivity_runDat(JNIEnv* env,jobject,jintArray descriptors,jint choice) {
+ if(!descriptors)return nullptr;
+ jsize count=env->GetArrayLength(descriptors);
+ jint* fds=env->GetIntArrayElements(descriptors,nullptr);
+ if(!fds)return nullptr;
+ size_t length=0;
+ uint8_t* output=neko_probe_dat(fds,count,choice,&length);
+ env->ReleaseIntArrayElements(descriptors,fds,JNI_ABORT);
+ if(length>INT_MAX){neko_probe_free(output,length);env->ThrowNew(env->FindClass("java/lang/IllegalStateException"),"DAT report too large");return nullptr;}
+ jbyteArray result=env->NewByteArray(static_cast<jsize>(length));
+ if(result)env->SetByteArrayRegion(result,0,static_cast<jsize>(length),reinterpret_cast<jbyte*>(output));
+ neko_probe_free(output,length);return result;
+}

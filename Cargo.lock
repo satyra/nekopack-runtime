@@ -30,6 +30,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "encoding_rs"
+version = "0.8.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75030f3c4f45dafd7586dd6780965a8c7e8e285a5ecb86713e63a79c5b2766f3"
+dependencies = [
+ "cfg-if",
+]
+
+[[package]]
 name = "fdeflate"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -73,6 +82,7 @@ dependencies = [
 name = "nekopack-android-probe"
 version = "0.1.0"
 dependencies = [
+ "nekopack-runtime",
  "nekopack-script",
 ]
 
@@ -87,6 +97,7 @@ dependencies = [
  "nekopack-archive",
  "nekopack-image",
  "nekopack-resource",
+ "nekopack-runtime",
  "nekopack-script",
 ]
 
@@ -102,6 +113,17 @@ name = "nekopack-resource"
 version = "0.1.0"
 dependencies = [
  "nekopack-archive",
+]
+
+[[package]]
+name = "nekopack-runtime"
+version = "0.1.0"
+dependencies = [
+ "encoding_rs",
+ "nekopack-archive",
+ "nekopack-image",
+ "nekopack-resource",
+ "nekopack-script",
 ]
 
 [[package]]

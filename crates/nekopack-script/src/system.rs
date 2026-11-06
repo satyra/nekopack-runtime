@@ -16,7 +16,73 @@ type VariableCallback = unsafe extern "C" fn(
     usize,
     *mut i32,
 ) -> *const c_char;
+/// Synchronous, bounded resource serialization supplied by the runtime adapter.
+pub trait ResourceProvider {
+    fn resource(&mut self, kind: &str, name: &str) -> Result<String, String>;
+}
+type ResourceCallback = unsafe extern "C" fn(
+    *mut c_void,
+    *const u8,
+    usize,
+    *const u8,
+    usize,
+    *mut *const u8,
+    *mut usize,
+) -> *const c_char;
+struct ResourceBinding<'a> {
+    provider: &'a mut dyn ResourceProvider,
+    output: String,
+    error: [u8; 256],
+    panicked: bool,
+}
+unsafe extern "C" fn resource_callback(
+    state: *mut c_void,
+    kind: *const u8,
+    kind_len: usize,
+    name: *const u8,
+    name_len: usize,
+    data: *mut *const u8,
+    length: *mut usize,
+) -> *const c_char {
+    let binding = unsafe { &mut *state.cast::<ResourceBinding<'_>>() };
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        let kind = std::str::from_utf8(unsafe { std::slice::from_raw_parts(kind, kind_len) })
+            .map_err(|e| e.to_string())?;
+        let name = std::str::from_utf8(unsafe { std::slice::from_raw_parts(name, name_len) })
+            .map_err(|e| e.to_string())?;
+        let output = binding.provider.resource(kind, name)?;
+        if output.len() > 1024 * 1024 {
+            return Err("resource literal exceeds 1 MiB".into());
+        }
+        binding.output = output;
+        unsafe {
+            *data = binding.output.as_ptr();
+            *length = binding.output.len();
+        }
+        Ok::<(), String>(())
+    }));
+    match result {
+        Ok(Ok(())) => std::ptr::null(),
+        Ok(Err(error)) => {
+            binding.error.fill(0);
+            for (out, byte) in binding.error.iter_mut().take(255).zip(error.bytes()) {
+                *out = if byte == 0 { b'?' } else { byte };
+            }
+            binding.error.as_ptr().cast()
+        }
+        Err(payload) => {
+            std::mem::forget(payload);
+            binding.panicked = true;
+            c"Rust resource callback panicked".as_ptr()
+        }
+    }
+}
 unsafe extern "C" {
+    fn neko_sq_bind_resources(
+        vm: *mut c_void,
+        state: *mut c_void,
+        callback: Option<ResourceCallback>,
+    );
     fn neko_sq_bind(vm: *mut c_void, state: *mut c_void, callback: Option<VariableCallback>);
     fn neko_sq_open() -> *mut c_void;
     fn neko_sq_close(vm: *mut c_void);
@@ -97,6 +163,37 @@ impl Default for SystemVm {
     }
 }
 impl SystemVm {
+    pub fn eval_with_resources(
+        &mut self,
+        name: &str,
+        source: &str,
+        variables: &mut Variables,
+        provider: &mut dyn ResourceProvider,
+    ) -> Result<(), String> {
+        let mut binding = ResourceBinding {
+            provider,
+            output: String::new(),
+            error: [0; 256],
+            panicked: false,
+        };
+        unsafe {
+            neko_sq_bind_resources(
+                self.raw,
+                (&mut binding as *mut ResourceBinding<'_>).cast(),
+                Some(resource_callback),
+            );
+        }
+        let result = self.eval_with_variables(name, source, variables);
+        unsafe {
+            neko_sq_bind_resources(self.raw, std::ptr::null_mut(), None);
+        }
+        if binding.panicked {
+            self.callback_failed = true;
+            Err("Rust resource callback panicked; VM stopped".into())
+        } else {
+            result
+        }
+    }
     pub fn new() -> Self {
         Self::try_new().expect("Squirrel VM initialization failed")
     }
@@ -458,5 +555,66 @@ mod tests {
             "if(com.answer(1)!=2) throw \"stack corruption\";",
         )
         .unwrap();
+    }
+}
+
+#[cfg(test)]
+mod resource_tests {
+    use super::*;
+    struct Provider {
+        panic: bool,
+    }
+    impl ResourceProvider for Provider {
+        fn resource(&mut self, _kind: &str, name: &str) -> Result<String, String> {
+            if self.panic {
+                panic!("resource fault")
+            }
+            if name == "missing" {
+                Err("missing resource".into())
+            } else {
+                Ok("resource-value".into())
+            }
+        }
+    }
+    #[test]
+    fn resource_binding_errors_children_and_panic_are_contained() {
+        let mut vm = SystemVm::new();
+        let mut vars = Variables::default();
+        let mut provider = Provider { panic: false };
+        vm.eval_with_resources(
+            "child",
+            "return newthread(function(){return NekoResource(\"Data\",\"ok\")}).call()",
+            &mut vars,
+            &mut provider,
+        )
+        .unwrap();
+        assert_eq!(vm.result(), "resource-value");
+        assert!(vm
+            .eval_with_resources(
+                "missing",
+                "NekoResource(\"Data\",\"missing\")",
+                &mut vars,
+                &mut provider
+            )
+            .unwrap_err()
+            .contains("missing resource"));
+        assert!(vm
+            .eval("unbound", "NekoResource(\"Data\",\"ok\")")
+            .unwrap_err()
+            .contains("not bound"));
+        provider.panic = true;
+        assert!(vm
+            .eval_with_resources(
+                "panic",
+                "try {NekoResource(\"Data\",\"ok\")} catch(e) {}",
+                &mut vars,
+                &mut provider
+            )
+            .unwrap_err()
+            .contains("resource callback panicked"));
+        assert!(vm
+            .eval("terminal", "return 1")
+            .unwrap_err()
+            .contains("VM stopped"));
     }
 }

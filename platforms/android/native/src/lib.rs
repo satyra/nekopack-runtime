@@ -203,3 +203,51 @@ pub unsafe extern "C" fn neko_probe_free(bytes: *mut u8, length: usize) {
         )));
     }
 }
+
+/// Borrowed descriptors remain owned by Kotlin until this synchronous call returns.
+/// # Safety
+/// `fds` contains `count` valid open seekable descriptors; out_len is writable.
+#[cfg(target_os = "android")]
+#[no_mangle]
+pub unsafe extern "C" fn neko_probe_dat(
+    fds: *const i32,
+    count: usize,
+    choice: i32,
+    out_len: *mut usize,
+) -> *mut u8 {
+    use std::os::fd::BorrowedFd;
+    let result = std::panic::catch_unwind(|| -> Result<String, Box<dyn Error>> {
+        let descriptors = unsafe { std::slice::from_raw_parts(fds, count) };
+        let mut files = Vec::new();
+        for &fd in descriptors {
+            files.push(std::fs::File::from(
+                unsafe { BorrowedFd::borrow_raw(fd) }.try_clone_to_owned()?,
+            ));
+        }
+        let baseline = SystemVm::validation_live_bytes();
+        let mut store = nekopack_runtime::dat::DatGame::mount(files)?;
+        let mut output = Vec::new();
+        let executed = nekopack_runtime::run_title(&mut store, choice, &mut output);
+        check(
+            SystemVm::validation_live_bytes() == baseline,
+            "DAT title VM leak",
+        )?;
+        executed?;
+        Ok(String::from_utf8(output)?)
+    });
+    let text = match result {
+        Ok(Ok(text)) => text,
+        Ok(Err(e)) => format!("FAIL\t{e}\n"),
+        Err(payload) => {
+            std::mem::forget(payload);
+            "FAIL\tunexpected Rust panic\n".into()
+        }
+    };
+    let mut bytes = text.into_bytes().into_boxed_slice();
+    unsafe {
+        *out_len = bytes.len();
+    }
+    let ptr = bytes.as_mut_ptr();
+    std::mem::forget(bytes);
+    ptr
+}

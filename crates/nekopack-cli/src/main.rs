@@ -136,6 +136,24 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
+        ("run-dat-title", 3) => {
+            let mut files = Vec::new();
+            for entry in std::fs::read_dir(&args[1])? {
+                let path = entry?.path();
+                if path
+                    .extension()
+                    .is_some_and(|x| x.eq_ignore_ascii_case("dat"))
+                {
+                    files.push(std::fs::File::open(path)?);
+                }
+            }
+            let mut store = nekopack_runtime::dat::DatGame::mount(files)?;
+            nekopack_runtime::run_title(
+                &mut store,
+                args[2].to_str().ok_or("invalid choice")?.parse()?,
+                &mut std::io::stdout().lock(),
+            )?
+        }
         ("run-title", 3) => title::run(
             Path::new(&args[1]),
             args[2].to_str().ok_or("invalid choice")?.parse()?,

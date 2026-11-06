@@ -62,6 +62,8 @@ def main():
     run(build/'aapt2.exe','link','-o',unsigned,'--manifest',ROOT/'platforms/android/AndroidManifest.xml','-I',android)
     with zipfile.ZipFile(unsigned,'a',compression=zipfile.ZIP_DEFLATED) as apk:
         apk.write(dex/'classes.dex','classes.dex')
+        for license_file in sorted((ROOT/'crates/nekopack-runtime/licenses').iterdir()):
+            apk.write(license_file,'assets/licenses/'+license_file.name)
         for path in [native,shim,cpp]: apk.write(path,'lib/arm64-v8a/'+path.name)
     aligned=out/'aligned.apk'
     run(build/'zipalign.exe','-f','-P','16','4',unsigned,aligned)
