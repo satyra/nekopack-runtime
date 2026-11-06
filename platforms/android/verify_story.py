@@ -94,7 +94,7 @@ def main():
  games=[]
  for i in a.games:
   run='story_'+uuid.uuid4().hex
-  adb('shell','am','start','-S','-n',package+'/.MainActivity','--ei','story_game',str(i),'--es','run_id',run)
+  adb('shell','am','start','-W','-S','-n',package+'/.MainActivity','--ei','story_game',str(i),'--es','run_id',run)
   pages=[];motions=[]
   to_boundary=a.until_boundary and (a.desktop/str(i)/'boundary.json').exists()
   if a.until_boundary and not to_boundary:assert a.allow_page_limit, 'missing expected boundary'

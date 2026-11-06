@@ -230,7 +230,7 @@ class MainActivity : Activity() {
                     runOnUiThread {if(!isDestroyed&&!storyClosing){sequence=token;text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true
                         if(metadata.has("motion")){
                             storyEffects!!.runMotion(token,metadata.getJSONObject("motion").getLong("duration_ms"))
-                            if(intent.getBooleanExtra("close_on_motion",false))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
+                            if(intent.getBooleanExtra("close_on_motion",false) && (!intent.hasExtra("close_on_motion_sequence") || token==intent.getIntExtra("close_on_motion_sequence",0).toLong()))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
                         }else image.setImageBitmap(bitmap)}}
                 }
             }

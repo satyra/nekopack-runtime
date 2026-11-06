@@ -1,0 +1,55 @@
+{
+  "scope": "BLESS only, native ARM64 PGKM10; movie explicitly skipped; no dynamic original screen parity or full-game claim",
+  "apk_sha256": "6fed7609f35dbc556a807dbdea2e6519e64c7594725dd3b2ba3858bfdb2fa2a5",
+  "unchanged_prefix_pages": 56,
+  "total_pages": 59,
+  "new_source_lines": [
+    84,
+    87,
+    92
+  ],
+  "next_boundary": {
+    "source": "012402",
+    "line": 94,
+    "steps": 430,
+    "unsupported": "[]"
+  },
+  "independent_rightward_frames": 8,
+  "independent_dip_frames": 9,
+  "dip_first_last_pixels_identical": true,
+  "independent_scene_pages": 59,
+  "independent_transition_snapshots": 4,
+  "audio_requests": 24,
+  "normal_and_cancel_vm_live_bytes": 0,
+  "cancel_target_page": 57,
+  "cancel_after_intermediate_frame": true,
+  "checks": {
+    "workspace_tests": {
+      "passed": true,
+      "log_sha256": "11185864750a3683aa6b5b6a321b30d2ba2f49f46b2d056230cf5c50f8a2eb65"
+    },
+    "runtime_final": {
+      "passed": true,
+      "log_sha256": "92cafd401ce90162e236dcf5e9701c9efb342bd80073fb62746ca377d342c941"
+    },
+    "clippy": {
+      "passed": true,
+      "log_sha256": "586a6a0e02a99bffa543f24dc881e2f57078fc0d8622add2eda356e075d9c3ec"
+    },
+    "python_tests": {
+      "passed": true,
+      "log_sha256": "58ab61bef8964691dd1f5d61b343021330490a3e559e9b350bbf7e4d1bf9fbf2"
+    }
+  },
+  "reports": {
+    "dip-batch18-audio-evidence.json": "442b152f0fdf82f33fddcd3f3486eb2fbda6c6eb94d76c3a33aedad04b2c10c5",
+    "dip-batch18-audio-reference.json": "5d21d0acd17cb0f579f2ed2d4df22ab52a1a1ef35ba177fbbc09024cad09fe8e",
+    "dip-batch18-cancel.json": "f6ddffdd04380cb626b3d2ce8f3e3f7c95495148d13c7a3549a4d43e5669c6f3",
+    "dip-batch18-desktop.json": "a31e2403ed41adaf2a72e32f4c8427d5be60aa5317d9dc294c38962a5f495d5d",
+    "dip-batch18-effects.json": "a4fc94b04a9fbe72570bffd5e47ff1fbb615bcd0befdfe95972e8861821c7e0d",
+    "dip-batch18-frames.json": "67de834b59c7cd4790386eea669ed54afb1cb1cb826922ee613bbe6af4db882c",
+    "dip-batch18-layers.json": "86ffb3a972cf439d7703591222857b675f7dbb9cc1f76f7ec97fe21d9783e446",
+    "dip-batch18-native.json": "882a496385ebe125262058a090d1fdd0a9f59c4d483e9622cdd7f25274d12079",
+    "dip-batch18-original.json": "7384398d09f844795825aa6c062baace9ef0342476d09932a97cbb3fff3a69cb"
+  }
+}

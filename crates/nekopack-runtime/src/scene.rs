@@ -1,4 +1,4 @@
-//! Observed Tiny Dungeon layer profile. Only the verified default rightward motion is supported.
+//! Observed Tiny Dungeon layer profile. Verified default rightward and vertical dip motions only.
 use crate::quote;
 use nekopack_image::RgbaImage;
 use std::collections::BTreeMap;
@@ -81,6 +81,14 @@ mod tests {
         let move_plan = plan(&[b">>>>>>>".to_vec()], &macros, 640).unwrap();
         assert_eq!(move_plan.rightward, Some(350));
         assert_eq!(move_plan.order, Order::Keep);
+        let dip = plan(&[b"_".to_vec()], &macros, 640).unwrap();
+        assert!(dip.dip);
+        assert_eq!(dip.order, Order::Keep);
+        let nested = BTreeMap::from([
+            ("alias".into(), vec!["_".into()]),
+            ("_".into(), vec!["front".into()]),
+        ]);
+        assert!(plan(&[b"alias".to_vec()], &nested, 640).is_err());
         assert_eq!(p.name.as_deref(), Some("face"));
         assert_eq!(p.folder.as_deref(), Some("image/actor/big"));
         assert_eq!(p.x, Some(320));
@@ -90,7 +98,10 @@ mod tests {
             vec![b">2".to_vec()],
             vec![b">".to_vec(), b"face".to_vec()],
             vec![b"center".to_vec(), b">".to_vec()],
-            vec![b"_".to_vec()],
+            vec![b"__".to_vec()],
+            vec![b"_2".to_vec()],
+            vec![b"_".to_vec(), b">".to_vec()],
+            vec![b"center".to_vec(), b"_".to_vec()],
             vec![b"left9".to_vec()],
             vec![b"clear".to_vec(), b"face".to_vec()],
         ] {
@@ -104,6 +115,7 @@ pub(crate) struct Plan {
     pub folder: Option<String>,
     pub x: Option<i32>,
     pub rightward: Option<i32>,
+    pub dip: bool,
     pub order: Order,
     pub clear: bool,
 }
@@ -129,13 +141,21 @@ pub(crate) fn plan(
         folder: None,
         x: None,
         rightward: None,
+        dip: false,
         order: Order::Front,
         clear: words.is_empty(),
     };
     for (index, word) in words.iter().enumerate() {
-        if !word.is_empty() && word.bytes().all(|b| b == b'>') {
-            if index + 1 != words.len() || p.rightward.is_some() || p.x.is_some() {
-                return Err("rightward motion must be the sole terminal position modifier".into());
+        if macros.contains_key(word) {
+            return Err("nested image macros are unsupported".into());
+        }
+        if word == "_" || (!word.is_empty() && word.bytes().all(|b| b == b'>')) {
+            if index + 1 != words.len() || p.x.is_some() {
+                return Err("motion must be the sole terminal position modifier".into());
+            }
+            if word == "_" {
+                p.dip = true;
+                continue;
             }
             p.rightward = Some(
                 i32::try_from(word.len())
@@ -144,9 +164,6 @@ pub(crate) fn plan(
                     .ok_or("actor motion overflow")?,
             );
             continue;
-        }
-        if macros.contains_key(word) {
-            return Err("nested image macros are unsupported".into());
         }
         match word.as_str() {
             "front" => p.order = Order::Front,
@@ -198,7 +215,7 @@ pub(crate) fn plan(
             }
         }
     }
-    if p.rightward.is_some()
+    if (p.rightward.is_some() || p.dip)
         && p.name.is_none()
         && !words
             .iter()
@@ -328,7 +345,7 @@ impl Scene {
     }
     pub fn render_pixels(
         &mut self,
-        positions: &[(u8, i32)],
+        positions: &[(u8, [i32; 2])],
     ) -> Result<RgbaImage, Box<dyn std::error::Error>> {
         let mut canvas = RgbaImage::filled(
             self.dimensions[0],
@@ -348,13 +365,14 @@ impl Scene {
                     l.filter = self.filter;
                     l.filter_pending = false;
                 }
-                let x = positions
+                let anchor = positions
                     .iter()
                     .find(|(slot, _)| *slot == l.slot)
-                    .map_or(l.anchor[0], |(_, x)| *x)
+                    .map_or(l.anchor, |(_, anchor)| *anchor);
+                let x = anchor[0]
                     .checked_add(l.offset[0])
                     .ok_or("actor x overflow")?;
-                let y = l.anchor[1]
+                let y = anchor[1]
                     .checked_add(l.offset[1])
                     .ok_or("actor y overflow")?;
                 canvas.draw(&l.image, [x, y]);

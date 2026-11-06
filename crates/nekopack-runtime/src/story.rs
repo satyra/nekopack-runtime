@@ -353,7 +353,7 @@ impl<R: Read + Seek> StorySession<R> {
         let positions = self
             .motions
             .iter()
-            .map(|m| (m.slot, m.x(elapsed_ms)))
+            .map(|m| (m.slot, m.position(elapsed_ms)))
             .collect::<Vec<_>>();
         let frame = self.scene.render_pixels(&positions)?;
         self.motion_elapsed = elapsed_ms;
@@ -498,12 +498,15 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(x) = p.x {
             anchor[0] = x;
         }
-        let motion = p
-            .rightward
-            .map(|dx| crate::motion::Motion::new(slot, anchor[0], dx, center[0]))
-            .transpose()?;
+        let motion = if p.dip {
+            Some(crate::motion::Motion::dip(slot, anchor, center)?)
+        } else {
+            p.rightward
+                .map(|dx| crate::motion::Motion::new(slot, anchor, dx, center))
+                .transpose()?
+        };
         if let Some(m) = &motion {
-            anchor[0] = m.end;
+            anchor = m.end;
         }
         if p.name.is_none() && p.folder.is_none() {
             let index = self
@@ -1382,6 +1385,66 @@ mod tests {
         assert!(s.motions.is_empty());
         assert!(s.page_frame(1, 250).is_err());
         assert!(s.acknowledge_text(1).is_err());
+    }
+    #[test]
+    fn dip_frames_restore_y_and_early_next_never_commits_peak_or_reorders() {
+        for early in [false, true] {
+            let mut s = moving_session(b".img6 _\nfirst\nsecond");
+            s.scene.dimensions = [800, 200];
+            s.scene.actors[0].anchor[1] = 50;
+            let packet = s.poll_packet().unwrap();
+            let steps = s.machine.steps();
+            let times = if early {
+                vec![(0, 50), (125, 100)]
+            } else {
+                vec![(0, 50), (50, 80), (125, 100), (200, 80), (250, 50)]
+            };
+            for (time, y) in times {
+                let bytes = s.page_frame(1, time).unwrap();
+                let split = bytes.iter().position(|b| *b == b'\n').unwrap();
+                let pixels = &bytes[split + 1..];
+                let offset = (y * 800 + 400) * 4;
+                assert_eq!(&pixels[offset..offset + 4], [83, 88, 137, 255]);
+                assert_eq!(
+                    pixels
+                        .as_chunks::<4>()
+                        .0
+                        .iter()
+                        .filter(|p| **p != [0, 0, 0, 255])
+                        .count(),
+                    1
+                );
+                assert_eq!(s.poll_packet().unwrap(), packet);
+                assert_eq!(s.machine.steps(), steps);
+            }
+            s.acknowledge_text(1).unwrap();
+            assert_eq!(s.scene.actors[0].anchor, [400, 50]);
+            assert_eq!(s.scene.actors[0].filter, crate::filter::Filter::Night);
+            assert!(s.motions.is_empty());
+            assert!(s.page_frame(1, 250).is_err());
+            assert!(s.page.as_ref().unwrap().motion.is_none());
+        }
+    }
+    #[test]
+    fn early_rightward_ack_then_dip_uses_committed_origin_and_new_page_identity() {
+        let mut s = moving_session(b".img6 >\nright\n.img6 _\ndip\nsettled");
+        s.scene.dimensions = [800, 200];
+        s.scene.actors[0].anchor[1] = 50;
+        s.poll_packet().unwrap();
+        s.page_frame(1, 50).unwrap();
+        let second = s.acknowledge_text(1).unwrap();
+        assert_eq!(s.scene.actors[0].anchor, [450, 50]);
+        assert!(s.page_frame(1, 250).is_err());
+        assert_eq!(s.poll_packet().unwrap(), second);
+        let peak = s.page_frame(2, 125).unwrap();
+        let split = peak.iter().position(|b| *b == b'\n').unwrap();
+        assert_eq!(
+            &peak[split + 1 + (100 * 800 + 450) * 4..split + 1 + (100 * 800 + 450) * 4 + 4],
+            [83, 88, 137, 255]
+        );
+        s.acknowledge_text(2).unwrap();
+        assert_eq!(s.scene.actors[0].anchor, [450, 50]);
+        assert!(s.page_frame(2, 250).is_err());
     }
     #[test]
     fn motion_early_next_finishes_position_and_unverified_queue_combinations_stop() {
