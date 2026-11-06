@@ -1,6 +1,8 @@
-//! Byte-preserving parser for the observed bootstrap subset, not a VM.
-//! No CP932/CP936 conversion or guessed system-script execution.
+//! Byte-preserving bootstrap parser, cooperative scenario state, and system bridge.
+//! Parsing performs no CP932/CP936 conversion; unsupported syntax stays explicit.
 use std::{fmt, ops::Range};
+pub mod runtime;
+pub mod system;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Statement<'a> {
@@ -98,7 +100,12 @@ pub fn parse_bootstrap(data: &[u8], max_statements: usize) -> Result<Vec<Node<'_
         {
             return Err(fail("unsupported control, quote, or inline comment syntax"));
         }
-        let tokens: Vec<&[u8]> = raw.split(|b| space(*b)).filter(|t| !t.is_empty()).collect();
+        let mut tokens: Vec<&[u8]> = raw.split(|b| space(*b)).filter(|t| !t.is_empty()).collect();
+        if tokens[0].starts_with(b"?") && tokens[0].len() > 1 {
+            let first = tokens[0];
+            tokens[0] = &first[..1];
+            tokens.insert(1, &first[1..]);
+        }
         let args = &tokens[1..];
         let statement = match tokens[0] {
             b"?" => {
@@ -181,6 +188,13 @@ mod tests {
     use super::*;
     #[test]
     fn patch_assignment_is_not_a_general_expression_parser() {
+        assert_eq!(
+            parse_bootstrap(b"?x = 3", 1).unwrap()[0].statement,
+            Statement::Assign {
+                name: b"x",
+                value: 3
+            }
+        );
         let nodes = parse_bootstrap(b"? \x90\x85 = 0", 1).unwrap();
         assert_eq!(
             nodes[0].statement,

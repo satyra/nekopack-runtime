@@ -1,6 +1,8 @@
-# NekoPack Android Runtime
+# NekoPack Cross-Platform Runtime
 
-目标：Rust + Kotlin 实现独立、通用的 Android ARM64 NekoPack 游戏运行环境，由玩家导入自己的游戏。Phase 0 已获用户审核，当前进入 **Phase 1：独立 Rust /1 DAT 只读资源层**；没有游戏 VM、Android 工程或可安装 APK。
+目标：共享 Rust 核心与独立平台宿主。Android ARM64（Kotlin + JNI）仍是首个交付目标，Android MVP 后验证 Windows，再推进 Linux/Steam Deck、macOS。跨平台方案已获审核，当前实施最小迁移 M1：变量/调用状态、系统脚本与标题执行链路；尚无 Android 工程或 APK。
+
+当前四部曲均通过无窗口标题选择到首段剧情调用的验证，`def` 和 `.nut` 变量访问共用 Rust 状态。该结果不代表完整剧情、真实渲染/音频或 Android 已运行，详见 [执行链路验收](docs/Phase2_Title_Runtime.md)。目标架构、依赖审计、最小迁移与路线分别见根目录 [架构](CROSS_PLATFORM_ARCHITECTURE.md)、[审计](PLATFORM_DEPENDENCY_AUDIT.md)、[迁移](MIGRATION_PLAN.md)、[路线](DEVELOPMENT_ROADMAP.md)。
 
 2026-11-06：完成公开源码调查后，新增无外部 crate 依赖的 `nekopack-archive` 和 `nekopack-cli`。Rust 资源层通过四部曲 22 个 DAT、51,201 个条目的差分验证；索引、全部条目元数据和前 16 字节与旧 Python 参考解码器一致。完整资源仅分层抽样，不代表所有图像/音频都已解码或游戏可运行。结果见 [Phase 1 验收](docs/Phase1_Archive_Increment.md)。
 
@@ -10,7 +12,7 @@
 
 ## 使用
 
-脚本主线已开始：新增 `nekopack-script` 启动子集 AST 与 `parse-bootstrap FILE ENTRY`，四部曲 12 份启动/补丁脚本、91 条语句通过验证，53 次直接依赖均能定位。尚不执行脚本；详见 [启动脚本增量](docs/Phase2_Bootstrap_Parser.md)。
+静态入口 `parse-bootstrap FILE ENTRY` 保留原有字节与来源信息；历史 12 份启动/补丁脚本、91 条语句、53 次直接依赖验证见 [启动脚本增量](docs/Phase2_Bootstrap_Parser.md)。执行入口 `run-title DECODED_FIXTURE_ROOT CHOICE` 使用私有预处理样本树；构建新增 C++ 工具链要求，见下方链接。
 
 ```text
 cargo run -p nekopack-cli -- inspect-archive path/to/system.dat
@@ -38,7 +40,7 @@ $env:CARGO_HOME="$env:LOCALAPPDATA/RustGNU/cargo"
 $env:Path="$env:CARGO_HOME/bin;$env:Path"
 ```
 
-其他已安装 Rust 的环境使用自己的工具链即可。本次验证工具链：Rust 1.99.1，Windows GNU；尚未验证 Android target。
+其他已安装 Rust 的环境使用自己的工具链即可。当前系统解释器桥还需要 C++ 编译器/归档器；已验证 Windows GNU + Zig 0.14.1，参数和复现步骤见 [构建与验证](docs/Phase2_Title_Runtime.md)。尚未验证 Android target，目标感知构建与 parser-only 依赖隔离属于下一批 M2。
 
 ## 调查文档
 

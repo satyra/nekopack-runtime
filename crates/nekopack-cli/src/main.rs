@@ -5,6 +5,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Write};
 use std::path::Path;
+mod title;
 
 const INDEX_BUDGET: usize = 16 * 1024 * 1024;
 const MNG_BUDGET: u64 = 64 * 1024 * 1024;
@@ -135,6 +136,22 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
+        ("run-title", 3) => title::run(
+            Path::new(&args[1]),
+            args[2].to_str().ok_or("invalid choice")?.parse()?,
+        )?,
+        ("eval-system", n) if n >= 2 => {
+            let mut vm = nekopack_script::system::SystemVm::new();
+            for path in &args[1..] {
+                let data = bounded_file(path)?;
+                vm.eval(
+                    &Path::new(path).display().to_string(),
+                    std::str::from_utf8(&data)?,
+                )
+                .map_err(|e| format!("{}: {e}", Path::new(path).display()))?;
+            }
+            println!("{}", vm.result());
+        }
         ("parse-bootstrap", 3) => {
             let entry = args[2].to_str().ok_or("invalid entry")?.parse::<usize>()?;
             let mut a = open(Path::new(&args[1]))?;

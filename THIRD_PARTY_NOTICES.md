@@ -1,5 +1,7 @@
 # 格式与算法来源
 
+系统执行增量使用 Alberto Demichelis 的 **Squirrel 2.2.5 stable** 开源解释器源码子集。该版本随附的许可为 zlib 风格条款，不套用新版 Squirrel 的许可标签。完整原始声明保留在 [COPYRIGHT](vendor/squirrel2/COPYRIGHT)；来源、下载包 SHA-256 与三处移植修改见 [修改清单](vendor/squirrel2/NEKOPACK_CHANGES.md)。这些源码并非本项目原创，修改版已明确标记。没有复制商业游戏 EXE/DLL 或游戏系统脚本。
+
 像素增量新增 Cargo 依赖 `png 0.18.1`（MIT OR Apache-2.0），通过其公开 API 解码/编码 PNG。
 实际构建依赖还包含 bitflags、crc32fast、cfg-if、fdeflate、flate2、miniz_oxide、adler2、simd-adler32；具体版本由 Cargo.lock 固定。
 其中 simd-adler32 为 MIT，其他均提供 MIT 许可选项。依赖源码与完整许可由 Cargo 的对应 crate 包提供；本仓库不复制这些依赖源码或发布编译后的游戏资源。
