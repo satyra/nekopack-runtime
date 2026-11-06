@@ -1,0 +1,93 @@
+{
+  "scope": "Static original executable facts; not original screen captures",
+  "games": [
+    {
+      "file": "Tiny_BoD.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "parser_va": "0x441eac",
+      "loop_va": "0x4423ac",
+      "wait_va": "0x442408",
+      "phase_wait_ms": 30,
+      "loop_sha256": "08ccb8a93056aab0ab116d84c3a98d66a2b9ff5e292155b73a748463649adcb8",
+      "colors": {
+        "white": 16777215,
+        "白": 16777215,
+        "赤": 16711680,
+        "青": 255,
+        "黄": 16776960,
+        "緑": 65280,
+        "紫": 16711935,
+        "水": 65535
+      }
+    },
+    {
+      "file": "Tiny_BfY.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "parser_va": "0x441eac",
+      "loop_va": "0x4423ac",
+      "wait_va": "0x442408",
+      "phase_wait_ms": 30,
+      "loop_sha256": "08ccb8a93056aab0ab116d84c3a98d66a2b9ff5e292155b73a748463649adcb8",
+      "colors": {
+        "white": 16777215,
+        "白": 16777215,
+        "赤": 16711680,
+        "青": 255,
+        "黄": 16776960,
+        "緑": 65280,
+        "紫": 16711935,
+        "水": 65535
+      }
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+      "parser_va": "0x4958bc",
+      "loop_va": "0x49872a",
+      "wait_va": "0x498786",
+      "phase_wait_ms": 30,
+      "loop_sha256": "8c4cdae21185ae1f90d7e342846f763e5f7ca1544c847ed7ea143d2db4982998",
+      "colors": {
+        "white": 16777215,
+        "白": 16777215,
+        "赤": 16711680,
+        "青": 255,
+        "黄": 16776960,
+        "緑": 65280,
+        "紫": 16711935,
+        "水": 65535
+      }
+    },
+    {
+      "file": "Tiny_BaW.exe",
+      "sha256": "c570d44929360672475db25ec22704ae06ffc20cbabf4a46d0e60325fbe908d0",
+      "parser_va": "0x441e04",
+      "loop_va": "0x4422f4",
+      "wait_va": "0x442359",
+      "phase_wait_ms": 30,
+      "loop_sha256": "f115c9d38b94b556865972d1bfad5ec48a398728123e4374624b94b6d2dbbd26",
+      "colors": {
+        "white": 16777215,
+        "白": 16777215,
+        "赤": 16711680,
+        "青": 255,
+        "黄": 16776960,
+        "緑": 65280,
+        "紫": 16711935,
+        "水": 65535
+      }
+    }
+  ],
+  "conclusions": [
+    "Numeric argument is repeat count, default one",
+    "Default RGB is white",
+    "Each iteration waits 30ms then alternates solid color and scene snapshot",
+    "Count is doubled; last positive-count phase restores snapshot"
+  ],
+  "limits": [
+    "Input interruption branches differ among versions",
+    "Zero/negative count not supported by the runtime profile",
+    "Original DIB alpha is not a display opacity; Android exports opaque RGBA",
+    "No guarantee of original frame cadence"
+  ]
+}

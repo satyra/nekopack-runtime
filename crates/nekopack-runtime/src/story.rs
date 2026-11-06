@@ -108,6 +108,7 @@ pub struct StorySession<R: Read + Seek> {
     presented: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
     shake: Option<crate::shake::Frames>,
+    flash: Option<crate::flash::Frames>,
     image_macros: BTreeMap<String, Vec<String>>,
     page: Option<Page>,
     speaker: String,
@@ -147,6 +148,7 @@ impl<R: Read + Seek> StorySession<R> {
             presented: None,
             wipe: None,
             shake: None,
+            flash: None,
             image_macros,
             page: None,
             speaker: String::new(),
@@ -201,7 +203,8 @@ impl<R: Read + Seek> StorySession<R> {
             }
         }
         if let Some(effect) = &self.pending_effect {
-            let checkpoint = if matches!(effect.kind.as_str(), "shake" | "wipe" | "fade") {
+            let checkpoint = if matches!(effect.kind.as_str(), "shake" | "wipe" | "fade" | "flash")
+            {
                 Some(self.checkpoint()?)
             } else {
                 None
@@ -225,12 +228,16 @@ impl<R: Read + Seek> StorySession<R> {
         if self.shake.as_ref().is_some_and(|s| !s.finished()) {
             return Err("shake acknowledged before final frame".into());
         }
+        if self.flash.as_ref().is_some_and(|f| !f.finished()) {
+            return Err("flash acknowledged before final phase".into());
+        }
         self.machine.complete(None)?;
         let effect = self.pending_effect.take().unwrap();
+        self.flash = None;
         if let Some(shake) = self.shake.take() {
             self.presented = Some(shake.into_png()?);
         }
-        if effect.kind == "fade" || effect.kind == "wipe" {
+        if matches!(effect.kind.as_str(), "fade" | "wipe" | "flash") {
             self.presented = Some(effect.payload);
         }
         self.wipe = None;
@@ -248,6 +255,23 @@ impl<R: Read + Seek> StorySession<R> {
         self.speaker.clear();
         self.voice.clear();
         self.poll_packet()
+    }
+    pub fn flash_frame(&mut self, token: u64, phase: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self
+                .pending_effect
+                .as_ref()
+                .map(|e| (e.token, e.kind.as_str()))
+                != Some((token, "flash"))
+        {
+            return Err("stale or missing flash frame request".into());
+        }
+        let flash = self.flash.as_mut().ok_or("missing flash state")?;
+        let (width, height) = flash.dimensions();
+        let pixels = flash.frame(phase)?;
+        let mut packet=format!("{{\"frame_kind\":\"flash\",\"token\":{token},\"phase\":{phase},\"width\":{width},\"height\":{height},\"format\":\"RGBA8\"}}\n").into_bytes();
+        packet.extend_from_slice(pixels);
+        Ok(packet)
     }
     pub fn effect_frame(&mut self, token: u64, elapsed_ms: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed || self.pending_effect.as_ref().map(|e| e.token) != Some(token) {
@@ -489,6 +513,38 @@ impl<R: Read + Seek> StorySession<R> {
                                 return Ok(());
                             }
                         }
+                        "flash" => {
+                            let options = args
+                                .iter()
+                                .map(|a| std::str::from_utf8(a))
+                                .collect::<Result<Vec<_>, _>>()?;
+                            let spec = crate::flash::Flash::parse(options.iter().copied())?;
+                            let normalized = format!(
+                                "{:02x}{:02x}{:02x} {}",
+                                spec.rgb()[0],
+                                spec.rgb()[1],
+                                spec.rgb()[2],
+                                spec.count()
+                            );
+                            self.effects.push(format!("flash {normalized}"));
+                            let target = self.render()?;
+                            if self.host_mode {
+                                self.flash = Some(crate::flash::Frames::new(
+                                    spec,
+                                    decode_png(&target, PIXELS)?,
+                                )?);
+                                self.host_sequence += 1;
+                                self.pending_effect = Some(HostEffect {
+                                    token: self.host_sequence,
+                                    kind: "flash".into(),
+                                    name: normalized,
+                                    duration_ms: spec.duration_ms(),
+                                    payload: target,
+                                });
+                                return Ok(());
+                            }
+                            self.presented = Some(target);
+                        }
                         "shake" => {
                             let options = args
                                 .iter()
@@ -700,6 +756,7 @@ mod tests {
             presented: None,
             wipe: None,
             shake: None,
+            flash: None,
             image_macros: BTreeMap::new(),
             page: None,
             speaker: String::new(),
@@ -713,6 +770,26 @@ mod tests {
         }
     }
 
+    #[test]
+    fn flash_cannot_skip_phases_or_complete_early() {
+        let mut s = session(".flash 青 2\ntext".as_bytes());
+        s.enable_host_effects();
+        let packet = s.poll_packet().unwrap();
+        let before = s.checkpoint().unwrap();
+        assert!(s.flash_frame(2, 0).is_err());
+        assert!(s.flash_frame(1, 1).is_err());
+        assert!(s.acknowledge_effect(1).is_err());
+        let frame = s.flash_frame(1, 0).unwrap();
+        assert_eq!(s.flash_frame(1, 0).unwrap(), frame);
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        assert_eq!(s.checkpoint().unwrap(), before);
+        for phase in 1..4 {
+            s.flash_frame(1, phase).unwrap();
+        }
+        s.acknowledge_effect(1).unwrap();
+        assert!(s.flash.is_none());
+        assert!(s.flash_frame(1, 3).is_err());
+    }
     #[test]
     fn shake_frames_require_matching_token_and_completion_without_advancing_pc() {
         let mut s = session(b".shake once\ntext");

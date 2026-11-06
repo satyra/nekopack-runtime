@@ -17,7 +17,7 @@ import org.json.JSONObject
 import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
-class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val wipeFrame:(Long,Long,(Bitmap)->Unit)->Unit,private val failure:(Throwable)->Unit) {
+class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val wipeFrame:(String,Long,Long,(Bitmap)->Unit)->Unit,private val failure:(Throwable)->Unit) {
     private val handler=Handler(Looper.getMainLooper())
     private val players=mutableMapOf<String,Pair<MediaPlayer,File>>()
     private var animator:ValueAnimator?=null
@@ -72,12 +72,25 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                         animation.start();done()
                     }
                 }
+                "flash"->{
+                    check(bitmap!=null)
+                    val phases=duration/30;var phase=0L
+                    fun frame(){
+                        if(closed)return
+                        wipeFrame(kind,token,phase){value->
+                            if(!closed){image.setImageBitmap(value);log("frame",kind,token,phase);phase++
+                                if(phase==phases)done() else handler.postDelayed({frame()},30)
+                            }
+                        }
+                    }
+                    handler.postDelayed({frame()},30)
+                }
                 "wipe","shake"->{
                     check(bitmap!=null)
                     fun frame(){
                         if(closed)return
                         val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
-                        wipeFrame(token,elapsed){value->
+                        wipeFrame(kind,token,elapsed){value->
                             if(!closed){image.setImageBitmap(value);log("frame",kind,token,elapsed)
                                 if(elapsed==duration){if(kind=="wipe")image.setImageBitmap(bitmap);done()}
                                 else handler.postDelayed({frame()},16)

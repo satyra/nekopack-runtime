@@ -1,0 +1,3282 @@
+{
+  "scope": "HOME during fade/BGM; probe-triggered background 35ms after shake / 5ms after flash begins; onPause ends session, no resume/save claim",
+  "device": {
+    "ro.product.cpu.abilist": "arm64-v8a,armeabi-v7a,armeabi",
+    "ro.dalvik.vm.native.bridge": "0",
+    "ro.build.version.sdk": "35",
+    "kernel_machine": "aarch64"
+  },
+  "execution": "native ARM64",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "523ac09eea2ea22bd5f6827371bcbc3c6c2431b244bb304aca6e19a995e52752",
+      "libnekopack_host.so": "2d7a21068b2e77013cecced86b740eb6602f9e61f65c4e2f94ac1cef643fb138",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "f840e8f8b76ade1707098e667762a2ff009d51aab55f2cc6924fc23c343cbcd6"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1782784 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x068fe0 0x068fe0 R   0x4000\n  LOAD           0x068fe0 0x000000000006cfe0 0x000000000006cfe0 0x0d4610 0x0d4610 R E 0x4000\n  LOAD           0x13d5f0 0x00000000001455f0 0x00000000001455f0 0x007550 0x007a10 RW  0x4000\n  LOAD           0x144b40 0x0000000000150b40 0x0000000000150b40 0x001420 0x001da8 RW  0x4000\n  DYNAMIC        0x144468 0x000000000014c468 0x000000000014c468 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x13d5f0 0x00000000001455f0 0x00000000001455f0 0x007550 0x007a10 R   0x1\n  GNU_EH_FRAME   0x04b118 0x000000000004b118 0x000000000004b118 0x0040d4 0x0040d4 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x144468 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x1160\n  0x0000000000000008 (RELASZ)       42216 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1746\n  0x0000000000000017 (JMPREL)       0xb648\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x14c898\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd0c\n  0x000000000000000a (STRSZ)        1104 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xce0\n  0x0000000000000019 (INIT_ARRAY)   0x14c460\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x14c450\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbc0\n  0x000000006ffffffe (VERNEED)      0xc7c\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6080 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x0008a8 0x0008a8 R   0x4000\n  LOAD           0x0008a8 0x00000000000048a8 0x00000000000048a8 0x0004c8 0x0004c8 R E 0x4000\n  LOAD           0x000d70 0x0000000000008d70 0x0000000000008d70 0x000218 0x000290 RW  0x4000\n  DYNAMIC        0x000d88 0x0000000000008d88 0x0000000000008d88 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000d70 0x0000000000008d70 0x0000000000008d70 0x000218 0x000290 R   0x1\n  GNU_EH_FRAME   0x0006dc 0x00000000000006dc 0x00000000000006dc 0x000054 0x000054 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xd88 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x588\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x5d0\n  0x0000000000000002 (PLTRELSZ)     168 (bytes)\n  0x0000000000000003 (PLTGOT)       0x8f38\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x438\n  0x000000000000000a (STRSZ)        332 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x410\n  0x000000000000001a (FINI_ARRAY)   0x8d78\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x3d8\n  0x000000006ffffffe (VERNEED)      0x3f0\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "tests": [
+    {
+      "game": 0,
+      "interrupted": "fade",
+      "run_id": "cancel_5c97ffe42f2441a09001fb57f351df94",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598839992,
+          "value": 3000
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 598840108,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 598840107
+      },
+      "closed": true
+    },
+    {
+      "game": 2,
+      "interrupted": "bgm",
+      "run_id": "cancel_a23534df0fb14620b02241e14dd09869",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598842955,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598843001,
+          "value": 122993
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598843001,
+          "value": 46
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 598843053,
+          "value": 2000
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 598843183,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 598843147
+      },
+      "closed": true
+    },
+    {
+      "game": 2,
+      "interrupted": "bgm_fade",
+      "run_id": "cancel_e111c38f1f9f468f9ab3fb1102429526",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598845957,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598845985,
+          "value": 122993
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598845985,
+          "value": 28
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 598846048,
+          "value": 2000
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 598846187,
+          "value": 47
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 598846564,
+          "value": 257
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 598848070,
+          "value": 2022
+        },
+        {
+          "event": "begin",
+          "kind": "bgm_fade",
+          "token": 3,
+          "time_ms": 598871062,
+          "value": 1000
+        },
+        {
+          "event": "ack",
+          "kind": "bgm_fade",
+          "token": 3,
+          "time_ms": 598871063,
+          "value": 1
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 4,
+          "time_ms": 598871085,
+          "value": 2000
+        },
+        {
+          "event": "cancelled",
+          "kind": "bgm_fade",
+          "token": 3,
+          "time_ms": 598871197,
+          "value": 0
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 598871235,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 598871197
+      },
+      "closed": true
+    },
+    {
+      "game": 1,
+      "interrupted": "shake",
+      "run_id": "cancel_8250a8ebfeaa4841b06f88d3610e8aca",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598874023,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598874538,
+          "value": 253
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598876054,
+          "value": 2031
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598876072,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598876161,
+          "value": 4647
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598876162,
+          "value": 90
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598876364,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598876569,
+          "value": 216
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598879243,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598879269,
+          "value": 3599
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598879269,
+          "value": 27
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598879470,
+          "value": 44
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598883026,
+          "value": 3599
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598887463,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598887486,
+          "value": 1774
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598887487,
+          "value": 24
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598887688,
+          "value": 35
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598889432,
+          "value": 1774
+        },
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598890352,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598890386,
+          "value": 152561
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598890386,
+          "value": 34
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598890588,
+          "value": 35
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598895831,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598895852,
+          "value": 1301
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598895853,
+          "value": 22
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598896054,
+          "value": 37
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598897323,
+          "value": 1301
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598898565,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598898584,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598898584,
+          "value": 19
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598898784,
+          "value": 36
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598899242,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598899292,
+          "value": 8
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598899324,
+          "value": 66
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598899355,
+          "value": 98
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598899385,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598899385,
+          "value": 143
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598899408,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598899481,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598899482,
+          "value": 74
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598899684,
+          "value": 40
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598900089,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598900111,
+          "value": 8
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 598900256,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 598900149
+      },
+      "closed": true
+    },
+    {
+      "game": 1,
+      "interrupted": "flash",
+      "run_id": "cancel_09444626d94b421eb084c53e1e1a7841",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598902574,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598903084,
+          "value": 252
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 598904595,
+          "value": 2021
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598904614,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598904687,
+          "value": 4647
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598904688,
+          "value": 74
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598904891,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 598905093,
+          "value": 194
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598907674,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598907694,
+          "value": 3599
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598907694,
+          "value": 20
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598907895,
+          "value": 52
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 598911446,
+          "value": 3599
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598915818,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598915839,
+          "value": 1774
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598915840,
+          "value": 22
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598916044,
+          "value": 44
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 598917775,
+          "value": 1774
+        },
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598918716,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598918746,
+          "value": 152561
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598918746,
+          "value": 30
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 598918947,
+          "value": 35
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598924178,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598924194,
+          "value": 1301
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598924195,
+          "value": 17
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598924396,
+          "value": 23
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 598925677,
+          "value": 1301
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598926901,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598926923,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598926924,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598927124,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598927579,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 598927580,
+          "value": 476
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598927630,
+          "value": 8
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598927661,
+          "value": 66
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598927692,
+          "value": 98
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598927722,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 598927723,
+          "value": 144
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598927746,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598927800,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598927800,
+          "value": 54
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598928002,
+          "value": 44
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928400,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928430,
+          "value": 10
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928463,
+          "value": 49
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928494,
+          "value": 80
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928529,
+          "value": 111
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928561,
+          "value": 146
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 598928581,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928605,
+          "value": 178
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928638,
+          "value": 222
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928677,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 598928677,
+          "value": 277
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 598928982,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 598929048,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 598929049,
+          "value": 67
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 598929253,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 598929703,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 598929704,
+          "value": 467
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 598929730,
+          "value": 8
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 598929763,
+          "value": 44
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 598929806,
+          "value": 78
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 598929840,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 598929841,
+          "value": 138
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 598929882,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 598929960,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 598929961,
+          "value": 79
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 598930165,
+          "value": 31
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930566,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930585,
+          "value": 6
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930618,
+          "value": 37
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930652,
+          "value": 69
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930685,
+          "value": 104
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930721,
+          "value": 137
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930754,
+          "value": 173
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 598930757,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930799,
+          "value": 219
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930840,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 598930842,
+          "value": 275
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 598934158,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 598934176,
+          "value": 1764
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 598934176,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 598934378,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 598934578,
+          "value": 221
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 598936125,
+          "value": 1764
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 598936879,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 598936901,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 598936902,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 598937104,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937630,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 598937630,
+          "value": 543
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937649,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937681,
+          "value": 35
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937711,
+          "value": 67
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937743,
+          "value": 98
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937773,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 598937774,
+          "value": 144
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 598937800,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 598937831,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 598937832,
+          "value": 32
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 598938034,
+          "value": 50
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938448,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938469,
+          "value": 7
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938498,
+          "value": 38
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938531,
+          "value": 67
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938574,
+          "value": 99
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938614,
+          "value": 149
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938647,
+          "value": 183
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938689,
+          "value": 216
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938722,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 598938723,
+          "value": 275
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 598939028,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 598939159,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 598939160,
+          "value": 132
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 598939363,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 598939880,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 598939881,
+          "value": 531
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 598939914,
+          "value": 9
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 598939951,
+          "value": 51
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 598939986,
+          "value": 88
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 598940028,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 598940029,
+          "value": 149
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 598940066,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 598940156,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 598940157,
+          "value": 91
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 598940360,
+          "value": 29
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 598942426,
+          "value": 2094
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 598945765,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 598945789,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 598945789,
+          "value": 24
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 598946295,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 598946299,
+          "value": 337
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 598946314,
+          "value": 1
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 598946347,
+          "value": 36
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 598946382,
+          "value": 69
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 598946415,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 598946415,
+          "value": 120
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 598946439,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 598946493,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 598946494,
+          "value": 55
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 598946695,
+          "value": 50
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598946957,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598946982,
+          "value": 11
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947014,
+          "value": 43
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947045,
+          "value": 74
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947075,
+          "value": 105
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947107,
+          "value": 134
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947155,
+          "value": 166
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947191,
+          "value": 216
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947226,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 598947229,
+          "value": 271
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 598947533,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 598947614,
+          "value": 3320
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 598947615,
+          "value": 82
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 598947745,
+          "value": 1098
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 598947818,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 598948023,
+          "value": 183
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 598955909,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 598955929,
+          "value": 2789
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 598955929,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 598956134,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 598956342,
+          "value": 224
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 598958607,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 598958625,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 598958625,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 598958827,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 598959318,
+          "value": 50
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 598959319,
+          "value": 514
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 598959341,
+          "value": 5
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 598959373,
+          "value": 40
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 598959403,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 598959403,
+          "value": 85
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 598959430,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 598959505,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 598959506,
+          "value": 76
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 598959708,
+          "value": 49
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960144,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960168,
+          "value": 10
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960203,
+          "value": 40
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960234,
+          "value": 76
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960268,
+          "value": 107
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960300,
+          "value": 141
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960341,
+          "value": 174
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960377,
+          "value": 218
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960407,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 598960407,
+          "value": 263
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 598960708,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 598960839,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 598960839,
+          "value": 131
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 598961042,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 598961551,
+          "value": 50
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 598961552,
+          "value": 528
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 598961573,
+          "value": 4
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 598961621,
+          "value": 39
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 598961655,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 598961656,
+          "value": 105
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 598961686,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 598961764,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 598961765,
+          "value": 80
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 598961968,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 598962172,
+          "value": 209
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962405,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962435,
+          "value": 10
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962470,
+          "value": 48
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962501,
+          "value": 82
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962553,
+          "value": 115
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962588,
+          "value": 166
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962623,
+          "value": 200
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962660,
+          "value": 235
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962701,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 598962701,
+          "value": 296
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 598963022,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 598963152,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 598963152,
+          "value": 130
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 598963355,
+          "value": 27
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 598963890,
+          "value": 50
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 598963929,
+          "value": 18
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 598963961,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 598963961,
+          "value": 71
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 598964029,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 598964096,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 598964097,
+          "value": 68
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 598964301,
+          "value": 33
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598964795,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598964819,
+          "value": 9
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598964865,
+          "value": 43
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598964897,
+          "value": 86
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598964937,
+          "value": 120
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598964991,
+          "value": 162
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598965043,
+          "value": 213
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598965087,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 598965088,
+          "value": 293
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 598965423,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 598965553,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 598965554,
+          "value": 131
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 598965756,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 598966225,
+          "value": 50
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 598966226,
+          "value": 466
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 598966249,
+          "value": 4
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 598966315,
+          "value": 46
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 598966371,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 598966372,
+          "value": 147
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 598966425,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 598966539,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 598966540,
+          "value": 116
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 598966743,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 598966946,
+          "value": 204
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967232,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967258,
+          "value": 9
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967299,
+          "value": 44
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967341,
+          "value": 84
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967389,
+          "value": 131
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967441,
+          "value": 176
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967484,
+          "value": 226
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967529,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 598967531,
+          "value": 299
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 598968840,
+          "value": 2094
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 45,
+          "time_ms": 598973719,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 45,
+          "time_ms": 598974228,
+          "value": 252
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 45,
+          "time_ms": 598975734,
+          "value": 2014
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 46,
+          "time_ms": 598996922,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 46,
+          "time_ms": 598997684,
+          "value": 251
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 46,
+          "time_ms": 598999937,
+          "value": 3015
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 47,
+          "time_ms": 599000386,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 47,
+          "time_ms": 599000900,
+          "value": 251
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 47,
+          "time_ms": 599002410,
+          "value": 2025
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 599002416,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 599002473,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 599002474,
+          "value": 57
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 599002676,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 599003229,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 599003230,
+          "value": 563
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 599003271,
+          "value": 17
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 599003308,
+          "value": 59
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 599003348,
+          "value": 95
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 599003395,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 599003395,
+          "value": 166
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 599003454,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 599003525,
+          "value": 733
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 599003526,
+          "value": 72
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 599003730,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 599003932,
+          "value": 199
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004174,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004192,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004234,
+          "value": 37
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004267,
+          "value": 77
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004302,
+          "value": 110
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004356,
+          "value": 146
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004397,
+          "value": 199
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004448,
+          "value": 241
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 599004470,
+          "value": 733
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004505,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 599004505,
+          "value": 331
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 599010361,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 599010380,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 599010380,
+          "value": 19
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 599010582,
+          "value": 22
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 599011024,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 599011047,
+          "value": 7
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 599011079,
+          "value": 39
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 599011111,
+          "value": 72
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 599011140,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 599011140,
+          "value": 116
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 599011165,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 599011222,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 599011223,
+          "value": 58
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 599011425,
+          "value": 54
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599011813,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599011834,
+          "value": 9
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599011866,
+          "value": 39
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599011896,
+          "value": 69
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599011942,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599011977,
+          "value": 146
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 599011992,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599012027,
+          "value": 194
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599012063,
+          "value": 231
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599012097,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 599012098,
+          "value": 285
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 599012401,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 599012476,
+          "value": 735
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 599012477,
+          "value": 76
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 599012679,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 599012886,
+          "value": 150
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 599013476,
+          "value": 735
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 599015234,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 599015260,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 599015260,
+          "value": 26
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 599015461,
+          "value": 0
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599015955,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 599015955,
+          "value": 489
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599015973,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599016008,
+          "value": 36
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599016038,
+          "value": 69
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599016070,
+          "value": 99
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599016101,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 599016101,
+          "value": 146
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 599016126,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 599016172,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 599016172,
+          "value": 46
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 599016375,
+          "value": 55
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 599016941,
+          "value": 618
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019411,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019429,
+          "value": 1
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019462,
+          "value": 35
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019493,
+          "value": 67
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019524,
+          "value": 98
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019556,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 599019559,
+          "value": 148
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 599019592,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 599019618,
+          "value": 1365
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 599019619,
+          "value": 26
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 599019820,
+          "value": 44
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020074,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020095,
+          "value": 6
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020125,
+          "value": 38
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020157,
+          "value": 69
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020201,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020233,
+          "value": 144
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020276,
+          "value": 176
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020313,
+          "value": 219
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020347,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 599020349,
+          "value": 274
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 599020653,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 599020723,
+          "value": 1606
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 599020724,
+          "value": 71
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 599020927,
+          "value": 0
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 599021130,
+          "value": 74
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 599021145,
+          "value": 1365
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 599022664,
+          "value": 1606
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 599028984,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 599029006,
+          "value": 4592
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 599029006,
+          "value": 22
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029487,
+          "value": 500
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 599029491,
+          "value": 328
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029506,
+          "value": 1
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029540,
+          "value": 38
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029571,
+          "value": 70
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029603,
+          "value": 101
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029635,
+          "value": 133
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029669,
+          "value": 165
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029700,
+          "value": 199
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029733,
+          "value": 230
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029765,
+          "value": 263
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029798,
+          "value": 294
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029830,
+          "value": 327
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029864,
+          "value": 360
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029897,
+          "value": 394
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029931,
+          "value": 427
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599029968,
+          "value": 461
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599030004,
+          "value": 498
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599030034,
+          "value": 500
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 599030035,
+          "value": 547
+        },
+        {
+          "event": "begin",
+          "kind": "flash",
+          "token": 66,
+          "time_ms": 599030066,
+          "value": 60
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 599030260,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 599030107
+      },
+      "closed": true
+    }
+  ]
+}

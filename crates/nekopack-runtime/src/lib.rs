@@ -1,5 +1,6 @@
 //! Shared bounded title execution and raw DAT resources; no platform APIs.
 pub mod dat;
+pub mod flash;
 mod scene;
 pub mod shake;
 pub mod story;

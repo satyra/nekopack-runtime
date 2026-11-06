@@ -298,6 +298,10 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .acknowledge_effect(sequence),
+                6 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .flash_frame(sequence, elapsed_ms),
                 5 => state
                     .as_mut()
                     .ok_or("no story session")?

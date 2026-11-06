@@ -102,7 +102,7 @@ def main():
    if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
    reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
    for begin,ack in zip(begins,acks):
-    if begin['kind'] in ['fade','wait','wipe','shake']:
+    if begin['kind'] in ['fade','wait','wipe','shake','flash']:
      if ack['value']<begin['value']:raise RuntimeError('premature timed completion')
      if begin['kind']=='fade' and not any(e['event']=='frame' and e['token']==begin['token'] and 0<e['value']<1000 for e in host):raise RuntimeError('fade had no intermediate frame')
     elif begin['kind']=='bgm_fade':
@@ -132,7 +132,7 @@ def main():
   layout=json.loads(private(run,'layout.json'));assert layout['width']>layout['height'] and layout['orientation']==2 and layout['stage_height']>0
   if a.effect_captures:
    folder=a.effect_captures/str(i);folder.mkdir(parents=True,exist_ok=True)
-   for begin in [e for e in host if e['event']=='begin' and e['kind'] in ['fade','wipe','shake']]:
+   for begin in [e for e in host if e['event']=='begin' and e['kind'] in ['fade','wipe','shake','flash']]:
     token=begin['token'];meta=json.loads(private(run,f'effect-{token}.json'))
     (folder/f'{token}.json').write_text(json.dumps(meta['checkpoint']),encoding='utf8')
     (folder/f'{token}.png').write_bytes(private(run,f'effect-{token}.png'))
@@ -189,6 +189,32 @@ def main():
     hashes.append(dict(elapsed_ms=elapsed,rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest()))
    if kind=='shake':assert moved, 'shake never produced a nonzero displacement'
    (wipes if kind=='wipe' else shakes).append(dict(token=token,name=meta['name'],frames=hashes,independent_kernel_pixels_equal=True))
+  flashes=[]
+  for begin in [e for e in host if e['event']=='begin' and e['kind']=='flash']:
+   import io,numpy as np
+   from PIL import Image
+   token=begin['token'];meta=json.loads(private(run,f'effect-{token}.json'))
+   color,count=meta['name'].split();count=int(count);assert begin['value']==count*60
+   cp=meta['checkpoint'];source=next(f for f in (a.fixtures/str(i)/'script').iterdir() if f.name.lower()==(cp['source']+'.txt').lower())
+   command=source.read_bytes().decode('utf8').split('\n')[cp['line']-1].strip().split();assert command[0]=='.flash'
+   reference_color='ffffff';reference_count=1
+   palette={'white':'ffffff','白':'ffffff','赤':'ff0000','青':'0000ff','黄':'ffff00','緑':'00ff00','紫':'ff00ff','水':'00ffff'}
+   for word in command[1:]:
+    if word.isascii() and word.isdigit():reference_count=int(word)
+    else:reference_color=palette[word]
+   assert (color,count)==(reference_color,reference_count), 'flash parameters differ from source command'
+
+   target=np.array(Image.open(io.BytesIO(private(run,f'effect-{token}.png'))).convert('RGBA'))
+   solid=np.empty_like(target);solid[:]=[int(color[j:j+2],16) for j in [0,2,4]]+[255]
+   frames=[e for e in host if e['event']=='frame' and e['token']==token]
+   assert [e['value'] for e in frames]==list(range(count*2)), 'flash phase skipped or duplicated'
+   previous=begin['time_ms'];hashes=[]
+   for frame in frames:
+    assert frame['time_ms']-previous>=30, 'flash phase wait shortened'
+    phase=frame['value'];actual=np.frombuffer(private(run,f'flash-{token}-{phase}.rgba'),dtype=np.uint8).reshape(target.shape)
+    assert np.array_equal(actual,solid if phase%2==0 else target), 'flash color/restoration mismatch'
+    hashes.append(dict(phase=phase,rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest()));previous=frame['time_ms']
+   flashes.append(dict(token=token,color=color,count=count,phases=hashes,independent_phase_pixels_equal=True))
   visual=False
   if boundary and boundary['checkpoint']['scene'].get('visual') and not a.effect_captures:
    from PIL import Image
@@ -199,7 +225,7 @@ def main():
    expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
    assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
    visual=True
-  games.append(dict(index=i,run_id=run,layout=layout,wipes=wipes,shakes=shakes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  games.append(dict(index=i,run_id=run,layout=layout,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()

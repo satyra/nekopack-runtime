@@ -153,10 +153,10 @@ class MainActivity : Activity() {
             if(storyLoaded)story(intArrayOf(),3,0)
             runOnUiThread{storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
-        storyEffects=StoryEffects(this,image,overlay,root,{token,elapsed,ready->
+        storyEffects=StoryEffects(this,image,overlay,root,{kind,token,elapsed,ready->
             worker.execute{try{
                 if(!storyClosing){
-                    val packet=story(intArrayOf(),5,token,elapsed);val split=packet.indexOf(10.toByte());check(split>=0)
+                    val packet=story(intArrayOf(),if(kind=="flash")6 else 5,token,elapsed);val split=packet.indexOf(10.toByte());check(split>=0)
                     val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.optString("error")}
                     check(meta.getString("format")=="RGBA8")
                     val width=meta.getInt("width");val height=meta.getInt("height")
@@ -180,8 +180,8 @@ class MainActivity : Activity() {
                 if(metadata.has("host_effect")) {
                     val token=metadata.getLong("token");val kind=metadata.getString("host_effect")
                     File(root,"effect-$token.json").writeText(metadata.toString())
-                    if(kind in listOf("fade","wipe","shake"))File(root,"effect-$token.png").writeBytes(payload)
-                    val bitmap=if(kind in listOf("fade","wipe","shake"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
+                    if(kind in listOf("fade","wipe","shake","flash"))File(root,"effect-$token.png").writeBytes(payload)
+                    val bitmap=if(kind in listOf("fade","wipe","shake","flash"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
                     val file=if(kind in listOf("bgm","se","voice"))File(root,"audio-$token.ogg").also{
                         it.writeBytes(payload)
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
@@ -194,7 +194,7 @@ class MainActivity : Activity() {
                                 if(old!=null)File(root,"$kind-$token-old.png").outputStream().use{check(old.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
                             }
                             // Probe-only lifecycle injection: preserve the original duration, background during the real request.
-                            if(kind=="shake" && intent.getBooleanExtra("close_on_shake",false))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},35)
+                            if((kind=="shake" && intent.getBooleanExtra("close_on_shake",false)) || (kind=="flash" && intent.getBooleanExtra("close_on_flash",false)))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},if(kind=="flash")5L else 35L)
                             storyEffects!!.run(metadata,bitmap,file){
                             if(!storyClosing)worker.execute{try{show(story(intArrayOf(),4,token))}catch(error:Throwable){fail(error)}}
                             }

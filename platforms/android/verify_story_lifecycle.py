@@ -18,11 +18,11 @@ def main():
   x,y,r,b=map(int,re.findall(r'\d+',button.get('bounds')))
   adb('shell','input','tap',str((x+r)//2),str((y+b)//2))
  results=[]
- for game,kind,event in [(0,'fade','begin'),(2,'bgm','playing'),(2,'bgm_fade','begin'),(1,'shake','begin')]:
+ for game,kind,event in [(0,'fade','begin'),(2,'bgm','playing'),(2,'bgm_fade','begin'),(1,'shake','begin'),(1,'flash','begin')]:
   run='cancel_'+uuid.uuid4().hex
-  adb('shell','am','start','-S','-n',package+'/.MainActivity','--ei','story_game',str(game),'--es','run_id',run,*(['--ez','close_on_shake','true'] if kind=='shake' else []))
-  if kind in ['bgm_fade','shake']:
-   for page in range(1,11 if kind=='bgm_fade' else 9):
+  adb('shell','am','start','-S','-n',package+'/.MainActivity','--ei','story_game',str(game),'--es','run_id',run,*(['--ez','close_on_'+kind,'true'] if kind in ['shake','flash'] else []))
+  if kind in ['bgm_fade','shake','flash']:
+   for page in range(1,11 if kind=='bgm_fade' else 9 if kind=='shake' else 34):
     deadline=time.monotonic()+45
     while time.monotonic()<deadline:
      if read(run,f'page-{page}.json').startswith(b'{'):break
@@ -39,7 +39,7 @@ def main():
    if observed:break
    time.sleep(.1)
   if not observed:raise RuntimeError('effect never started')
-  if kind!='shake':adb('shell','input','keyevent','3')
+  if kind not in ['shake','flash']:adb('shell','input','keyevent','3')
   deadline=time.monotonic()+15
   while time.monotonic()<deadline:
    closed=read(run,'lifecycle-closed.json')
@@ -54,7 +54,7 @@ def main():
   assert released and pause['time_ms']<=released[0]['time_ms']
   if len(released)!=1 or released[0]['value']!=0:raise RuntimeError('players not released')
   if not no_late_visual_completion(host):raise RuntimeError('late completion after close')
-  if kind in ['fade','shake'] and any(e['event']=='ack' and e['token']==observed['token'] for e in host):raise RuntimeError('cancelled visual effect acknowledged')
+  if kind in ['fade','shake','flash'] and any(e['event']=='ack' and e['token']==observed['token'] for e in host):raise RuntimeError('cancelled visual effect acknowledged')
   if kind=='bgm_fade':
    assert any(e['event']=='cancelled' and e['token']==observed['token'] for e in host)
    assert not any(e['event']=='finished' and e['token']==observed['token'] for e in host)
@@ -67,5 +67,5 @@ def main():
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
  execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties')
- a.output.write_text(json.dumps(dict(scope='HOME during fade/BGM; probe-triggered background 35ms after real shake begins; onPause ends session, no resume/save claim',device=device,execution=execution,build=build,tests=results),indent=2)+'\n',encoding='utf8')
+ a.output.write_text(json.dumps(dict(scope='HOME during fade/BGM; probe-triggered background 35ms after shake / 5ms after flash begins; onPause ends session, no resume/save claim',device=device,execution=execution,build=build,tests=results),indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()
