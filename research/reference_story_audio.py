@@ -10,12 +10,12 @@ def main():
  for i,g in enumerate(manifest['games']):
   packs=[(s['priority'],Archive(a.games/s['file'])) for s in g['sources'] if any(x in s['file'] for x in ['sound.dat','voice','patch'])]
   wanted=set()
-  for n in range(2):
-   page=json.loads((a.pages/str(i)/f'{n}.json').read_text(encoding='utf8'))
+  for file in (a.pages/str(i)).glob('*.json'):
+   page=json.loads(file.read_text(encoding='utf8'))
    if page['voice']:wanted.add(('voice',page['voice']))
    for effect in page['effects']:
     kind,name=effect.split(' ',1)
-    if kind in ['bgm','se']:wanted.add((kind,name))
+    if kind in ['bgm','se'] and not name.startswith('fade '):wanted.add((kind,name))
   rows={}
   for kind,name in sorted(wanted):
    logical=({'bgm':'sound/bgm','se':'sound/se','voice':'voice'}[kind]+'/'+name+'.ogg').lower()
@@ -26,5 +26,5 @@ def main():
    if not raw.startswith(b'OggS'):raise RuntimeError('not Ogg audio')
    rows[kind+'/'+name.lower()]=hashlib.sha256(raw).hexdigest()
   games.append(rows)
- a.output.write_text(json.dumps(dict(scope='independent reference DAT decoder hashes for audio in the two validated story pages',games=games),indent=2)+'\n',encoding='utf8')
+ a.output.write_text(json.dumps(dict(scope='independent reference DAT decoder hashes for audio in validated story pages and boundary checkpoint',games=games),indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

@@ -146,10 +146,24 @@ fn run() -> Result<(), Box<dyn Error>> {
             let count: usize = args[2].to_str().ok_or("invalid count")?.parse()?;
             std::fs::create_dir_all(&args[1])?;
             for i in 0..count {
-                let page = if i == 0 {
-                    session.page()?
+                let result = if i == 0 {
+                    session.page()
                 } else {
-                    session.next(i as u64)?
+                    session.next(i as u64)
+                };
+                let page = match result {
+                    Ok(page) => page,
+                    Err(error) => {
+                        std::fs::write(
+                            Path::new(&args[1]).join("boundary.json"),
+                            session.checkpoint()?,
+                        )?;
+                        std::fs::write(
+                            Path::new(&args[1]).join("boundary.txt"),
+                            error.to_string(),
+                        )?;
+                        return Err(error);
+                    }
                 };
                 std::fs::write(
                     Path::new(&args[1]).join(format!("{i}.json")),

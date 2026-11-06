@@ -312,8 +312,11 @@ pub unsafe extern "C" fn neko_probe_story(
     let bytes = match result {
         Ok(Ok(bytes)) => bytes,
         other => {
-            STORY.with(|cell| {
-                *cell.borrow_mut() = None;
+            let checkpoint = STORY.with(|cell| {
+                let mut state = cell.borrow_mut();
+                let checkpoint = state.as_ref().map(|s| s.checkpoint()).transpose();
+                *state = None;
+                checkpoint
             });
             let message = match other {
                 Ok(Err(e)) => e.to_string(),
@@ -323,8 +326,17 @@ pub unsafe extern "C" fn neko_probe_story(
                 }
                 _ => unreachable!(),
             };
+            let (checkpoint, message) = match checkpoint {
+                Ok(state) => (state.unwrap_or("null".into()), message),
+                Err(error) => (
+                    "null".into(),
+                    format!("{message}; checkpoint failed: {error}"),
+                ),
+            };
             format!(
-                "{{\"error\":\"{}\"}}\n",
+                "{{\"checkpoint\":{},\"vm_live_bytes\":{},\"error\":\"{}\"}}\n",
+                checkpoint,
+                SystemVm::validation_live_bytes(),
                 message
                     .replace('\\', "\\\\")
                     .replace('"', "\\\"")

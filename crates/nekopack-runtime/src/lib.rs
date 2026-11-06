@@ -1,5 +1,6 @@
 //! Shared bounded title execution and raw DAT resources; no platform APIs.
 pub mod dat;
+mod scene;
 pub mod story;
 use nekopack_script::{
     runtime::{Machine, Request, Scripts, Step},

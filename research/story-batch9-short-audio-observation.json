@@ -1,0 +1,49 @@
+{
+  "scope": "initial strict-position verifier failure; completion at position zero, not a passed full run",
+  "execution": "native ARM64",
+  "game": 2,
+  "page": 15,
+  "build": {
+    "libnekopack_probe.so": "0107e7c6ea423d7b2836de97e6febcc741f0f4d7d1d27294eaac30ab99db7fc6",
+    "libnekopack_host.so": "a55b3cf62c5cd669779042cc0937463a87cb96878b6ef28bec722267669a8c09",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "0f162814dda1cd4fb5b584c7ce58629fd2a612ffe9e01541aa3d1f76bf904492"
+  },
+  "events": [
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 6,
+      "time_ms": 586049360,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 6,
+      "time_ms": 586049382,
+      "value": 324
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 6,
+      "time_ms": 586049382,
+      "value": 22
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 6,
+      "time_ms": 586049585,
+      "value": 0
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 6,
+      "time_ms": 586049773,
+      "value": 0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "failed expanded run before adding original BLACK voice1.dat; not counted as success",
+  "tests": [
+    {
+      "device": "SST89X85TC8TGUQO",
+      "run_id": "story_08c38e73e308449fa68fbe4deff5fda9",
+      "error": "story P01:32 depth=2 steps=156: missing DAT resource voice/RA_P01_0000.ogg",
+      "source": "P01",
+      "line": 32,
+      "vm_live_bytes": 0
+    },
+    {
+      "device": "emulator-5568",
+      "run_id": "story_6dff6f2844914a83b5aedf3fd749c900",
+      "error": "story P01:32 depth=2 steps=156: missing DAT resource voice/RA_P01_0000.ogg",
+      "source": "P01",
+      "line": 32,
+      "vm_live_bytes": 0
+    }
+  ]
+}

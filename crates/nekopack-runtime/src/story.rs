@@ -1,10 +1,17 @@
 //! Cooperative story presentation. Explicit host mode waits for effect acknowledgements.
-use crate::{array, bootstrap, dat::DatGame, quote};
-use nekopack_image::{decode_png, Mng, RgbaImage};
+use crate::{
+    array, bootstrap,
+    dat::DatGame,
+    quote,
+    scene::{plan, Layer, Scene},
+    GameResources,
+};
+use nekopack_image::{decode_png, Mng};
 use nekopack_script::{
     runtime::{Machine, Request, Step},
     system::SystemVm,
 };
+use std::collections::BTreeMap;
 use std::{
     error::Error,
     io::{Read, Seek},
@@ -19,10 +26,20 @@ pub struct Page {
     pub text: String,
     pub effects: Vec<String>,
     pub png: Vec<u8>,
+    pub scene: String,
+    pub depth: usize,
+    pub steps: usize,
+    pub slots: Vec<(u8, u32, i32)>,
 }
 impl Page {
     pub fn metadata(&self) -> Result<String, String> {
-        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{}}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?))
+        let slots = self
+            .slots
+            .iter()
+            .map(|(b, i, v)| format!("[{}, {i}, {v}]", b))
+            .collect::<Vec<_>>()
+            .join(",");
+        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}]}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,self.scene,self.depth,self.steps,slots))
     }
     pub fn packet(&self) -> Result<Vec<u8>, String> {
         let mut bytes = self.metadata()?.into_bytes();
@@ -80,10 +97,8 @@ pub struct StorySession<R: Read + Seek> {
     store: DatGame<R>,
     machine: Machine,
     system: SystemVm,
-    background: Option<RgbaImage>,
-    actor: Option<(RgbaImage, [i32; 2])>,
-    solid: Option<[u8; 4]>,
-    dimensions: [u32; 2],
+    scene: Scene,
+    image_macros: BTreeMap<String, Vec<String>>,
     page: Option<Page>,
     speaker: String,
     voice: String,
@@ -100,14 +115,26 @@ impl<R: Read + Seek> StorySession<R> {
         machine.enable_dialogue();
         let title = store.read("system", "title.mng")?;
         let mng = Mng::parse(&title, 100000)?;
+        let mut image_macros = BTreeMap::new();
+        let table = String::from_utf8(store.system(b"imagemap.txt")?)?;
+        for line in table
+            .lines()
+            .map(str::trim)
+            .filter(|l| !l.is_empty() && !l.starts_with(';'))
+        {
+            let (key, value) = line.split_once('=').ok_or("invalid imagemap row")?;
+            let key = key.trim().to_owned();
+            let value = value.split_whitespace().map(str::to_owned).collect();
+            if image_macros.insert(key, value).is_some() {
+                return Err("duplicate imagemap macro".into());
+            }
+        }
         Ok(Self {
             store,
             machine,
             system,
-            background: None,
-            actor: None,
-            solid: None,
-            dimensions: [mng.header[0], mng.header[1]],
+            scene: Scene::new([mng.header[0], mng.header[1]]),
+            image_macros,
             page: None,
             speaker: String::new(),
             voice: String::new(),
@@ -126,8 +153,7 @@ impl<R: Read + Seek> StorySession<R> {
         }
         if self.page.is_none() && self.pending_effect.is_none() {
             if let Err(e) = self.advance() {
-                self.failed = true;
-                return Err(e);
+                return Err(self.stop(e));
             }
         }
         self.page
@@ -158,8 +184,7 @@ impl<R: Read + Seek> StorySession<R> {
         }
         if self.page.is_none() && self.pending_effect.is_none() {
             if let Err(e) = self.advance() {
-                self.failed = true;
-                return Err(e);
+                return Err(self.stop(e));
             }
         }
         if let Some(effect) = &self.pending_effect {
@@ -199,7 +224,7 @@ impl<R: Read + Seek> StorySession<R> {
     fn emit(&mut self, kind: &str, name: &str) -> Result<(), Box<dyn Error>> {
         let (duration, payload) = match kind {
             "fade" => (duration_ms(name)?, self.render()?),
-            "wait" => (duration_ms(name)?, Vec::new()),
+            "wait" | "bgm_fade" => (duration_ms(name)?, Vec::new()),
             "bgm" | "se" | "voice" => {
                 let directory = match kind {
                     "bgm" => "sound/bgm",
@@ -224,30 +249,76 @@ impl<R: Read + Seek> StorySession<R> {
         });
         Ok(())
     }
+    fn stop(&mut self, error: Box<dyn Error>) -> Box<dyn Error> {
+        self.failed = true;
+        let (name, line) = self.machine.location().unwrap_or((b"<finished>", 0));
+        format!(
+            "story {}:{} depth={} steps={}: {error}",
+            String::from_utf8_lossy(name),
+            line,
+            self.machine.depth(),
+            self.machine.steps()
+        )
+        .into()
+    }
+    /// Read-only execution evidence, including commands since the last text page.
+    pub fn checkpoint(&self) -> Result<String, String> {
+        let (source, line) = self.machine.location().unwrap_or((b"<finished>", 0));
+        let slots = self
+            .machine
+            .variables
+            .slots()
+            .iter()
+            .map(|((b, i), v)| format!("[{b},{i},{v}]"))
+            .collect::<Vec<_>>()
+            .join(",");
+        Ok(format!("{{\"source\":{},\"line\":{line},\"depth\":{},\"steps\":{},\"slots\":[{slots}],\"scene\":{},\"effects\":{},\"voice\":{}}}",quote(source)?,self.machine.depth(),self.machine.steps(),self.scene.metadata()?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,quote(self.voice.as_bytes())?))
+    }
     fn render(&self) -> Result<Vec<u8>, Box<dyn Error>> {
-        let mut canvas = RgbaImage::filled(
-            self.dimensions[0],
-            self.dimensions[1],
-            self.solid.unwrap_or([0, 0, 0, 255]),
-            PIXELS,
-        )?;
-        if self.solid.is_none() {
-            if let Some(bg) = &self.background {
-                canvas.draw(bg, [0, 0]);
-            }
-            if let Some((actor, pos)) = &self.actor {
-                let x = i32::try_from(self.dimensions[0] / 2)?
-                    .checked_add(pos[0])
-                    .ok_or("actor position overflow")?;
-                let y = i32::try_from(self.dimensions[1] / 2)?
-                    .checked_add(pos[1])
-                    .ok_or("actor position overflow")?;
-                canvas.draw(actor, [x, y]);
-            }
+        self.scene.render()
+    }
+    fn actor(&mut self, slot: u8, args: &[Vec<u8>]) -> Result<(), Box<dyn Error>> {
+        let center = [
+            i32::try_from(self.scene.dimensions[0] / 2)?,
+            i32::try_from(self.scene.dimensions[1] / 2)?,
+        ];
+        let p = plan(args, &self.image_macros, center[0])?;
+        if p.clear {
+            self.scene.actors.retain(|l| l.slot != slot);
+            return Ok(());
         }
-        let mut png = Vec::new();
-        canvas.write_png(&mut png)?;
-        Ok(png)
+        let old = self.scene.actors.iter().find(|l| l.slot == slot);
+        let name = p
+            .name
+            .clone()
+            .or_else(|| old.map(|l| l.name.clone()))
+            .ok_or("image operation requires an existing layer or resource")?;
+        let folder = p.folder.clone().unwrap_or_else(|| {
+            if p.name.is_some() {
+                "image/actor".into()
+            } else {
+                old.unwrap().folder.clone()
+            }
+        });
+        let mut anchor = old.map_or(center, |l| l.anchor);
+        if let Some(x) = p.x {
+            anchor[0] = x;
+        }
+        let bytes = self.store.read(&folder, &format!("{name}.png"))?;
+        let image = decode_png(&bytes, PIXELS)?;
+        let offset = png_position(&bytes)?;
+        self.scene.put(
+            Layer {
+                slot,
+                name,
+                folder,
+                image,
+                offset,
+                anchor,
+            },
+            p.order,
+        )?;
+        Ok(())
     }
     fn advance(&mut self) -> Result<(), Box<dyn Error>> {
         loop {
@@ -275,6 +346,16 @@ impl<R: Read + Seek> StorySession<R> {
                         text: String::from_utf8(text)?,
                         effects: std::mem::take(&mut self.effects),
                         png,
+                        scene: self.scene.metadata()?,
+                        depth: self.machine.depth(),
+                        steps: self.machine.steps(),
+                        slots: self
+                            .machine
+                            .variables
+                            .slots()
+                            .iter()
+                            .map(|((b, i), v)| (*b, *i, *v))
+                            .collect(),
                     });
                     return Ok(());
                 }
@@ -289,36 +370,56 @@ impl<R: Read + Seek> StorySession<R> {
                                 &mut self.store,
                             )?;
                         }
-                        "img0" | "img1" => {
-                            if args.len() != 1 {
-                                return Err("preview image command requires one name".into());
-                            }
-                            let folder = if command == "img0" {
-                                "image/back"
+                        "img0" => {
+                            if args.is_empty() {
+                                self.scene.background = None;
+                                self.scene.background_name = None;
+                                self.scene.background_color = None;
+                            } else if args.len() == 1 {
+                                let name = std::str::from_utf8(&args[0])?;
+                                if let Some(color) = solid(name) {
+                                    self.scene.background = None;
+                                    self.scene.background_name = None;
+                                    self.scene.background_color = Some(color);
+                                    self.scene.overlay = None;
+                                } else {
+                                    let bytes =
+                                        self.store.read("image/back", &format!("{name}.png"))?;
+                                    self.scene
+                                        .set_background(name.into(), decode_png(&bytes, PIXELS)?)?;
+                                }
                             } else {
-                                "image/actor"
-                            };
-                            let name = std::str::from_utf8(&args[0])?;
-                            let bytes = self.store.read(folder, &format!("{name}.png"))?;
-                            let image = decode_png(&bytes, PIXELS)?;
-                            let position = png_position(&bytes)?;
-                            if command == "img0" {
-                                self.dimensions = [image.width(), image.height()];
-                                self.background = Some(image);
-                                self.solid = None;
-                            } else {
-                                self.actor = Some((image, position));
+                                return Err("unsupported background arguments".into());
                             }
                         }
-                        "img" => {
-                            if args.len() != 1 {
-                                return Err("preview solid image requires one argument".into());
+                        "img1" | "img2" | "img3" | "img4" | "img5" | "img6" | "img7" | "img8"
+                        | "img9" => self.actor(command.as_bytes()[3] - b'0', &args)?,
+                        "imgx" => self.scene.reorder(&args)?,
+                        "img" | "page" => {
+                            if args.is_empty() {
+                                self.scene.clear();
+                            } else if command == "img" && args.len() == 1 {
+                                self.scene.overlay = Some(
+                                    solid(std::str::from_utf8(&args[0])?)
+                                        .ok_or("unsupported full-screen image")?,
+                                );
+                            } else {
+                                return Err("unsupported clear/overlay arguments".into());
                             }
-                            self.solid = Some(match std::str::from_utf8(&args[0])? {
-                                "白" => [255, 255, 255, 255],
-                                "黒" => [0, 0, 0, 255],
-                                _ => return Err("unsupported preview solid image".into()),
-                            });
+                        }
+                        "bgm" if args.first().is_some_and(|a| a == b"fade") => {
+                            if args.len() != 2 {
+                                return Err(
+                                    "BGM fade requires explicit duration in this profile".into()
+                                );
+                            }
+                            let time = std::str::from_utf8(&args[1])?;
+                            duration_ms(time)?;
+                            self.effects.push(format!("bgm fade {time}"));
+                            if self.host_mode {
+                                self.emit("bgm_fade", time)?;
+                                return Ok(());
+                            }
                         }
                         "bgm" | "se" | "fade" | "wait" => {
                             if args.len() != 1 {
@@ -344,6 +445,13 @@ impl<R: Read + Seek> StorySession<R> {
                 }
             }
         }
+    }
+}
+fn solid(name: &str) -> Option<[u8; 4]> {
+    match name {
+        "白" => Some([255; 4]),
+        "黒" => Some([0, 0, 0, 255]),
+        _ => None,
     }
 }
 /// PNG pixel offsets are the observed actor placement contract, not MNG timing.
@@ -375,6 +483,7 @@ fn png_position(bytes: &[u8]) -> Result<[i32; 2], Box<dyn Error>> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use nekopack_image::RgbaImage;
     use nekopack_script::runtime::Source;
     fn session(text: &[u8]) -> StorySession<std::io::Cursor<Vec<u8>>> {
         let mut bytes = b"NEKOPACK".to_vec();
@@ -395,10 +504,8 @@ mod tests {
             store,
             machine,
             system: SystemVm::new(),
-            background: None,
-            actor: None,
-            solid: None,
-            dimensions: [1, 1],
+            scene: Scene::new([1, 1]),
+            image_macros: BTreeMap::new(),
             page: None,
             speaker: String::new(),
             voice: String::new(),
@@ -435,6 +542,44 @@ mod tests {
             .contains("\"host_effect\":\"wait\""));
         let text = s.acknowledge_effect(2).unwrap();
         assert!(String::from_utf8_lossy(&text).contains("second"));
+    }
+    #[test]
+    fn clearing_slots_preserves_other_layers_and_clear_all_releases_them() {
+        let mut s = session(b".img1\nfirst\n.img\nsecond");
+        for slot in [1, 2] {
+            s.scene.actors.push(Layer {
+                slot,
+                name: "test".into(),
+                folder: "image/actor".into(),
+                image: RgbaImage::filled(1, 1, [255; 4], 4).unwrap(),
+                offset: [0, 0],
+                anchor: [0, 0],
+            });
+        }
+        s.page().unwrap();
+        assert_eq!(
+            s.scene.actors.iter().map(|l| l.slot).collect::<Vec<_>>(),
+            [2]
+        );
+        s.next(1).unwrap();
+        assert!(s.scene.actors.is_empty());
+    }
+    #[test]
+    fn bgm_fade_waits_for_host_and_missing_duration_stops() {
+        let mut s = session(b".bgm fade 1\ntext\n.bgm fade\nnever");
+        s.enable_host_effects();
+        let packet = s.poll_packet().unwrap();
+        assert!(String::from_utf8_lossy(&packet).contains("\"host_effect\":\"bgm_fade\""));
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        assert!(s.acknowledge_effect(2).is_err());
+        s.acknowledge_effect(1).unwrap();
+        assert!(s
+            .acknowledge_text(1)
+            .unwrap_err()
+            .to_string()
+            .contains("explicit duration"));
+        assert!(s.checkpoint().unwrap().contains("\"line\":3"));
+        assert!(s.poll_packet().is_err());
     }
     #[test]
     fn bad_duration_and_missing_audio_are_terminal() {
@@ -475,15 +620,19 @@ mod tests {
     #[test]
     fn actor_offsets_use_canvas_center_and_solid_overlay_retains_layers() {
         let mut s = session("one\n.img 白\ntwo\n".as_bytes());
-        s.dimensions = [4, 4];
-        s.actor = Some((
-            RgbaImage::filled(1, 1, [255, 0, 0, 255], PIXELS).unwrap(),
-            [-1, -1],
-        ));
+        s.scene.dimensions = [4, 4];
+        s.scene.actors.push(Layer {
+            slot: 1,
+            name: "test".into(),
+            folder: "image/actor".into(),
+            image: RgbaImage::filled(1, 1, [255, 0, 0, 255], PIXELS).unwrap(),
+            offset: [-1, -1],
+            anchor: [2, 2],
+        });
         let image = decode_png(&s.page().unwrap().png, PIXELS).unwrap();
         assert_eq!(&image.pixels()[20..24], &[255, 0, 0, 255]);
         let image = decode_png(&s.next(1).unwrap().png, PIXELS).unwrap();
         assert!(image.pixels().iter().all(|b| *b == 255));
-        assert!(s.actor.is_some());
+        assert_eq!(s.scene.actors.len(), 1);
     }
 }

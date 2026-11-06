@@ -157,6 +157,7 @@ class MainActivity : Activity() {
             if(storyClosing) Unit else {
                 val split=packet.indexOf(10.toByte());check(split>=0)
                 val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8))
+                if(metadata.has("error"))File(root,"boundary.json").writeText(metadata.toString())
                 check(!metadata.has("error")){metadata.optString("error")}
                 check(packet.contentEquals(story(intArrayOf(),1,0))){"poll advanced story"}
                 val payload=packet.copyOfRange(split+1,packet.size)

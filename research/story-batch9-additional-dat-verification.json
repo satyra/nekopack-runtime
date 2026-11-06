@@ -1,0 +1,27 @@
+{
+  "scope": "BLACK additional original voice DAT for expanded story span; prior 17 DAT evidence remains separate",
+  "files": [
+    {
+      "device": "SST89X85TC8TGUQO",
+      "file": "voice1.dat",
+      "bytes": 270161386,
+      "sha256": "9f7c622458057bd56d4e7f5042520bcbf99fd674df84901baf05966aabe91cc1",
+      "requested_resources": [
+        "voice/ra_p01_0000.ogg",
+        "voice/ra_p01_0001.ogg",
+        "voice/ra_p01_0002.ogg"
+      ]
+    },
+    {
+      "device": "emulator-5568",
+      "file": "voice1.dat",
+      "bytes": 270161386,
+      "sha256": "9f7c622458057bd56d4e7f5042520bcbf99fd674df84901baf05966aabe91cc1",
+      "requested_resources": [
+        "voice/ra_p01_0000.ogg",
+        "voice/ra_p01_0001.ogg",
+        "voice/ra_p01_0002.ogg"
+      ]
+    }
+  ]
+}

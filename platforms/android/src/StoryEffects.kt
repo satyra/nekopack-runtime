@@ -48,6 +48,23 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         try {
             when(kind){
                 "wait"->handler.postDelayed({done()},duration)
+                "bgm_fade"->{
+                    val player=players["bgm"]?.first
+                    val animation=ValueAnimator.ofFloat(1f,0f);animator=animation
+                    animation.duration=duration;animation.interpolator=LinearInterpolator()
+                    var sampled=false
+                    animation.addUpdateListener{
+                        val volume=it.animatedValue as Float
+                        player?.setVolume(volume,volume)
+                        if(!sampled && volume>=0.25f && volume<=0.75f){sampled=true;log("frame",kind,token,(volume*1000).toLong())}
+                    }
+                    animation.addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(animation:Animator){
+                        if(closed)return
+                        animator=null;release("bgm");log("stopped","bgm",token)
+                        handler.postDelayed({done()},(duration-(SystemClock.elapsedRealtime()-started)).coerceAtLeast(0))
+                    }})
+                    animation.start()
+                }
                 "fade"->{
                     check(bitmap!=null);overlay.setImageBitmap(bitmap);overlay.alpha=0f
                     val animation=ValueAnimator.ofFloat(0f,1f);animator=animation
