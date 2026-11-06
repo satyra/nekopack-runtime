@@ -26,7 +26,7 @@ cargo build --release --workspace
 
 像素命令：`decode-png FILE`、`decode-mng-archive FILE` 输出二进制 RGBA 记录流；`export-mng-image FILE ENTRY IMAGE` 输出单图 PNG。详细协议及支持范围见像素验收文档。批量输出必须检查进程退出码；导出图不含原始 MNG 引擎元数据。
 
-画布命令：`inspect-sprites FILE ENTRY` 输出名称与坐标；`compose-mng FILE ENTRY:IMAGE [ENTRY:IMAGE ...]` 按给定顺序合成 PNG。它不自动播放 MNG，也不自动选择界面状态。
+画布命令：`inspect-sprites FILE ENTRY` 输出名称与坐标；`compose-mng FILE ENTRY:IMAGE [ENTRY:IMAGE ...]` 按给定顺序合成透明 PNG；`compose-mng-on FILE RRGGBB ENTRY:IMAGE [ENTRY:IMAGE ...]` 从指定不透明底色开始合成。它不自动播放 MNG，也不自动选择界面状态。
 
 本机 Rust 工具链位于用户目录，必要时在当前 PowerShell 会话设置：
 
@@ -52,6 +52,7 @@ $env:Path="$env:CARGO_HOME/bin;$env:Path"
 - [名称、覆盖关系与 MNG 验收](docs/Phase1_Metadata_Increment.md)
 - [PNG/RGBA 像素解码验收](docs/Phase1_Pixel_Increment.md)
 - [素材坐标与画布合成验收](docs/Phase1_Canvas_Increment.md)
+- [原版显示差异定位与修正](docs/Phase1_Display_Correction.md)
 - [第三方算法来源声明](THIRD_PARTY_NOTICES.md)
 
 ## 调查复现
@@ -68,4 +69,4 @@ python research/verify_pixels.py --games 'D:\codex\电脑移植安卓\游戏' --
 
 脚本只读取游戏文件，输出文件哈希、计数和格式元数据，不导出剧情、图像、音频或引擎二进制。文件名中的汉化版本标记不等于已确认的原版版本号。完整资源解码、字符编码、脚本语义、启动流程、原版行为对照及真机测试仍待验证。
 
-已增加素材坐标解析与显式图层合成：四部曲 3,072 个素材坐标验证通过，84 组画布与 Pillow 的最大通道差不超过 1。原版 BLESS 设置页已建立对照，但色彩与边缘差异尚未解决，不能视为显示一致。下一步继续隔离原版渲染差异，验证控制块、脚本入口与补丁加载顺序。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。
+已增加素材坐标解析与显式图层合成，并修正屏幕对照的 alpha 丢弃及选中态素材误用。四部曲 3,072 个素材坐标、252 组合成和四份设置页配方验证通过。BLESS 原版对照平均通道差由 25.51 降到 3.16；确认截图实际为 JPEG，尚不能判定原版无损帧是否逐像素一致。下一步需无损帧/受控实验隔离剩余差异，继续验证控制块、脚本入口与补丁加载顺序。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。

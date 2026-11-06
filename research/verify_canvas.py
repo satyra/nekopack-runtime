@@ -63,23 +63,29 @@ def main():
                             for i, (p, name, _) in enumerate(images)]
                 assert actual == expected, (entry, 'sprite metadata')
                 selected = [0, len(images)-1]
-                reference = Image.new('RGBA', dimensions)
-                for i in selected:
-                    position, _, png = images[i]
-                    layer = Image.new('RGBA', dimensions)
-                    layer.paste(Image.open(io.BytesIO(png)).convert('RGBA'), position)
-                    reference = Image.alpha_composite(reference, layer)
-                actual_png = cli('compose-mng', path, *(f'{entry}:{i}' for i in selected))
-                actual_image = Image.open(io.BytesIO(actual_png)).convert('RGBA')
-                assert actual_image.size == dimensions
-                extrema = ImageChops.difference(actual_image, reference).getextrema()
-                max_error = max(v[1] for v in extrema)
-                # Pillow uses fixed-point intermediate rounding; Rust rounds the rational result once.
-                assert max_error <= 1, (entry, max_error)
+                checks = []
+                for background in [None, '000000', '193B79']:
+                    color = (0,0,0,0) if background is None else (*bytes.fromhex(background),255)
+                    reference = Image.new('RGBA', dimensions, color)
+                    for i in selected:
+                        position, _, png = images[i]
+                        layer = Image.new('RGBA', dimensions)
+                        layer.paste(Image.open(io.BytesIO(png)).convert('RGBA'), position)
+                        reference = Image.alpha_composite(reference, layer)
+                    command = ['compose-mng', path] if background is None else ['compose-mng-on', path, background]
+                    actual_png = cli(*command, *(f'{entry}:{i}' for i in selected))
+                    actual_image = Image.open(io.BytesIO(actual_png)).convert('RGBA')
+                    assert actual_image.size == dimensions
+                    extrema = ImageChops.difference(actual_image, reference).getextrema()
+                    max_error = max(v[1] for v in extrema)
+                    # Pillow uses fixed-point intermediate rounding; Rust rounds once.
+                    assert max_error <= 1, (entry, background, max_error)
+                    if background is not None:
+                        assert actual_image.getchannel('A').getextrema() == (255,255)
+                    checks.append({'background': background, 'max_channel_error_vs_pillow': max_error,
+                                   'rgba_sha256': hashlib.sha256(actual_image.tobytes()).hexdigest()})
                 row['resources'].append({'file': source['file'], 'entry': entry,
-                    'sprites': len(images), 'layers': selected, 'canvas': dimensions,
-                    'max_channel_error_vs_pillow': max_error,
-                    'rgba_sha256': hashlib.sha256(actual_image.tobytes()).hexdigest()})
+                    'sprites': len(images), 'layers': selected, 'canvas': dimensions, 'checks': checks})
         report['games'].append(row)
         print(game['game'], len(row['resources']), 'MNG checked', flush=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2)+'\n', encoding='utf8')

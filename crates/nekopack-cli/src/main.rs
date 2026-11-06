@@ -129,16 +129,25 @@ fn run() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     if args.len() < 2 {
         return Err(
-            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE | inspect-sprites FILE ENTRY | compose-mng FILE ENTRY:IMAGE..."
+            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE | inspect-sprites FILE ENTRY | compose-mng FILE ENTRY:IMAGE... | compose-mng-on FILE RRGGBB ENTRY:IMAGE..."
                 .into(),
         );
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
-        ("compose-mng", n) if n >= 3 => {
+        ("compose-mng", n) | ("compose-mng-on", n) if n >= 3 => {
+            let (background, layers) = if command == "compose-mng-on" {
+                let rgb = unhex(&args[2])?;
+                if rgb.len() != 3 || n < 4 {
+                    return Err("compose-mng-on FILE RRGGBB ENTRY:IMAGE...".into());
+                }
+                ([rgb[0], rgb[1], rgb[2], 255], &args[3..])
+            } else {
+                ([0; 4], &args[2..])
+            };
             let mut a = open(Path::new(&args[1]))?;
             let mut canvas = None;
-            for layer in &args[2..] {
+            for layer in layers {
                 let (entry, image) = layer
                     .to_str()
                     .ok_or("invalid layer")?
@@ -151,9 +160,10 @@ fn run() -> Result<(), Box<dyn Error>> {
                 let sprite = sprites.get(ordinal).ok_or("sprite ordinal out of range")?;
                 let target = match &mut canvas {
                     Some(target) => target,
-                    None => canvas.insert(RgbaImage::transparent(
+                    None => canvas.insert(RgbaImage::filled(
                         mng.header[0],
                         mng.header[1],
+                        background,
                         PIXEL_BUDGET,
                     )?),
                 };

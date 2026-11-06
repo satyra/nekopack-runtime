@@ -210,3 +210,42 @@ fn standalone_png_raster_protocol_and_failure() {
     assert!(result.stdout.is_empty());
     std::fs::remove_file(path).unwrap();
 }
+
+#[test]
+fn opaque_canvas_cli_and_invalid_background() {
+    // Synthetic 1x1 MNG/DAT: partially transparent (183,64,54,187).
+    let hex = "4e454b4f5041434b000000000000000000000000100000000700000001000000090000008b000000000000008b0000008a4d4e470d0a1a0a0000001c4d4844520000000100000001000000000000000000000000000000000000000b05bb0a7c000000054652414d0242415345a09d624e0000000d49484452000000010000000108060000001f15c4890000000d49444154789c63d8ee60b61b0004c801e9969d58380000000049454e44ae426082000000004d454e442120f7d5";
+    let bytes: Vec<u8> = (0..hex.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&hex[i..i + 2], 16).unwrap())
+        .collect();
+    let path = std::env::temp_dir().join(format!("neko-canvas-{}.dat", std::process::id()));
+    std::fs::write(&path, bytes).unwrap();
+    let binary = env!("CARGO_BIN_EXE_nekopack-cli");
+    for (command, background, expected) in [
+        ("compose-mng", None, [183, 64, 54, 187]),
+        ("compose-mng-on", Some("000000"), [134, 47, 40, 255]),
+        ("compose-mng-on", Some("FFFFFF"), [202, 115, 108, 255]),
+    ] {
+        let mut cmd = Command::new(binary);
+        cmd.arg(command).arg(&path);
+        if let Some(color) = background {
+            cmd.arg(color);
+        }
+        let result = cmd.arg("0:0").output().unwrap();
+        assert!(result.status.success(), "{:?}", result.stderr);
+        let decoded = nekopack_image::decode_png(&result.stdout, 1024 * 1024).unwrap();
+        assert_eq!(decoded.pixels(), expected);
+    }
+    for bad in ["0", "00000000", "GG0000"] {
+        let result = Command::new(binary)
+            .arg("compose-mng-on")
+            .arg(&path)
+            .args([bad, "0:0"])
+            .output()
+            .unwrap();
+        assert!(!result.status.success());
+        assert!(result.stdout.is_empty());
+    }
+    std::fs::remove_file(path).unwrap();
+}

@@ -50,6 +50,17 @@ impl Mng<'_> {
 
 impl RgbaImage {
     pub fn transparent(width: u32, height: u32, budget: usize) -> Result<Self, PixelError> {
+        Self::filled(width, height, [0; 4], budget)
+    }
+
+    /// Explicit initial canvas samples. Use an opaque background for display;
+    /// dropping alpha from a transparent composition does not flatten it.
+    pub fn filled(
+        width: u32,
+        height: u32,
+        rgba: [u8; 4],
+        budget: usize,
+    ) -> Result<Self, PixelError> {
         let len = u64::from(width)
             .checked_mul(u64::from(height))
             .and_then(|v| v.checked_mul(4))
@@ -57,10 +68,14 @@ impl RgbaImage {
         if width == 0 || height == 0 || len > budget as u64 {
             return Err(PixelError::Budget);
         }
+        let mut pixels = vec![0; len as usize];
+        for pixel in pixels.as_chunks_mut::<4>().0 {
+            pixel.copy_from_slice(&rgba);
+        }
         Ok(Self {
             width,
             height,
-            pixels: vec![0; len as usize],
+            pixels,
         })
     }
 
@@ -98,6 +113,23 @@ impl RgbaImage {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn display_background_preserves_alpha_and_edge_coverage() {
+        let src = RgbaImage {
+            width: 3,
+            height: 1,
+            pixels: vec![183, 64, 54, 187, 255, 0, 0, 0, 255, 255, 255, 128],
+        };
+        let mut black = RgbaImage::filled(3, 1, [0, 0, 0, 255], 12).unwrap();
+        black.draw(&src, [0, 0]);
+        assert_eq!(
+            black.pixels(),
+            &[134, 47, 40, 255, 0, 0, 0, 255, 128, 128, 128, 255]
+        );
+        let mut blue = RgbaImage::filled(3, 1, [0, 0, 255, 255], 12).unwrap();
+        blue.draw(&src, [0, 0]);
+        assert_eq!(&blue.pixels()[4..], &[0, 0, 255, 255, 128, 128, 255, 255]);
+    }
     #[test]
     fn alpha_and_signed_clipping() {
         let source = RgbaImage {

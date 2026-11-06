@@ -1,6 +1,6 @@
 {
   "scope": "sprite positions/names and explicit first+last layer composition; not playback",
-  "cli_sha256": "8b564b72a61d63de2e8572c4a0fc57d9afe88c31e5cf185033d4a942eec66f1a",
+  "cli_sha256": "788d8660d36b297d41b478927d08b0ca09ac4d5c67f302cef62bd091007e6e1b",
   "games": [
     {
       "game": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]",
@@ -17,8 +17,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -32,8 +47,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e111ce93ba19beed5f3e1da5b8aa31f9d55c0904b1ccda39631c5573573d127e"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aeb3a6eb3b6c36302e2b03563a237c4f767d9c9bda943cee1ac22cc401402ee0"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -47,8 +77,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "10a299efbd9116e4f543c7124b4c7eebfb6e5f67ab98727a7ae6cf3522b131c6"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "5e7883ac224857efda72a8934ca2d04d0903de37bc291c0d844ce42efbf95991"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -62,8 +107,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "76296a1a9f77c5ff8a356b2bb5b7391112455ee60116e4567fd11db454b269ce"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c65a91c2a5326ebb7c717a9daa09edfb87da1dfbaf08b1cc8343ca2548fbb4d3"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -77,8 +137,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -92,8 +167,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b3419f1982c2cd879f8f2d47dae43b26d22620ac75d56b3976b4759ace969c53"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e5dd97097b09b9a9dab630711f2c16f6cae2538f954d9d40e89e9ba11013f62b"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -107,8 +197,23 @@
             188,
             106
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "178b18311144b93908bd958db2090f59b75fa45675925ac411a692d04adbd7d7"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "178b18311144b93908bd958db2090f59b75fa45675925ac411a692d04adbd7d7"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "9d0120698c8e4e6e06e3b24a367549cdad6343adb5f3b794f364cc266a74a6cf"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "a12d9a13ff501dff83dc20806a393f246e8029a1358117ebdc50fd9490118f4c"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -122,8 +227,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "e356b48d88deffbc8c7b3f101a9769139ea9722758d0e232e03cb49d7f351fb6"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e356b48d88deffbc8c7b3f101a9769139ea9722758d0e232e03cb49d7f351fb6"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e356b48d88deffbc8c7b3f101a9769139ea9722758d0e232e03cb49d7f351fb6"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e356b48d88deffbc8c7b3f101a9769139ea9722758d0e232e03cb49d7f351fb6"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -137,8 +257,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b270ede1f85eafb859f3edc750c72c1cd9f44bb3bccee2b7ee7a73d6b9d6178b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3caa9607181bd9882dc9fe1dc33b1d51ad382794d2e3948c1525ae236c8128f5"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -152,8 +287,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "a29ac38ce57f0a2e1a0aa28441c1ac2e891ca092a9c4047173361a1dc0464e04"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3250c8376bb9c126b68c491eb5b7fb7174a676470a6e3782b4244be5bab04f23"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -167,8 +317,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -182,8 +347,23 @@
             675,
             380
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "c666fddd4ca92d02034780d8731a4898603cd960f651907c69a8e01ec047e5d7"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c666fddd4ca92d02034780d8731a4898603cd960f651907c69a8e01ec047e5d7"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "6d84b8843006c5c8d9dfd01e5f7ccd9805b4bde094a2459e8892a0434c178d70"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "593270a1235cab11e3ab5918e1fab8117ad6c0f42ba875f6e654363bb8804fdd"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -197,8 +377,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4415cf363de67a551c5d022fa4167b5d0fa47c55aa8012ca6f37f76d30f44e90"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e1206ce357ff9828a78b7c2484edf839669beb26f6337bbb1af4f33c43c771eb"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -212,8 +407,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -227,8 +437,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "f40886753a43c5b2a127c7e8537a415c7e65882322ae84673112584807df4368"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "f40886753a43c5b2a127c7e8537a415c7e65882322ae84673112584807df4368"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c0cb41201c26d7579d3b8a5f6fc6ad069bb1da7c797e6c8a55b2cbd477d0bb2b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1ae9d2e8e8157f3bf5731f7c8c14814b37a7a68c5970436682a7d0a9c1a76c59"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -242,8 +467,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0a54dc49ff1668c647d37ff4c95c95a856d2acb719530df966956f33521ce774"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "552cf45754e508cedc9bb8d28a0b88a21ac858e5d7685987bb96d72bf7e425ff"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -257,8 +497,23 @@
             540,
             2000
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "7748a2a81c936d2779726dd6d247196098a7c29bb5145838a7b986bd580fc223"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "7748a2a81c936d2779726dd6d247196098a7c29bb5145838a7b986bd580fc223"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "935b91fba437ed640dc708fcf610e8705a54c4ddba2290e80b2378c93d6ce1c1"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aaff1473e4f55ca4c53da0ca23b96c281cb4b05cc6fde0826fe1f1c63f131b26"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -272,8 +527,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "0fdb39dcb3420ee49dd766cda00b3b3347fa6d9c4ee4c8dc9311c727a2549aff"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0fdb39dcb3420ee49dd766cda00b3b3347fa6d9c4ee4c8dc9311c727a2549aff"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "f8cca368d5f936951b345759e3a412fc11f8c1e469ac76e1b66bf542d79bb216"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3c08a0d14c4bb90858b6cd056b2a6aed1cfe4b922f34091382e49cc4c525eea8"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -287,8 +557,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            }
+          ]
         },
         {
           "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
@@ -302,8 +587,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "2d88e0d77de7f7bd18ce32f40b711aa4959ce81db785301e02235242a799386d"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "73b46e39b786c8ff1e1a8a11601c9e516fbfba67b07dc1d691ea457b1c37acc4"
+            }
+          ]
         }
       ]
     },
@@ -322,8 +622,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -337,8 +652,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e111ce93ba19beed5f3e1da5b8aa31f9d55c0904b1ccda39631c5573573d127e"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aeb3a6eb3b6c36302e2b03563a237c4f767d9c9bda943cee1ac22cc401402ee0"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -352,8 +682,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "10a299efbd9116e4f543c7124b4c7eebfb6e5f67ab98727a7ae6cf3522b131c6"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "5e7883ac224857efda72a8934ca2d04d0903de37bc291c0d844ce42efbf95991"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -367,8 +712,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "76296a1a9f77c5ff8a356b2bb5b7391112455ee60116e4567fd11db454b269ce"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c65a91c2a5326ebb7c717a9daa09edfb87da1dfbaf08b1cc8343ca2548fbb4d3"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -382,8 +742,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -397,8 +772,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "307d197131b739d7e47cf5ed312520c52a788a412539fec87320354c94f13b31"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "307d197131b739d7e47cf5ed312520c52a788a412539fec87320354c94f13b31"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "307d197131b739d7e47cf5ed312520c52a788a412539fec87320354c94f13b31"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "307d197131b739d7e47cf5ed312520c52a788a412539fec87320354c94f13b31"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -412,8 +802,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b3419f1982c2cd879f8f2d47dae43b26d22620ac75d56b3976b4759ace969c53"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e5dd97097b09b9a9dab630711f2c16f6cae2538f954d9d40e89e9ba11013f62b"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -427,8 +832,23 @@
             188,
             106
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "f9ecc00f64996b37661b286de2986778d7ecc4524381f050616e3ce0a4f59c12"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "f9ecc00f64996b37661b286de2986778d7ecc4524381f050616e3ce0a4f59c12"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "ccf0996120d7b3a4cc1983d69f5e1ca3ea993967d4d35227a2a3a100606da3aa"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "f8667fdbe28fe9a98185664634a869d245d37c76080c72ec3a2b7d14fed58136"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -442,8 +862,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "4c487aea55409906934b5794ed886a60a2859a090d7f02db699ae976f4aa3239"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4c487aea55409906934b5794ed886a60a2859a090d7f02db699ae976f4aa3239"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4c487aea55409906934b5794ed886a60a2859a090d7f02db699ae976f4aa3239"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4c487aea55409906934b5794ed886a60a2859a090d7f02db699ae976f4aa3239"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -457,8 +892,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b270ede1f85eafb859f3edc750c72c1cd9f44bb3bccee2b7ee7a73d6b9d6178b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3caa9607181bd9882dc9fe1dc33b1d51ad382794d2e3948c1525ae236c8128f5"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -472,8 +922,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "a29ac38ce57f0a2e1a0aa28441c1ac2e891ca092a9c4047173361a1dc0464e04"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3250c8376bb9c126b68c491eb5b7fb7174a676470a6e3782b4244be5bab04f23"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -487,8 +952,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -502,8 +982,23 @@
             675,
             380
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "2a0f650d984ded9af02ffefe250eea21bc470fb488c84c31f188882ca5d0e8f9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "2a0f650d984ded9af02ffefe250eea21bc470fb488c84c31f188882ca5d0e8f9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c8decff23bf27c5540e4a7a909291e0955a53742de3d854563f4944ad863dd6c"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "ca6360a3952f01508c461d5e05e3b4a914f558f4820c67a86f89eb2347fd9da8"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -517,8 +1012,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4415cf363de67a551c5d022fa4167b5d0fa47c55aa8012ca6f37f76d30f44e90"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e1206ce357ff9828a78b7c2484edf839669beb26f6337bbb1af4f33c43c771eb"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -532,8 +1042,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -547,8 +1072,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "f40886753a43c5b2a127c7e8537a415c7e65882322ae84673112584807df4368"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "f40886753a43c5b2a127c7e8537a415c7e65882322ae84673112584807df4368"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c0cb41201c26d7579d3b8a5f6fc6ad069bb1da7c797e6c8a55b2cbd477d0bb2b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1ae9d2e8e8157f3bf5731f7c8c14814b37a7a68c5970436682a7d0a9c1a76c59"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -562,8 +1102,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0a54dc49ff1668c647d37ff4c95c95a856d2acb719530df966956f33521ce774"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "552cf45754e508cedc9bb8d28a0b88a21ac858e5d7685987bb96d72bf7e425ff"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -577,8 +1132,23 @@
             540,
             2000
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "32569bd78ea8068943e1b3f50b3f67dae9bc25ceeec2c28eb5b65fec3fd6418a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "32569bd78ea8068943e1b3f50b3f67dae9bc25ceeec2c28eb5b65fec3fd6418a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "733cf2e785bf32192ffb97e1747250d45ad9cfae34d7d8526deb038da83ecf2a"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "837c202dc9bee9d4adc1bdec36970593c1c7b600ac50c833e28449352d414fa8"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -592,8 +1162,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "64a4e99fcc0c9b292a9d47390f9d2230d15db9fe1938e24e54efd711a998eb46"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "64a4e99fcc0c9b292a9d47390f9d2230d15db9fe1938e24e54efd711a998eb46"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4fbf81afad8fe2b722be34dde2b94192d8f06e958ce4b9cf0d65c589ac8062fe"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "d138d88be4a0957335286b844d9ede17dba37b21646ea5bdccf230ed6cca85a7"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -607,8 +1192,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            }
+          ]
         },
         {
           "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
@@ -622,8 +1222,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "2d88e0d77de7f7bd18ce32f40b711aa4959ce81db785301e02235242a799386d"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "73b46e39b786c8ff1e1a8a11601c9e516fbfba67b07dc1d691ea457b1c37acc4"
+            }
+          ]
         }
       ]
     },
@@ -642,8 +1257,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "f40886753a43c5b2a127c7e8537a415c7e65882322ae84673112584807df4368"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "f40886753a43c5b2a127c7e8537a415c7e65882322ae84673112584807df4368"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c0cb41201c26d7579d3b8a5f6fc6ad069bb1da7c797e6c8a55b2cbd477d0bb2b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1ae9d2e8e8157f3bf5731f7c8c14814b37a7a68c5970436682a7d0a9c1a76c59"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -657,8 +1287,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -672,8 +1317,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -687,8 +1347,23 @@
             540,
             2000
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "7eb7787a5a5ab851ae492327e5832a0e16f67faa8639ba16dcda8a8a15e1422c"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "7eb7787a5a5ab851ae492327e5832a0e16f67faa8639ba16dcda8a8a15e1422c"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "dfe32ace095d7d9117c32dfd660e8fb3667b8d35b100090f83fb622f2b5cdc5f"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "2619a102218444809c1078c07447a3008d37936715f97cdb42248ce3bc644010"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -702,8 +1377,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "64a4e99fcc0c9b292a9d47390f9d2230d15db9fe1938e24e54efd711a998eb46"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "64a4e99fcc0c9b292a9d47390f9d2230d15db9fe1938e24e54efd711a998eb46"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4fbf81afad8fe2b722be34dde2b94192d8f06e958ce4b9cf0d65c589ac8062fe"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "d138d88be4a0957335286b844d9ede17dba37b21646ea5bdccf230ed6cca85a7"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -717,8 +1407,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "2d88e0d77de7f7bd18ce32f40b711aa4959ce81db785301e02235242a799386d"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "73b46e39b786c8ff1e1a8a11601c9e516fbfba67b07dc1d691ea457b1c37acc4"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -732,8 +1437,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -747,8 +1467,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "0954d456da0044166e2b2e0898f8dbdc563be0cc6aba38c79d66435368dc11bc"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0954d456da0044166e2b2e0898f8dbdc563be0cc6aba38c79d66435368dc11bc"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "bf302ad7ba4a816084964789c1d9b51753f1900713a0f22d27345ff55e53da45"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b8fcc4fbb90bb0e06d0051e75b37fc04e496506d27523b0f8efb409bcde14aa3"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -762,8 +1497,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0a54dc49ff1668c647d37ff4c95c95a856d2acb719530df966956f33521ce774"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "552cf45754e508cedc9bb8d28a0b88a21ac858e5d7685987bb96d72bf7e425ff"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -777,8 +1527,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "51b66f405de03ceadc9130a7b2b0df628aeef859fda16d45bbea6c739b7e5262"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "51b66f405de03ceadc9130a7b2b0df628aeef859fda16d45bbea6c739b7e5262"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "51b66f405de03ceadc9130a7b2b0df628aeef859fda16d45bbea6c739b7e5262"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "51b66f405de03ceadc9130a7b2b0df628aeef859fda16d45bbea6c739b7e5262"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -792,8 +1557,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e111ce93ba19beed5f3e1da5b8aa31f9d55c0904b1ccda39631c5573573d127e"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aeb3a6eb3b6c36302e2b03563a237c4f767d9c9bda943cee1ac22cc401402ee0"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -807,8 +1587,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "10a299efbd9116e4f543c7124b4c7eebfb6e5f67ab98727a7ae6cf3522b131c6"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "5e7883ac224857efda72a8934ca2d04d0903de37bc291c0d844ce42efbf95991"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -822,8 +1617,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "4fb3dc58272b0c0c371813191361a0cdb59178940563f73f04ac2042758ff4e3"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4fb3dc58272b0c0c371813191361a0cdb59178940563f73f04ac2042758ff4e3"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4fb3dc58272b0c0c371813191361a0cdb59178940563f73f04ac2042758ff4e3"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4fb3dc58272b0c0c371813191361a0cdb59178940563f73f04ac2042758ff4e3"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -837,8 +1647,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b3419f1982c2cd879f8f2d47dae43b26d22620ac75d56b3976b4759ace969c53"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e5dd97097b09b9a9dab630711f2c16f6cae2538f954d9d40e89e9ba11013f62b"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -852,8 +1677,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "948d285e4ae4d0bf3647e16a78b2a72fac0bbdaef1fd2e2b677c085830e15748"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "948d285e4ae4d0bf3647e16a78b2a72fac0bbdaef1fd2e2b677c085830e15748"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "948d285e4ae4d0bf3647e16a78b2a72fac0bbdaef1fd2e2b677c085830e15748"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "948d285e4ae4d0bf3647e16a78b2a72fac0bbdaef1fd2e2b677c085830e15748"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -867,8 +1707,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "76296a1a9f77c5ff8a356b2bb5b7391112455ee60116e4567fd11db454b269ce"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c65a91c2a5326ebb7c717a9daa09edfb87da1dfbaf08b1cc8343ca2548fbb4d3"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -882,8 +1737,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -897,8 +1767,23 @@
             188,
             106
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "10d73497fc81b5a53bb213668b7b527b8164793bbea11598d47c98592a8febe1"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "10d73497fc81b5a53bb213668b7b527b8164793bbea11598d47c98592a8febe1"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e74c592530b0a2160063a2d4ec948ed87cdb6e5d71feaceb8046ff5a4e18a8bd"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "02c6867bd3a257f56b6c2d1ad5aa5e3e5dbe25194e31433f2c8e3615284b5784"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -912,8 +1797,23 @@
             248,
             288
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "57bdaa6614271bbf92e5b133f860e03e861acd29e948cf3732dc95da8431dc72"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "57bdaa6614271bbf92e5b133f860e03e861acd29e948cf3732dc95da8431dc72"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "904866c506ddcbbbcec86d7f5740f7100439ee631004df17883c85062f2bd686"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4f965a40dc59ea2266d9fb24770b51c1216d1dab40444ffc05c93c049d4e5ced"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -927,8 +1827,23 @@
             675,
             380
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "abf20c87016d66cfea7352c4495d9c98616fc7ac41361690b07687b58917483f"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "abf20c87016d66cfea7352c4495d9c98616fc7ac41361690b07687b58917483f"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e099bd5d89a925c710656b3f625b23794a0e00ca2266517862276283ab058b00"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "33ecad43ac332eb85116df8132bda84f669da5b77acba34cfced783f80510ba7"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -942,8 +1857,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b270ede1f85eafb859f3edc750c72c1cd9f44bb3bccee2b7ee7a73d6b9d6178b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3caa9607181bd9882dc9fe1dc33b1d51ad382794d2e3948c1525ae236c8128f5"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -957,8 +1887,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "a29ac38ce57f0a2e1a0aa28441c1ac2e891ca092a9c4047173361a1dc0464e04"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3250c8376bb9c126b68c491eb5b7fb7174a676470a6e3782b4244be5bab04f23"
+            }
+          ]
         },
         {
           "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
@@ -972,8 +1917,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4415cf363de67a551c5d022fa4167b5d0fa47c55aa8012ca6f37f76d30f44e90"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e1206ce357ff9828a78b7c2484edf839669beb26f6337bbb1af4f33c43c771eb"
+            }
+          ]
         }
       ]
     },
@@ -992,8 +1952,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "efdf01d2fa03df8a7f8f8ff3e3fc5e4c65673b5c775b162089536aea6b77805f"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "76296a1a9f77c5ff8a356b2bb5b7391112455ee60116e4567fd11db454b269ce"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c65a91c2a5326ebb7c717a9daa09edfb87da1dfbaf08b1cc8343ca2548fbb4d3"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1007,8 +1982,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "940b9d2355e7aa2b2b2c1f0b6431f997e03f95bdc5518016833b72e53b1d8388"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1022,8 +2012,23 @@
             675,
             380
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "697d9339a0a4eedcd3a730979fe1677767569813c996a3d52c8028fca642576b"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "697d9339a0a4eedcd3a730979fe1677767569813c996a3d52c8028fca642576b"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "25eca5c873a204e1b04071028d1701ada727c9ad9bf9ef99fb344582e3035157"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "dfee4f6a3d4a1382d6fc84ddd22facfe275266987bc815e0501c39541df74d2b"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1037,8 +2042,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "5b45474dec4ff4e47cb16a0198847be51f165e298f7e99b7c12a598d8bb76f16"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0a54dc49ff1668c647d37ff4c95c95a856d2acb719530df966956f33521ce774"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "552cf45754e508cedc9bb8d28a0b88a21ac858e5d7685987bb96d72bf7e425ff"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1052,8 +2072,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "40d9f2d594cdad248000006247d9705ba4fcda92113d9b05cec3de1ab1d78d92"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b3419f1982c2cd879f8f2d47dae43b26d22620ac75d56b3976b4759ace969c53"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e5dd97097b09b9a9dab630711f2c16f6cae2538f954d9d40e89e9ba11013f62b"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1067,8 +2102,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aa32fe87ead89c3f8f7fdfb5968d15c609ecbd9f68c1a14c1c3181d21bbda5c3"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "2d88e0d77de7f7bd18ce32f40b711aa4959ce81db785301e02235242a799386d"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "73b46e39b786c8ff1e1a8a11601c9e516fbfba67b07dc1d691ea457b1c37acc4"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1082,8 +2132,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b861fba513a007d468dce206a48ecaa989a11493c7a23fe865151d780220e964"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b270ede1f85eafb859f3edc750c72c1cd9f44bb3bccee2b7ee7a73d6b9d6178b"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3caa9607181bd9882dc9fe1dc33b1d51ad382794d2e3948c1525ae236c8128f5"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1097,8 +2162,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "9379656b1b54d65ab02aa6e69d9307f46f7acd479c4b99f03725da7e845d000f"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "9379656b1b54d65ab02aa6e69d9307f46f7acd479c4b99f03725da7e845d000f"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "72bae5290f4692d4ced50470860c45e0179db92d14ed7aee85699963049b4d31"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "d8d92645fc508ee91abc21829bff88e2ad89a60ccf5965b609f9cea2cee70d32"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1112,8 +2192,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "c44f3855507abf8d1c2da7a923737c6166e8a81a3243f96f6dfb981bde99dcb9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "a29ac38ce57f0a2e1a0aa28441c1ac2e891ca092a9c4047173361a1dc0464e04"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3250c8376bb9c126b68c491eb5b7fb7174a676470a6e3782b4244be5bab04f23"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1127,8 +2222,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "7086608a04e3be2e5366e0bcc7e33cc5faa5b992f9aafa7fc04cc054f3e4027a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "7086608a04e3be2e5366e0bcc7e33cc5faa5b992f9aafa7fc04cc054f3e4027a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "7086608a04e3be2e5366e0bcc7e33cc5faa5b992f9aafa7fc04cc054f3e4027a"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "7086608a04e3be2e5366e0bcc7e33cc5faa5b992f9aafa7fc04cc054f3e4027a"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1142,8 +2252,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "2129821d1b3f6d6291947a6f9a7b4d9a55f8137b489ae899361fc3bc5d46fc7a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "2129821d1b3f6d6291947a6f9a7b4d9a55f8137b489ae899361fc3bc5d46fc7a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "cd2a1386f5373e49cf8b827e6bc6ef26276550481203f8eeee8261448ee611ed"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "43ee54783746f8610ff920189ebbd8990a87e0c41e5c97dcf43ed75069e4b59f"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1157,8 +2282,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "b10bf0c15dbfa9a8f4e4c78c5238c4ad60fd645205213a5968ea880d9052035a"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1172,8 +2312,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "1dbe76bfe1558087d4eac2fb366d2122db080170d155ff5d0fb4fb704c8c25a9"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e111ce93ba19beed5f3e1da5b8aa31f9d55c0904b1ccda39631c5573573d127e"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "aeb3a6eb3b6c36302e2b03563a237c4f767d9c9bda943cee1ac22cc401402ee0"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1187,8 +2342,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f03402d39c50fcc0f27da492451e52ef351f4b60166dcf552b87305ec0f1116"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1202,8 +2372,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "553c8571bd4a6297bb6a32cd93bee99ee6270d167b3a97b138a3b20c22c59bf7"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1217,8 +2402,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "9041ea7893afe1537e13336ac80bee38d0a56338957ff48ef6de342359efa669"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "10a299efbd9116e4f543c7124b4c7eebfb6e5f67ab98727a7ae6cf3522b131c6"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "5e7883ac224857efda72a8934ca2d04d0903de37bc291c0d844ce42efbf95991"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1232,8 +2432,23 @@
             540,
             2000
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "44da2eddcabbb13b57eb5670c6ca6fc96092e6caccda32f93885b9f109a90565"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "44da2eddcabbb13b57eb5670c6ca6fc96092e6caccda32f93885b9f109a90565"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "a8e233f5100e8662c2fad5620af99723bb8db0498d4fafc7c4101603673af4db"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "fe7ef7937ea4de3deaa93c29ad8cb958c80525285996eacc4599bdeb24d58d89"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1247,8 +2462,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "8ad33aef1e5e2422b26160b6a07c9af5627305b29b14856b9c513b2ca9ab4865"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "4415cf363de67a551c5d022fa4167b5d0fa47c55aa8012ca6f37f76d30f44e90"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "e1206ce357ff9828a78b7c2484edf839669beb26f6337bbb1af4f33c43c771eb"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1262,8 +2492,23 @@
             188,
             106
           ],
-          "max_channel_error_vs_pillow": 1,
-          "rgba_sha256": "e6a6293d260925caef4d67b62d63b667fb39b0cc800bbf18634e21573558da4a"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 1,
+              "rgba_sha256": "e6a6293d260925caef4d67b62d63b667fb39b0cc800bbf18634e21573558da4a"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "0f5a5b0a664f9b604b262fd07a32634ddf4ba62db9f901c02d6a2b028604aa57"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "6858e642e08c877bafd54190c3962107123616b9e7d6eb3c62e19c2fcc338084"
+            }
+          ]
         },
         {
           "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
@@ -1277,8 +2522,23 @@
             1280,
             720
           ],
-          "max_channel_error_vs_pillow": 0,
-          "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+          "checks": [
+            {
+              "background": null,
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "000000",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            },
+            {
+              "background": "193B79",
+              "max_channel_error_vs_pillow": 0,
+              "rgba_sha256": "3a886d42fc9bcbcbf5c6d029c33ec617b4f79edc1b7090577769ddd04a9a8078"
+            }
+          ]
         }
       ]
     }

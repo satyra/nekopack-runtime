@@ -1,0 +1,410 @@
+{
+  "scope": "four static named config recipes against Pillow; not original window parity",
+  "cli_sha256": "788d8660d36b297d41b478927d08b0ca09ac4d5c67f302cef62bd091007e6e1b",
+  "games": [
+    {
+      "game": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]",
+      "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+      "sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+      "layers": [
+        "24:0",
+        "19:0",
+        "24:2",
+        "24:4",
+        "24:6",
+        "19:51",
+        "19:2",
+        "19:3",
+        "19:48",
+        "19:5",
+        "19:6",
+        "19:45",
+        "19:8",
+        "19:43",
+        "19:42",
+        "19:11",
+        "19:40",
+        "19:13",
+        "19:38",
+        "19:15",
+        "19:36",
+        "19:17"
+      ],
+      "states": [
+        {
+          "name_hex": "402053637265656e2330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d2053637265656e2331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d2053637265656e2332",
+          "selected": false
+        },
+        {
+          "name_hex": "4020536b69704e6f526561642330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20536b69704e6f526561642331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d204b656570536b69702331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b656570536b69702330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204b6565704175746f2331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b6565704175746f2330",
+          "selected": true
+        },
+        {
+          "name_hex": "40204d6f7669652331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204d6f7669652330",
+          "selected": false
+        },
+        {
+          "name_hex": "4020506f7075702331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20506f7075702330",
+          "selected": false
+        },
+        {
+          "name_hex": "40204566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204566666563742330",
+          "selected": false
+        },
+        {
+          "name_hex": "40205379734566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d205379734566666563742330",
+          "selected": false
+        }
+      ],
+      "max_channel_error_vs_pillow": 0,
+      "rgba_sha256": "d58b28ee0b8d7f7ca96e29c829735346b9ccde085146a833777081994ef2c9a6"
+    },
+    {
+      "game": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]",
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+      "sha256": "d09a29e6287394fff09535a14aef50e985f6e7df9a06265c2f979cd56bbcebc9",
+      "layers": [
+        "25:0",
+        "20:0",
+        "25:2",
+        "25:4",
+        "25:6",
+        "20:51",
+        "20:2",
+        "20:3",
+        "20:48",
+        "20:5",
+        "20:6",
+        "20:45",
+        "20:8",
+        "20:43",
+        "20:42",
+        "20:11",
+        "20:40",
+        "20:13",
+        "20:38",
+        "20:15",
+        "20:36",
+        "20:17"
+      ],
+      "states": [
+        {
+          "name_hex": "402053637265656e2330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d2053637265656e2331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d2053637265656e2332",
+          "selected": false
+        },
+        {
+          "name_hex": "4020536b69704e6f526561642330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20536b69704e6f526561642331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d204b656570536b69702331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b656570536b69702330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204b6565704175746f2331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b6565704175746f2330",
+          "selected": true
+        },
+        {
+          "name_hex": "40204d6f7669652331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204d6f7669652330",
+          "selected": false
+        },
+        {
+          "name_hex": "4020506f7075702331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20506f7075702330",
+          "selected": false
+        },
+        {
+          "name_hex": "40204566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204566666563742330",
+          "selected": false
+        },
+        {
+          "name_hex": "40205379734566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d205379734566666563742330",
+          "selected": false
+        }
+      ],
+      "max_channel_error_vs_pillow": 0,
+      "rgba_sha256": "d58b28ee0b8d7f7ca96e29c829735346b9ccde085146a833777081994ef2c9a6"
+    },
+    {
+      "game": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]",
+      "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+      "sha256": "fdc80cbc4ba61e201ba41137d7e7ebc8aa92084f5a02a8254963dc0e334e8508",
+      "layers": [
+        "248:0",
+        "246:0",
+        "248:2",
+        "248:4",
+        "248:6",
+        "246:51",
+        "246:2",
+        "246:3",
+        "246:48",
+        "246:5",
+        "246:6",
+        "246:45",
+        "246:8",
+        "246:43",
+        "246:42",
+        "246:11",
+        "246:40",
+        "246:13",
+        "246:38",
+        "246:15",
+        "246:36",
+        "246:17"
+      ],
+      "states": [
+        {
+          "name_hex": "402053637265656e2330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d2053637265656e2331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d2053637265656e2332",
+          "selected": false
+        },
+        {
+          "name_hex": "4020536b69704e6f526561642330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20536b69704e6f526561642331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d204b656570536b69702331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b656570536b69702330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204b6565704175746f2331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b6565704175746f2330",
+          "selected": true
+        },
+        {
+          "name_hex": "40204d6f7669652331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204d6f7669652330",
+          "selected": false
+        },
+        {
+          "name_hex": "4020506f7075702331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20506f7075702330",
+          "selected": false
+        },
+        {
+          "name_hex": "40204566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204566666563742330",
+          "selected": false
+        },
+        {
+          "name_hex": "40205379734566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d205379734566666563742330",
+          "selected": false
+        }
+      ],
+      "max_channel_error_vs_pillow": 0,
+      "rgba_sha256": "d58b28ee0b8d7f7ca96e29c829735346b9ccde085146a833777081994ef2c9a6"
+    },
+    {
+      "game": "Tiny Dungeon ～BLACK and WHITE～",
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+      "sha256": "fbd087a3f1b7500c7d271fc4ba83373c15468a0e859fcadb84a11077710af9ca",
+      "layers": [
+        "35:0",
+        "15:0",
+        "35:2",
+        "35:4",
+        "35:6",
+        "15:51",
+        "15:2",
+        "15:3",
+        "15:48",
+        "15:5",
+        "15:6",
+        "15:45",
+        "15:8",
+        "15:43",
+        "15:42",
+        "15:11",
+        "15:40",
+        "15:13",
+        "15:38",
+        "15:15",
+        "15:36",
+        "15:17"
+      ],
+      "states": [
+        {
+          "name_hex": "402053637265656e2330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d2053637265656e2331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d2053637265656e2332",
+          "selected": false
+        },
+        {
+          "name_hex": "4020536b69704e6f526561642330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20536b69704e6f526561642331",
+          "selected": false
+        },
+        {
+          "name_hex": "3d204b656570536b69702331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b656570536b69702330",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204b6565704175746f2331",
+          "selected": false
+        },
+        {
+          "name_hex": "40204b6565704175746f2330",
+          "selected": true
+        },
+        {
+          "name_hex": "40204d6f7669652331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204d6f7669652330",
+          "selected": false
+        },
+        {
+          "name_hex": "4020506f7075702331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d20506f7075702330",
+          "selected": false
+        },
+        {
+          "name_hex": "40204566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d204566666563742330",
+          "selected": false
+        },
+        {
+          "name_hex": "40205379734566666563742331",
+          "selected": true
+        },
+        {
+          "name_hex": "3d205379734566666563742330",
+          "selected": false
+        }
+      ],
+      "max_channel_error_vs_pillow": 0,
+      "rgba_sha256": "d58b28ee0b8d7f7ca96e29c829735346b9ccde085146a833777081994ef2c9a6"
+    }
+  ]
+}

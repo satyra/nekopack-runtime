@@ -1,0 +1,286 @@
+{
+  "scope": "static config scene; no VM or animation verification",
+  "cli_sha256": "788d8660d36b297d41b478927d08b0ca09ac4d5c67f302cef62bd091007e6e1b",
+  "screenshot_sha256": "49099ddd59453de94bab8fd5c71e802714d3eb58d7602fe50213f16b4b391633",
+  "reference_format": "JPEG",
+  "client_crop": [
+    1,
+    26,
+    1281,
+    746
+  ],
+  "comparison_roi": [
+    100,
+    200,
+    1170,
+    650
+  ],
+  "layers": [
+    "24:0",
+    "19:0",
+    "24:2",
+    "24:4",
+    "24:6",
+    "19:51",
+    "19:2",
+    "19:3",
+    "19:48",
+    "19:5",
+    "19:6",
+    "19:45",
+    "19:8",
+    "19:43",
+    "19:42",
+    "19:11",
+    "19:40",
+    "19:13",
+    "19:38",
+    "19:15",
+    "19:36",
+    "19:17"
+  ],
+  "states": [
+    {
+      "name_hex": "402053637265656e2330",
+      "selected": true
+    },
+    {
+      "name_hex": "3d2053637265656e2331",
+      "selected": false
+    },
+    {
+      "name_hex": "3d2053637265656e2332",
+      "selected": false
+    },
+    {
+      "name_hex": "4020536b69704e6f526561642330",
+      "selected": true
+    },
+    {
+      "name_hex": "3d20536b69704e6f526561642331",
+      "selected": false
+    },
+    {
+      "name_hex": "3d204b656570536b69702331",
+      "selected": false
+    },
+    {
+      "name_hex": "40204b656570536b69702330",
+      "selected": true
+    },
+    {
+      "name_hex": "3d204b6565704175746f2331",
+      "selected": false
+    },
+    {
+      "name_hex": "40204b6565704175746f2330",
+      "selected": true
+    },
+    {
+      "name_hex": "40204d6f7669652331",
+      "selected": true
+    },
+    {
+      "name_hex": "3d204d6f7669652330",
+      "selected": false
+    },
+    {
+      "name_hex": "4020506f7075702331",
+      "selected": true
+    },
+    {
+      "name_hex": "3d20506f7075702330",
+      "selected": false
+    },
+    {
+      "name_hex": "40204566666563742331",
+      "selected": true
+    },
+    {
+      "name_hex": "3d204566666563742330",
+      "selected": false
+    },
+    {
+      "name_hex": "40205379734566666563742331",
+      "selected": true
+    },
+    {
+      "name_hex": "3d205379734566666563742330",
+      "selected": false
+    }
+  ],
+  "background": "000000",
+  "before_alpha_drop_and_hover_state": {
+    "pixels": 481500,
+    "different_pixels": 480695,
+    "max_channel_error": 132,
+    "p99_channel_error": 89,
+    "mean_absolute_channel_error": 25.508830737279336
+  },
+  "background_fixed_only": {
+    "pixels": 481500,
+    "different_pixels": 471538,
+    "max_channel_error": 132,
+    "p99_channel_error": 89,
+    "mean_absolute_channel_error": 5.672125995154032
+  },
+  "background_and_selected_state_fixed": {
+    "pixels": 481500,
+    "different_pixels": 471529,
+    "max_channel_error": 65,
+    "p99_channel_error": 23,
+    "mean_absolute_channel_error": 3.162362062997577
+  },
+  "composed_rgba_sha256": "d58b28ee0b8d7f7ca96e29c829735346b9ccde085146a833777081994ef2c9a6",
+  "archive_sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+  "jpeg_subsampling": 2,
+  "jpeg_quantization_tables": {
+    "0": [
+      6,
+      4,
+      4,
+      6,
+      10,
+      16,
+      20,
+      24,
+      5,
+      5,
+      6,
+      8,
+      10,
+      23,
+      24,
+      22,
+      6,
+      5,
+      6,
+      10,
+      16,
+      23,
+      28,
+      22,
+      6,
+      7,
+      9,
+      12,
+      20,
+      35,
+      32,
+      25,
+      7,
+      9,
+      15,
+      22,
+      27,
+      44,
+      41,
+      31,
+      10,
+      14,
+      22,
+      26,
+      32,
+      42,
+      45,
+      37,
+      20,
+      26,
+      31,
+      35,
+      41,
+      48,
+      48,
+      40,
+      29,
+      37,
+      38,
+      39,
+      45,
+      40,
+      41,
+      40
+    ],
+    "1": [
+      7,
+      7,
+      10,
+      19,
+      40,
+      40,
+      40,
+      40,
+      7,
+      8,
+      10,
+      26,
+      40,
+      40,
+      40,
+      40,
+      10,
+      10,
+      22,
+      40,
+      40,
+      40,
+      40,
+      40,
+      19,
+      26,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40,
+      40
+    ]
+  },
+  "matched_jpeg_diagnostic": {
+    "pixels": 481500,
+    "different_pixels": 422060,
+    "max_channel_error": 26,
+    "p99_channel_error": 7,
+    "mean_absolute_channel_error": 1.4274087919695397
+  },
+  "jpeg_self_error": {
+    "pixels": 481500,
+    "different_pixels": 468382,
+    "max_channel_error": 70,
+    "p99_channel_error": 23,
+    "mean_absolute_channel_error": 3.0274323295257877
+  },
+  "exact_parity": "not measurable from lossy reference"
+}
