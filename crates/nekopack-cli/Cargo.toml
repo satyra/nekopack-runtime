@@ -7,3 +7,4 @@ edition.workspace = true
 nekopack-archive = { path = "../nekopack-archive" }
 nekopack-resource = { path = "../nekopack-resource" }
 nekopack-image = { path = "../nekopack-image" }
+nekopack-script = { path = "../nekopack-script" }

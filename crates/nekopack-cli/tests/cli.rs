@@ -1,6 +1,50 @@
 use std::process::Command;
 
 #[test]
+fn bootstrap_cli_reports_spans_and_never_outputs_partial_ast() {
+    let path = std::env::temp_dir().join(format!("neko-script-{}.dat", std::process::id()));
+    for (script, valid) in [
+        (&b";note\r\n\t.load title\r\n"[..], true),
+        (&b".load title\n.img background"[..], false),
+    ] {
+        let mut bytes = b"NEKOPACK".to_vec();
+        for n in [
+            0u32,
+            0,
+            0,
+            16,
+            7,
+            1,
+            9,
+            script.len() as u32,
+            0,
+            script.len() as u32,
+        ] {
+            bytes.extend(n.to_le_bytes());
+        }
+        bytes.extend(script);
+        std::fs::write(&path, bytes).unwrap();
+        let result = Command::new(env!("CARGO_BIN_EXE_nekopack-cli"))
+            .arg("parse-bootstrap")
+            .arg(&path)
+            .arg("0")
+            .output()
+            .unwrap();
+        assert_eq!(result.status.success(), valid);
+        if valid {
+            assert_eq!(result.stdout, b"2\t8\t19\t2E6C6F6164\t7469746C65\n");
+        } else {
+            assert!(result.stdout.is_empty());
+            let error = String::from_utf8(result.stderr).unwrap();
+            assert!(
+                error.contains("entry 0") && error.contains("line 2") && error.contains("2E696D67")
+            );
+        }
+    }
+    std::fs::remove_file(path).unwrap();
+}
+
+#[test]
 fn binary_output_metadata_and_error_exit() {
     let path = std::env::temp_dir().join(format!("nekopack-cli-test-{}.dat", std::process::id()));
     let mut bytes = b"NEKOPACK".to_vec();

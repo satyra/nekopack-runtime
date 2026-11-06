@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/nekopack-archive", "crates/nekopack-cli", "crates/nekopack-resource", "crates/nekopack-image"]
+members = ["crates/nekopack-archive", "crates/nekopack-cli", "crates/nekopack-resource", "crates/nekopack-image", "crates/nekopack-script"]
 resolver = "2"
 
 [workspace.package]

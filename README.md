@@ -10,6 +10,8 @@
 
 ## 使用
 
+脚本主线已开始：新增 `nekopack-script` 启动子集 AST 与 `parse-bootstrap FILE ENTRY`，四部曲 12 份启动/补丁脚本、91 条语句通过验证，53 次直接依赖均能定位。尚不执行脚本；详见 [启动脚本增量](docs/Phase2_Bootstrap_Parser.md)。
+
 ```text
 cargo run -p nekopack-cli -- inspect-archive path/to/system.dat
 cargo test --workspace
@@ -53,6 +55,7 @@ $env:Path="$env:CARGO_HOME/bin;$env:Path"
 - [PNG/RGBA 像素解码验收](docs/Phase1_Pixel_Increment.md)
 - [素材坐标与画布合成验收](docs/Phase1_Canvas_Increment.md)
 - [原版显示差异定位与修正](docs/Phase1_Display_Correction.md)
+- [启动脚本 AST 与依赖验证](docs/Phase2_Bootstrap_Parser.md)
 - [第三方算法来源声明](THIRD_PARTY_NOTICES.md)
 
 ## 调查复现
@@ -69,4 +72,4 @@ python research/verify_pixels.py --games 'D:\codex\电脑移植安卓\游戏' --
 
 脚本只读取游戏文件，输出文件哈希、计数和格式元数据，不导出剧情、图像、音频或引擎二进制。文件名中的汉化版本标记不等于已确认的原版版本号。完整资源解码、字符编码、脚本语义、启动流程、原版行为对照及真机测试仍待验证。
 
-已增加素材坐标解析与显式图层合成，并修正屏幕对照的 alpha 丢弃及选中态素材误用。四部曲 3,072 个素材坐标、252 组合成和四份设置页配方验证通过。BLESS 原版对照平均通道差由 25.51 降到 3.16；确认截图实际为 JPEG，尚不能判定原版无损帧是否逐像素一致。下一步需无损帧/受控实验隔离剩余差异，继续验证控制块、脚本入口与补丁加载顺序。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。
+资源与显示增量已完成素材坐标、显式图层合成及主要对照错误修正，逐像素原版一致性仍待无损帧验证。当前工作优先推进脚本执行主线：启动 AST、变量/调用状态、`.nut` 系统命令注册与标题菜单调用链。不继续围绕有损截图拟合颜色，也不提前搭建空壳 VM 或臆造指令；未知指令必须报告，不能静默跳过。

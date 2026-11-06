@@ -1,0 +1,1559 @@
+{
+  "scope": "bootstrap candidate AST and static direct dependencies; no VM execution",
+  "cli_sha256": "5abf1eb33bde6b0cef36318ade322d3748e5ec315abc2ae1b43a0a67a7f5dcf9",
+  "games": [
+    {
+      "game": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]",
+      "sources": [
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/image.dat",
+          "sha256": "10499a9d839977153e2570274ed87cb325c0845b766083c175f346b754328e12",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/sound.dat",
+          "sha256": "67745244b294d9962fbed37311e83049e692ce4034764df4e8834a6a95f0c877",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/voice.dat",
+          "sha256": "f447bc2cb02d77b6fce3e7658d648efa90ab521c853056cb69bf9531f148ab6e",
+          "seed": 607214694,
+          "priority": 0
+        }
+      ],
+      "startup": {
+        "status": "selected",
+        "candidates": [
+          {
+            "source": 2,
+            "entry": 172,
+            "priority": 0
+          }
+        ],
+        "source": 2,
+        "entry": 172,
+        "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+        "sha256": "c3b4856024422c5980ea6b4161cc040f9741ac7e73362625c0c864bbe903800a"
+      },
+      "statement_count": 19,
+      "commands": {
+        ".def": 2,
+        ".var": 4,
+        ".call": 2,
+        ".system": 10,
+        ".load": 1
+      },
+      "dependencies": [
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 115,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 115,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "9ad1a390cdb4959bce4ff4ef39e4f4c51e8e765b14e54dce8ecc90f0bfae0cc3",
+          "line": 13,
+          "offset": 407,
+          "command": ".call",
+          "target_hex": "78785f70617463685f7377696d2e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 79,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 79,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "cc4c477cb1ddc46be9b363ea1a080774c85c70f2f7f0cfbc6c970b6ce8d50f19",
+          "line": 14,
+          "offset": 428,
+          "command": ".call",
+          "target_hex": "78785f70617463685f6e7564652e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 4,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 4,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a",
+          "line": 16,
+          "offset": 451,
+          "command": ".system",
+          "target_hex": "6775692e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 37,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 37,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "c7ae50d65fe9d27843add27fa21687066283ead2a275f6b394f9fb89af71aa74",
+          "line": 17,
+          "offset": 468,
+          "command": ".system",
+          "target_hex": "73797374656d2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 22,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 22,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "a3aa6ef8a3b581770b887f4fa4a19a06f77caf178326554d9fd357ed3fc0817e",
+          "line": 18,
+          "offset": 488,
+          "command": ".system",
+          "target_hex": "636f6e76657273696f6e2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 23,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 23,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+          "line": 19,
+          "offset": 512,
+          "command": ".system",
+          "target_hex": "636f6e6669672e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 1,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 1,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d",
+          "line": 20,
+          "offset": 532,
+          "command": ".system",
+          "target_hex": "736176656c6f61642e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 14,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 14,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "8ae14e1b766d50d5cb12c4ec01de9b1827acfa0a6af38724c2ccbafde28f66ea",
+          "line": 21,
+          "offset": 554,
+          "command": ".system",
+          "target_hex": "73686f72746375742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 36,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 36,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "ab0afdf2db22e3bd5ec25d9ceac35ae1d756bfc6f083b7f6a3f813fb79f12d46",
+          "line": 22,
+          "offset": 576,
+          "command": ".system",
+          "target_hex": "73656c6563742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 8,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 8,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+          "line": 23,
+          "offset": 596,
+          "command": ".system",
+          "target_hex": "6d6573736167652e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 15,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 15,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "93fc45510d42c257aaf90355a643218e9f2d7fc4b38950e3b41f1646d5535d6d",
+          "line": 24,
+          "offset": 617,
+          "command": ".system",
+          "target_hex": "785f726f6f6d732e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 25,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 25,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "6105f0beb286e3d14b72a10ab659095248f679a403163395474e8369b660d034",
+          "line": 25,
+          "offset": 638,
+          "command": ".system",
+          "target_hex": "73746166665f726f6c6c2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 128,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 128,
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "f65b92781c77b1463ebe491a2db356645cb14f29f46b675552534dc4dffa2e75",
+          "line": 29,
+          "offset": 685,
+          "command": ".load",
+          "target_hex": "7469746c652e747874",
+          "directory": "script",
+          "bootstrap_subset_rejected_next_stage": true,
+          "next_stage_commands": {
+            "img": 2,
+            "bgm": 1,
+            "map": 1,
+            "case": 11,
+            "load": 3,
+            "sysload": 1,
+            "config": 1,
+            "quit": 1,
+            "room": 3,
+            "se": 2,
+            "page": 1,
+            "end": 1
+          }
+        }
+      ],
+      "system_command_registrations": [
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 16,
+          "command": "title"
+        },
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 17,
+          "command": "route"
+        },
+        {
+          "file_hex": "636f6e6669672e6e7574",
+          "line": 259,
+          "command": "config"
+        },
+        {
+          "file_hex": "736176656c6f61642e6e7574",
+          "line": 264,
+          "command": "sysload"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 4,
+          "command": "select"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 262,
+          "command": "map"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 32,
+          "command": "box"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 152,
+          "command": "chapter"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 176,
+          "command": "date"
+        },
+        {
+          "file_hex": "785f726f6f6d732e6e7574",
+          "line": 10,
+          "command": "room"
+        },
+        {
+          "file_hex": "73746166665f726f6c6c2e6e7574",
+          "line": 65,
+          "command": "staffroll"
+        }
+      ]
+    },
+    {
+      "game": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]",
+      "sources": [
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/image.dat",
+          "sha256": "8d5437f2a4ef9a7879b5edb13424bc17171046ce703b8ee295438689abe9e333",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/patch101.dat",
+          "sha256": "38dca9b619e91331fa9edb8acd9da7804fd28f18395f3b4f58f3baf21897263c",
+          "seed": 607214694,
+          "priority": 301
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/sound.dat",
+          "sha256": "9419ee591dbac029aa034221880b018a592065ab9e4a694f73e672357f4aac27",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "d09a29e6287394fff09535a14aef50e985f6e7df9a06265c2f979cd56bbcebc9",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/voice.dat",
+          "sha256": "9c659a75add75fa2ac0f11ceadff27f896a56b45fa94f176b53f90252f0f201a",
+          "seed": 607214694,
+          "priority": 0
+        }
+      ],
+      "startup": {
+        "status": "selected",
+        "candidates": [
+          {
+            "source": 3,
+            "entry": 174,
+            "priority": 0
+          }
+        ],
+        "source": 3,
+        "entry": 174,
+        "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+        "sha256": "c3b4856024422c5980ea6b4161cc040f9741ac7e73362625c0c864bbe903800a"
+      },
+      "statement_count": 19,
+      "commands": {
+        ".def": 2,
+        ".var": 4,
+        ".call": 2,
+        ".system": 10,
+        ".load": 1
+      },
+      "dependencies": [
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 102,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 102,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "9ad1a390cdb4959bce4ff4ef39e4f4c51e8e765b14e54dce8ecc90f0bfae0cc3",
+          "line": 13,
+          "offset": 407,
+          "command": ".call",
+          "target_hex": "78785f70617463685f7377696d2e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 72,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 72,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "cc4c477cb1ddc46be9b363ea1a080774c85c70f2f7f0cfbc6c970b6ce8d50f19",
+          "line": 14,
+          "offset": 428,
+          "command": ".call",
+          "target_hex": "78785f70617463685f6e7564652e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 4,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 4,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a",
+          "line": 16,
+          "offset": 451,
+          "command": ".system",
+          "target_hex": "6775692e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 38,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 38,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "275ad312fd19264a1a2639d778355b6f7c6f81b67d70efa751cc6c6b638b4bd5",
+          "line": 17,
+          "offset": 468,
+          "command": ".system",
+          "target_hex": "73797374656d2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 23,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 23,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "a3aa6ef8a3b581770b887f4fa4a19a06f77caf178326554d9fd357ed3fc0817e",
+          "line": 18,
+          "offset": 488,
+          "command": ".system",
+          "target_hex": "636f6e76657273696f6e2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 24,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 24,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+          "line": 19,
+          "offset": 512,
+          "command": ".system",
+          "target_hex": "636f6e6669672e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 1,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 1,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d",
+          "line": 20,
+          "offset": 532,
+          "command": ".system",
+          "target_hex": "736176656c6f61642e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 15,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 15,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "8ae14e1b766d50d5cb12c4ec01de9b1827acfa0a6af38724c2ccbafde28f66ea",
+          "line": 21,
+          "offset": 554,
+          "command": ".system",
+          "target_hex": "73686f72746375742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 37,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 37,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "ab0afdf2db22e3bd5ec25d9ceac35ae1d756bfc6f083b7f6a3f813fb79f12d46",
+          "line": 22,
+          "offset": 576,
+          "command": ".system",
+          "target_hex": "73656c6563742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 8,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 8,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+          "line": 23,
+          "offset": 596,
+          "command": ".system",
+          "target_hex": "6d6573736167652e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 16,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 16,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "014ab017c353b4b8511633771935ae2eb53898741d69c50739db59e275c3826a",
+          "line": 24,
+          "offset": 617,
+          "command": ".system",
+          "target_hex": "785f726f6f6d732e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 26,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 26,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "6105f0beb286e3d14b72a10ab659095248f679a403163395474e8369b660d034",
+          "line": 25,
+          "offset": 638,
+          "command": ".system",
+          "target_hex": "73746166665f726f6c6c2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 120,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 120,
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "f65b92781c77b1463ebe491a2db356645cb14f29f46b675552534dc4dffa2e75",
+          "line": 29,
+          "offset": 685,
+          "command": ".load",
+          "target_hex": "7469746c652e747874",
+          "directory": "script",
+          "bootstrap_subset_rejected_next_stage": true,
+          "next_stage_commands": {
+            "img": 2,
+            "bgm": 1,
+            "map": 1,
+            "case": 11,
+            "load": 3,
+            "sysload": 1,
+            "config": 1,
+            "quit": 1,
+            "room": 3,
+            "se": 2,
+            "page": 1,
+            "end": 1
+          }
+        }
+      ],
+      "system_command_registrations": [
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 16,
+          "command": "title"
+        },
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 17,
+          "command": "route"
+        },
+        {
+          "file_hex": "636f6e6669672e6e7574",
+          "line": 259,
+          "command": "config"
+        },
+        {
+          "file_hex": "736176656c6f61642e6e7574",
+          "line": 264,
+          "command": "sysload"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 4,
+          "command": "select"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 262,
+          "command": "map"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 32,
+          "command": "box"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 152,
+          "command": "chapter"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 176,
+          "command": "date"
+        },
+        {
+          "file_hex": "785f726f6f6d732e6e7574",
+          "line": 10,
+          "command": "room"
+        },
+        {
+          "file_hex": "73746166665f726f6c6c2e6e7574",
+          "line": 65,
+          "command": "staffroll"
+        }
+      ]
+    },
+    {
+      "game": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]",
+      "sources": [
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/image.dat",
+          "sha256": "4cd96091772ed431fa83ba0ba5d4887cf34e06e322320e7761fb2ccac0309869",
+          "seed": 2608180646,
+          "priority": 0
+        },
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/sound.dat",
+          "sha256": "a006f4ae8937d5fee1fa5d32e7fdc7fe5862575a1a8b2feb833a203f306dd05b",
+          "seed": 2608180646,
+          "priority": 0
+        },
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "fdc80cbc4ba61e201ba41137d7e7ebc8aa92084f5a02a8254963dc0e334e8508",
+          "seed": 2608180646,
+          "priority": 0
+        },
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/voice.dat",
+          "sha256": "af136e52adeb0a323608e2b8205a6f267f0978fcf55dc0c58f50c4067410ad27",
+          "seed": 2608180646,
+          "priority": 0
+        }
+      ],
+      "startup": {
+        "status": "selected",
+        "candidates": [
+          {
+            "source": 2,
+            "entry": 157,
+            "priority": 0
+          }
+        ],
+        "source": 2,
+        "entry": 157,
+        "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+        "sha256": "968b33636e4cb286cf3839ecbf9a2dc9fe09d132d26e6934720a0ae68abb8e85"
+      },
+      "statement_count": 27,
+      "commands": {
+        ".def": 8,
+        ".var": 5,
+        ".call": 2,
+        ".system": 11,
+        ".load": 1
+      },
+      "dependencies": [
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 3,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 3,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "9ad1a390cdb4959bce4ff4ef39e4f4c51e8e765b14e54dce8ecc90f0bfae0cc3",
+          "line": 21,
+          "offset": 532,
+          "command": ".call",
+          "target_hex": "78785f70617463685f7377696d2e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 165,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 165,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "cc4c477cb1ddc46be9b363ea1a080774c85c70f2f7f0cfbc6c970b6ce8d50f19",
+          "line": 22,
+          "offset": 553,
+          "command": ".call",
+          "target_hex": "78785f70617463685f6e7564652e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 228,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 228,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a",
+          "line": 24,
+          "offset": 576,
+          "command": ".system",
+          "target_hex": "6775692e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 218,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 218,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "f413dac16dae737158385de89d5cf3ba9f8b5f5474cc79f9ae9c5ec5968dc388",
+          "line": 25,
+          "offset": 593,
+          "command": ".system",
+          "target_hex": "73797374656d2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 220,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 220,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "a3aa6ef8a3b581770b887f4fa4a19a06f77caf178326554d9fd357ed3fc0817e",
+          "line": 26,
+          "offset": 613,
+          "command": ".system",
+          "target_hex": "636f6e76657273696f6e2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 247,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 247,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "29e7a536ef31314e2ff017f7dc1a0b113b7a2e7c0cba49d83334989618f66e8b",
+          "line": 27,
+          "offset": 637,
+          "command": ".system",
+          "target_hex": "636f6e6669672e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 209,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 209,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d",
+          "line": 28,
+          "offset": 657,
+          "command": ".system",
+          "target_hex": "736176656c6f61642e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 232,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 232,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "41faaa088ffa007b3ecd2af3b8957b3a145836814019dfdd34dc994a7b9cfacd",
+          "line": 29,
+          "offset": 679,
+          "command": ".system",
+          "target_hex": "73686f72746375742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 213,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 213,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "73f92de189dd93fa90dbde0524228393944295a0b76e6ced7682e4c2cce5b982",
+          "line": 30,
+          "offset": 701,
+          "command": ".system",
+          "target_hex": "73656c6563742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 237,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 237,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "5c6b9915acb875e98b7b6ba27d8ec2862fbc917b5dd0332eb783cf9ee86496bd",
+          "line": 31,
+          "offset": 721,
+          "command": ".system",
+          "target_hex": "6d6573736167652e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 216,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 216,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "113dad9a883c0171de092a05cfb992fcd71b554ee762fc2a470c5bbf3ff1974d",
+          "line": 32,
+          "offset": 742,
+          "command": ".system",
+          "target_hex": "6469616c6f672e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 243,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 243,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "401d8d5abdda06db3ce0d49bf52918c5d141929825c20ea5d6c344235150c31d",
+          "line": 33,
+          "offset": 762,
+          "command": ".system",
+          "target_hex": "785f726f6f6d732e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 227,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 227,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "9c31412a6d7cc549f6f85299bdd15d0c7990fd51168502cd9768cd172a87310a",
+          "line": 34,
+          "offset": 783,
+          "command": ".system",
+          "target_hex": "73746166665f726f6c6c2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 2,
+              "entry": 44,
+              "priority": 0
+            }
+          ],
+          "source": 2,
+          "entry": 44,
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "a6a3d06690b3ab8516f74286eef704cca2aad29b10b23756067a2f21cf55ef84",
+          "line": 38,
+          "offset": 830,
+          "command": ".load",
+          "target_hex": "7469746c656c6f676f2e747874",
+          "directory": "script",
+          "bootstrap_subset_rejected_next_stage": true,
+          "next_stage_commands": {
+            "img": 5,
+            "wait": 3,
+            "fade": 4,
+            "load": 1
+          }
+        }
+      ],
+      "system_command_registrations": [
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 16,
+          "command": "title"
+        },
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 17,
+          "command": "route"
+        },
+        {
+          "file_hex": "636f6e6669672e6e7574",
+          "line": 262,
+          "command": "config"
+        },
+        {
+          "file_hex": "736176656c6f61642e6e7574",
+          "line": 264,
+          "command": "sysload"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 4,
+          "command": "select"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 147,
+          "command": "map"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 32,
+          "command": "box"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 154,
+          "command": "chapter"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 178,
+          "command": "date"
+        },
+        {
+          "file_hex": "785f726f6f6d732e6e7574",
+          "line": 10,
+          "command": "room"
+        },
+        {
+          "file_hex": "785f726f6f6d732e6e7574",
+          "line": 137,
+          "command": "CompleteCG"
+        },
+        {
+          "file_hex": "785f726f6f6d732e6e7574",
+          "line": 256,
+          "command": "CompleteScene"
+        },
+        {
+          "file_hex": "73746166665f726f6c6c2e6e7574",
+          "line": 99,
+          "command": "staffroll"
+        }
+      ]
+    },
+    {
+      "game": "Tiny Dungeon ～BLACK and WHITE～",
+      "sources": [
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/image.dat",
+          "sha256": "237ae5d5839c202621a922e264c193f392686eb4f1cea66b852f50bba17038c2",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+          "sha256": "41fe150a571e1f6d872e9f892574f85a09de2be2ce766891c6563535a5f73afb",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/sound.dat",
+          "sha256": "6e13ccf279bd4d19594d51408ccddfb76b205d219a3229c516fe4017e8274549",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "fbd087a3f1b7500c7d271fc4ba83373c15468a0e859fcadb84a11077710af9ca",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice1.dat",
+          "sha256": "9f7c622458057bd56d4e7f5042520bcbf99fd674df84901baf05966aabe91cc1",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice2.dat",
+          "sha256": "fb6d199e6a4210558d43e8c3fb6b9f899a4a029f4fa63b92e810c4e41a7acd9e",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice3.dat",
+          "sha256": "6f6fdb90fe7d56995cb7134abc78c9e2f2e0ef3e5e615dc98b3b0407541dbbf9",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice4.dat",
+          "sha256": "dcfe2c369be4e80022260e989885216ca2fd52461298113181732a88b19db72c",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice5.dat",
+          "sha256": "b6bc2048cf1ce6f52f991e58f12c0be72d98ea3706f76cf584d687a5256fc80f",
+          "seed": 1259259315,
+          "priority": 0
+        }
+      ],
+      "startup": {
+        "status": "selected",
+        "candidates": [
+          {
+            "source": 1,
+            "entry": 27,
+            "priority": 0
+          }
+        ],
+        "source": 1,
+        "entry": 27,
+        "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+        "sha256": "203efd98e088580972e0efe6cc2896fc35c93f78c3fdf825dbc3bdfa13a274d7"
+      },
+      "statement_count": 18,
+      "commands": {
+        ".def": 2,
+        ".var": 3,
+        ".call": 2,
+        ".system": 10,
+        ".load": 1
+      },
+      "dependencies": [
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 1,
+              "entry": 78,
+              "priority": 0
+            }
+          ],
+          "source": 1,
+          "entry": 78,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+          "sha256": "9ad1a390cdb4959bce4ff4ef39e4f4c51e8e765b14e54dce8ecc90f0bfae0cc3",
+          "line": 13,
+          "offset": 407,
+          "command": ".call",
+          "target_hex": "78785f70617463685f7377696d2e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 1,
+              "entry": 240,
+              "priority": 0
+            }
+          ],
+          "source": 1,
+          "entry": 240,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+          "sha256": "cc4c477cb1ddc46be9b363ea1a080774c85c70f2f7f0cfbc6c970b6ce8d50f19",
+          "line": 14,
+          "offset": 428,
+          "command": ".call",
+          "target_hex": "78785f70617463685f6e7564652e747874",
+          "directory": "script",
+          "parsed_bootstrap_statements": 1
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 33,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 33,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a",
+          "line": 16,
+          "offset": 451,
+          "command": ".system",
+          "target_hex": "6775692e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 30,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 30,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "2a0b63dbd28948da61c224068e284bd32ca5b93ce0ecd8276980694bd425ccb6",
+          "line": 17,
+          "offset": 468,
+          "command": ".system",
+          "target_hex": "73797374656d2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 20,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 20,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "1b2c867da37cb2f7667528e64675fce65e61b84adb898c434f5bd4942c827d74",
+          "line": 18,
+          "offset": 488,
+          "command": ".system",
+          "target_hex": "636f6e76657273696f6e2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 36,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 36,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "1668334022e755ee29881eaee1d3fd29ccdd29bb754b9dbadbbfdba9f1afae50",
+          "line": 19,
+          "offset": 512,
+          "command": ".system",
+          "target_hex": "636f6e6669672e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 25,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 25,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "e59a6d4a27eff564ef85dd443f6aedbd86b73d0b115d907165b1dcf6b9b2afb5",
+          "line": 20,
+          "offset": 532,
+          "command": ".system",
+          "target_hex": "736176656c6f61642e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 8,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 8,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "8ae14e1b766d50d5cb12c4ec01de9b1827acfa0a6af38724c2ccbafde28f66ea",
+          "line": 21,
+          "offset": 554,
+          "command": ".system",
+          "target_hex": "73686f72746375742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 12,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 12,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "bd3b2c707a329a7b04c2725b944e8034ea4c60f1a47b3d43e21fb42b690e5b31",
+          "line": 22,
+          "offset": 576,
+          "command": ".system",
+          "target_hex": "73656c6563742e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 28,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 28,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+          "line": 23,
+          "offset": 596,
+          "command": ".system",
+          "target_hex": "6d6573736167652e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 18,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 18,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "844de5a0bbb96feccaf2e3117acb80fba31db6bbe057266cd95a4a883a9d9278",
+          "line": 24,
+          "offset": 617,
+          "command": ".system",
+          "target_hex": "785f726f6f6d732e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 3,
+              "entry": 22,
+              "priority": 0
+            }
+          ],
+          "source": 3,
+          "entry": 22,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "6105f0beb286e3d14b72a10ab659095248f679a403163395474e8369b660d034",
+          "line": 25,
+          "offset": 638,
+          "command": ".system",
+          "target_hex": "73746166665f726f6c6c2e6e7574",
+          "directory": "system"
+        },
+        {
+          "status": "selected",
+          "candidates": [
+            {
+              "source": 1,
+              "entry": 85,
+              "priority": 0
+            }
+          ],
+          "source": 1,
+          "entry": 85,
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+          "sha256": "ff24349296d3cb98f87251a5af3b8ed2ffef37925cddb49188576111ef77cf14",
+          "line": 28,
+          "offset": 666,
+          "command": ".load",
+          "target_hex": "7469746c652e747874",
+          "directory": "script",
+          "bootstrap_subset_rejected_next_stage": true,
+          "next_stage_commands": {
+            "img": 2,
+            "bgm": 1,
+            "map": 1,
+            "case": 11,
+            "load": 3,
+            "sysload": 1,
+            "config": 1,
+            "quit": 1,
+            "room": 3,
+            "se": 2,
+            "page": 1,
+            "end": 1
+          }
+        }
+      ],
+      "system_command_registrations": [
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 46,
+          "command": "title"
+        },
+        {
+          "file_hex": "73797374656d2e6e7574",
+          "line": 47,
+          "command": "route"
+        },
+        {
+          "file_hex": "636f6e6669672e6e7574",
+          "line": 256,
+          "command": "config"
+        },
+        {
+          "file_hex": "736176656c6f61642e6e7574",
+          "line": 333,
+          "command": "sysload"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 4,
+          "command": "select"
+        },
+        {
+          "file_hex": "73656c6563742e6e7574",
+          "line": 258,
+          "command": "map"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 32,
+          "command": "box"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 152,
+          "command": "chapter"
+        },
+        {
+          "file_hex": "6d6573736167652e6e7574",
+          "line": 176,
+          "command": "date"
+        },
+        {
+          "file_hex": "785f726f6f6d732e6e7574",
+          "line": 10,
+          "command": "room"
+        },
+        {
+          "file_hex": "73746166665f726f6c6c2e6e7574",
+          "line": 65,
+          "command": "staffroll"
+        }
+      ]
+    }
+  ]
+}

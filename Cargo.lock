@@ -80,6 +80,7 @@ dependencies = [
  "nekopack-archive",
  "nekopack-image",
  "nekopack-resource",
+ "nekopack-script",
 ]
 
 [[package]]
@@ -95,6 +96,10 @@ version = "0.1.0"
 dependencies = [
  "nekopack-archive",
 ]
+
+[[package]]
+name = "nekopack-script"
+version = "0.1.0"
 
 [[package]]
 name = "png"

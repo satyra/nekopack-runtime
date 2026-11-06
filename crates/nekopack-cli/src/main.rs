@@ -129,12 +129,31 @@ fn run() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     if args.len() < 2 {
         return Err(
-            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE | inspect-sprites FILE ENTRY | compose-mng FILE ENTRY:IMAGE... | compose-mng-on FILE RRGGBB ENTRY:IMAGE..."
+            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE | inspect-sprites FILE ENTRY | compose-mng FILE ENTRY:IMAGE... | compose-mng-on FILE RRGGBB ENTRY:IMAGE... | parse-bootstrap FILE ENTRY"
                 .into(),
         );
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
+        ("parse-bootstrap", 3) => {
+            let entry = args[2].to_str().ok_or("invalid entry")?.parse::<usize>()?;
+            let mut a = open(Path::new(&args[1]))?;
+            let data = resource(&mut a, entry)?;
+            let nodes = nekopack_script::parse_bootstrap(&data, 100_000)
+                .map_err(|e| format!("{} entry {entry}: {e}", Path::new(&args[1]).display()))?;
+            let mut out = BufWriter::new(io::stdout().lock());
+            for node in nodes {
+                write!(out, "{}\t{}\t{}", node.line, node.span.start, node.span.end)?;
+                for token in node.tokens {
+                    write!(out, "\t")?;
+                    for byte in token {
+                        write!(out, "{byte:02X}")?;
+                    }
+                }
+                writeln!(out)?;
+            }
+            out.flush()?;
+        }
         ("compose-mng", n) | ("compose-mng-on", n) if n >= 3 => {
             let (background, layers) = if command == "compose-mng-on" {
                 let rgb = unhex(&args[2])?;
