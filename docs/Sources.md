@@ -20,3 +20,7 @@
 以上段落描述 Phase 0。**L2（Phase 1 新增）**：[rust-archive-verification.json](../research/rust-archive-verification.json)，由 [verify_rust_archive.py](../research/verify_rust_archive.py) 生成。Rust 按逐字节/u16 lane 反馈实现，旧 Python 按 u64 分组实现；二者独立代码路径，但依据相同公开格式，不是原版引擎 oracle。逐包核对原始文件 SHA-256、完整解密索引、全部条目元数据和前缀，并对选中资源做完整字节相等比较。Rust 另外校验全部非零 parity。报告记录参考工具与 CLI 的 SHA-256；没有验证完整游戏行为。
 
 Niflheim 克隆中未发现独立 LICENSE 文件，因此只作证据引用，不把其源码或专用词表直接纳入本项目。仓库当前不分发游戏数据、参考工具二进制或上游源码。
+
+**L3（名称与元数据增量）**：[metadata-verification.json](../research/metadata-verification.json)，由 [verify_metadata.py](../research/verify_metadata.py) 生成。包含全部单字节与实际 seed 的名称哈希向量、逐包来源和内容指纹、33 组重叠关系、全部 84 个 MNG 的块统计与哈希。MNG 原始块以独立 Python struct/zlib 校验；补丁内容以旧解密器交叉验证。没有原版动态播放验证。
+
+本增量已将 G1 的 MIT 授权 ShiftMap 数值表移入 names.rs，许可保留在 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)；上文“不分发上游源码”指 Phase 0，不再适用于此表。MNG 元数据布局另查阅 [MNG 1.0 HTML 规范](https://www.libpng.org/pub/mng/spec/mng-1.0-20010209-pdg.html)。未知 critical 块只保留并标记，不宣称支持其运行语义。

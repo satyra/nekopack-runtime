@@ -1,0 +1,3456 @@
+{
+  "scope": "static names/priority policy/MNG metadata; no engine playback verification",
+  "cli_sha256": "9999102c9cbb2409731379a7124b010dfb721e5f557ce620c7be252e45981379",
+  "reference_sha256": "9a7f4c9886dc7176bd2d68aa5bef8085ca4d62bf05d6dd7fbe7e5985be22fca0",
+  "hash_vectors_checked": 277,
+  "games": [
+    {
+      "game": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]",
+      "sources": [
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/image.dat",
+          "sha256": "10499a9d839977153e2570274ed87cb325c0845b766083c175f346b754328e12",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/sound.dat",
+          "sha256": "67745244b294d9962fbed37311e83049e692ce4034764df4e8834a6a95f0c877",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+          "sha256": "d49f380b458024597b4ae891a15419de91234cba2a7ab8d61b697167d80b6683",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/voice.dat",
+          "sha256": "f447bc2cb02d77b6fce3e7658d648efa90ab521c853056cb69bf9531f148ab6e",
+          "seed": 607214694,
+          "priority": 0
+        }
+      ],
+      "entries_compared": 11019,
+      "overlaps": [],
+      "lookups": [
+        {
+          "name": "script/start.txt",
+          "candidates": [
+            [
+              2,
+              172,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/title.txt",
+          "candidates": [
+            [
+              2,
+              128,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "script/setup.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/start.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/title.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/setup.txt",
+          "candidates": []
+        }
+      ],
+      "mng": [
+        {
+          "source": 2,
+          "ordinal": 0,
+          "sha256": "ac971878087f0ca04c728a218066f0003aca80a5d37e2b87f0346a308e19deea",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 55,
+            "IHDR": 55,
+            "tEXt": 55,
+            "IDAT": 79,
+            "IEND": 55,
+            "DEFI": 54,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 2,
+          "sha256": "8a75979637d911088e6fcd3d2851303828560938115a05a2c7ce25ed666fcea1",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "DEFI": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 42,
+            "IEND": 27,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 3,
+          "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 62,
+            "IEND": 27,
+            "DEFI": 26,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 6,
+          "sha256": "5456e476b269c076ccdb382fecf9961cc2c648914f57ceb3c2e6349b24991486",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 91,
+            "DEFI": 91,
+            "IHDR": 91,
+            "tEXt": 91,
+            "IDAT": 112,
+            "IEND": 91,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 10,
+          "sha256": "93a304ee1d6c2b09c49bba7fbc0c1ef719e5b2f69e2dd35bc39a289591d4945e",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 22,
+            "IHDR": 22,
+            "tEXt": 22,
+            "IDAT": 166,
+            "IEND": 22,
+            "DEFI": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 11,
+          "sha256": "aafde3c005b5df1cf3a78f2279a23f74f9d8dd412ae5e6fbddc7e324b357b1f8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 33,
+            "IHDR": 33,
+            "tEXt": 33,
+            "IDAT": 33,
+            "IEND": 33,
+            "DEFI": 19,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 12,
+          "sha256": "6d43481961832a3bacdc1ec802998a6e43c09339518e618c51afa3c23477e9ee",
+          "mhdr": [
+            188,
+            106,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 62,
+            "IHDR": 62,
+            "tEXt": 62,
+            "IDAT": 347,
+            "IEND": 62,
+            "DEFI": 1,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 16,
+          "sha256": "3226eb296c1a920c4bbb5ee586847cb5beb6e9dd0e40d38d5d8072dc6a438a68",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 34,
+            "IHDR": 34,
+            "tEXt": 34,
+            "IDAT": 344,
+            "IEND": 34,
+            "DEFI": 32,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 17,
+          "sha256": "f6857d807eb891e4773bf695a10812e7bb112c3ef46a0174ea509214e390c8f5",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "DEFI": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 34,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 19,
+          "sha256": "92a6c41c8db42a359c3ae2997d61af554858c359c7d22dc2c510b9350a2bc6cf",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 52,
+            "DEFI": 52,
+            "IHDR": 52,
+            "tEXt": 52,
+            "IDAT": 74,
+            "IEND": 52,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 20,
+          "sha256": "d767e461050d945a945c1b86aafaeafbf0266e559dc5e2245742c4460e50a7da",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 45,
+            "IHDR": 45,
+            "tEXt": 45,
+            "IDAT": 63,
+            "IEND": 45,
+            "DEFI": 44,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 21,
+          "sha256": "2818cab3f043a38d15cb3513c57c88ad7eeb1ad90bb50ed883e2b430635bf088",
+          "mhdr": [
+            675,
+            380,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 972,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 24,
+          "sha256": "2c04ca9bb4b7f27bb7b31a3152ff63f48f3dd98251adc51aad73e45294f97964",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 32,
+            "IEND": 7,
+            "DEFI": 6,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 26,
+          "sha256": "0d3dc8d25484342e0a7e790505e80748b6cade3ed0e9f7fd6c099323dcd3570b",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 3,
+            "IHDR": 3,
+            "tEXt": 3,
+            "IDAT": 217,
+            "IEND": 3,
+            "DEFI": 2,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 27,
+          "sha256": "42829ede9966843e9b7be50fb3425e93109922b2b797451ef77a4b7dc265c966",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 4,
+            "DEFI": 4,
+            "IHDR": 4,
+            "tEXt": 4,
+            "IDAT": 21,
+            "IEND": 4,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 29,
+          "sha256": "4eb255733c787fb1b3f51a44c3b9886d722b62218d8828caa18c85530b6414d8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 13,
+            "IHDR": 13,
+            "tEXt": 13,
+            "IDAT": 26,
+            "IEND": 13,
+            "DEFI": 12,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 31,
+          "sha256": "debbe458fccb65e90e5f81c85dcb494541e87138df2bdac90b4314d578f9c013",
+          "mhdr": [
+            540,
+            2000,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "DEFI": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 30,
+            "IEND": 7,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 32,
+          "sha256": "edbbdf8524f554d252f49f497d45f9d6a8fcc630c48e5e4de2807331fbf43e17",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 110,
+            "DEFI": 110,
+            "IHDR": 110,
+            "tEXt": 110,
+            "IDAT": 127,
+            "IEND": 110,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 34,
+          "sha256": "400d96f8b3986b11cb1814e6dc9c9b8a9dea8fe6f87fc3d2c3f6444863c33c8c",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 63,
+            "IHDR": 63,
+            "tEXt": 63,
+            "IDAT": 128,
+            "IEND": 63,
+            "DEFI": 62,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 35,
+          "sha256": "c091861c4c9bc172850bdb51ed1b5dd52c97f9921decf15a7ba9cf691623ccd7",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 5,
+            "DEFI": 5,
+            "IHDR": 5,
+            "tEXt": 5,
+            "IDAT": 8,
+            "IEND": 5,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        }
+      ]
+    },
+    {
+      "game": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]",
+      "sources": [
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/image.dat",
+          "sha256": "8d5437f2a4ef9a7879b5edb13424bc17171046ce703b8ee295438689abe9e333",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/patch101.dat",
+          "sha256": "38dca9b619e91331fa9edb8acd9da7804fd28f18395f3b4f58f3baf21897263c",
+          "seed": 607214694,
+          "priority": 301
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/sound.dat",
+          "sha256": "9419ee591dbac029aa034221880b018a592065ab9e4a694f73e672357f4aac27",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+          "sha256": "d09a29e6287394fff09535a14aef50e985f6e7df9a06265c2f979cd56bbcebc9",
+          "seed": 607214694,
+          "priority": 0
+        },
+        {
+          "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/voice.dat",
+          "sha256": "9c659a75add75fa2ac0f11ceadff27f896a56b45fa94f176b53f90252f0f201a",
+          "seed": 607214694,
+          "priority": 0
+        }
+      ],
+      "entries_compared": 11049,
+      "overlaps": [
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "004F78D3",
+          "candidates": [
+            [
+              1,
+              0,
+              301
+            ],
+            [
+              3,
+              40,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            0
+          ],
+          "payload_sha256": [
+            "a81aab4971aa5f93007e8e202b1d4ab7e245ffd62facdce647884b5994818092",
+            "24b9da1656c9b8e574970738947eb48f7d8350a040c4782016b0ee9792563506"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "012EF577",
+          "candidates": [
+            [
+              1,
+              1,
+              301
+            ],
+            [
+              3,
+              41,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            1
+          ],
+          "payload_sha256": [
+            "05dc28c8aed4a86de80a0a36760db13c3387c2eea19acb3882ec96bbb4303c71",
+            "497082caf278defe11ed8fa49cda2cdd9f19e27c8af2f368f0a95d4d69a47462"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "1540727B",
+          "candidates": [
+            [
+              1,
+              2,
+              301
+            ],
+            [
+              3,
+              52,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            2
+          ],
+          "payload_sha256": [
+            "aa3824b0ce24619d6d679f73d84409f7dd87ccdcd6eb6cf124ee640faf8c2c32",
+            "4cbf9530d4099a5c993a69b20f720312b60bd7047f4f5c7e645f531f5ed513d7"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "28B47AF2",
+          "candidates": [
+            [
+              1,
+              3,
+              301
+            ],
+            [
+              3,
+              57,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            3
+          ],
+          "payload_sha256": [
+            "b69e3a1620e5b8cd37fe3fef7ee9ef737209719455d6b2a4f72a3ff893a99ed3",
+            "1130d0afb0df3f4e7518840c6f0362e70f72ba11be8f28a732f92ac2e4a3aa91"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "2BE0C333",
+          "candidates": [
+            [
+              1,
+              4,
+              301
+            ],
+            [
+              3,
+              59,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            4
+          ],
+          "payload_sha256": [
+            "de8e84cbbadaec4bc36baf624daa3927cefc24c0023f396f421e29e6bfcf3374",
+            "4c0d295d640b6c492d2435439646d4582677a32878313bc20868cdd49d7a0e73"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "2E05AE4C",
+          "candidates": [
+            [
+              1,
+              5,
+              301
+            ],
+            [
+              3,
+              63,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            5
+          ],
+          "payload_sha256": [
+            "f3d5faeb1ec869cdb4b00516fc6883dbba3d4469455a36a5c477ff569131dee8",
+            "3c0e6a0fea3342860da67c62645df50175789a10441ce47a25c9fa7679937ddd"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "3D5C7584",
+          "candidates": [
+            [
+              1,
+              6,
+              301
+            ],
+            [
+              3,
+              79,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            6
+          ],
+          "payload_sha256": [
+            "ab4d9e64cf0f4bc1477f2640b05e8f31dac2069908c69094e59bdcc01fcfc58a",
+            "7e91eeb94d3a4813b4c2ca1038ff8540ad27f3dfc31bb3ae78b1ee26855664fc"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "427B5B02",
+          "candidates": [
+            [
+              1,
+              7,
+              301
+            ],
+            [
+              3,
+              82,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            7
+          ],
+          "payload_sha256": [
+            "4edf9ba164f67480016bffa71f723a8d10d7acb43f665030450b7c88a2d328a5",
+            "1fda7e23dcc66d213471d3313c616a70b79bf47c417d5daa75cd2cee66edd19f"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "4576ECF4",
+          "candidates": [
+            [
+              1,
+              8,
+              301
+            ],
+            [
+              3,
+              84,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            8
+          ],
+          "payload_sha256": [
+            "b68e063cc4fbda8da52f320507336df96ef9dddd11e5da9f0ec151ce25fa5d3b",
+            "fdc49a8c270f971bde57ad51e1689f876fa313bba040d723d35099c5e58b5d3d"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "48064472",
+          "candidates": [
+            [
+              1,
+              9,
+              301
+            ],
+            [
+              3,
+              86,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            9
+          ],
+          "payload_sha256": [
+            "caf19201e84ea0f658d674bad242d62915637beeb795ca5a49b6b79b3a13c20b",
+            "53c8475f00c48e611ec8e19a4b3cf26249ca6cdd0fd64e9042b97372b3b4931d"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "4987F0B7",
+          "candidates": [
+            [
+              1,
+              10,
+              301
+            ],
+            [
+              3,
+              88,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            10
+          ],
+          "payload_sha256": [
+            "075e64116b717de77ec4178175e2586daacf82ff45b2920b1508f8e8a5943645",
+            "df8b773147b8010b341e4aa10951a22fbcbf98b8fbe9e28a8021af67ba6a44d1"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "585E48CA",
+          "candidates": [
+            [
+              1,
+              11,
+              301
+            ],
+            [
+              3,
+              93,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            11
+          ],
+          "payload_sha256": [
+            "2845e759a121158f0b7f5deae26cb8ea88e3f862e76d3907610e1e1d6862f1df",
+            "870d6017be876c3c1923946a20b3599d195c290df883725a809bd6e6cb20e78d"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "60F7B7D6",
+          "candidates": [
+            [
+              1,
+              12,
+              301
+            ],
+            [
+              3,
+              98,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            12
+          ],
+          "payload_sha256": [
+            "660e410731b0bebc9b1eb792f96b361e115f8fd747224a0b355195a22c7dbe98",
+            "5bd25045ce9347a2cb56a4a9e10d74001990c09fe1bb2786c18a3c8ddfecab46"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "61B0EE92",
+          "candidates": [
+            [
+              1,
+              13,
+              301
+            ],
+            [
+              3,
+              100,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            13
+          ],
+          "payload_sha256": [
+            "b31d4276a2ff508d9802097e512e2b7613e9ceb8e41cf1a4e5dd3c0290061402",
+            "b69d4ba03f05e3fd124bfd01872122b7b63d390b7eb649a4613eaec32c71b1a3"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "6CBF8B78",
+          "candidates": [
+            [
+              1,
+              14,
+              301
+            ],
+            [
+              3,
+              112,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            14
+          ],
+          "payload_sha256": [
+            "908c303894077b20d3aaf553a85a47047b3fe003546add223a72f10e80188154",
+            "bea81fbe7fff337123aa52076ed2848b00be64d522398df1e4d807d778e557f2"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "7C756EFC",
+          "candidates": [
+            [
+              1,
+              15,
+              301
+            ],
+            [
+              3,
+              125,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            15
+          ],
+          "payload_sha256": [
+            "76e4990bf34b141af46eeb22379f3f0c47c2b1a00f1f83493fb29ebb0093a32d",
+            "5c6f9cabed4b7b43d2ec4afc6202b1045088d0a7e6f6c37578527412f75c5c45"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "93CCA377",
+          "candidates": [
+            [
+              1,
+              16,
+              301
+            ],
+            [
+              3,
+              140,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            16
+          ],
+          "payload_sha256": [
+            "760c001d02a21965208cc1ae9a07a8a12f02b4e3ea65ebeca7663966938a44d3",
+            "a2d42841b0a7ae49b5a98c615d83d7454e0e35fb0f3dae73c8af322cfc46f53d"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "99E8CFB3",
+          "candidates": [
+            [
+              1,
+              17,
+              301
+            ],
+            [
+              3,
+              144,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            17
+          ],
+          "payload_sha256": [
+            "87b5bf4421d18dc200e9b50461dab824d8404bf8aa30539b268e07222b400b6c",
+            "c6aaa5dac0cf99769577819d6249e2a16ca5c68a70796df6fbcc17c5f776e62a"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "9F95359E",
+          "candidates": [
+            [
+              1,
+              18,
+              301
+            ],
+            [
+              3,
+              150,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            18
+          ],
+          "payload_sha256": [
+            "d22e961f46c8a13704c78565617366142b470a8658b085823c396f2247777b1a",
+            "f29da7c6e278fc965fd0016b980612ffa9c09c8456a28030c2c0aaf61584ded7"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "B198D691",
+          "candidates": [
+            [
+              1,
+              19,
+              301
+            ],
+            [
+              3,
+              157,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            19
+          ],
+          "payload_sha256": [
+            "dac8332a8d99163680324d35566afc306c2e431cbb521c5e17cbb6eab9f989c6",
+            "cce428d7894c9caacaf9abea4769c4f5514ae5f9e4103c92aa9ed20d7edebd80"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "BC6CA6E8",
+          "candidates": [
+            [
+              1,
+              20,
+              301
+            ],
+            [
+              3,
+              164,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            20
+          ],
+          "payload_sha256": [
+            "ae15804ee12070a05dd54483714fce4999c7ddc60da54f062635f59703894eab",
+            "cc774a21f761dbe524871b918f09a8330f6cdddda81d6fb7cefc8f440188462d"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "C793E495",
+          "candidates": [
+            [
+              1,
+              21,
+              301
+            ],
+            [
+              3,
+              167,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            21
+          ],
+          "payload_sha256": [
+            "f366e6f32aa366db611e2be52c13e9a88163d98350faf05a44da7648e6c3b4bf",
+            "f750206873b0cfd43f2c6b7698577eab456443a34739018dbb8afffa94fbefbb"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "C82A19D3",
+          "candidates": [
+            [
+              1,
+              22,
+              301
+            ],
+            [
+              3,
+              168,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            22
+          ],
+          "payload_sha256": [
+            "5aef49700d83cdd143f77b75e352cd5047c34e5a166464daca2e785753260570",
+            "7419fc1aaab9d7c981dbab1c438ad9784ea61b79c475d6cbf6c0f778f918a37c"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "CA7C87B0",
+          "candidates": [
+            [
+              1,
+              23,
+              301
+            ],
+            [
+              3,
+              169,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            23
+          ],
+          "payload_sha256": [
+            "20a6630653acd307c45f010f2082272b574580cb6017503c9b658b9026098e3a",
+            "6e5025479be0e7978e30ec4316ef3629d6b8fa37a0666563f003cd269e135e47"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "D0541E46",
+          "candidates": [
+            [
+              1,
+              24,
+              301
+            ],
+            [
+              3,
+              173,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            24
+          ],
+          "payload_sha256": [
+            "43a4687f2dfaf80fd6c84feab10a3b99e565a9c1b6ba4c0b6db69e8282c020df",
+            "eee7d36aee1a620b4aa2923b01bd68d91f0e799e884ed33d7ce6213bc34d4a84"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "D3509B2F",
+          "candidates": [
+            [
+              1,
+              25,
+              301
+            ],
+            [
+              3,
+              175,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            25
+          ],
+          "payload_sha256": [
+            "fd93f96a0270860c56e658a8857c002761fbe11360e680af4a5fba85d4a62324",
+            "14a0e6c195f088ee7c87d763b12d9eaa5ffdcfa8caa9bf3b211f463d3d42c09e"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "D7E05013",
+          "candidates": [
+            [
+              1,
+              26,
+              301
+            ],
+            [
+              3,
+              179,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            26
+          ],
+          "payload_sha256": [
+            "dfbf9f3c0bbcbec26d68a47ad58ff0ee72c539060cb55f340af10dba99b58780",
+            "d72c4c167d745ccadfd40f93d924749922861063cc8ca6de9d70a91bb822f2a4"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "D8C397F5",
+          "candidates": [
+            [
+              1,
+              27,
+              301
+            ],
+            [
+              3,
+              180,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            27
+          ],
+          "payload_sha256": [
+            "3b620b47abbc3ed7efea54c5ddbb6431a4609913b991b7b5bb686e03e1ea3c7d",
+            "767383ac481681723f67ae46b28675378fb243cf96ee1966bd08211e78e5f98a"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "DB8D8D8B",
+          "candidates": [
+            [
+              1,
+              28,
+              301
+            ],
+            [
+              3,
+              181,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            28
+          ],
+          "payload_sha256": [
+            "be13f7dc0cbb8d4727deeb36c581b9307edc773a95d2cf43797f6847af59c4da",
+            "c56f128da7d95dd72782daddc7cacc75b3a829e2d6a2100412340a5e9b00362a"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "F4FD9993",
+          "candidates": [
+            [
+              1,
+              29,
+              301
+            ],
+            [
+              3,
+              191,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            29
+          ],
+          "payload_sha256": [
+            "459b223a29f65e098f5d4d6048dd233ef77573f822d74a973a6d4995f5003894",
+            "dad1e345e17d4848e17a9c462cdf6430344b1f748f6585619675426a29e4e4ae"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "F7321993",
+          "candidates": [
+            [
+              1,
+              30,
+              301
+            ],
+            [
+              3,
+              193,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            30
+          ],
+          "payload_sha256": [
+            "31c680cf278d6be3f9d7a68f1568ef3585ff05f50c84add326e2df615bcbbec9",
+            "9985b65d8747f55580c49268c0e78386a799b4728900bc8d1ad8586b22a7df4e"
+          ],
+          "payloads_differ": true
+        },
+        {
+          "seed": "24315C66",
+          "directory_hash": "E603149F",
+          "name_hash": "FA0A7149",
+          "candidates": [
+            [
+              1,
+              31,
+              301
+            ],
+            [
+              3,
+              196,
+              0
+            ]
+          ],
+          "resolution": [
+            "selected",
+            1,
+            31
+          ],
+          "payload_sha256": [
+            "5aab123e55dba1268f51c345160157a957fad9198089824b04f9962df072b94a",
+            "d137be7ddc04cc1c668ddf93ce386f479774d9bae5f502e34ef63f0ec72c4eeb"
+          ],
+          "payloads_differ": true
+        }
+      ],
+      "lookups": [
+        {
+          "name": "script/start.txt",
+          "candidates": [
+            [
+              3,
+              174,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/title.txt",
+          "candidates": [
+            [
+              3,
+              120,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "script/setup.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/start.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/title.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/setup.txt",
+          "candidates": []
+        }
+      ],
+      "mng": [
+        {
+          "source": 3,
+          "ordinal": 0,
+          "sha256": "ac971878087f0ca04c728a218066f0003aca80a5d37e2b87f0346a308e19deea",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 55,
+            "IHDR": 55,
+            "tEXt": 55,
+            "IDAT": 79,
+            "IEND": 55,
+            "DEFI": 54,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 2,
+          "sha256": "8a75979637d911088e6fcd3d2851303828560938115a05a2c7ce25ed666fcea1",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "DEFI": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 42,
+            "IEND": 27,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 3,
+          "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 62,
+            "IEND": 27,
+            "DEFI": 26,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 6,
+          "sha256": "5456e476b269c076ccdb382fecf9961cc2c648914f57ceb3c2e6349b24991486",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 91,
+            "DEFI": 91,
+            "IHDR": 91,
+            "tEXt": 91,
+            "IDAT": 112,
+            "IEND": 91,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 10,
+          "sha256": "61962ce987e60a16ffa80f10d92d0582b9bd2eec866effe517f173c9f8b46f90",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 29,
+            "IHDR": 29,
+            "tEXt": 29,
+            "IDAT": 168,
+            "IEND": 29,
+            "DEFI": 28,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 11,
+          "sha256": "9fcb9ace5bcd9b1bc39b8d186de7a1ce99a64a5d25b565f6855fe9d5abbfb2cb",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 40,
+            "IHDR": 40,
+            "tEXt": 40,
+            "IDAT": 628,
+            "IEND": 40,
+            "DEFI": 37,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 12,
+          "sha256": "aafde3c005b5df1cf3a78f2279a23f74f9d8dd412ae5e6fbddc7e324b357b1f8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 33,
+            "IHDR": 33,
+            "tEXt": 33,
+            "IDAT": 33,
+            "IEND": 33,
+            "DEFI": 19,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 13,
+          "sha256": "af5d45672fce45d59f370f745ee5ce4222bef7c399d57756e5a8ff77ab18817c",
+          "mhdr": [
+            188,
+            106,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 68,
+            "IHDR": 68,
+            "tEXt": 68,
+            "IDAT": 378,
+            "IEND": 68,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 17,
+          "sha256": "e062db266d4592359df2ff45c940aa3600fc8fa5de657d46f72dc6850f2ee755",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 33,
+            "IHDR": 33,
+            "tEXt": 33,
+            "IDAT": 214,
+            "IEND": 33,
+            "DEFI": 32,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 18,
+          "sha256": "f6857d807eb891e4773bf695a10812e7bb112c3ef46a0174ea509214e390c8f5",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "DEFI": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 34,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 20,
+          "sha256": "92a6c41c8db42a359c3ae2997d61af554858c359c7d22dc2c510b9350a2bc6cf",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 52,
+            "DEFI": 52,
+            "IHDR": 52,
+            "tEXt": 52,
+            "IDAT": 74,
+            "IEND": 52,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 21,
+          "sha256": "0a71ea2f7a2f3589982c99f70ff8abf415837c9268020d24c8b3b3ec63efae47",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 45,
+            "IHDR": 45,
+            "tEXt": 45,
+            "IDAT": 63,
+            "IEND": 45,
+            "DEFI": 44,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 22,
+          "sha256": "da0446201e282fae0bd1bdb55e50846e40925d5e3d95802ba64779667d36e2e2",
+          "mhdr": [
+            675,
+            380,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 972,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 25,
+          "sha256": "2c04ca9bb4b7f27bb7b31a3152ff63f48f3dd98251adc51aad73e45294f97964",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 32,
+            "IEND": 7,
+            "DEFI": 6,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 27,
+          "sha256": "0d3dc8d25484342e0a7e790505e80748b6cade3ed0e9f7fd6c099323dcd3570b",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 3,
+            "IHDR": 3,
+            "tEXt": 3,
+            "IDAT": 217,
+            "IEND": 3,
+            "DEFI": 2,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 28,
+          "sha256": "42829ede9966843e9b7be50fb3425e93109922b2b797451ef77a4b7dc265c966",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 4,
+            "DEFI": 4,
+            "IHDR": 4,
+            "tEXt": 4,
+            "IDAT": 21,
+            "IEND": 4,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 30,
+          "sha256": "4eb255733c787fb1b3f51a44c3b9886d722b62218d8828caa18c85530b6414d8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 13,
+            "IHDR": 13,
+            "tEXt": 13,
+            "IDAT": 26,
+            "IEND": 13,
+            "DEFI": 12,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 32,
+          "sha256": "0d64cb482b3137cf4b8f211fd1cc0e258e638242d28ca28e736a433ab518b87d",
+          "mhdr": [
+            540,
+            2000,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "DEFI": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 31,
+            "IEND": 7,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 33,
+          "sha256": "589b00f0304642dec5e65f37bb90b62fa0692b8866aa66eb4a5f28ab552b70a5",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 121,
+            "DEFI": 121,
+            "IHDR": 121,
+            "tEXt": 121,
+            "IDAT": 138,
+            "IEND": 121,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 35,
+          "sha256": "62366127b8f03c1f38619808b4795d4b083bf56a74b364249ab963e544198161",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 66,
+            "IHDR": 66,
+            "tEXt": 66,
+            "IDAT": 135,
+            "IEND": 66,
+            "DEFI": 65,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 36,
+          "sha256": "c091861c4c9bc172850bdb51ed1b5dd52c97f9921decf15a7ba9cf691623ccd7",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 5,
+            "DEFI": 5,
+            "IHDR": 5,
+            "tEXt": 5,
+            "IDAT": 8,
+            "IEND": 5,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        }
+      ]
+    },
+    {
+      "game": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]",
+      "sources": [
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/image.dat",
+          "sha256": "4cd96091772ed431fa83ba0ba5d4887cf34e06e322320e7761fb2ccac0309869",
+          "seed": 2608180646,
+          "priority": 0
+        },
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/sound.dat",
+          "sha256": "a006f4ae8937d5fee1fa5d32e7fdc7fe5862575a1a8b2feb833a203f306dd05b",
+          "seed": 2608180646,
+          "priority": 0
+        },
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+          "sha256": "fdc80cbc4ba61e201ba41137d7e7ebc8aa92084f5a02a8254963dc0e334e8508",
+          "seed": 2608180646,
+          "priority": 0
+        },
+        {
+          "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/voice.dat",
+          "sha256": "af136e52adeb0a323608e2b8205a6f267f0978fcf55dc0c58f50c4067410ad27",
+          "seed": 2608180646,
+          "priority": 0
+        }
+      ],
+      "entries_compared": 15497,
+      "overlaps": [],
+      "lookups": [
+        {
+          "name": "script/start.txt",
+          "candidates": [
+            [
+              2,
+              157,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/title.txt",
+          "candidates": [
+            [
+              2,
+              88,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "script/setup.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/start.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/title.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/setup.txt",
+          "candidates": []
+        }
+      ],
+      "mng": [
+        {
+          "source": 2,
+          "ordinal": 203,
+          "sha256": "42829ede9966843e9b7be50fb3425e93109922b2b797451ef77a4b7dc265c966",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 4,
+            "DEFI": 4,
+            "IHDR": 4,
+            "tEXt": 4,
+            "IDAT": 21,
+            "IEND": 4,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 207,
+          "sha256": "0a71ea2f7a2f3589982c99f70ff8abf415837c9268020d24c8b3b3ec63efae47",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 45,
+            "IHDR": 45,
+            "tEXt": 45,
+            "IDAT": 63,
+            "IEND": 45,
+            "DEFI": 44,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 208,
+          "sha256": "ac971878087f0ca04c728a218066f0003aca80a5d37e2b87f0346a308e19deea",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 55,
+            "IHDR": 55,
+            "tEXt": 55,
+            "IDAT": 79,
+            "IEND": 55,
+            "DEFI": 54,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 210,
+          "sha256": "93562d633d66363247e0b1c96fc8c2e4baf217e21fe71bcba8b03b5fc8a623be",
+          "mhdr": [
+            540,
+            2000,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "DEFI": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 24,
+            "IEND": 7,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 211,
+          "sha256": "589b00f0304642dec5e65f37bb90b62fa0692b8866aa66eb4a5f28ab552b70a5",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 121,
+            "DEFI": 121,
+            "IHDR": 121,
+            "tEXt": 121,
+            "IDAT": 138,
+            "IEND": 121,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 212,
+          "sha256": "c091861c4c9bc172850bdb51ed1b5dd52c97f9921decf15a7ba9cf691623ccd7",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 5,
+            "DEFI": 5,
+            "IHDR": 5,
+            "tEXt": 5,
+            "IDAT": 8,
+            "IEND": 5,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 215,
+          "sha256": "62366127b8f03c1f38619808b4795d4b083bf56a74b364249ab963e544198161",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 66,
+            "IHDR": 66,
+            "tEXt": 66,
+            "IDAT": 135,
+            "IEND": 66,
+            "DEFI": 65,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 217,
+          "sha256": "6ffedcfaf5b049653e8d47f9791665688d51cb1f4046d56a84439a57d1eb62d1",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "DEFI": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 28,
+            "IEND": 7,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 221,
+          "sha256": "4eb255733c787fb1b3f51a44c3b9886d722b62218d8828caa18c85530b6414d8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 13,
+            "IHDR": 13,
+            "tEXt": 13,
+            "IDAT": 26,
+            "IEND": 13,
+            "DEFI": 12,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 222,
+          "sha256": "0a56c92b8eebcbad260ea730869da9fda5736a9e85cc393ae928ad1b00b2be46",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 31,
+            "IHDR": 31,
+            "tEXt": 31,
+            "IDAT": 278,
+            "IEND": 31,
+            "DEFI": 29,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 224,
+          "sha256": "8a75979637d911088e6fcd3d2851303828560938115a05a2c7ce25ed666fcea1",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "DEFI": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 42,
+            "IEND": 27,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 226,
+          "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 62,
+            "IEND": 27,
+            "DEFI": 26,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 229,
+          "sha256": "9ed2cd0bbdb91be2d41debc20c9d63f8e4a8cdfbb83b1afffb4df83bdbbc22d7",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 4,
+            "IHDR": 4,
+            "tEXt": 4,
+            "IDAT": 240,
+            "IEND": 4,
+            "DEFI": 3,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 230,
+          "sha256": "aafde3c005b5df1cf3a78f2279a23f74f9d8dd412ae5e6fbddc7e324b357b1f8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 33,
+            "IHDR": 33,
+            "tEXt": 33,
+            "IDAT": 33,
+            "IEND": 33,
+            "DEFI": 19,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 234,
+          "sha256": "d79ae81a0f7532a0f289d679f98b91cb03616dbe0ffc1760224c2dcafdffa7db",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 121,
+            "IHDR": 121,
+            "tEXt": 121,
+            "IDAT": 179,
+            "IEND": 121,
+            "DEFI": 120,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 236,
+          "sha256": "5456e476b269c076ccdb382fecf9961cc2c648914f57ceb3c2e6349b24991486",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 91,
+            "DEFI": 91,
+            "IHDR": 91,
+            "tEXt": 91,
+            "IDAT": 112,
+            "IEND": 91,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 239,
+          "sha256": "2eae802bc7fc196acbdf7484ac9f7d7b64b60914c3c19b836de343fce1a8ad2b",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 20,
+            "IHDR": 20,
+            "tEXt": 20,
+            "IDAT": 38,
+            "IEND": 20,
+            "DEFI": 19,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 240,
+          "sha256": "9d6016dccfe195ecf11623b13d392c63fda47f149d16b8480bf328938cf48766",
+          "mhdr": [
+            188,
+            106,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 81,
+            "IHDR": 81,
+            "tEXt": 81,
+            "IDAT": 446,
+            "IEND": 81,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 241,
+          "sha256": "b20a96c8efbca1dd8ecac61139c0e11fc2812f51a81af8db5bb3fd9a248b355a",
+          "mhdr": [
+            248,
+            288,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "DEFI": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 188,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 244,
+          "sha256": "e0c98b65fa78ec561ee647cb784d4b6599ef466e5dd0d4d028924adec7ca68e5",
+          "mhdr": [
+            675,
+            380,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 23,
+            "IHDR": 23,
+            "tEXt": 23,
+            "IDAT": 1121,
+            "IEND": 23,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 245,
+          "sha256": "f6857d807eb891e4773bf695a10812e7bb112c3ef46a0174ea509214e390c8f5",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "DEFI": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 34,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 246,
+          "sha256": "92a6c41c8db42a359c3ae2997d61af554858c359c7d22dc2c510b9350a2bc6cf",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 52,
+            "DEFI": 52,
+            "IHDR": 52,
+            "tEXt": 52,
+            "IDAT": 74,
+            "IEND": 52,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 2,
+          "ordinal": 248,
+          "sha256": "2c04ca9bb4b7f27bb7b31a3152ff63f48f3dd98251adc51aad73e45294f97964",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 32,
+            "IEND": 7,
+            "DEFI": 6,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        }
+      ]
+    },
+    {
+      "game": "Tiny Dungeon ～BLACK and WHITE～",
+      "sources": [
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/image.dat",
+          "sha256": "237ae5d5839c202621a922e264c193f392686eb4f1cea66b852f50bba17038c2",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/script.dat",
+          "sha256": "41fe150a571e1f6d872e9f892574f85a09de2be2ce766891c6563535a5f73afb",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/sound.dat",
+          "sha256": "6e13ccf279bd4d19594d51408ccddfb76b205d219a3229c516fe4017e8274549",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+          "sha256": "fbd087a3f1b7500c7d271fc4ba83373c15468a0e859fcadb84a11077710af9ca",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice1.dat",
+          "sha256": "9f7c622458057bd56d4e7f5042520bcbf99fd674df84901baf05966aabe91cc1",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice2.dat",
+          "sha256": "fb6d199e6a4210558d43e8c3fb6b9f899a4a029f4fa63b92e810c4e41a7acd9e",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice3.dat",
+          "sha256": "6f6fdb90fe7d56995cb7134abc78c9e2f2e0ef3e5e615dc98b3b0407541dbbf9",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice4.dat",
+          "sha256": "dcfe2c369be4e80022260e989885216ca2fd52461298113181732a88b19db72c",
+          "seed": 1259259315,
+          "priority": 0
+        },
+        {
+          "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/voice5.dat",
+          "sha256": "b6bc2048cf1ce6f52f991e58f12c0be72d98ea3706f76cf584d687a5256fc80f",
+          "seed": 1259259315,
+          "priority": 0
+        }
+      ],
+      "entries_compared": 13636,
+      "overlaps": [
+        {
+          "seed": "4B0EC5B3",
+          "directory_hash": "EFFB4B01",
+          "name_hash": "CCC861C7",
+          "candidates": [
+            [
+              4,
+              977,
+              0
+            ],
+            [
+              5,
+              4690,
+              0
+            ],
+            [
+              6,
+              2680,
+              0
+            ],
+            [
+              7,
+              757,
+              0
+            ],
+            [
+              8,
+              44,
+              0
+            ]
+          ],
+          "resolution": [
+            "ambiguous",
+            5
+          ]
+        }
+      ],
+      "lookups": [
+        {
+          "name": "script/start.txt",
+          "candidates": [
+            [
+              1,
+              27,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/title.txt",
+          "candidates": [
+            [
+              1,
+              85,
+              0
+            ]
+          ]
+        },
+        {
+          "name": "script/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "script/setup.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/start.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/title.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/story.txt",
+          "candidates": []
+        },
+        {
+          "name": "system/setup.txt",
+          "candidates": []
+        }
+      ],
+      "mng": [
+        {
+          "source": 3,
+          "ordinal": 1,
+          "sha256": "5456e476b269c076ccdb382fecf9961cc2c648914f57ceb3c2e6349b24991486",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 91,
+            "DEFI": 91,
+            "IHDR": 91,
+            "tEXt": 91,
+            "IDAT": 112,
+            "IEND": 91,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 3,
+          "sha256": "316440dc451d49d6aec212d6ebe6a53dbc14f2e0b5ce93b243278ee86e351555",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 19,
+            "IHDR": 19,
+            "tEXt": 19,
+            "IDAT": 151,
+            "IEND": 19,
+            "DEFI": 18,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 4,
+          "sha256": "c97854fc3f49da8f5a012c68ab4928c111a48f2f99d08c3419d9fdbb0d415d58",
+          "mhdr": [
+            675,
+            380,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 929,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 6,
+          "sha256": "4eb255733c787fb1b3f51a44c3b9886d722b62218d8828caa18c85530b6414d8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 13,
+            "IHDR": 13,
+            "tEXt": 13,
+            "IDAT": 26,
+            "IEND": 13,
+            "DEFI": 12,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 9,
+          "sha256": "aafde3c005b5df1cf3a78f2279a23f74f9d8dd412ae5e6fbddc7e324b357b1f8",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 33,
+            "IHDR": 33,
+            "tEXt": 33,
+            "IDAT": 33,
+            "IEND": 33,
+            "DEFI": 19,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 11,
+          "sha256": "c091861c4c9bc172850bdb51ed1b5dd52c97f9921decf15a7ba9cf691623ccd7",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 5,
+            "DEFI": 5,
+            "IHDR": 5,
+            "tEXt": 5,
+            "IDAT": 8,
+            "IEND": 5,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 13,
+          "sha256": "f6857d807eb891e4773bf695a10812e7bb112c3ef46a0174ea509214e390c8f5",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 21,
+            "DEFI": 21,
+            "IHDR": 21,
+            "tEXt": 21,
+            "IDAT": 34,
+            "IEND": 21,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 14,
+          "sha256": "19fd4f0179d8b803e6905433174c0ad5eddc7ba2ebd3a7ece0fc9bceda7706cb",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 109,
+            "DEFI": 109,
+            "IHDR": 109,
+            "tEXt": 109,
+            "IDAT": 126,
+            "IEND": 109,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 15,
+          "sha256": "92a6c41c8db42a359c3ae2997d61af554858c359c7d22dc2c510b9350a2bc6cf",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 52,
+            "DEFI": 52,
+            "IHDR": 52,
+            "tEXt": 52,
+            "IDAT": 74,
+            "IEND": 52,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 16,
+          "sha256": "204e978d53d6bcac6eb8b36d5222c0e36eefcccf6ae0bc1e22261f44506a96f0",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 33,
+            "IHDR": 33,
+            "tEXt": 33,
+            "IDAT": 144,
+            "IEND": 33,
+            "DEFI": 32,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 19,
+          "sha256": "700fd009870f1a26ff02a19bb8d8b06a938cf88906e062e4c651eff21cc8abd4",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 4,
+            "DEFI": 4,
+            "IHDR": 4,
+            "tEXt": 4,
+            "IDAT": 21,
+            "IEND": 4,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 21,
+          "sha256": "0d3dc8d25484342e0a7e790505e80748b6cade3ed0e9f7fd6c099323dcd3570b",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 3,
+            "IHDR": 3,
+            "tEXt": 3,
+            "IDAT": 217,
+            "IEND": 3,
+            "DEFI": 2,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 23,
+          "sha256": "8a75979637d911088e6fcd3d2851303828560938115a05a2c7ce25ed666fcea1",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "DEFI": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 42,
+            "IEND": 27,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 24,
+          "sha256": "ac971878087f0ca04c728a218066f0003aca80a5d37e2b87f0346a308e19deea",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 55,
+            "IHDR": 55,
+            "tEXt": 55,
+            "IDAT": 79,
+            "IEND": 55,
+            "DEFI": 54,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 27,
+          "sha256": "7d256c6e3769d3694b79604f9942caf1c537c17f96b2489e9841f153c2da7662",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 60,
+            "IHDR": 60,
+            "tEXt": 60,
+            "IDAT": 122,
+            "IEND": 60,
+            "DEFI": 59,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 29,
+          "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 27,
+            "IHDR": 27,
+            "tEXt": 27,
+            "IDAT": 62,
+            "IEND": 27,
+            "DEFI": 26,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 34,
+          "sha256": "6927f41953559881e0667bc3adf4bf1644f285e8d8e4899ea78e5055218e09d4",
+          "mhdr": [
+            540,
+            2000,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "DEFI": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 34,
+            "IEND": 7,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 35,
+          "sha256": "2c04ca9bb4b7f27bb7b31a3152ff63f48f3dd98251adc51aad73e45294f97964",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 7,
+            "IHDR": 7,
+            "tEXt": 7,
+            "IDAT": 32,
+            "IEND": 7,
+            "DEFI": 6,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 37,
+          "sha256": "e9c440d2e27c963b19f56b5608c4fc44b578d7185a6397b63b2fb7cc55373daa",
+          "mhdr": [
+            188,
+            106,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 88,
+            "IHDR": 88,
+            "tEXt": 88,
+            "IDAT": 488,
+            "IEND": 88,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        },
+        {
+          "source": 3,
+          "ordinal": 38,
+          "sha256": "d767e461050d945a945c1b86aafaeafbf0266e559dc5e2245742c4460e50a7da",
+          "mhdr": [
+            1280,
+            720,
+            0,
+            0,
+            0,
+            0,
+            11
+          ],
+          "chunks": {
+            "MHDR": 1,
+            "TERM": 1,
+            "FRAM": 45,
+            "IHDR": 45,
+            "tEXt": 45,
+            "IDAT": 63,
+            "IEND": 45,
+            "DEFI": 44,
+            "MEND": 1
+          },
+          "crc_and_raw_metadata_equal": true
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "games": 4,
+    "entries": 51201,
+    "mng": 84,
+    "chunks": {
+      "MHDR": 84,
+      "TERM": 84,
+      "FRAM": 3072,
+      "IHDR": 3072,
+      "tEXt": 3072,
+      "IDAT": 12582,
+      "IEND": 3072,
+      "DEFI": 2590,
+      "MEND": 84
+    },
+    "overlap_groups": 33
+  }
+}

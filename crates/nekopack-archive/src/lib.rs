@@ -3,6 +3,8 @@
 //! The source must remain unchanged while an Archive is in use.
 use std::fmt;
 use std::io::{self, Read, Seek, SeekFrom, Write};
+mod names;
+pub use names::name_hash;
 
 #[derive(Debug)]
 pub enum Error {

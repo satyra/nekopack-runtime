@@ -1,6 +1,16 @@
 use super::*;
 use std::io::Cursor;
 
+#[test]
+fn name_hash_reference_vectors_and_byte_semantics() {
+    assert_eq!(name_hash(0x9B75ADA7, b"script"), 0x0DDB021E);
+    assert_eq!(name_hash(0x9B75ADA7, b"start.bin"), 0xCB8FB53B);
+    assert_eq!(name_hash(7, b""), 7);
+    assert_eq!(name_hash(7, b"SCRIPT"), name_hash(7, b"script"));
+    assert_eq!(name_hash(7, b"image\\actor"), name_hash(7, b"image/actor"));
+    assert_ne!(name_hash(7, &[0x82, 0xA0]), name_hash(7, "あ".as_bytes()));
+}
+
 fn hex(s: &str) -> Vec<u8> {
     s.as_bytes()
         .as_chunks::<2>()

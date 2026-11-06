@@ -11,4 +11,17 @@ name = "nekopack-cli"
 version = "0.1.0"
 dependencies = [
  "nekopack-archive",
+ "nekopack-image",
+ "nekopack-resource",
+]
+
+[[package]]
+name = "nekopack-image"
+version = "0.1.0"
+
+[[package]]
+name = "nekopack-resource"
+version = "0.1.0"
+dependencies = [
+ "nekopack-archive",
 ]
