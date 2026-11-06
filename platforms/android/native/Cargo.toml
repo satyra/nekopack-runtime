@@ -1,0 +1,11 @@
+[package]
+name = "nekopack-android-probe"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+name = "nekopack_probe"
+crate-type = ["cdylib"]
+
+[dependencies]
+nekopack-script = { path = "../../../crates/nekopack-script", features = ["validation"] }

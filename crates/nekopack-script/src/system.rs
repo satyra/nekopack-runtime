@@ -38,7 +38,7 @@ struct Binding<'a> {
     panicked: bool,
     error: [u8; 256],
 }
-#[cfg(test)]
+#[cfg(any(test, feature = "validation"))]
 thread_local! { static INJECT_CALLBACK_PANIC: std::cell::Cell<bool> = const { std::cell::Cell::new(false) }; }
 unsafe extern "C" fn variable_callback(
     state: *mut c_void,
@@ -52,7 +52,7 @@ unsafe extern "C" fn variable_callback(
     // Pointers are borrowed only during synchronous eval; C++ validates argument types.
     let binding = unsafe { &mut *state.cast::<Binding<'_>>() };
     let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        #[cfg(test)]
+        #[cfg(any(test, feature = "validation"))]
         if INJECT_CALLBACK_PANIC.with(|flag| flag.replace(false)) {
             panic!("injected callback fault");
         }
@@ -206,6 +206,27 @@ impl SystemVm {
 impl Drop for SystemVm {
     fn drop(&mut self) {
         unsafe { neko_sq_close(self.raw) }
+    }
+}
+
+#[cfg(feature = "validation")]
+impl SystemVm {
+    pub fn validation_live_bytes() -> usize {
+        unsafe extern "C" {
+            fn neko_sq_live_bytes() -> usize;
+        }
+        unsafe { neko_sq_live_bytes() }
+    }
+    pub fn validation_fail_after(&mut self, count: usize) {
+        unsafe extern "C" {
+            fn neko_sq_fail_after(vm: *mut c_void, count: usize);
+        }
+        unsafe {
+            neko_sq_fail_after(self.raw, count);
+        }
+    }
+    pub fn validation_panic_next_callback(&mut self) {
+        INJECT_CALLBACK_PANIC.with(|flag| flag.set(true));
     }
 }
 

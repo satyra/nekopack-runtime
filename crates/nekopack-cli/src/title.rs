@@ -5,6 +5,7 @@ use nekopack_script::{
 };
 use std::{
     error::Error,
+    io::Write,
     path::{Path, PathBuf},
 };
 fn quote(bytes: &[u8]) -> Result<String, String> {
@@ -37,7 +38,29 @@ impl Store {
         if name.contains(['/', '\\', '\0']) || name == ".." {
             return Err("resource name is not a basename".into());
         }
-        let path = self.root.join(dir).join(format!("{name}{extension}"));
+        // Decoded fixtures retain on-disk spelling; scenario resource names use
+        // ASCII-insensitive lookup on every host, including case-sensitive Android.
+        let wanted = format!("{name}{extension}");
+        let mut matches = std::fs::read_dir(self.root.join(dir))
+            .map_err(|e| e.to_string())?
+            .filter_map(|entry| match entry {
+                Ok(entry)
+                    if entry
+                        .file_name()
+                        .to_str()
+                        .is_some_and(|n| n.eq_ignore_ascii_case(&wanted)) =>
+                {
+                    Some(Ok(entry.path()))
+                }
+                Ok(_) => None,
+                Err(error) => Some(Err(error.to_string())),
+            });
+        let path = matches
+            .next()
+            .ok_or_else(|| format!("missing fixture resource {wanted}"))??;
+        if matches.next().transpose()?.is_some() {
+            return Err(format!("case-ambiguous fixture resource {wanted}"));
+        }
         let data = std::fs::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         if data.len() > 64 * 1024 * 1024 {
             return Err("script exceeds 64 MiB budget".into());
@@ -45,6 +68,7 @@ impl Store {
         Ok(data)
     }
 }
+
 impl Scripts for Store {
     fn load(&mut self, name: &[u8]) -> Result<Source, String> {
         Ok(Source {
@@ -54,6 +78,11 @@ impl Scripts for Store {
     }
 }
 pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
+    run_to(root, choice, &mut std::io::stdout().lock())
+}
+
+/// Shared headless validation path; Android probe uses this exact adapter.
+pub fn run_to(root: &Path, choice: i32, output: &mut impl Write) -> Result<(), Box<dyn Error>> {
     let mut store = Store {
         root: root.to_owned(),
     };
@@ -77,24 +106,31 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
             Step::Finished => return Err("script ended before title menu".into()),
             Step::Request(request) => {
                 let (source, line) = machine.location().unwrap();
-                println!(
+                writeln!(
+                    output,
                     "location\t{}\t{}\t{}",
                     String::from_utf8_lossy(source),
                     line,
                     machine.depth()
-                );
+                )?;
                 if menus > 0 {
                     if !entered {
-                        println!("after-menu\t{}\t{}", String::from_utf8_lossy(source), line);
+                        writeln!(
+                            output,
+                            "after-menu\t{}\t{}",
+                            String::from_utf8_lossy(source),
+                            line
+                        )?;
                         entered = true;
                     }
                     if !matches!(&request,Request::Command{name,..} if name==b"route") {
-                        println!(
+                        writeln!(
+                            output,
                             "story-boundary\t{}\t{}\t{}",
                             String::from_utf8_lossy(source),
                             line,
                             machine.depth()
-                        );
+                        )?;
                         break;
                     }
                 }
@@ -110,17 +146,18 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
                             .map_err(|e| {
                                 format!("module {}: {e}", String::from_utf8_lossy(&name))
                             })?;
-                        println!("system\t{}", String::from_utf8_lossy(&name));
+                        writeln!(output, "system\t{}", String::from_utf8_lossy(&name))?;
                         modules += 1;
                         machine.complete(None)?;
                     }
                     Request::Command { name, args, rows } => {
-                        println!(
+                        writeln!(
+                            output,
                             "command\t{}\t{}\t{}",
                             String::from_utf8_lossy(&name),
                             args.len(),
                             rows.len()
-                        );
+                        )?;
                         if [b"img".as_slice(), b"bgm", b"wait", b"fade"].contains(&name.as_slice())
                         {
                             system.eval_with_variables(
@@ -140,7 +177,7 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
                                 let selected = system.result().parse::<i32>()?;
                                 machine.complete(Some(selected))?;
                                 menus += 1;
-                                println!("menu-result\t{selected}");
+                                writeln!(output, "menu-result\t{selected}")?;
                             } else {
                                 machine.complete(None)?;
                             }
@@ -161,14 +198,42 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
         return s+"\nframes\t"+Host.frames.len()+"\neffects\t"+Host.effects.len()
     "#,
     )?;
-    println!("registered\t{}", system.result());
-    println!(
+    writeln!(output, "registered\t{}", system.result())?;
+    writeln!(
+        output,
         "complete\t{modules}\t{}\t{}",
         machine.steps(),
         machine.variables.slots().len()
-    );
+    )?;
     for ((bank, index), value) in machine.variables.slots() {
-        println!("slot\t{}\t{index}\t{value}", char::from(*bank));
+        writeln!(output, "slot\t{}\t{index}\t{value}", char::from(*bank))?;
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn fixture_lookup_is_ascii_case_insensitive() {
+        let root = std::env::temp_dir().join(format!(
+            "neko-fixture-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(root.join("script")).unwrap();
+        std::fs::write(root.join("script/p01.txt"), b".done").unwrap();
+        let mut store = Store { root: root.clone() };
+        assert_eq!(store.load(b"P01").unwrap().bytes, b".done");
+        assert!(store.load(b"missing").is_err());
+        #[cfg(unix)]
+        {
+            std::fs::write(root.join("script/P01.txt"), b"other").unwrap();
+            assert!(store.load(b"P01").unwrap_err().contains("case-ambiguous"));
+        }
+        std::fs::remove_dir_all(root).unwrap();
+    }
 }

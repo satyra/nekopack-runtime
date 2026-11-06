@@ -70,6 +70,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "nekopack-android-probe"
+version = "0.1.0"
+dependencies = [
+ "nekopack-script",
+]
+
+[[package]]
 name = "nekopack-archive"
 version = "0.1.0"
 

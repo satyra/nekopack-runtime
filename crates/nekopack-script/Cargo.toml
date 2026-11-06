@@ -2,3 +2,7 @@
 name = "nekopack-script"
 version.workspace = true
 edition.workspace = true
+
+[features]
+# Fault injection for the Android validation host; never enabled by production hosts.
+validation = []

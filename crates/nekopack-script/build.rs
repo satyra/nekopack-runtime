@@ -44,7 +44,15 @@ fn main() {
                 .split_whitespace(),
         );
         command
-            .args(["-c", "-O1", "-std=c++11", "-fexceptions", "-fno-rtti", "-w"])
+            .args([
+                "-c",
+                "-O1",
+                "-std=c++11",
+                "-fexceptions",
+                "-fno-rtti",
+                "-fPIC",
+                "-w",
+            ])
             .arg("-I")
             .arg(root.join("include"))
             .arg(source)
