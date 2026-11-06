@@ -1,6 +1,7 @@
 //! Shared bounded title execution and raw DAT resources; no platform APIs.
 pub mod dat;
 mod scene;
+pub mod shake;
 pub mod story;
 pub mod transition;
 use nekopack_script::{

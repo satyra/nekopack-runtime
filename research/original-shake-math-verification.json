@@ -1,0 +1,105 @@
+{
+  "scope": "Static original PE math verification; not original playback or Android validation",
+  "games": [
+    {
+      "file": "Tiny_BoD.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "kernel_va": "0x441d54",
+      "kernel_size": 90,
+      "kernel_sha256": "25a7830c9a93470463d0757df9d2bbd826321f81d39e9d1ee015e0d1a2eedcab",
+      "x_constant_va": "0x441e14",
+      "x_mantissa_hex": "0x9249249249249000",
+      "y_constant_va": "0x441e20",
+      "x_frequency": 0.14285714285714285,
+      "y_frequency": 0.125,
+      "sine_va": "0x5061f8",
+      "truncation_va": "0x504990"
+    },
+    {
+      "file": "Tiny_BfY.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "kernel_va": "0x441d54",
+      "kernel_size": 90,
+      "kernel_sha256": "25a7830c9a93470463d0757df9d2bbd826321f81d39e9d1ee015e0d1a2eedcab",
+      "x_constant_va": "0x441e14",
+      "x_mantissa_hex": "0x9249249249249000",
+      "y_constant_va": "0x441e20",
+      "x_frequency": 0.14285714285714285,
+      "y_frequency": 0.125,
+      "sine_va": "0x5061f8",
+      "truncation_va": "0x504990"
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+      "kernel_va": "0x4957f4",
+      "kernel_size": 90,
+      "kernel_sha256": "19f8d8c9b1ee29edfc0e08bc2c82223ce2a74be08127ddabd708f1cc6b0e2804",
+      "x_constant_va": "0x4958ac",
+      "x_mantissa_hex": "0x9249249249249249",
+      "y_constant_va": "0x4958b8",
+      "x_frequency": 0.14285714285714285,
+      "y_frequency": 0.125,
+      "sine_va": "0x5f85ac",
+      "truncation_va": "0x5f6cd4"
+    },
+    {
+      "file": "Tiny_BaW.exe",
+      "sha256": "c570d44929360672475db25ec22704ae06ffc20cbabf4a46d0e60325fbe908d0",
+      "kernel_va": "0x441caa",
+      "kernel_size": 90,
+      "kernel_sha256": "23b725a006640dbe6ec027a4338384ee9165ce1f5deca0c2744457b9015cd71c",
+      "x_constant_va": "0x441d6c",
+      "x_mantissa_hex": "0x9249249249249000",
+      "y_constant_va": "0x441d78",
+      "x_frequency": 0.14285714285714285,
+      "y_frequency": 0.125,
+      "sine_va": "0x505330",
+      "truncation_va": "0x503ac8"
+    }
+  ],
+  "brave_defaults_and_exit": [
+    {
+      "file": "Tiny_BoS.exe",
+      "va": "0x491571",
+      "mnemonic": "mov",
+      "operands": "dword ptr [ebp - 0x1a0], 8"
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "va": "0x49157b",
+      "mnemonic": "mov",
+      "operands": "dword ptr [ebp - 0x1a4], 8"
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "va": "0x491585",
+      "mnemonic": "mov",
+      "operands": "dword ptr [ebp - 0x1a8], 0xfa"
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "va": "0x49206c",
+      "mnemonic": "mov",
+      "operands": "dword ptr [ebp - 0x1a8], 0x32"
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "va": "0x4957ec",
+      "mnemonic": "cmp",
+      "operands": "ebx, edi"
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "va": "0x4957ee",
+      "mnemonic": "jge",
+      "operands": "0x49587c"
+    }
+  ],
+  "limitations": [
+    "Snapshot composition and exposed edge pixels need further verification",
+    "Host frame schedule is not verified",
+    "x87 and Rust libm are not asserted bit-identical at every timestamp",
+    "Parameter parser separately inspected in BRAVE; not all four parsers verified"
+  ]
+}
