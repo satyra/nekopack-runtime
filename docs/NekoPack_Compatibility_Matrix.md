@@ -37,7 +37,9 @@
 - Rust /1 DAT 索引、块边界/长度/parity 校验、资源前缀读取、流式解密：已实现并验证（22 个包全索引/条目前缀，完整 payload 分层抽样）。
 - 名称字节哈希与已知名称候选查找：已实现并验证；未知名称自动还原未实现。
 - 包来源与显式最高 priority 覆盖分析：已实现并验证；第三部 32 对补丁内容变化，第一部 5 个同优先级未知候选保留歧义。原版动态挂载顺序未知。
-- MNG 元数据：已实现并验证，全部 84 个 MNG、27,712 个块；像素解码和动画播放未实现。新增证据见 [L3](../research/metadata-verification.json) 和 [增量说明](Phase1_Metadata_Increment.md)。
+- MNG 元数据：已实现并验证，全部 84 个 MNG、27,712 个块。证据见 [L3](../research/metadata-verification.json)。
+- MNG 内独立 PNG 像素：已实现并验证，3,072 张图像 RGBA 与 Pillow 一致、84 次 PNG 导出复核通过。范围见 [像素验收](Phase1_Pixel_Increment.md) 和 [L4](../research/pixel-verification.json)。全局调色板、filter 64 等未支持特性明确报错。
+- MNG 画布合成、控制块执行、动画播放：未实现。
 - 脚本：静态 token 分析已实施；完整语法与执行语义未知；VM 未实现。
 - 进入游戏、剧情播放、渲染、动画播放、音频播放、存读档、Android：未实现。
 - 真实原版行为对照、音频 codec 和循环点、汉化编码、同优先级挂载顺序：未知。

@@ -1,6 +1,8 @@
-//! Borrowed MNG metadata, not a pixel decoder or animation player.
+//! Borrowed MNG metadata and bounded embedded PNG pixel decoding; no animation player.
 //! Full raw chunks remain available, including unknown critical chunks.
 use std::fmt;
+mod pixels;
+pub use pixels::{decode_png, EmbeddedImage, PixelError, RgbaImage};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Error {

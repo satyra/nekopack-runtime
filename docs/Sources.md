@@ -24,3 +24,5 @@ Niflheim 克隆中未发现独立 LICENSE 文件，因此只作证据引用，�
 **L3（名称与元数据增量）**：[metadata-verification.json](../research/metadata-verification.json)，由 [verify_metadata.py](../research/verify_metadata.py) 生成。包含全部单字节与实际 seed 的名称哈希向量、逐包来源和内容指纹、33 组重叠关系、全部 84 个 MNG 的块统计与哈希。MNG 原始块以独立 Python struct/zlib 校验；补丁内容以旧解密器交叉验证。没有原版动态播放验证。
 
 本增量已将 G1 的 MIT 授权 ShiftMap 数值表移入 names.rs，许可保留在 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)；上文“不分发上游源码”指 Phase 0，不再适用于此表。MNG 元数据布局另查阅 [MNG 1.0 HTML 规范](https://www.libpng.org/pub/mng/spec/mng-1.0-20010209-pdg.html)。未知 critical 块只保留并标记，不宣称支持其运行语义。
+
+**L4（像素增量）**：[pixel-verification.json](../research/pixel-verification.json)，由 [verify_pixels.py](../research/verify_pixels.py) 生成。Rust 使用 png 0.18.1，Python 使用报告中记录的 Pillow 版本，分别解码相同原始 MNG 内 PNG；比较全部 RGBA 字节，并用 Pillow 复核 Rust 导出的 PNG。原始资源指纹来自 L3。记录每图像素哈希、尺寸、来源和前置控制块索引，没有游戏像素落盘。图像数不等于动画播放帧数。

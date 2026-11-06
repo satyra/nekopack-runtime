@@ -2,3 +2,6 @@
 name = "nekopack-image"
 version.workspace = true
 edition.workspace = true
+
+[dependencies]
+png = "0.18.1"

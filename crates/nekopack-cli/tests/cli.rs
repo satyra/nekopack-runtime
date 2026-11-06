@@ -171,3 +171,42 @@ fn standalone_mng_metadata_cli_and_crc_failure() {
         .contains("CRC mismatch"));
     std::fs::remove_file(path).unwrap();
 }
+
+#[test]
+fn standalone_png_raster_protocol_and_failure() {
+    let png: &[u8] = &[
+        137, 80, 78, 71, 13, 10, 26, 10, 0, 0, 0, 13, 73, 72, 68, 82, 0, 0, 0, 2, 0, 0, 0, 2, 8, 6,
+        0, 0, 0, 114, 182, 13, 36, 0, 0, 0, 26, 73, 68, 65, 84, 120, 156, 99, 248, 207, 45, 198,
+        192, 148, 242, 159, 145, 129, 61, 34, 185, 225, 255, 191, 191, 255, 1, 52, 37, 7, 194, 222,
+        179, 178, 202, 0, 0, 0, 0, 73, 69, 78, 68, 174, 66, 96, 130,
+    ];
+    let path = std::env::temp_dir().join(format!("neko-png-{}.png", std::process::id()));
+    std::fs::write(&path, png).unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_nekopack-cli"))
+        .arg("decode-png")
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(result.status.success());
+    assert_eq!(&result.stdout[..8], b"NRGBA001");
+    let fields: Vec<u32> = result.stdout[8..36]
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .map(|v| u32::from_le_bytes(*v))
+        .collect();
+    assert_eq!(fields, [0, 0, 2, 2, u32::MAX, u32::MAX, 16]);
+    assert_eq!(
+        &result.stdout[36..],
+        &[255, 11, 22, 0, 2, 100, 255, 1, 7, 88, 99, 128, 255, 254, 253, 255]
+    );
+    std::fs::write(&path, b"not PNG").unwrap();
+    let result = Command::new(env!("CARGO_BIN_EXE_nekopack-cli"))
+        .arg("decode-png")
+        .arg(&path)
+        .output()
+        .unwrap();
+    assert!(!result.status.success());
+    assert!(result.stdout.is_empty());
+    std::fs::remove_file(path).unwrap();
+}

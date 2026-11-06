@@ -6,6 +6,8 @@
 
 后续增量新增名称字节哈希、`nekopack-resource` 来源/覆盖分析和 `nekopack-image` MNG 元数据解析。四部曲全部 84 个 MNG、27,712 个块核对通过；第三部 32 对补丁资源均确认内容变化，第一部一组同优先级候选明确报告歧义。使用与验收见 [名称与 MNG 增量](docs/Phase1_Metadata_Increment.md)。
 
+最新增量加入 PNG/RGBA 像素解码与单图导出：四部曲 MNG 内全部 3,072 张图像、约 528 MB RGBA 与 Pillow 一致，84 次 PNG 导出复核通过。图像模块新增 `png` crate 依赖；尚未实现 MNG 画布合成或动画播放。见 [像素解码验收](docs/Phase1_Pixel_Increment.md)。
+
 ## 使用
 
 ```text
@@ -20,7 +22,9 @@ cargo build --release --workspace
 
 库使用 `Archive::open(Read + Seek, max_index_bytes)`；资源通过 `copy_entry(ordinal, Write)` 用 64 KiB 缓冲流式读取。CLI 的索引预算是 16 MiB，不是 DAT 格式的固有限制。打开后源文件必须保持不变。重复哈希保留原始序号，不做隐式覆盖。此版本显式面向 /1 布局，不实现 /2、/3 自动探测、未知名称自动还原或原版动态挂载模拟。
 
-新增命令：`hash-name SEED_HEX NAME_BYTES_HEX`、`lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE...`、`inspect-overlays FILE...`、`inspect-mng FILE`、`inspect-mng-archive FILE`。名称由调用方按实际编码提供 hex 字节，包的 source ID 对应参数列表顺序；最高 priority 并列时返回歧义。MNG 仅做元数据检查，未知块不会被当成已经支持的动画命令。
+新增命令：`hash-name SEED_HEX NAME_BYTES_HEX`、`lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE...`、`inspect-overlays FILE...`、`inspect-mng FILE`、`inspect-mng-archive FILE`。名称由调用方按实际编码提供 hex 字节，包的 source ID 对应参数列表顺序；最高 priority 并列时返回歧义。MNG inspect 命令只检查元数据，未知块不会被当成已经支持的动画命令。
+
+像素命令：`decode-png FILE`、`decode-mng-archive FILE` 输出二进制 RGBA 记录流；`export-mng-image FILE ENTRY IMAGE` 输出单图 PNG。详细协议及支持范围见像素验收文档。批量输出必须检查进程退出码；导出图不含原始 MNG 引擎元数据。
 
 本机 Rust 工具链位于用户目录，必要时在当前 PowerShell 会话设置：
 
@@ -44,6 +48,7 @@ $env:Path="$env:CARGO_HOME/bin;$env:Path"
 - [本地样本元数据](research/sample-audit.json)
 - [Phase 1 实施与验收](docs/Phase1_Archive_Increment.md)
 - [名称、覆盖关系与 MNG 验收](docs/Phase1_Metadata_Increment.md)
+- [PNG/RGBA 像素解码验收](docs/Phase1_Pixel_Increment.md)
 - [第三方算法来源声明](THIRD_PARTY_NOTICES.md)
 
 ## 调查复现
@@ -55,8 +60,9 @@ python research/audit_samples.py --games 'D:\codex\电脑移植安卓\游戏' --
 python -m unittest discover -s research -p 'test_*.py' -v
 python research/verify_rust_archive.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --cli target/release/nekopack-cli.exe --output research/rust-archive-verification.json
 python research/verify_metadata.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --cli target/release/nekopack-cli.exe --output research/metadata-verification.json
+python research/verify_pixels.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --cli target/release/nekopack-cli.exe --output research/pixel-verification.json
 ```
 
 脚本只读取游戏文件，输出文件哈希、计数和格式元数据，不导出剧情、图像、音频或引擎二进制。文件名中的汉化版本标记不等于已确认的原版版本号。完整资源解码、字符编码、脚本语义、启动流程、原版行为对照及真机测试仍待验证。
 
-下一步是 MNG 像素解码、控制块行为与原版显示对照，以及脚本入口和补丁加载顺序实验。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。
+下一步是 MNG 对象位置、画布合成、控制块行为与原版显示对照，以及脚本入口和补丁加载顺序实验。不提前搭建空壳 VM 或臆造指令；未来未知指令必须报告，不能静默跳过。

@@ -1,5 +1,5 @@
 use nekopack_archive::Archive;
-use nekopack_image::Mng;
+use nekopack_image::{decode_png, Mng, RgbaImage};
 use nekopack_resource::{resolve, Catalog, Resolution};
 use std::error::Error;
 use std::fs::File;
@@ -8,6 +8,59 @@ use std::path::Path;
 
 const INDEX_BUDGET: usize = 16 * 1024 * 1024;
 const MNG_BUDGET: u64 = 64 * 1024 * 1024;
+const PIXEL_BUDGET: usize = 64 * 1024 * 1024;
+
+fn raster(
+    out: &mut impl Write,
+    entry: usize,
+    image: usize,
+    fram: Option<usize>,
+    defi: Option<usize>,
+    rgba: &RgbaImage,
+) -> Result<(), Box<dyn Error>> {
+    let optional = |n: Option<usize>| -> Result<u32, std::num::TryFromIntError> {
+        n.map(u32::try_from)
+            .transpose()
+            .map(|v| v.unwrap_or(u32::MAX))
+    };
+    for n in [
+        u32::try_from(entry)?,
+        u32::try_from(image)?,
+        rgba.width(),
+        rgba.height(),
+        optional(fram)?,
+        optional(defi)?,
+        u32::try_from(rgba.pixels().len())?,
+    ] {
+        out.write_all(&n.to_le_bytes())?;
+    }
+    out.write_all(rgba.pixels())?;
+    Ok(())
+}
+fn resource(a: &mut Archive<BufReader<File>>, ordinal: usize) -> Result<Vec<u8>, Box<dyn Error>> {
+    let e = a
+        .entries()
+        .get(ordinal)
+        .ok_or("resource ordinal out of range")?;
+    if u64::from(e.length) > MNG_BUDGET {
+        return Err("image resource exceeds CLI 64 MiB budget".into());
+    }
+    let mut data = Vec::new();
+    a.copy_entry(ordinal, &mut data)?;
+    Ok(data)
+}
+fn bounded_file(path: &std::ffi::OsStr) -> Result<Vec<u8>, Box<dyn Error>> {
+    let file = File::open(path)?;
+    if file.metadata()?.len() > MNG_BUDGET {
+        return Err("image exceeds CLI 64 MiB budget".into());
+    }
+    let mut data = Vec::new();
+    std::io::Read::read_to_end(&mut std::io::Read::take(file, MNG_BUDGET + 1), &mut data)?;
+    if data.len() as u64 > MNG_BUDGET {
+        return Err("image exceeds CLI 64 MiB budget".into());
+    }
+    Ok(data)
+}
 
 fn unhex(s: &std::ffi::OsStr) -> Result<Vec<u8>, Box<dyn Error>> {
     let s = s.to_str().ok_or("hex must be ASCII")?;
@@ -76,12 +129,57 @@ fn run() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args_os().skip(1).collect();
     if args.len() < 2 {
         return Err(
-            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE"
+            "usage: nekopack-cli inspect-archive FILE | read-entry FILE ORDINAL | read-index FILE | hash-name SEED_HEX NAME_BYTES_HEX | lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE... | inspect-overlays FILE... | inspect-mng FILE | inspect-mng-archive FILE | decode-png FILE | decode-mng-archive FILE | export-mng-image FILE ENTRY IMAGE"
                 .into(),
         );
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
+        ("decode-png", 2) => {
+            let data = bounded_file(&args[1])?;
+            let image = decode_png(&data, PIXEL_BUDGET)?;
+            let mut out = BufWriter::new(io::stdout().lock());
+            out.write_all(b"NRGBA001")?;
+            raster(&mut out, 0, 0, None, None, &image)?;
+            out.flush()?;
+        }
+        ("export-mng-image", 4) => {
+            let entry = args[2].to_str().ok_or("invalid entry")?.parse::<usize>()?;
+            let image = args[3].to_str().ok_or("invalid image")?.parse::<usize>()?;
+            let mut a = open(Path::new(&args[1]))?;
+            let data = resource(&mut a, entry)?;
+            let mng = Mng::parse(&data, 100_000)?;
+            let rgba = mng.decode_image(image, PIXEL_BUDGET)?;
+            let mut out = BufWriter::new(io::stdout().lock());
+            rgba.write_png(&mut out)?;
+            out.flush()?;
+        }
+        ("decode-mng-archive", 2) => {
+            let mut a = open(Path::new(&args[1]))?;
+            let mut out = BufWriter::new(io::stdout().lock());
+            out.write_all(b"NRGBA001")?;
+            for entry in 0..a.entries().len() {
+                if a.read_prefix(entry, 8)? != b"\x8aMNG\r\n\x1a\n" {
+                    continue;
+                }
+                let data = resource(&mut a, entry)?;
+                let mng = Mng::parse(&data, 100_000)?;
+                for source in mng.embedded_images()? {
+                    let rgba = mng
+                        .decode_image(source.ordinal, PIXEL_BUDGET)
+                        .map_err(|e| format!("entry {entry} image {}: {e}", source.ordinal))?;
+                    raster(
+                        &mut out,
+                        entry,
+                        source.ordinal,
+                        source.preceding_fram,
+                        source.preceding_defi,
+                        &rgba,
+                    )?;
+                }
+            }
+            out.flush()?;
+        }
         ("hash-name", 3) => {
             let seed = u32::from_str_radix(args[1].to_str().ok_or("invalid seed")?, 16)?;
             println!(
