@@ -11,6 +11,7 @@
 #include <string.h>
 #include <assert.h>
 #include <new>
+#include <neko_limits.h>
 //squirrel stuff
 #include <squirrel.h>
 #include "sqobject.h"

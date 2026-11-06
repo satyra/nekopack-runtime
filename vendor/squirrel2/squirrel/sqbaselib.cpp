@@ -475,6 +475,7 @@ static SQInteger array_resize(HSQUIRRELVM v)
 
 bool _sort_compare(HSQUIRRELVM v,SQObjectPtr &a,SQObjectPtr &b,SQInteger func,SQInteger &ret)
 {
+	neko_work();
 	if(func < 0) {
 		if(!v->ObjCmp(a,b,ret)) return false;
 	}
@@ -627,6 +628,9 @@ static SQInteger string_find(HSQUIRRELVM v)
 	if(((top=sq_gettop(v))>1) && SQ_SUCCEEDED(sq_getstring(v,1,&str)) && SQ_SUCCEEDED(sq_getstring(v,2,&substr))){
 		if(top>2)sq_getinteger(v,3,&start_idx);
 		if((sq_getsize(v,1)>start_idx) && (start_idx>=0)){
+			size_t haystack=(size_t)(sq_getsize(v,1)-start_idx), needle=(size_t)sq_getsize(v,2);
+			if(needle && haystack>((size_t)-1)/needle) neko_fail(NekoWorkLimit);
+			neko_work(haystack*needle); // Admission for libc strstr worst-case comparisons.
 			ret=scstrstr(&str[start_idx],substr);
 			if(ret){
 				sq_pushinteger(v,(SQInteger)(ret-str));

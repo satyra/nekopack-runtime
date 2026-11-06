@@ -481,7 +481,7 @@ bool SQFunctionProto::Load(SQVM *v,SQUserPointer up,SQREADFUNC read,SQObjectPtr 
 
 #ifndef NO_GARBAGE_COLLECTOR
 
-#define START_MARK() 	if(!(_uiRef&MARK_FLAG)){ \
+#define START_MARK() NekoDepth mark_depth; if(!(_uiRef&MARK_FLAG)){ \
 		_uiRef|=MARK_FLAG;
 
 #define END_MARK() RemoveFromChain(&_sharedstate->_gc_chain, this); \

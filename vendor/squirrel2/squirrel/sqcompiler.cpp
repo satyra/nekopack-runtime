@@ -3,7 +3,7 @@
 */
 #include "sqpcheader.h"
 #include <stdarg.h>
-#include <setjmp.h>
+struct NekoSyntaxError {};
 #include "sqopcodes.h"
 #include "sqstring.h"
 #include "sqfuncproto.h"
@@ -62,13 +62,17 @@ public:
 	}
 	void Error(const SQChar *s, ...)
 	{
-		static SQChar temp[256];
 		va_list vl;
 		va_start(vl, s);
-		scvsprintf(temp, s, vl);
+#ifdef SQUNICODE
+		vswprintf(_errorbuffer, 256, s, vl);
+#else
+		vsnprintf(_errorbuffer, 256, s, vl);
+#endif
 		va_end(vl);
-		compilererror = temp;
-		longjmp(_errorjmp,1);
+		_errorbuffer[255] = 0;
+		compilererror = _errorbuffer;
+		throw NekoSyntaxError();
 	}
 	void Lex(){	_token = _lex.Lex();}
 	void PushExpState(){ _expstates.push_back(ExpState()); }
@@ -164,7 +168,7 @@ public:
 		_fs->AddParameter(_fs->CreateString(_SC("this")));
 		_fs->_sourcename = _sourcename;
 		SQInteger stacksize = _fs->GetStackSize();
-		if(setjmp(_errorjmp) == 0) {
+		try {
 			Lex();
 			while(_token > 0){
 				Statement();
@@ -179,7 +183,7 @@ public:
 			_fs->Dump(_funcproto(o));
 #endif
 		}
-		else {
+		catch(NekoSyntaxError) {
 			if(_raiseerror && _ss(_vm)->_compilererrorhandler) {
 				_ss(_vm)->_compilererrorhandler(_vm, compilererror, type(_sourcename) == OT_STRING?_stringval(_sourcename):_SC("unknown"),
 					_lex._currentline, _lex._currentcolumn);
@@ -198,6 +202,7 @@ public:
 	}
 	void Statement()
 	{
+		NekoDepth depth;
 		_fs->AddLineInfos(_lex._currentline, _lineinfo);
 		switch(_token){
 		case _SC(';'):	Lex();					break;
@@ -340,6 +345,7 @@ public:
 	}
 	ExpState Expression(bool funcarg = false)
 	{
+		NekoDepth depth;
 		PushExpState();
 		_exst._class_or_delete = false;
 		_exst._funcarg = funcarg;
@@ -595,6 +601,7 @@ public:
 	}
 	SQInteger Factor()
 	{
+		NekoDepth depth;
 		_exst._deref = DEREF_NO_DEREF;
 		switch(_token)
 		{
@@ -1346,7 +1353,8 @@ private:
 	SQInteger _debugop;
 	ExpStateVec _expstates;
 	SQChar *compilererror;
-	jmp_buf _errorjmp;
+	SQChar _errorbuffer[256];
+
 	SQVM *_vm;
 };
 

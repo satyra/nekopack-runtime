@@ -54,12 +54,105 @@ fn root_suspend_is_an_error_and_preserves_pending_request() {
 fn bytecode_budget_cannot_be_caught_or_reset_by_coroutines() {
     probe("budget");
 }
+#[test]
+fn native_memory_work_and_depth_limits_stop_execution() {
+    probe("native-limits");
+}
 
 #[test]
 #[ignore = "executed by bounded subprocess tests"]
 fn native_probe() {
     let name = std::env::var("NEKO_NATIVE_PROBE").expect("probe scenario");
     match name.as_str() {
+        "native-limits" => {
+            for source in [
+                "return array(1000000)",
+                "local a=[]; while(true)a.append(array(1000))",
+                "try {newthread(function(){return array(1000000)}).call()} catch(e) {}",
+            ] {
+                let mut vm = SystemVm::new();
+                vm.set_native_limits(vm.memory_used() + 128 * 1024, 4_000_000);
+                assert!(vm
+                    .eval("memory", source)
+                    .unwrap_err()
+                    .contains("memory budget"));
+                assert!(vm
+                    .eval("again", "return 1")
+                    .unwrap_err()
+                    .contains("VM stopped"));
+            }
+            let mut vm = SystemVm::new();
+            vm.set_native_limits(64 * 1024 * 1024, 10);
+            assert!(vm
+                .eval("compile", "local a=1; return a+2")
+                .unwrap_err()
+                .contains("work budget"));
+            let mut vm = SystemVm::new();
+            vm.eval(
+                "prepare",
+                "re <- regexp(\"(a|aa)*b\"); text <- \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"",
+            )
+            .unwrap();
+            vm.set_native_limits(64 * 1024 * 1024, 250);
+            assert!(vm
+                .eval("regex", "return re.search(text)")
+                .unwrap_err()
+                .contains("work budget"));
+            let mut vm = SystemVm::new();
+            let deep = format!("return {}1{}", "(".repeat(200), ")".repeat(200));
+            assert!(vm
+                .eval("deep", &deep)
+                .unwrap_err()
+                .contains("recursion limit"));
+            let mut vm = SystemVm::new();
+            assert!(vm.eval("gc-depth", "root <- []; local p=root; for(local i=0;i<300;i++){local n=[];p.append(n);p=n} collectgarbage()").unwrap_err().contains("recursion limit"));
+            let mut vm = SystemVm::new();
+            vm.eval(
+                "sort-setup",
+                "data <- array(2000); for(local i=0;i<2000;i++)data[i]=2000-i",
+            )
+            .unwrap();
+            vm.set_native_limits(64 * 1024 * 1024, 5000);
+            assert!(vm
+                .eval("sort", "data.sort()")
+                .unwrap_err()
+                .contains("work budget"));
+            let mut vm = SystemVm::new();
+            vm.eval(
+                "find-setup",
+                "hay <- \"a\"; for(local i=0;i<12;i++)hay+=hay; needle <- hay.slice(0,128)+\"b\"",
+            )
+            .unwrap();
+            vm.set_native_limits(64 * 1024 * 1024, 20000);
+            assert!(vm
+                .eval("find", "return hay.find(needle)")
+                .unwrap_err()
+                .contains("work budget"));
+            let mut vm = SystemVm::new();
+            assert!(vm
+                .eval("huge", &" ".repeat(1024 * 1024 + 1))
+                .unwrap_err()
+                .contains("source exceeds"));
+            vm.eval(
+                "normal",
+                "return regexp(\"a+\").match(\"aaa\") ? \"yes\" : \"no\"",
+            )
+            .unwrap();
+            assert_eq!(vm.result(), "yes");
+            assert!(vm.eval("syntax", "local = ;").is_err());
+            let missing = "x".repeat(1024);
+            let error = vm
+                .eval(
+                    "long-diagnostic",
+                    &format!("enum Values {{Present=1}} return Values.{missing}"),
+                )
+                .unwrap_err();
+            assert!(error.contains("invalid constant"));
+            assert!(error.len() < 512);
+            assert!(vm.eval("regex-syntax", "regexp(\"[\")").is_err());
+            vm.eval("after-syntax", "return \"ok\"").unwrap();
+            assert_eq!(vm.result(), "ok");
+        }
         "root-suspend" => {
             use nekopack_script::runtime::{Machine, Scripts, Source};
             struct Empty;

@@ -7,17 +7,10 @@
 #include <cstdint>
 #include <climits>
 
-// Squirrel uses no C++ standard containers. Avoid a target-specific C++ runtime.
-void* operator new(size_t n) { if (void* p = malloc(n)) return p; abort(); }
-void* operator new[](size_t n) { return operator new(n); }
-void operator delete(void* p) noexcept { free(p); }
-void operator delete[](void* p) noexcept { free(p); }
-void operator delete(void* p, size_t) noexcept { free(p); }
-void operator delete[](void* p, size_t) noexcept { free(p); }
-extern "C" void __cxa_pure_virtual() { abort(); }
+#include <neko_limits.h>
 
 typedef const char* (*VariableCallback)(void*,int,const char*,size_t,const char*,size_t,int32_t*);
-struct Context { HSQUIRRELVM vm; char error[2048]; char* result; void* variables; VariableCallback variable; bool failed; };
+struct Context { HSQUIRRELVM vm; char error[2048]; char* result; void* variables; VariableCallback variable; bool failed; NekoArena arena; };
 // The registry is shared by the root VM and its coroutines. Context outlives
 // sq_close (including every child VM); it never owns a persistent Rust borrow.
 static char context_key;
@@ -61,7 +54,9 @@ static void compiler_error(HSQUIRRELVM v, const SQChar* desc, const SQChar*, SQI
 }
 extern "C" {
 void* neko_sq_open() {
-    auto* c = new Context{}; c->vm=sq_open(1024);
+    auto* c = new(std::nothrow) Context{}; if(!c) return nullptr;
+    try {
+    NekoScope scope(&c->arena); c->vm=sq_open(1024);
     sq_pushregistrytable(c->vm);
     sq_pushuserpointer(c->vm,&context_key);sq_pushuserpointer(c->vm,c);
     sq_rawset(c->vm,-3);sq_pop(c->vm,1);
@@ -73,15 +68,21 @@ void* neko_sq_open() {
     for(int i=0;i<3;++i) {sq_pushstring(c->vm,names[i],-1);sq_newclosure(c->vm,functions[i],0);sq_newslot(c->vm,-3,SQFalse);}
     sq_pop(c->vm,1);
     return c;
+    } catch(...) { delete c; return nullptr; }
 }
-void neko_sq_close(Context* c) { sq_close(c->vm); free(c->result); delete c; }
+void neko_sq_close(Context* c) {
+    { NekoScope scope(&c->arena); c->arena.metered=false;
+      if(!c->arena.failed) { try { sq_close(c->vm); } catch(...) { c->arena.failed=true; } }
+    }
+    delete c;
+}
 const char* neko_sq_result(Context* c) { return c->result ? c->result : ""; }
 const char* neko_sq_error(Context* c) { return c->error; }
 void neko_sq_bind(Context* c, void* variables, VariableCallback callback) {c->variables=variables;c->variable=callback;}
-int neko_sq_eval(Context* c, const char* source, size_t length, const char* name, size_t budget) {
+static int eval_impl(Context* c, const char* source, size_t length, const char* name, size_t budget) {
     if(c->failed) {strcpy(c->error,"VM stopped after execution limit; create a new VM");return -1;}
     auto v=c->vm; auto top=sq_gettop(v); c->error[0]=0;
-    free(c->result); c->result=nullptr;
+    sq_free(c->result,0); c->result=nullptr;
     if(SQ_FAILED(sq_compilebuffer(v,source,static_cast<SQInteger>(length),name,SQTrue))) {
         sq_settop(v,top); return -1;
     }
@@ -100,12 +101,36 @@ int neko_sq_eval(Context* c, const char* source, size_t length, const char* name
         } else strcpy(c->error,"non-string Squirrel exception");
         sq_settop(v,top); return -1;
     }
-    free(c->result); c->result=nullptr;
+    sq_free(c->result,0); c->result=nullptr;
     if(sq_gettype(v,-1)==OT_STRING) {
         const SQChar* text; sq_getstring(v,-1,&text); size_t len=(size_t)sq_getsize(v,-1);
-        c->result=(char*)malloc(len+1); if(!c->result) abort();
+        c->result=(char*)sq_malloc(len+1);
         memcpy(c->result,text,len); c->result[len]=0;
     }
     sq_settop(v,top); return 0;
+}
+size_t neko_sq_memory(Context* c) { return c->arena.used; }
+size_t neko_sq_live_bytes() { return neko_live_bytes; }
+void neko_sq_fail_after(Context* c, size_t count) { c->arena.allocations_left=count; }
+int neko_sq_eval(Context* c, const char* source, size_t length, const char* name,
+                 size_t budget, size_t memory, size_t work) {
+    if(c->failed) {strcpy(c->error,"VM stopped after execution limit; create a new VM");return -1;}
+    NekoScope scope(&c->arena);
+    c->arena.limit=memory; c->arena.work=work; c->arena.metered=true;
+    try {
+        if(c->arena.used>memory) neko_fail(NekoMemoryLimit);
+        neko_work(length);
+        return eval_impl(c,source,length,name,budget);
+    } catch(NekoLimitError error) {
+        const char* message = error==NekoMemoryLimit ? "native memory budget exceeded" :
+            error==NekoWorkLimit ? "native work budget exceeded" :
+            error==NekoDepthLimit ? "native recursion limit exceeded" : "native allocation failed";
+        strcpy(c->error,message);
+    } catch(...) {
+        c->arena.failed=true;
+        strcpy(c->error,"unexpected native exception");
+    }
+    c->failed=true; c->result=nullptr;
+    return -1;
 }
 }

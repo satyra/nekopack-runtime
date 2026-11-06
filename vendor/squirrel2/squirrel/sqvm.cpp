@@ -1123,6 +1123,12 @@ void SQVM::CallDebugHook(SQInteger type,SQInteger forcedline)
 
 bool SQVM::CallNative(SQNativeClosure *nclosure,SQInteger nargs,SQInteger stackbase,SQObjectPtr &retval,bool &suspend)
 {
+	NekoDepth native_depth;
+	for(SQInteger i=0;i<nargs;++i) {
+		const SQObjectPtr &arg=_stack._vals[stackbase+i];
+		if(type(arg)==OT_STRING) neko_work((size_t)_string(arg)->_len);
+		if(type(arg)==OT_ARRAY) neko_work((size_t)_array(arg)->Size());
+	}
 	if (_nnativecalls + 1 > MAX_NATIVE_CALLS) { Raise_Error(_SC("Native stack overflow")); return false; }
 	SQInteger nparamscheck = nclosure->_nparamscheck;
 	if(((nparamscheck > 0) && (nparamscheck != nargs))

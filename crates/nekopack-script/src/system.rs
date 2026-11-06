@@ -1,4 +1,6 @@
 //! Actual Squirrel 2.2.5 module execution. Host symbols must be explicitly supplied.
+#[cfg(panic = "abort")]
+compile_error!("nekopack-script requires panic=unwind to contain Rust callback panics");
 use crate::runtime::Variables;
 use std::{
     ffi::{c_char, c_void, CStr, CString},
@@ -20,18 +22,24 @@ unsafe extern "C" {
     fn neko_sq_close(vm: *mut c_void);
     fn neko_sq_result(vm: *mut c_void) -> *const c_char;
     fn neko_sq_error(vm: *mut c_void) -> *const c_char;
+    fn neko_sq_memory(vm: *mut c_void) -> usize;
     fn neko_sq_eval(
         vm: *mut c_void,
         source: *const c_char,
         length: usize,
         name: *const c_char,
         budget: usize,
+        memory: usize,
+        work: usize,
     ) -> i32;
 }
 struct Binding<'a> {
     variables: &'a mut Variables,
-    error: CString,
+    panicked: bool,
+    error: [u8; 256],
 }
+#[cfg(test)]
+thread_local! { static INJECT_CALLBACK_PANIC: std::cell::Cell<bool> = const { std::cell::Cell::new(false) }; }
 unsafe extern "C" fn variable_callback(
     state: *mut c_void,
     operation: i32,
@@ -43,26 +51,44 @@ unsafe extern "C" fn variable_callback(
 ) -> *const c_char {
     // Pointers are borrowed only during synchronous eval; C++ validates argument types.
     let binding = unsafe { &mut *state.cast::<Binding<'_>>() };
-    let name = unsafe { std::slice::from_raw_parts(name, length) };
-    let result = match operation {
-        0 => binding.variables.get(name).map(|v| unsafe { *value = v }),
-        1 => binding.variables.set(name, unsafe { *value }),
-        2 => binding.variables.define_system(name, unsafe {
-            std::slice::from_raw_parts(alias, alias_length)
-        }),
-        _ => unreachable!("internal variable operation"),
-    };
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+        #[cfg(test)]
+        if INJECT_CALLBACK_PANIC.with(|flag| flag.replace(false)) {
+            panic!("injected callback fault");
+        }
+        let name = unsafe { std::slice::from_raw_parts(name, length) };
+        match operation {
+            0 => binding.variables.get(name).map(|v| unsafe { *value = v }),
+            1 => binding.variables.set(name, unsafe { *value }),
+            2 => binding.variables.define_system(name, unsafe {
+                std::slice::from_raw_parts(alias, alias_length)
+            }),
+            _ => Err("invalid variable operation".into()),
+        }
+    }));
     match result {
-        Ok(()) => std::ptr::null(),
-        Err(e) => {
-            binding.error = CString::new(e).expect("variable diagnostics escape raw names");
-            binding.error.as_ptr()
+        Ok(Ok(())) => std::ptr::null(),
+        Ok(Err(error)) => {
+            binding.error.fill(0);
+            for (out, byte) in binding.error.iter_mut().take(255).zip(error.bytes()) {
+                *out = if byte == 0 { b'?' } else { byte };
+            }
+            binding.error.as_ptr().cast()
+        }
+        Err(payload) => {
+            // Do not unwind through C++; a panic payload may itself panic on Drop.
+            std::mem::forget(payload);
+            binding.panicked = true;
+            c"Rust variable callback panicked".as_ptr()
         }
     }
 }
 pub struct SystemVm {
     raw: *mut c_void,
     instruction_budget: usize,
+    memory_budget: usize,
+    native_work_budget: usize,
+    callback_failed: bool,
     _thread: PhantomData<Rc<()>>,
 }
 impl Default for SystemVm {
@@ -72,9 +98,19 @@ impl Default for SystemVm {
 }
 impl SystemVm {
     pub fn new() -> Self {
+        Self::try_new().expect("Squirrel VM initialization failed")
+    }
+    pub fn try_new() -> Result<Self, String> {
+        let raw = unsafe { neko_sq_open() };
+        if raw.is_null() {
+            return Err("Squirrel VM allocation failed".into());
+        }
         let mut vm = Self {
-            raw: unsafe { neko_sq_open() },
+            raw,
             instruction_budget: 1_000_000,
+            memory_budget: 64 * 1024 * 1024,
+            native_work_budget: 4_000_000,
+            callback_failed: false,
             _thread: PhantomData,
         };
         vm.eval(
@@ -86,9 +122,8 @@ impl SystemVm {
             }
             var <- NekoVariableAccess()
         "#,
-        )
-        .expect("built-in variable proxy must compile");
-        vm
+        )?;
+        Ok(vm)
     }
     pub fn result(&self) -> String {
         unsafe { CStr::from_ptr(neko_sq_result(self.raw)) }
@@ -96,9 +131,16 @@ impl SystemVm {
             .into_owned()
     }
     /// Bytecodes per eval, shared by child VMs. Exhaustion stops this VM permanently.
-    /// Compilation, native-library work and allocation are not metered by this limit.
+    /// Compilation/native work and allocation use separate native limits.
     pub fn set_instruction_budget(&mut self, budget: usize) {
         self.instruction_budget = budget;
+    }
+    pub fn set_native_limits(&mut self, memory_bytes: usize, work_units: usize) {
+        self.memory_budget = memory_bytes;
+        self.native_work_budget = work_units;
+    }
+    pub fn memory_used(&self) -> usize {
+        unsafe { neko_sq_memory(self.raw) }
     }
     /// Bind the authoritative Rust state for this call only, including error paths.
     pub fn eval_with_variables(
@@ -109,7 +151,8 @@ impl SystemVm {
     ) -> Result<(), String> {
         let mut binding = Binding {
             variables,
-            error: CString::default(),
+            panicked: false,
+            error: [0; 256],
         };
         unsafe {
             neko_sq_bind(
@@ -122,9 +165,20 @@ impl SystemVm {
         unsafe {
             neko_sq_bind(self.raw, std::ptr::null_mut(), None);
         }
-        result
+        if binding.panicked {
+            self.callback_failed = true;
+            Err("Rust variable callback panicked; state may be partially changed".into())
+        } else {
+            result
+        }
     }
     pub fn eval(&mut self, name: &str, source: &str) -> Result<(), String> {
+        if self.callback_failed {
+            return Err("VM stopped after Rust callback panic".into());
+        }
+        if source.len() > 1024 * 1024 {
+            return Err("module source exceeds 1 MiB limit".into());
+        }
         let name = CString::new(name).map_err(|_| "module name contains NUL")?;
         if source.contains('\0') {
             return Err("module source contains NUL".into());
@@ -136,6 +190,8 @@ impl SystemVm {
                 source.len(),
                 name.as_ptr(),
                 self.instruction_budget,
+                self.memory_budget,
+                self.native_work_budget,
             )
         };
         if result == 0 {
@@ -156,14 +212,115 @@ impl Drop for SystemVm {
 #[cfg(test)]
 mod tests {
     use super::*;
+    unsafe extern "C" {
+        fn neko_sq_live_bytes() -> usize;
+        fn neko_sq_fail_after(vm: *mut c_void, count: usize);
+    }
+    #[test]
+    fn allocation_faults_are_terminal_and_all_arena_blocks_are_reclaimed() {
+        let baseline = unsafe { neko_sq_live_bytes() };
+        for source in [
+            "local a=[]; for(local i=0;i<80;i++)a.append({value=i}); return a.len().tostring()",
+            "local re=regexp(\"a+\"); return re.search(\"aaaa\")!=null ? \"ok\" : \"bad\"",
+            "class Node {value=null; constructor(v){value=v}} local a=Node(array(32)); return format(\"%s\",\"ok\")",
+        ] {
+        let mut failures = 0;
+        let mut reached_success = false;
+        for count in 0..2000 {
+            {
+                let mut vm = SystemVm::try_new().unwrap();
+                unsafe { neko_sq_fail_after(vm.raw, count) };
+                let result=vm.eval("allocation-fault", source);
+                if let Err(error) = result {
+                    assert!(error.contains("native allocation failed"), "{error}");
+                    assert!(vm
+                        .eval("again", "return 1")
+                        .unwrap_err()
+                        .contains("VM stopped"));
+                    failures += 1;
+                } else {
+                    reached_success = true;
+                }
+            }
+            assert_eq!(
+                unsafe { neko_sq_live_bytes() },
+                baseline,
+                "allocation point {count}"
+            );
+            if reached_success {
+                break;
+            }
+        }
+        assert!(failures > 0);
+        eprintln!("covered {failures} allocation failures before successful execution");
+        assert!(
+            reached_success,
+            "fault sweep must cover every allocation through successful execution"
+        );
+        }
+    }
+    #[test]
+    fn native_limits_are_per_vm_and_failure_cleanup_does_not_touch_another_vm() {
+        let baseline = unsafe { neko_sq_live_bytes() };
+        {
+            let mut healthy = SystemVm::new();
+            healthy.eval("state", "value <- 42").unwrap();
+            let memory = healthy.memory_used();
+            let mut limited = SystemVm::new();
+            limited.set_native_limits(0, 100);
+            assert!(limited
+                .eval("limit", "return 1")
+                .unwrap_err()
+                .contains("memory budget"));
+            drop(limited);
+            assert_eq!(healthy.memory_used(), memory);
+            healthy.eval("intact", "return value.tostring()").unwrap();
+            assert_eq!(healthy.result(), "42");
+        }
+        assert_eq!(unsafe { neko_sq_live_bytes() }, baseline);
+    }
+    #[test]
+    fn callback_panic_is_contained_even_if_script_catches_it() {
+        let mut vars = Variables::default();
+        vars.define_system(b"G1", b"score").unwrap();
+        let mut vm = SystemVm::new();
+        INJECT_CALLBACK_PANIC.with(|flag| flag.set(true));
+        let error = vm
+            .eval_with_variables(
+                "panic",
+                "try {NekoVariableGet(\"score\")} catch(e) {}",
+                &mut vars,
+            )
+            .unwrap_err();
+        assert!(error.contains("callback panicked"));
+        assert!(vm
+            .eval("again", "return 1")
+            .unwrap_err()
+            .contains("callback panic"));
+        assert_eq!(vars.get(b"score").unwrap(), 0);
+    }
+    #[test]
+    fn variable_errors_preserve_diagnostics_and_unbind() {
+        let mut vm = SystemVm::new();
+        let mut vars = Variables::default();
+        let error = vm
+            .eval_with_variables("bad", "def(\"G-1\",\"bad\")", &mut vars)
+            .unwrap_err();
+        assert!(error.contains("invalid system variable address"));
+        assert!(vm
+            .eval("unbound", "NekoVariableGet(\"bad\")")
+            .unwrap_err()
+            .contains("not bound"));
+        vm.eval_with_variables("good", "def(\"G1\",\"ok\"); var.ok=12", &mut vars)
+            .unwrap();
+        assert_eq!(vars.get(b"ok").unwrap(), 12);
+    }
     #[test]
     fn variables_are_live_aliases_across_both_languages() {
         let mut state = Variables::default();
         state.define_system(b"G200", b"first").unwrap();
         state.set(b"first", 7).unwrap();
-        state
-            .names
-            .insert(b"constant".to_vec(), crate::runtime::Value::Constant(9));
+        state.define_constant(b"constant", 9).unwrap();
         let mut vm = SystemVm::new();
         vm.eval("host", include_str!("../host/headless.nut"))
             .unwrap();

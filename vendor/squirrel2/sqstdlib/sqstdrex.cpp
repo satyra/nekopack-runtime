@@ -2,7 +2,8 @@
 #include <squirrel.h>
 #include <string.h>
 #include <ctype.h>
-#include <setjmp.h>
+#include <neko_limits.h>
+struct NekoRegexSyntaxError {};
 #include "sqstdstring.h"
 
 #ifdef _UINCODE
@@ -69,7 +70,7 @@ struct SQRex{
 	SQInteger _nsubexpr;
 	SQRexMatch *_matches;
 	SQInteger _currsubexp;
-	void *_jmpbuf;
+
 	const SQChar **_error;
 };
 
@@ -95,7 +96,7 @@ static SQInteger sqstd_rex_newnode(SQRex *exp, SQRexNodeType type)
 static void sqstd_rex_error(SQRex *exp,const SQChar *error)
 {
 	if(exp->_error) *exp->_error = error;
-	longjmp(*((jmp_buf*)exp->_jmpbuf),-1);
+	throw NekoRegexSyntaxError();
 }
 
 static void sqstd_rex_expect(SQRex *exp, SQInteger n){
@@ -173,7 +174,7 @@ static SQInteger sqstd_rex_class(SQRex *exp)
 		ret = sqstd_rex_newnode(exp,OP_NCLASS);
 		exp->_p++;
 	}else ret = sqstd_rex_newnode(exp,OP_CLASS);
-	
+
 	if(*exp->_p == ']') sqstd_rex_error(exp,_SC("empty class"));
 	chain = ret;
 	while(*exp->_p != ']' && exp->_p != exp->_eol) {
@@ -229,6 +230,7 @@ static SQInteger sqstd_rex_parsenumber(SQRex *exp)
 
 static SQInteger sqstd_rex_element(SQRex *exp)
 {
+	NekoDepth depth;
 	SQInteger ret = -1;
 	switch(*exp->_p)
 	{
@@ -313,6 +315,7 @@ static SQInteger sqstd_rex_element(SQRex *exp)
 
 static SQInteger sqstd_rex_list(SQRex *exp)
 {
+	NekoDepth depth;
 	SQInteger ret=-1,e;
 	if(*exp->_p == SQREX_SYMBOL_BEGINNING_OF_STRING) {
 		exp->_p++;
@@ -378,7 +381,8 @@ static SQBool sqstd_rex_matchclass(SQRex* exp,SQRexNode *node,SQChar c)
 
 static const SQChar *sqstd_rex_matchnode(SQRex* exp,SQRexNode *node,const SQChar *str,SQRexNode *next)
 {
-	
+	NekoDepth depth;
+
 	SQRexNodeType type = node->type;
 	switch(type) {
 	case OP_GREEDY: {
@@ -527,15 +531,15 @@ SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
 	SQRex *exp = (SQRex *)sq_malloc(sizeof(SQRex));
 	exp->_eol = exp->_bol = NULL;
 	exp->_p = pattern;
-	exp->_nallocated = (SQInteger)scstrlen(pattern) * sizeof(SQChar);
+	exp->_nallocated = (SQInteger)scstrlen(pattern) * sizeof(SQChar) + 1;
 	exp->_nodes = (SQRexNode *)sq_malloc(exp->_nallocated * sizeof(SQRexNode));
 	exp->_nsize = 0;
 	exp->_matches = 0;
 	exp->_nsubexpr = 0;
 	exp->_first = sqstd_rex_newnode(exp,OP_EXPR);
 	exp->_error = error;
-	exp->_jmpbuf = sq_malloc(sizeof(jmp_buf));
-	if(setjmp(*((jmp_buf*)exp->_jmpbuf)) == 0) {
+
+	try {
 		SQInteger res = sqstd_rex_list(exp);
 		exp->_nodes[exp->_first].left = res;
 		if(*exp->_p!='\0')
@@ -560,7 +564,7 @@ SQRex *sqstd_rex_compile(const SQChar *pattern,const SQChar **error)
 		exp->_matches = (SQRexMatch *) sq_malloc(exp->_nsubexpr * sizeof(SQRexMatch));
 		memset(exp->_matches,0,exp->_nsubexpr * sizeof(SQRexMatch));
 	}
-	else{
+	catch(NekoRegexSyntaxError){
 		sqstd_rex_free(exp);
 		return NULL;
 	}
@@ -571,7 +575,7 @@ void sqstd_rex_free(SQRex *exp)
 {
 	if(exp)	{
 		if(exp->_nodes) sq_free(exp->_nodes,exp->_nallocated * sizeof(SQRexNode));
-		if(exp->_jmpbuf) sq_free(exp->_jmpbuf,sizeof(jmp_buf));
+
 		if(exp->_matches) sq_free(exp->_matches,exp->_nsubexpr * sizeof(SQRexMatch));
 		sq_free(exp,sizeof(SQRex));
 	}
@@ -599,7 +603,8 @@ SQBool sqstd_rex_searchrange(SQRex* exp,const SQChar* text_begin,const SQChar* t
 	do {
 		cur = text_begin;
 		while(node != -1) {
-			exp->_currsubexp = 0;
+			neko_work();
+		exp->_currsubexp = 0;
 			cur = sqstd_rex_matchnode(exp,&exp->_nodes[node],cur,NULL);
 			if(!cur)
 				break;

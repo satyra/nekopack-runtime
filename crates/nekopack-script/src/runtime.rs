@@ -9,10 +9,23 @@ pub enum Value {
 }
 #[derive(Default, Debug)]
 pub struct Variables {
-    pub names: BTreeMap<Vec<u8>, Value>,
-    pub slots: BTreeMap<(u8, u32), i32>,
+    names: BTreeMap<Vec<u8>, Value>,
+    slots: BTreeMap<(u8, u32), i32>,
 }
 impl Variables {
+    pub fn slots(&self) -> &BTreeMap<(u8, u32), i32> {
+        &self.slots
+    }
+    pub fn define_constant(&mut self, name: &[u8], value: i32) -> Result<(), String> {
+        if name.is_empty() || name.contains(&0) {
+            return Err("invalid variable name".into());
+        }
+        if self.names.contains_key(name) {
+            return Err("duplicate name declaration".into());
+        }
+        self.names.insert(name.to_vec(), Value::Constant(value));
+        Ok(())
+    }
     /// Observed system `def(address, alias)` profile. GF aliases are read as @alias.
     /// Flag storage is separate from integer G slots; packed original layout is unverified.
     pub fn define_system(&mut self, address: &[u8], alias: &[u8]) -> Result<(), String> {
@@ -54,7 +67,11 @@ impl Variables {
     pub fn get(&self, name: &[u8]) -> Result<i32, String> {
         match self.names.get(name) {
             Some(Value::Constant(v)) => Ok(*v),
-            Some(Value::Slot(b, i)) => Ok(self.slots[&(*b, *i)]),
+            Some(Value::Slot(b, i)) => self
+                .slots
+                .get(&(*b, *i))
+                .copied()
+                .ok_or_else(|| "invalid variable slot state".into()),
             None => Err(format!("undefined variable {name:?}")),
         }
     }
@@ -184,12 +201,7 @@ impl Machine {
                 let ast = parse_bootstrap(&raw, 1).map_err(|e| e.to_string())?;
                 match &ast[0].statement {
                     Statement::Define { name, value } => {
-                        if self.variables.names.contains_key(*name) {
-                            return Err("duplicate name declaration".into());
-                        }
-                        self.variables
-                            .names
-                            .insert(name.to_vec(), Value::Constant(*value));
+                        self.variables.define_constant(name, *value)?;
                     }
                     Statement::Variables { bank, first, names } => {
                         let last = first
@@ -376,6 +388,22 @@ mod tests {
         vm.complete(None).unwrap();
         assert_eq!(vm.advance(&mut store).unwrap(), Step::Finished);
         assert_eq!(vm.variables.get(b"x").unwrap(), 7);
+    }
+    #[test]
+    fn variable_declarations_preserve_aliases_and_reject_partial_updates() {
+        let mut vars = Variables::default();
+        vars.define_system(b"G1", b"x").unwrap();
+        vars.set(b"x", 17).unwrap();
+        vars.define_system(b"G1", b"alias").unwrap();
+        assert!(vars.define_constant(b"x", 99).is_err());
+        assert!(vars.define_system(b"G2", b"x").is_err());
+        assert!(vars.define_system(b"G4294967296", b"overflow").is_err());
+        assert!(vars.define_system(b"G1", b"nul\0name").is_err());
+        assert_eq!(vars.get(b"alias").unwrap(), 17);
+        assert_eq!(vars.slots().len(), 1);
+        vars.define_constant(b"fixed", 9).unwrap();
+        assert!(vars.set(b"fixed", 10).is_err());
+        assert_eq!(vars.get(b"fixed").unwrap(), 9);
     }
     #[test]
     fn nested_maps_keep_outer_boundaries_and_call_context() {

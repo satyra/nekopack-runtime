@@ -58,7 +58,7 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
         root: root.to_owned(),
     };
     let mut machine = Machine::new(store.load(b"start")?, 10000, 64);
-    let mut system = SystemVm::new();
+    let mut system = SystemVm::try_new()?;
     let metadata = std::fs::read_to_string(root.join("assets.nut"))?;
     system.eval("assets", &metadata)?;
     system.eval("choice", &format!("InputChoice <- {choice}"))?;
@@ -165,9 +165,9 @@ pub fn run(root: &Path, choice: i32) -> Result<(), Box<dyn Error>> {
     println!(
         "complete\t{modules}\t{}\t{}",
         machine.steps(),
-        machine.variables.slots.len()
+        machine.variables.slots().len()
     );
-    for ((bank, index), value) in &machine.variables.slots {
+    for ((bank, index), value) in machine.variables.slots() {
         println!("slot\t{}\t{index}\t{value}", char::from(*bank));
     }
     Ok(())

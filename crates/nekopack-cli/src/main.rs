@@ -141,7 +141,7 @@ fn run() -> Result<(), Box<dyn Error>> {
             args[2].to_str().ok_or("invalid choice")?.parse()?,
         )?,
         ("eval-system", n) if n >= 2 => {
-            let mut vm = nekopack_script::system::SystemVm::new();
+            let mut vm = nekopack_script::system::SystemVm::try_new()?;
             for path in &args[1..] {
                 let data = bounded_file(path)?;
                 vm.eval(

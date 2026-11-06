@@ -44,14 +44,7 @@ fn main() {
                 .split_whitespace(),
         );
         command
-            .args([
-                "-c",
-                "-O1",
-                "-std=c++11",
-                "-fno-exceptions",
-                "-fno-rtti",
-                "-w",
-            ])
+            .args(["-c", "-O1", "-std=c++11", "-fexceptions", "-fno-rtti", "-w"])
             .arg("-I")
             .arg(root.join("include"))
             .arg(source)
@@ -73,6 +66,26 @@ fn main() {
     run(archive);
     println!("cargo:rustc-link-search=native={}", out.display());
     println!("cargo:rustc-link-lib=static=neko_squirrel");
+    let target = env::var("TARGET").unwrap();
+    if target.contains("windows-gnu") {
+        let output = Command::new(env::var_os("RUSTC").unwrap())
+            .args(["--print", "sysroot"])
+            .output()
+            .expect("rustc sysroot");
+        assert!(output.status.success());
+        let sysroot = String::from_utf8(output.stdout).unwrap();
+        println!(
+            "cargo:rustc-link-search=native={}/lib/rustlib/{target}/lib/self-contained",
+            sysroot.trim()
+        );
+    }
+    if target.contains("android") {
+        println!("cargo:rustc-link-lib=c++_shared");
+    } else if target.contains("apple") {
+        println!("cargo:rustc-link-lib=c++");
+    } else {
+        println!("cargo:rustc-link-lib=static=stdc++");
+    }
     println!("cargo:rerun-if-changed={}", root.display());
     println!("cargo:rerun-if-changed=src/squirrel_bridge.cpp");
     for key in ["CXX", "AR", "NEKO_CXX_ARGS", "NEKO_AR_ARGS"] {

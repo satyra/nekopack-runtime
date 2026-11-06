@@ -21,6 +21,7 @@
 SQLexer::SQLexer(){}
 SQLexer::~SQLexer()
 {
+	if(neko_failed()) return;
 	_keywords->Release();
 }
 
@@ -84,6 +85,7 @@ void SQLexer::Error(const SQChar *err)
 
 void SQLexer::Next()
 {
+	neko_work();
 	SQInteger t = _readf(_up);
 	if(t > MAX_CHAR) Error(_SC("Invalid character"));
 	if(t != 0) {

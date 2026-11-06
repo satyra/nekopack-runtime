@@ -78,13 +78,13 @@ struct SQObjectPtr;
 			unval.pRefCounted->_uiRef++; \
 		}  
 
-#define __Release(type,unval) if(ISREFCOUNTED(type) && ((--unval.pRefCounted->_uiRef)<=0))	\
+#define __Release(type,unval) if(!neko_failed() && ISREFCOUNTED(type) && ((--unval.pRefCounted->_uiRef)<=0))	\
 		{	\
 			unval.pRefCounted->Release();	\
 		}
 
 #define __ObjRelease(obj) { \
-	if((obj)) {	\
+	if((obj) && !neko_failed()) {	\
 		(obj)->_uiRef--; \
 		if((obj)->_uiRef == 0) \
 			(obj)->Release(); \

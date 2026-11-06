@@ -1,4 +1,5 @@
 // NekoPack portability: declare allocators before template definitions.
+#include <neko_limits.h>
 void *sq_vm_malloc(SQUnsignedInteger size);
 void *sq_vm_realloc(void *p,SQUnsignedInteger oldsize,SQUnsignedInteger size);
 void sq_vm_free(void *p,SQUnsignedInteger size);
@@ -36,6 +37,7 @@ public:
 	}
 	~sqvector()
 	{
+		if(neko_failed()) return; // Terminal VM arena owns all remaining blocks.
 		if(_allocated) {
 			for(SQUnsignedInteger i = 0; i < _size; i++)
 				_vals[i].~T();
@@ -98,6 +100,7 @@ private:
 	void _realloc(SQUnsignedInteger newsize)
 	{
 		newsize = (newsize > 0)?newsize:4;
+		if(newsize > ((size_t)-1)/sizeof(T)) neko_fail(NekoMemoryLimit);
 		_vals = (T*)SQ_REALLOC(_vals, _allocated * sizeof(T), newsize * sizeof(T));
 		_allocated = newsize;
 	}

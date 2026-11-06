@@ -1,0 +1,98 @@
+{
+  "scope": "headless title choice 1 through route and first story call; no device rendering",
+  "cli_sha256": "22ea958f8c17f7f1ba822f7a3f5683a1528a7ca47a7fffbf25e974eaf23d175c",
+  "games": [
+    {
+      "game": "BLESS",
+      "fixture_sha256": "5f103df9e9eb8f126f410672db5c4d97be1c31839a666fd53de1ab011e086e64",
+      "exit_code": 0,
+      "passed": true,
+      "boundary": [
+        [
+          "P01",
+          "3",
+          "2"
+        ]
+      ],
+      "complete": [
+        [
+          "10",
+          "130",
+          "15"
+        ]
+      ],
+      "state_sha256": "edd065bbb678194cf3cc4142e425707954557d4bb35c6e85097f312155e5c9e3",
+      "invalid_choice_rejected": true,
+      "stderr": ""
+    },
+    {
+      "game": "BIRTH",
+      "fixture_sha256": "79e3ce8ec121d7083321c39f08ef2dc6495fcc0faf6e48040e02191935300b26",
+      "exit_code": 0,
+      "passed": true,
+      "boundary": [
+        [
+          "012401",
+          "5",
+          "2"
+        ]
+      ],
+      "complete": [
+        [
+          "10",
+          "136",
+          "257"
+        ]
+      ],
+      "state_sha256": "85e1152bf59178453d66d112a0c5f7149d25aba87938ca4c32df0e28251d19b4",
+      "invalid_choice_rejected": true,
+      "stderr": ""
+    },
+    {
+      "game": "BRAVE",
+      "fixture_sha256": "38b5b405739f0c6c494bed5f673e2c55d1305eef34d0c7c92b2cd7494e7d32aa",
+      "exit_code": 0,
+      "passed": true,
+      "boundary": [
+        [
+          "010901",
+          "4",
+          "2"
+        ]
+      ],
+      "complete": [
+        [
+          "11",
+          "164",
+          "420"
+        ]
+      ],
+      "state_sha256": "be7dec5ca99330811096945b09c95515d02721f898e1ed3ccf0ae460cf4cc397",
+      "invalid_choice_rejected": true,
+      "stderr": ""
+    },
+    {
+      "game": "BLACK",
+      "fixture_sha256": "1f791a6e3b48424507799c8fdfb84844e218a2af65c51b9d39aaa2691e5fa1ce",
+      "exit_code": 0,
+      "passed": true,
+      "boundary": [
+        [
+          "P01",
+          "5",
+          "2"
+        ]
+      ],
+      "complete": [
+        [
+          "10",
+          "129",
+          "14"
+        ]
+      ],
+      "state_sha256": "16d75e23bc42b744018f590b1cf68e7360a29123df8871cf909960c2eee202d4",
+      "invalid_choice_rejected": true,
+      "stderr": ""
+    }
+  ]
+}

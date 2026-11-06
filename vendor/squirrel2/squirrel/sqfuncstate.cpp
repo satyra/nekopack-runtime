@@ -560,6 +560,7 @@ void SQFuncState::PopChildState()
 
 SQFuncState::~SQFuncState()
 {
+	if(neko_failed()) return;
 	while(_childstates.size() > 0)
 	{
 		PopChildState();
