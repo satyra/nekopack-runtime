@@ -1,0 +1,54 @@
+{
+  "scope": "independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim",
+  "actor_filter_profile": true,
+  "snapshots": [
+    {
+      "game": 0,
+      "source": "P01",
+      "line": 10,
+      "actor_slots": [],
+      "rgba_sha256": "4e84683337a46bda3d2e4d7c4305ab47abbf243a3f766245b54eecfc65f1f724",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 1
+    },
+    {
+      "game": 0,
+      "source": "P01",
+      "line": 61,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "521ea6af3ad0aa79c1bf5e394a96a096fe21f303ee3d05128108ccdcb57e9f22",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [
+        null
+      ],
+      "effect_token": 7
+    },
+    {
+      "game": 0,
+      "source": "012401",
+      "line": 9,
+      "actor_slots": [],
+      "rgba_sha256": "d3fb63525540ef5afc77226990ea14386172097432127e11e144ab0081568739",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 10
+    },
+    {
+      "game": 0,
+      "source": "012401",
+      "line": 132,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 19
+    }
+  ]
+}

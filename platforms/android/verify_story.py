@@ -40,16 +40,30 @@ def main():
  p.add_argument('--allow-page-limit',action='store_true')
  p.add_argument('--wipe-reference',type=Path)
  p.add_argument('--effect-captures',type=Path)
+ p.add_argument('--screen-captures',type=Path)
+ p.add_argument('--screen-pages',type=int,nargs='+',default=[])
  p.add_argument('--games',type=int,nargs='+',choices=range(4),default=list(range(4)))
  p.add_argument('--serial',required=True);a=p.parse_args()
+ if a.screen_pages and not a.screen_captures:p.error('--screen-pages requires --screen-captures')
  prefix=[str(a.adb),'-s',a.serial];package='org.nekopack.probe'
  def adb(*args):return subprocess.check_output(prefix+list(args),timeout=90)
  def private(run,name):return adb('exec-out','run-as',package,'cat',f'files/{run}/{name}')
+ skipped_movies=set()
+ def skip_movie(run):
+  if a.movie_completion!='secondary':return
+  names=adb('shell','run-as',package,'ls','-1',f'files/{run}').decode().splitlines()
+  for name in names:
+   if not re.fullmatch(r'movie-\d+-events.jsonl',name):continue
+   key=(run,name)
+   events=[json.loads(x) for x in private(run,name).splitlines()]
+   if key not in skipped_movies and not any(e['event']=='closed' for e in events) and any(e['event']=='progress' and e['head']>0 for e in events):
+    tap('返回剧情');skipped_movies.add(key)
  def wait_page(run,n):
-  deadline=time.monotonic()+45
+  deadline=time.monotonic()+(700 if a.movie_completion else 45)
   while time.monotonic()<deadline:
    raw=private(run,f'page-{n}.json')
    if raw.startswith(b'{'):return json.loads(raw)
+   skip_movie(run)
    error=private(run,'error.txt')
    if b'No such file' not in error:raise RuntimeError(error.decode())
    time.sleep(.3)
@@ -96,20 +110,28 @@ def main():
    source=next(f for f in (a.fixtures/str(i)/'script').iterdir() if f.name.lower()==(actual['source']+'.txt').lower())
    lines=source.read_bytes().split(b'\n');assert lines[actual['line']-1].strip().decode('utf8')==actual['text']
    pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=hashlib.sha256(png).hexdigest(),metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
+   if n in a.screen_pages:
+    import io
+    from PIL import Image
+    deadline=time.monotonic()+30
+    wanted=(actual['speaker']+'\n'+actual['text']).strip()
+    while time.monotonic()<deadline:
+     adb('shell','uiautomator','dump','/sdcard/neko-story-screen.xml')
+     xml=adb('shell','cat','/sdcard/neko-story-screen.xml')
+     if any(node.get('text','').strip()==wanted for node in ET.fromstring(xml).iter('node')):break
+     time.sleep(.2)
+    else:raise RuntimeError('story dialogue not visible on screen')
+    capture=adb('exec-out','screencap','-p');screen=Image.open(io.BytesIO(capture));assert screen.width>screen.height
+    folder=a.screen_captures/str(i);folder.mkdir(parents=True,exist_ok=True);(folder/f'{n}.png').write_bytes(capture)
+    pages[-1]['screen']=dict(dialogue_visible=True,landscape=True,sha256=hashlib.sha256(capture).hexdigest())
    if a.audio_reference:wait_audio(run)
    if a.audio_reference:last_page_audio={e['token'] for e in [json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()] if e['event']=='begin' and e['kind'] in ['bgm','se','voice']}
    if n<count or to_boundary:tap('继续')
   boundary=None
   if to_boundary:
    deadline=time.monotonic()+(700 if a.movie_completion else 45)
-   skipped=False
    while time.monotonic()<deadline:
-    if a.movie_completion=='secondary' and not skipped:
-     names=adb('shell','run-as',package,'ls','-1',f'files/{run}').decode().splitlines()
-     for name in names:
-      if re.fullmatch(r'movie-\d+-events.jsonl',name):
-       movie_events=[json.loads(x) for x in private(run,name).splitlines()]
-       if any(e['event']=='progress' and e['head']>0 for e in movie_events):tap('返回剧情');skipped=True;break
+    skip_movie(run)
     raw=private(run,'boundary.json')
     if raw.startswith(b'{'):break
     time.sleep(.3)
@@ -136,7 +158,7 @@ def main():
     movies.append(dict(token=token,metadata=meta,info=info,events=events))
    wanted=sum(e.startswith('movie ') for page in pages+([boundary['checkpoint']] if boundary else []) for e in page['effects'])
    assert len(movies)==wanted
-  tap('结束运行' if a.audio_reference else '结束预览（无音频／转场）')
+  tap('结束运行')
   deadline=time.monotonic()+15
   while time.monotonic()<deadline:
    if private(run,'closed.txt')==b'closed; VM live bytes=0':break
@@ -289,6 +311,6 @@ def main():
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
- result=dict(scope=('bounded continuous pages; unsupported boundaries or explicit reference page limit' if a.until_boundary else 'two text pages per game; host-driven audio and timed fade') if a.audio_reference else 'two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,games=games)
+ result=dict(scope=('bounded continuous pages; unsupported boundaries or explicit reference page limit' if a.until_boundary else 'two text pages per game; host-driven audio and timed fade') if a.audio_reference else 'host-driven story pages; audio resource and timing verification omitted',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,games=games)
  a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

@@ -423,7 +423,7 @@ impl<R: Read + Seek> StorySession<R> {
             .join(",");
         Ok(format!("{{\"source\":{},\"line\":{line},\"depth\":{},\"steps\":{},\"slots\":[{slots}],\"scene\":{},\"effects\":{},\"voice\":{},\"labels\":{}}}",quote(source)?,self.machine.depth(),self.machine.steps(),self.scene.metadata()?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,quote(self.voice.as_bytes())?,self.labels.metadata()?))
     }
-    fn render(&self) -> Result<Vec<u8>, Box<dyn Error>> {
+    fn render(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         self.scene.render()
     }
     fn actor(&mut self, slot: u8, args: &[Vec<u8>]) -> Result<(), Box<dyn Error>> {
@@ -453,11 +453,27 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(x) = p.x {
             anchor[0] = x;
         }
+        if p.name.is_none() && p.folder.is_none() {
+            let index = self
+                .scene
+                .actors
+                .iter()
+                .position(|l| l.slot == slot)
+                .unwrap();
+            self.scene.actors[index].anchor = anchor;
+            if p.order != crate::scene::Order::Keep {
+                let layer = self.scene.actors.remove(index);
+                self.scene.put(layer, p.order)?;
+            }
+            return Ok(());
+        }
         let bytes = self.store.read(&folder, &format!("{name}.png"))?;
         let image = decode_png(&bytes, PIXELS)?;
         let offset = png_position(&bytes)?;
         self.scene.put(
             Layer {
+                filter: crate::filter::Filter::None,
+                filter_pending: true,
                 slot,
                 name,
                 folder,
@@ -525,6 +541,9 @@ impl<R: Read + Seek> StorySession<R> {
                                 &mut self.store,
                             )?;
                             self.labels = StoryLabels::capture(&mut self.system)?;
+                        }
+                        "filter" => {
+                            self.scene.filter = crate::filter::Filter::parse(&args)?;
                         }
                         "img0" => {
                             if args.is_empty() {
@@ -885,6 +904,51 @@ mod tests {
     }
 
     #[test]
+    fn filter_changes_future_actor_loads_not_retained_pixels_or_background() {
+        use crate::filter::Filter;
+        let mut s = session(
+            ".filter 夜\nfirst\n.filter\n.img1 center keep\nsecond\n.filter unknown".as_bytes(),
+        );
+        s.scene
+            .set_background(
+                "bg".into(),
+                RgbaImage::filled(1, 1, [100, 110, 120, 255], 4).unwrap(),
+            )
+            .unwrap();
+        s.page().unwrap();
+        assert_eq!(s.scene.filter, Filter::Night);
+        assert_eq!(
+            decode_png(&s.render().unwrap(), 4).unwrap().pixels(),
+            [100, 110, 120, 255]
+        );
+        let mut image = RgbaImage::filled(1, 1, [100, 110, 120, 255], 4).unwrap();
+        s.scene.filter.apply(&mut image);
+        s.scene
+            .put(
+                Layer {
+                    filter: Filter::Night,
+                    filter_pending: false,
+                    slot: 1,
+                    name: "retained".into(),
+                    folder: "image/actor".into(),
+                    image,
+                    offset: [0, 0],
+                    anchor: [0, 0],
+                },
+                crate::scene::Order::Front,
+            )
+            .unwrap();
+        let before = s.render().unwrap();
+        assert_eq!(before, s.render().unwrap());
+        s.next(1).unwrap();
+        assert_eq!(s.scene.filter, Filter::None);
+        assert_eq!(s.scene.actors[0].filter, Filter::Night);
+        assert_eq!(before, s.render().unwrap());
+        assert!(s.next(2).is_err());
+        assert_eq!(s.scene.filter, Filter::None);
+    }
+
+    #[test]
     fn route_dispatch_retains_system_state_across_movie_and_text() {
         let mut s = session(".route before\n.movie op.mpg\n.route after ignored\n.title chapter\ntext\n.route\nnext\n.unknown".as_bytes());
         s.system
@@ -992,6 +1056,8 @@ mod tests {
         let mut s = session(b".img1\nfirst\n.img\nsecond");
         for slot in [1, 2] {
             s.scene.actors.push(Layer {
+                filter: crate::filter::Filter::None,
+                filter_pending: false,
                 slot,
                 name: "test".into(),
                 folder: "image/actor".into(),
@@ -1168,6 +1234,8 @@ mod tests {
         let mut s = session("one\n.img 白\ntwo\n".as_bytes());
         s.scene.dimensions = [4, 4];
         s.scene.actors.push(Layer {
+            filter: crate::filter::Filter::None,
+            filter_pending: false,
             slot: 1,
             name: "test".into(),
             folder: "image/actor".into(),

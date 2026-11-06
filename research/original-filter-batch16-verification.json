@@ -1,0 +1,162 @@
+{
+  "scope": "BLESS static original machine-code evidence, not original-game screenshot parity",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "facts": [
+    {
+      "va": "0x43f998",
+      "instruction": "mov edx, 0x54f019"
+    },
+    {
+      "va": "0x43f99f",
+      "instruction": "mov esi, 0x54f01a"
+    },
+    {
+      "va": "0x43f9c8",
+      "instruction": "mov ebx, 0x11"
+    },
+    {
+      "va": "0x43f9cd",
+      "instruction": "mov esi, 0x111600"
+    },
+    {
+      "va": "0x43fa3b",
+      "instruction": "xor eax, eax"
+    },
+    {
+      "va": "0x43fa3d",
+      "instruction": "mov esi, eax"
+    },
+    {
+      "va": "0x43fa3f",
+      "instruction": "mov ebx, eax"
+    },
+    {
+      "va": "0x43fb45",
+      "instruction": "mov dword ptr [eax], ebx"
+    },
+    {
+      "va": "0x43fb61",
+      "instruction": "mov ebx, esi"
+    },
+    {
+      "va": "0x43fbac",
+      "instruction": "mov dword ptr [eax], ebx"
+    },
+    {
+      "va": "0x43fcb1",
+      "instruction": "mov dword ptr [0x54e074], eax"
+    },
+    {
+      "va": "0x43fcff",
+      "instruction": "mov dword ptr [0x54e078], ecx"
+    },
+    {
+      "va": "0x435f4f",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x435f67",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x435f7f",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4363ab",
+      "instruction": "mov byte ptr [eax + 0x28], dl"
+    },
+    {
+      "va": "0x43774d",
+      "instruction": "mov edx, dword ptr [ebx + 0x34]"
+    },
+    {
+      "va": "0x437752",
+      "instruction": "jne 0x4379fb"
+    },
+    {
+      "va": "0x437987",
+      "instruction": "call 0x449c34"
+    },
+    {
+      "va": "0x43798f",
+      "instruction": "mov cl, byte ptr [ebx + 0x28]"
+    },
+    {
+      "va": "0x437994",
+      "instruction": "je 0x4379a0"
+    },
+    {
+      "va": "0x43799a",
+      "instruction": "call 0x435e18"
+    },
+    {
+      "va": "0x435e37",
+      "instruction": "mov eax, dword ptr [0x54e074]"
+    },
+    {
+      "va": "0x435e3c",
+      "instruction": "mov edx, dword ptr [0x54e078]"
+    },
+    {
+      "va": "0x435ea2",
+      "instruction": "paddusb mm1, mm0"
+    },
+    {
+      "va": "0x435eae",
+      "instruction": "psubusb mm1, mm7"
+    },
+    {
+      "va": "0x435eda",
+      "instruction": "paddusb mm1, mm0"
+    },
+    {
+      "va": "0x435edd",
+      "instruction": "psubusb mm1, mm7"
+    }
+  ],
+  "spans": [
+    {
+      "va": "0x43f8bc",
+      "length": 930,
+      "sha256": "d1b5fa076c57acce1deed364eb492bac125be1a68ffe927f5e18f7a91cfd079e"
+    },
+    {
+      "va": "0x43fc60",
+      "length": 199,
+      "sha256": "6d885970d34b43a4b4c04630eed6489861c8d5925039f7d3ce7f8ea76a57b380"
+    },
+    {
+      "va": "0x435e18",
+      "length": 218,
+      "sha256": "956940e47272d3b184677a56b3d4699a52fa7560bb7b1cea9499c13701c37dcf"
+    },
+    {
+      "va": "0x437714",
+      "length": 830,
+      "sha256": "d7c320ee856000e56538b9462e63352a30bd00af7ee2614109a111ad18b509c3"
+    }
+  ],
+  "semantics": {
+    "night_add_bgra": [
+      17,
+      0,
+      0,
+      0
+    ],
+    "night_subtract_bgra": [
+      0,
+      22,
+      17,
+      0
+    ],
+    "operation": "unsigned byte saturating add, then saturating subtract; alpha unchanged",
+    "target": "actor bitmap at resource load; visual/background layer flags are zero",
+    "lifetime": "global parameters affect subsequent actor loads; cached bitmap bypasses load/filter path",
+    "empty_argument": "zero add/subtract; no recoloring of retained bitmap"
+  },
+  "limits": [
+    "Only Night and empty reset implemented; sunset/dark/custom forms outside this batch",
+    "No dynamic original screen or full native save-state test"
+  ]
+}

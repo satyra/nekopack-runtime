@@ -73,6 +73,9 @@ impl RgbaImage {
     pub fn pixels(&self) -> &[u8] {
         &self.pixels
     }
+    pub fn pixels_mut(&mut self) -> &mut [u8] {
+        &mut self.pixels
+    }
     /// Export decoded pixels only, not a replacement for the original MNG metadata.
     pub fn write_png(&self, output: impl Write) -> Result<(), PixelError> {
         let mut encoder = png::Encoder::new(output, self.width, self.height);

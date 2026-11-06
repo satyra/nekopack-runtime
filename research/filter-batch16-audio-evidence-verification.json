@@ -1,0 +1,250 @@
+{
+  "scope": "Replay of captured device events; replacement is interruption evidence, not proof of audible progress; terminal spans retain their original bounded-observation limitation",
+  "verifier_sha256_lf_utf8": "2b727d5eb0283bb6fc72e853c415f8043ec048b3d7dc9f835ffeb27a7c762cde",
+  "reports": [
+    {
+      "report": "filter-batch16-arm64-natural-verification.json",
+      "report_sha256_lf_utf8": "31507a6b2095480930c038fea937d8387ef6a8ff0b3d23f4c55aa93d0b26cfc4",
+      "execution": "native ARM64",
+      "apk_sha256": "6cd0716f41caaf0bd8903542ef18c504de352834ab1cca9ba5deb31bd3efb82f",
+      "games": [
+        {
+          "index": 0,
+          "audio": [
+            {
+              "token": 2,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 3,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 4,
+              "terminal_span_only": false
+            },
+            {
+              "token": 4,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 5,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 6,
+              "kind": "se",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 9,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 11,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 12,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 13,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 14,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 15,
+              "terminal_span_only": false
+            },
+            {
+              "token": 15,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 16,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 17,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 18,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 20,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 21,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 22,
+              "terminal_span_only": false
+            },
+            {
+              "token": 22,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 23,
+              "terminal_span_only": false
+            },
+            {
+              "token": 23,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 24,
+              "terminal_span_only": false
+            },
+            {
+              "token": 24,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 25,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 26,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            }
+          ],
+          "stops": []
+        }
+      ]
+    },
+    {
+      "report": "filter-batch16-arm64-skip-verification.json",
+      "report_sha256_lf_utf8": "085ac0c2c9de21781b50f62f49d17720575d22d15b46b097c525bd3f9ea9ad41",
+      "execution": "native ARM64",
+      "apk_sha256": "6cd0716f41caaf0bd8903542ef18c504de352834ab1cca9ba5deb31bd3efb82f",
+      "games": [
+        {
+          "index": 0,
+          "audio": [
+            {
+              "token": 2,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 3,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 4,
+              "terminal_span_only": false
+            },
+            {
+              "token": 4,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 5,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 6,
+              "kind": "se",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 9,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            }
+          ],
+          "stops": []
+        }
+      ]
+    }
+  ]
+}

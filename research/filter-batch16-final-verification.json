@@ -1,0 +1,65 @@
+{
+  "scope": "BLESS only, native ARM64; natural movie plus 55 pages, skip plus first chapter dialogue; no original screen parity or other-game claim",
+  "apk_sha256": "6cd0716f41caaf0bd8903542ef18c504de352834ab1cca9ba5deb31bd3efb82f",
+  "independent_pixel_pages": 55,
+  "runs": [
+    {
+      "report": "filter-batch16-arm64-natural-verification.json",
+      "sha256_lf": "31507a6b2095480930c038fea937d8387ef6a8ff0b3d23f4c55aa93d0b26cfc4",
+      "completion": "natural",
+      "pages": 55,
+      "post_movie_pages": 43,
+      "first_chapter_dialogue": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11,
+        "text_sha256": "fbc5167f10fc37499a22ca74bf3f9dc18e3772c9968cc961a0e48e85839c81cb",
+        "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+        "metadata_sha256": "6dd66e682c2c6706746c8b7e9c5f0169c56f8516cf0ad4b5cd2448ccb5245b07",
+        "effects": [
+          "se SE_010",
+          "fade 3",
+          "movie op.mpg",
+          "bgm BGM016",
+          "fade 3"
+        ],
+        "screen": {
+          "dialogue_visible": true,
+          "landscape": true,
+          "sha256": "07f41609cc382a65fdcdd76fcc630224544baeb83e7a7e1dcbd1de3e1bbc66f4"
+        }
+      },
+      "movie_frames": 2497,
+      "vm_live_bytes": 0
+    },
+    {
+      "report": "filter-batch16-arm64-skip-verification.json",
+      "sha256_lf": "085ac0c2c9de21781b50f62f49d17720575d22d15b46b097c525bd3f9ea9ad41",
+      "completion": "skip",
+      "pages": 13,
+      "post_movie_pages": 1,
+      "first_chapter_dialogue": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11,
+        "text_sha256": "fbc5167f10fc37499a22ca74bf3f9dc18e3772c9968cc961a0e48e85839c81cb",
+        "png_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+        "metadata_sha256": "6dd66e682c2c6706746c8b7e9c5f0169c56f8516cf0ad4b5cd2448ccb5245b07",
+        "effects": [
+          "se SE_010",
+          "fade 3",
+          "movie op.mpg",
+          "bgm BGM016",
+          "fade 3"
+        ],
+        "screen": {
+          "dialogue_visible": true,
+          "landscape": true,
+          "sha256": "5db5ef41ae72ccbe6d034ca1778a4313909950125cb9453a5e69521be1ea0e41"
+        }
+      },
+      "movie_frames": 181,
+      "vm_live_bytes": 0
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "independent reference DAT decoder hashes for audio in validated story pages and boundary checkpoint",
+  "games": [
+    {
+      "bgm/bgm016": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+      "se/se_010": "d3d451d7c074c0122517e4c171a83d30957396a8aa833f2c4318f7c90845a2e9",
+      "voice/ka_p01_0000": "3a238ecc0d82763aaf33aaaa70151938f058dabfb377a052c8c114d78ce0dfdb",
+      "voice/ka_p01_0001": "632794383e7e248b9589f60a1f2bf64c411b980fd250b80f4d1acd950ec9792b",
+      "voice/ka_p01_0002": "7640321c3177a1e7cb204024e30ee02686dcb534b28bde74b36f6fed5a8c5eb1",
+      "voice/ka_p01_0003": "87aa70580ff46a0d79585b5c0607897ab5c51a8c993bfc503429e6857e2c7ee4"
+    },
+    {},
+    {},
+    {}
+  ]
+}

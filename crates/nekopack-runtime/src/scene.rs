@@ -16,6 +16,8 @@ mod tests {
     use nekopack_image::decode_png;
     fn layer(slot: u8, color: [u8; 4]) -> Layer {
         Layer {
+            filter_pending: false,
+            filter: crate::filter::Filter::None,
             slot,
             name: format!("actor{slot}"),
             folder: "image/actor".into(),
@@ -24,7 +26,7 @@ mod tests {
             anchor: [0, 0],
         }
     }
-    fn pixel(s: &Scene) -> Vec<u8> {
+    fn pixel(s: &mut Scene) -> Vec<u8> {
         decode_png(&s.render().unwrap(), 4)
             .unwrap()
             .pixels()
@@ -36,16 +38,36 @@ mod tests {
         s.put(layer(1, [255, 0, 0, 255]), Order::Front).unwrap();
         s.put(layer(2, [0, 255, 0, 255]), Order::Front).unwrap();
         s.put(layer(3, [0, 0, 255, 255]), Order::Back).unwrap();
-        assert_eq!(pixel(&s), [0, 255, 0, 255]);
+        assert_eq!(pixel(&mut s), [0, 255, 0, 255]);
         s.put(layer(1, [255, 255, 0, 255]), Order::Keep).unwrap();
-        assert_eq!(pixel(&s), [0, 255, 0, 255]);
+        assert_eq!(pixel(&mut s), [0, 255, 0, 255]);
         s.reorder(&[b"2".to_vec(), b"1".to_vec()]).unwrap();
         assert_eq!(s.actors.len(), 2);
-        assert_eq!(pixel(&s), [255, 255, 0, 255]);
+        assert_eq!(pixel(&mut s), [255, 255, 0, 255]);
         assert!(s.reorder(&[b"1".to_vec(), b"1".to_vec()]).is_err());
-        assert_eq!(pixel(&s), [255, 255, 0, 255]);
+        assert_eq!(pixel(&mut s), [255, 255, 0, 255]);
         s.reorder(&[]).unwrap();
-        assert_eq!(pixel(&s), [0, 0, 0, 255]);
+        assert_eq!(pixel(&mut s), [0, 0, 0, 255]);
+    }
+    #[test]
+    fn filter_is_sampled_on_first_draw_and_cached_until_resource_replacement() {
+        use crate::filter::Filter;
+        let mut s = Scene::new([1, 1]);
+        let mut actor = layer(1, [100, 110, 120, 128]);
+        actor.filter_pending = true;
+        s.put(actor, Order::Front).unwrap();
+        s.filter = Filter::Night;
+        s.render().unwrap();
+        assert_eq!(s.actors[0].image.pixels(), [83, 88, 137, 128]);
+        assert!(!s.actors[0].filter_pending);
+        s.filter = Filter::None;
+        s.render().unwrap();
+        assert_eq!(s.actors[0].image.pixels(), [83, 88, 137, 128]);
+        let mut replacement = layer(1, [100, 110, 120, 128]);
+        replacement.filter_pending = true;
+        s.put(replacement, Order::Keep).unwrap();
+        s.render().unwrap();
+        assert_eq!(s.actors[0].image.pixels(), [100, 110, 120, 128]);
     }
     #[test]
     fn macros_and_position_are_explicit_and_motion_is_rejected() {
@@ -158,6 +180,8 @@ pub(crate) fn plan(
     Ok(p)
 }
 pub(crate) struct Layer {
+    pub filter_pending: bool,
+    pub filter: crate::filter::Filter,
     pub slot: u8,
     pub name: String,
     pub folder: String,
@@ -166,6 +190,7 @@ pub(crate) struct Layer {
     pub anchor: [i32; 2],
 }
 pub(crate) struct Scene {
+    pub filter: crate::filter::Filter,
     pub dimensions: [u32; 2],
     pub background: Option<RgbaImage>,
     pub background_name: Option<String>,
@@ -177,6 +202,7 @@ pub(crate) struct Scene {
 impl Scene {
     pub fn new(dimensions: [u32; 2]) -> Self {
         Self {
+            filter: crate::filter::Filter::None,
             dimensions,
             background: None,
             background_name: None,
@@ -265,7 +291,7 @@ impl Scene {
             .sort_by_key(|l| slots.iter().position(|s| *s == l.slot).unwrap());
         Ok(())
     }
-    pub fn render(&self) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    pub fn render(&mut self) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
         let mut canvas = RgbaImage::filled(
             self.dimensions[0],
             self.dimensions[1],
@@ -278,7 +304,12 @@ impl Scene {
             if let Some(bg) = &self.background {
                 canvas.draw(bg, [0, 0]);
             }
-            for l in &self.actors {
+            for l in &mut self.actors {
+                if l.filter_pending {
+                    self.filter.apply(&mut l.image);
+                    l.filter = self.filter;
+                    l.filter_pending = false;
+                }
                 let x = l.anchor[0]
                     .checked_add(l.offset[0])
                     .ok_or("actor x overflow")?;
@@ -298,12 +329,12 @@ impl Scene {
         Ok(png)
     }
     pub fn metadata(&self) -> Result<String, String> {
-        let actors=self.actors.iter().map(|l|Ok(format!("{{\"slot\":{},\"name\":{},\"folder\":{},\"anchor\":[{},{}],\"offset\":[{},{}]}}",l.slot,quote(l.name.as_bytes())?,quote(l.folder.as_bytes())?,l.anchor[0],l.anchor[1],l.offset[0],l.offset[1]))).collect::<Result<Vec<_>,String>>()?;
+        let actors=self.actors.iter().map(|l|Ok(format!("{{\"slot\":{},\"name\":{},\"folder\":{},\"anchor\":[{},{}],\"offset\":[{},{}],\"filter\":{},\"filter_pending\":{}}}",l.slot,quote(l.name.as_bytes())?,quote(l.folder.as_bytes())?,l.anchor[0],l.anchor[1],l.offset[0],l.offset[1],l.filter.metadata(),l.filter_pending))).collect::<Result<Vec<_>,String>>()?;
         let color = |c: Option<[u8; 4]>| {
             c.map_or("null".to_owned(), |c| {
                 format!("[{},{},{},{}]", c[0], c[1], c[2], c[3])
             })
         };
-        Ok(format!("{{\"size\":[{},{}],\"background\":{},\"background_color\":{},\"overlay\":{},\"visual\":{},\"actors\":[{}]}}",self.dimensions[0],self.dimensions[1],self.background_name.as_ref().map(|s|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),color(self.background_color),color(self.overlay),self.visual.as_ref().map(|(s,_)|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),actors.join(",")))
+        Ok(format!("{{\"size\":[{},{}],\"background\":{},\"background_color\":{},\"overlay\":{},\"visual\":{},\"actors\":[{}],\"filter\":{}}}",self.dimensions[0],self.dimensions[1],self.background_name.as_ref().map(|s|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),color(self.background_color),color(self.overlay),self.visual.as_ref().map(|(s,_)|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),actors.join(","),self.filter.metadata()))
     }
 }
