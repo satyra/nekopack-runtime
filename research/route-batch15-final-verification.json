@@ -1,0 +1,232 @@
+{
+  "scope": "BLESS only, native ARM64; natural and secondary movie completion reach identical route/title and 012401:6 filter boundary; no full save/load or other-game claim",
+  "apk_sha256": "6256831c28f40c07a70d0a5e7a69a5e3fcd072c65efd9f2f82124edb3ac09d29",
+  "runs": [
+    {
+      "report": "route-batch15-arm64-natural-verification.json",
+      "report_sha256_lf": "fff6639fd9ce8afc7031a852ab002d20aadb9dacc889d40ed832eb92eb35fb31",
+      "completion": "natural",
+      "frames": 2497,
+      "vm_live_bytes": 0,
+      "checkpoint": {
+        "source": "012401",
+        "line": 6,
+        "depth": 2,
+        "steps": 205,
+        "slots": [
+          [
+            71,
+            800,
+            1
+          ],
+          [
+            71,
+            801,
+            0
+          ],
+          [
+            71,
+            802,
+            0
+          ],
+          [
+            71,
+            803,
+            0
+          ],
+          [
+            71,
+            804,
+            0
+          ],
+          [
+            71,
+            900,
+            0
+          ],
+          [
+            71,
+            901,
+            0
+          ],
+          [
+            71,
+            902,
+            0
+          ],
+          [
+            71,
+            903,
+            0
+          ],
+          [
+            71,
+            904,
+            0
+          ],
+          [
+            76,
+            100,
+            0
+          ],
+          [
+            76,
+            900,
+            0
+          ],
+          [
+            76,
+            901,
+            0
+          ],
+          [
+            76,
+            902,
+            0
+          ],
+          [
+            76,
+            903,
+            0
+          ]
+        ],
+        "scene": {
+          "size": [
+            1280,
+            720
+          ],
+          "background": null,
+          "background_color": null,
+          "overlay": null,
+          "visual": null,
+          "actors": []
+        },
+        "effects": [
+          "se SE_010",
+          "fade 3",
+          "movie op.mpg"
+        ],
+        "voice": "",
+        "labels": {
+          "title": "２４日目：水の曜日",
+          "route": "第１章",
+          "caption": "Tiny Dungeon ～BLESS of DRAGON～ 第１章 ２４日目：水の曜日",
+          "in_route": true
+        }
+      }
+    },
+    {
+      "report": "route-batch15-arm64-skip-verification.json",
+      "report_sha256_lf": "e5aa582838a76637a7add8f91c978d588081f7bbdeab99d40ec700dd5520cba6",
+      "completion": "skip",
+      "frames": 189,
+      "vm_live_bytes": 0,
+      "checkpoint": {
+        "source": "012401",
+        "line": 6,
+        "depth": 2,
+        "steps": 205,
+        "slots": [
+          [
+            71,
+            800,
+            1
+          ],
+          [
+            71,
+            801,
+            0
+          ],
+          [
+            71,
+            802,
+            0
+          ],
+          [
+            71,
+            803,
+            0
+          ],
+          [
+            71,
+            804,
+            0
+          ],
+          [
+            71,
+            900,
+            0
+          ],
+          [
+            71,
+            901,
+            0
+          ],
+          [
+            71,
+            902,
+            0
+          ],
+          [
+            71,
+            903,
+            0
+          ],
+          [
+            71,
+            904,
+            0
+          ],
+          [
+            76,
+            100,
+            0
+          ],
+          [
+            76,
+            900,
+            0
+          ],
+          [
+            76,
+            901,
+            0
+          ],
+          [
+            76,
+            902,
+            0
+          ],
+          [
+            76,
+            903,
+            0
+          ]
+        ],
+        "scene": {
+          "size": [
+            1280,
+            720
+          ],
+          "background": null,
+          "background_color": null,
+          "overlay": null,
+          "visual": null,
+          "actors": []
+        },
+        "effects": [
+          "se SE_010",
+          "fade 3",
+          "movie op.mpg"
+        ],
+        "voice": "",
+        "labels": {
+          "title": "２４日目：水の曜日",
+          "route": "第１章",
+          "caption": "Tiny Dungeon ～BLESS of DRAGON～ 第１章 ２４日目：水の曜日",
+          "in_route": true
+        }
+      }
+    }
+  ]
+}

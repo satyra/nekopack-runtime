@@ -1,0 +1,268 @@
+{
+  "scope": "BLESS only; original system scripts executed with recording file/renderer/native-save test doubles; metadata semantics, not original save bytes or complete runtime save/load",
+  "sources": [
+    {
+      "name": "system/system.nut",
+      "raw_sha256": "c7ae50d65fe9d27843add27fa21687066283ead2a275f6b394f9fb89af71aa74",
+      "utf8_fixture_sha256": "4691bef4a9692d5ea8658c6da6a778f8acf02ddacbb853de693c6da30b1a1cce"
+    },
+    {
+      "name": "system/saveload.nut",
+      "raw_sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d",
+      "utf8_fixture_sha256": "43aebe919f6a8497470e3801ba0190ea4deba96f08257ac85dcf38bda5cfd4f4"
+    },
+    {
+      "name": "script/story1.txt",
+      "raw_sha256": "da48e283b9d2bd7e3ecd3f8da772d6ca564ab453b7ac8801bcad37081460748e",
+      "utf8_fixture_sha256": "68da4d490a6cdb5d3696f38f05891cb368d14222fa513ea00a6fc3b883cc302e"
+    },
+    {
+      "name": "script/012401.txt",
+      "raw_sha256": "0297c4db65f436a60f6ed97f364b48f0fd67f06aae4747c1a6f810e685da6de9",
+      "utf8_fixture_sha256": "f193dc1b9d3b3412837dc194c5173f7886500e98218eb9e548852e2d6690da3e"
+    }
+  ],
+  "semantics_result": "PASS original route, title, reset, save gating, metadata order, load restore and unwind",
+  "cli_sha256": "e2dc1fcf3299080b1132a3e9146ff704c9cbf65b6b02d117cdab332a9a1d3240",
+  "semantics_executable_sha256": "9467ca64e6931237ba9d59c7378a638df5f622fce693e2ec5a5ffa5c991dea7a",
+  "pages": [
+    {
+      "sequence": 1,
+      "source": "P01",
+      "line": 15,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 2,
+      "source": "P01",
+      "line": 18,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 3,
+      "source": "P01",
+      "line": 21,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 4,
+      "source": "P01",
+      "line": 26,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 5,
+      "source": "P01",
+      "line": 32,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 6,
+      "source": "P01",
+      "line": 36,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 7,
+      "source": "P01",
+      "line": 39,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 8,
+      "source": "P01",
+      "line": 43,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 9,
+      "source": "P01",
+      "line": 46,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 10,
+      "source": "P01",
+      "line": 49,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 11,
+      "source": "P01",
+      "line": 52,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    },
+    {
+      "sequence": 12,
+      "source": "P01",
+      "line": 57,
+      "labels": {
+        "title": "プロローグ～選定者の扉",
+        "route": "　",
+        "caption": "Tiny Dungeon ～BLESS of DRAGON～ 　 プロローグ～選定者の扉",
+        "in_route": true
+      }
+    }
+  ],
+  "boundary": {
+    "source": "012401",
+    "line": 6,
+    "depth": 2,
+    "steps": 205,
+    "slots": [
+      [
+        71,
+        800,
+        1
+      ],
+      [
+        71,
+        801,
+        0
+      ],
+      [
+        71,
+        802,
+        0
+      ],
+      [
+        71,
+        803,
+        0
+      ],
+      [
+        71,
+        804,
+        0
+      ],
+      [
+        71,
+        900,
+        0
+      ],
+      [
+        71,
+        901,
+        0
+      ],
+      [
+        71,
+        902,
+        0
+      ],
+      [
+        71,
+        903,
+        0
+      ],
+      [
+        71,
+        904,
+        0
+      ],
+      [
+        76,
+        100,
+        0
+      ],
+      [
+        76,
+        900,
+        0
+      ],
+      [
+        76,
+        901,
+        0
+      ],
+      [
+        76,
+        902,
+        0
+      ],
+      [
+        76,
+        903,
+        0
+      ]
+    ],
+    "scene": {
+      "size": [
+        1280,
+        720
+      ],
+      "background": null,
+      "background_color": null,
+      "overlay": null,
+      "visual": null,
+      "actors": []
+    },
+    "effects": [
+      "se SE_010",
+      "fade 3",
+      "movie op.mpg"
+    ],
+    "voice": "",
+    "labels": {
+      "title": "２４日目：水の曜日",
+      "route": "第１章",
+      "caption": "Tiny Dungeon ～BLESS of DRAGON～ 第１章 ２４日目：水の曜日",
+      "in_route": true
+    }
+  }
+}

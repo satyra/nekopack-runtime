@@ -2,7 +2,7 @@
 
 目标：共享 Rust 核心与独立平台宿主。Android ARM64（Kotlin + JNI）仍是首个交付目标，Android MVP 后验证 Windows，再推进 Linux/Steam Deck、macOS。跨平台方案已获审核。当前已有 Android 横屏验证壳及 APK，通过 SAF 读取原始 DAT 和 MPEG 视频；尚未形成完整游戏应用。
 
-当前四部曲支持标题到有界剧情执行，`def` 和 `.nut` 变量访问共用 Rust 状态。Android 已验证图像、音频、部分演出与 movie 播放/跳过/恢复；BLESS/BLACK 在电影返回后仍停于未实现的 `.route`。这不代表完整游戏兼容，当前范围与真机/翻译执行结果见 [movie 增量](docs/Phase2_Movie_Batch14.md)，早期标题链路见 [执行链路验收](docs/Phase2_Title_Runtime.md)。目标架构、依赖审计、最小迁移与路线分别见根目录 [架构](CROSS_PLATFORM_ARCHITECTURE.md)、[审计](PLATFORM_DEPENDENCY_AUDIT.md)、[迁移](MIGRATION_PLAN.md)、[路线](DEVELOPMENT_ROADMAP.md)。
+当前四部曲支持标题到有界剧情执行，`def` 和 `.nut` 变量访问共用 Rust 状态。Android 已验证图像、音频、部分演出与 movie 播放/跳过/恢复；BLESS 已接通电影后的 `.route` 与章节调用，当前停于 `012401:6` 的 `.filter 夜`；本次只验证 BLESS，其他三部保留此前结果。这不代表完整游戏兼容，最新路线状态与存档元信息语义见 [route 增量](docs/Phase2_Route_Batch15.md)，此前真机/翻译执行结果见 [movie 增量](docs/Phase2_Movie_Batch14.md)，早期标题链路见 [执行链路验收](docs/Phase2_Title_Runtime.md)。目标架构、依赖审计、最小迁移与路线分别见根目录 [架构](CROSS_PLATFORM_ARCHITECTURE.md)、[审计](PLATFORM_DEPENDENCY_AUDIT.md)、[迁移](MIGRATION_PLAN.md)、[路线](DEVELOPMENT_ROADMAP.md)。
 
 2026-11-06：完成公开源码调查后，新增无外部 crate 依赖的 `nekopack-archive` 和 `nekopack-cli`。Rust 资源层通过四部曲 22 个 DAT、51,201 个条目的差分验证；索引、全部条目元数据和前 16 字节与旧 Python 参考解码器一致。完整资源仅分层抽样，不代表所有图像/音频都已解码或游戏可运行。结果见 [Phase 1 验收](docs/Phase1_Archive_Increment.md)。
 

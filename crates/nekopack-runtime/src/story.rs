@@ -17,7 +17,40 @@ use std::{
     io::{Read, Seek},
 };
 const PIXELS: usize = 64 * 1024 * 1024;
+/// Save-list labels owned by the original system script, not scenario variables.
+/// Metadata only: this is not a resumable VM/scene save file.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct StoryLabels {
+    pub title: String,
+    pub route: String,
+    pub caption: String,
+    pub in_route: bool,
+}
+impl StoryLabels {
+    fn capture(system: &mut SystemVm) -> Result<Self, String> {
+        fn read(system: &mut SystemVm, expression: &str) -> Result<String, String> {
+            system.eval("story-labels", &format!("return {expression}"))?;
+            Ok(system.result().to_owned())
+        }
+        Ok(Self {
+            title: read(system, "StoryTitle")?,
+            route: read(system, "StoryRoute")?,
+            caption: read(system, "Host.caption")?,
+            in_route: read(system, "InRoute() ? \"1\" : \"0\"")? == "1",
+        })
+    }
+    fn metadata(&self) -> Result<String, String> {
+        Ok(format!(
+            "{{\"title\":{},\"route\":{},\"caption\":{},\"in_route\":{}}}",
+            quote(self.title.as_bytes())?,
+            quote(self.route.as_bytes())?,
+            quote(self.caption.as_bytes())?,
+            self.in_route
+        ))
+    }
+}
 pub struct Page {
+    pub labels: StoryLabels,
     pub sequence: u64,
     pub source: String,
     pub line: usize,
@@ -39,7 +72,7 @@ impl Page {
             .map(|(b, i, v)| format!("[{}, {i}, {v}]", b))
             .collect::<Vec<_>>()
             .join(",");
-        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}]}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,self.scene,self.depth,self.steps,slots))
+        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}],\"labels\":{}}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,self.scene,self.depth,self.steps,slots,self.labels.metadata()?))
     }
     pub fn packet(&self) -> Result<Vec<u8>, String> {
         let mut bytes = self.metadata()?.into_bytes();
@@ -108,6 +141,7 @@ pub struct StorySession<R: Read + Seek> {
     store: DatGame<R>,
     machine: Machine,
     system: SystemVm,
+    labels: StoryLabels,
     scene: Scene,
     presented: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
@@ -126,8 +160,9 @@ pub struct StorySession<R: Read + Seek> {
 }
 impl<R: Read + Seek> StorySession<R> {
     pub fn open(mut store: DatGame<R>, choice: i32) -> Result<Self, Box<dyn Error>> {
-        let (mut machine, system) = bootstrap(&mut store, choice, &mut std::io::sink())?;
+        let (mut machine, mut system) = bootstrap(&mut store, choice, &mut std::io::sink())?;
         machine.enable_dialogue();
+        let labels = StoryLabels::capture(&mut system)?;
         let title = store.read("system", "title.mng")?;
         let mng = Mng::parse(&title, 100000)?;
         let mut image_macros = BTreeMap::new();
@@ -148,6 +183,7 @@ impl<R: Read + Seek> StorySession<R> {
             store,
             machine,
             system,
+            labels,
             scene: Scene::new([mng.header[0], mng.header[1]]),
             presented: None,
             wipe: None,
@@ -385,7 +421,7 @@ impl<R: Read + Seek> StorySession<R> {
             .map(|((b, i), v)| format!("[{b},{i},{v}]"))
             .collect::<Vec<_>>()
             .join(",");
-        Ok(format!("{{\"source\":{},\"line\":{line},\"depth\":{},\"steps\":{},\"slots\":[{slots}],\"scene\":{},\"effects\":{},\"voice\":{}}}",quote(source)?,self.machine.depth(),self.machine.steps(),self.scene.metadata()?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,quote(self.voice.as_bytes())?))
+        Ok(format!("{{\"source\":{},\"line\":{line},\"depth\":{},\"steps\":{},\"slots\":[{slots}],\"scene\":{},\"effects\":{},\"voice\":{},\"labels\":{}}}",quote(source)?,self.machine.depth(),self.machine.steps(),self.scene.metadata()?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,quote(self.voice.as_bytes())?,self.labels.metadata()?))
     }
     fn render(&self) -> Result<Vec<u8>, Box<dyn Error>> {
         self.scene.render()
@@ -452,6 +488,7 @@ impl<R: Read + Seek> StorySession<R> {
                     self.sequence += 1;
                     self.presented = Some(png.clone());
                     self.page = Some(Page {
+                        labels: self.labels.clone(),
                         sequence: self.sequence,
                         source: String::from_utf8(source.to_vec())?,
                         line,
@@ -476,13 +513,18 @@ impl<R: Read + Seek> StorySession<R> {
                 Step::Request(Request::Command { name, args, .. }) => {
                     let command = std::str::from_utf8(&name)?;
                     match command {
-                        "title" => {
+                        "title" | "route" => {
                             self.system.eval_with_resources(
-                                "story-title",
-                                &format!("com[\"title\"].call(getroottable(),{})", array(&args)?),
+                                "story-label-command",
+                                &format!(
+                                    "com[{}].call(getroottable(),{})",
+                                    quote(&name)?,
+                                    array(&args)?
+                                ),
                                 &mut self.machine.variables,
                                 &mut self.store,
                             )?;
+                            self.labels = StoryLabels::capture(&mut self.system)?;
                         }
                         "img0" => {
                             if args.is_empty() {
@@ -823,6 +865,7 @@ mod tests {
             store,
             machine,
             system: SystemVm::new(),
+            labels: StoryLabels::default(),
             scene: Scene::new([1, 1]),
             presented: None,
             wipe: None,
@@ -839,6 +882,45 @@ mod tests {
             host_sequence: 0,
             effects: Vec::new(),
         }
+    }
+
+    #[test]
+    fn route_dispatch_retains_system_state_across_movie_and_text() {
+        let mut s = session(".route before\n.movie op.mpg\n.route after ignored\n.title chapter\ntext\n.route\nnext\n.unknown".as_bytes());
+        s.system
+            .eval(
+                "test-commands",
+                r#"
+            StoryRoute <- ""
+            StoryTitle <- ""
+            Host <- {caption=""}
+            com <- {
+                route=function(args) { StoryRoute=args.len() ? args[0] : "" },
+                title=function(args) { StoryTitle=args[0]; Host.caption=StoryRoute+":"+StoryTitle }
+            }
+            function InRoute() { return StoryRoute!="" }
+        "#,
+            )
+            .unwrap();
+        s.enable_host_effects();
+        let packet = s.poll_packet().unwrap();
+        assert_eq!(s.labels.route, "before");
+        let checkpoint = s.checkpoint().unwrap();
+        assert_eq!(packet, s.poll_packet().unwrap());
+        assert_eq!(checkpoint, s.checkpoint().unwrap());
+        assert!(s.acknowledge_movie(1, 1).is_err());
+        s.acknowledge_movie(1, 0).unwrap();
+        let labels = &s.page.as_ref().unwrap().labels;
+        assert_eq!(labels.route, "after");
+        assert_eq!(labels.title, "chapter");
+        assert_eq!(labels.caption, "after:chapter");
+        assert!(labels.in_route);
+        s.acknowledge_text(1).unwrap();
+        assert_eq!(s.labels.route, "");
+        assert_eq!(s.labels.title, "chapter");
+        assert!(!s.labels.in_route);
+        assert!(s.acknowledge_text(2).is_err());
+        assert_eq!(s.machine.location().unwrap().1, 8);
     }
 
     #[test]
