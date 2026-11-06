@@ -98,6 +98,8 @@ pub struct StorySession<R: Read + Seek> {
     machine: Machine,
     system: SystemVm,
     scene: Scene,
+    presented: Option<Vec<u8>>,
+    wipe: Option<crate::transition::Wipe>,
     image_macros: BTreeMap<String, Vec<String>>,
     page: Option<Page>,
     speaker: String,
@@ -134,6 +136,8 @@ impl<R: Read + Seek> StorySession<R> {
             machine,
             system,
             scene: Scene::new([mng.header[0], mng.header[1]]),
+            presented: None,
+            wipe: None,
             image_macros,
             page: None,
             speaker: String::new(),
@@ -205,7 +209,11 @@ impl<R: Read + Seek> StorySession<R> {
             return Err("stale or missing host acknowledgement".into());
         }
         self.machine.complete(None)?;
-        self.pending_effect = None;
+        let effect = self.pending_effect.take().unwrap();
+        if effect.kind == "fade" || effect.kind == "wipe" {
+            self.presented = Some(effect.payload);
+        }
+        self.wipe = None;
         self.poll_packet()
     }
     pub fn acknowledge_text(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -220,6 +228,22 @@ impl<R: Read + Seek> StorySession<R> {
         self.speaker.clear();
         self.voice.clear();
         self.poll_packet()
+    }
+    pub fn wipe_frame(&self, token: u64, elapsed_ms: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self
+                .pending_effect
+                .as_ref()
+                .map(|e| (e.token, e.kind.as_str()))
+                != Some((token, "wipe"))
+        {
+            return Err("stale or missing wipe frame request".into());
+        }
+        let wipe = self.wipe.as_ref().ok_or("no wipe state")?;
+        let frame = wipe.frame(elapsed_ms)?;
+        let mut bytes=format!("{{\"wipe_frame\":{token},\"elapsed_ms\":{elapsed_ms},\"width\":{},\"height\":{},\"format\":\"RGBA8\"}}\n",frame.width(),frame.height()).into_bytes();
+        bytes.extend_from_slice(frame.pixels());
+        Ok(bytes)
     }
     fn emit(&mut self, kind: &str, name: &str) -> Result<(), Box<dyn Error>> {
         let (duration, payload) = match kind {
@@ -337,6 +361,7 @@ impl<R: Read + Seek> StorySession<R> {
                     let png = self.render()?;
                     let (source, line) = self.machine.location().unwrap();
                     self.sequence += 1;
+                    self.presented = Some(png.clone());
                     self.page = Some(Page {
                         sequence: self.sequence,
                         source: String::from_utf8(source.to_vec())?,
@@ -382,6 +407,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     self.scene.background_name = None;
                                     self.scene.background_color = Some(color);
                                     self.scene.overlay = None;
+                                    self.scene.visual = None;
                                 } else {
                                     let bytes =
                                         self.store.read("image/back", &format!("{name}.png"))?;
@@ -399,21 +425,29 @@ impl<R: Read + Seek> StorySession<R> {
                             if args.is_empty() {
                                 self.scene.clear();
                             } else if command == "img" && args.len() == 1 {
-                                self.scene.overlay = Some(
-                                    solid(std::str::from_utf8(&args[0])?)
-                                        .ok_or("unsupported full-screen image")?,
-                                );
+                                let name = std::str::from_utf8(&args[0])?;
+                                if let Some(color) = solid(name) {
+                                    self.scene.overlay = Some(color);
+                                    self.scene.visual = None;
+                                } else {
+                                    let bytes =
+                                        self.store.read("image/visual", &format!("{name}.png"))?;
+                                    if png_position(&bytes)? != [0, 0] {
+                                        return Err("unsupported visual offsets".into());
+                                    }
+                                    self.scene
+                                        .set_visual(name.into(), decode_png(&bytes, PIXELS)?)?;
+                                }
                             } else {
                                 return Err("unsupported clear/overlay arguments".into());
                             }
                         }
                         "bgm" if args.first().is_some_and(|a| a == b"fade") => {
-                            if args.len() != 2 {
-                                return Err(
-                                    "BGM fade requires explicit duration in this profile".into()
-                                );
-                            }
-                            let time = std::str::from_utf8(&args[1])?;
+                            let time = match args.as_slice() {
+                                [_] => "4",
+                                [_, duration] => std::str::from_utf8(duration)?,
+                                _ => return Err("unsupported BGM fade arguments".into()),
+                            };
                             duration_ms(time)?;
                             self.effects.push(format!("bgm fade {time}"));
                             if self.host_mode {
@@ -421,7 +455,90 @@ impl<R: Read + Seek> StorySession<R> {
                                 return Ok(());
                             }
                         }
-                        "bgm" | "se" | "fade" | "wait" => {
+                        "wipe" => {
+                            let mut name = None;
+                            let mut duration = 500u64;
+                            let mut soft = false;
+                            for arg in &args {
+                                let word = std::str::from_utf8(arg)?;
+                                if word == "fade" {
+                                    soft = true;
+                                } else if !word.is_empty()
+                                    && word.bytes().all(|c| c.is_ascii_digit())
+                                {
+                                    duration = word.parse::<u64>()?;
+                                    if duration > i32::MAX as u64 {
+                                        return Err("wipe duration overflow".into());
+                                    }
+                                } else if name.replace(word).is_some() {
+                                    return Err("multiple wipe masks".into());
+                                }
+                            }
+                            let name = name.ok_or("wipe requires a mask")?;
+                            if duration == 0 {
+                                duration = 500;
+                            }
+                            let bytes = self.store.read("image/mask", &format!("{name}.png"))?;
+                            if png_position(&bytes)? != [0, 0] {
+                                return Err("unsupported wipe mask offsets".into());
+                            }
+                            let mask = decode_png(&bytes, PIXELS)?;
+                            let target = self.render()?;
+                            let old = match &self.presented {
+                                Some(png) => decode_png(png, PIXELS)?,
+                                None => nekopack_image::RgbaImage::filled(
+                                    self.scene.dimensions[0],
+                                    self.scene.dimensions[1],
+                                    [0, 0, 0, 255],
+                                    PIXELS,
+                                )?,
+                            };
+                            let wipe = crate::transition::Wipe::new(
+                                old,
+                                decode_png(&target, PIXELS)?,
+                                mask,
+                                soft,
+                                duration,
+                            )?;
+                            self.effects.push(format!(
+                                "wipe {name} {duration}{}",
+                                if soft { " fade" } else { "" }
+                            ));
+                            if self.host_mode {
+                                self.host_sequence += 1;
+                                self.pending_effect = Some(HostEffect {
+                                    token: self.host_sequence,
+                                    kind: "wipe".into(),
+                                    name: name.into(),
+                                    duration_ms: duration,
+                                    payload: target,
+                                });
+                                self.wipe = Some(wipe);
+                                return Ok(());
+                            }
+                            self.presented = Some(target);
+                        }
+                        "fade" => {
+                            let text = match args.as_slice() {
+                                [] => "0",
+                                [value] => std::str::from_utf8(value)?,
+                                _ => return Err("unsupported fade arguments".into()),
+                            };
+                            let seconds = text.split('.').next().unwrap().parse::<i64>()?;
+                            let normalized = if seconds <= 0 {
+                                "0.5".to_owned()
+                            } else {
+                                seconds.to_string()
+                            };
+                            duration_ms(&normalized)?;
+                            self.effects.push(format!("fade {normalized}"));
+                            if self.host_mode {
+                                self.emit("fade", &normalized)?;
+                                return Ok(());
+                            }
+                            self.presented = Some(self.render()?);
+                        }
+                        "bgm" | "se" | "wait" => {
                             if args.len() != 1 {
                                 return Err("preview effect requires one argument".into());
                             }
@@ -505,6 +622,8 @@ mod tests {
             machine,
             system: SystemVm::new(),
             scene: Scene::new([1, 1]),
+            presented: None,
+            wipe: None,
             image_macros: BTreeMap::new(),
             page: None,
             speaker: String::new(),
@@ -565,7 +684,7 @@ mod tests {
         assert!(s.scene.actors.is_empty());
     }
     #[test]
-    fn bgm_fade_waits_for_host_and_missing_duration_stops() {
+    fn bgm_fade_requests_explicit_and_original_default_duration() {
         let mut s = session(b".bgm fade 1\ntext\n.bgm fade\nnever");
         s.enable_host_effects();
         let packet = s.poll_packet().unwrap();
@@ -573,13 +692,40 @@ mod tests {
         assert_eq!(s.poll_packet().unwrap(), packet);
         assert!(s.acknowledge_effect(2).is_err());
         s.acknowledge_effect(1).unwrap();
-        assert!(s
-            .acknowledge_text(1)
-            .unwrap_err()
-            .to_string()
-            .contains("explicit duration"));
-        assert!(s.checkpoint().unwrap().contains("\"line\":3"));
-        assert!(s.poll_packet().is_err());
+        let packet = s.acknowledge_text(1).unwrap();
+        assert!(String::from_utf8_lossy(&packet).contains("\"duration_ms\":4000"));
+        assert!(s.wipe_frame(2, 0).is_err());
+        s.acknowledge_effect(2).unwrap();
+    }
+    #[test]
+    fn original_default_fade_and_wipe_poll_contract() {
+        let mut s = session(b".fade\n.fade 2.5\ntext");
+        s.enable_host_effects();
+        assert!(String::from_utf8_lossy(&s.poll_packet().unwrap()).contains("\"duration_ms\":500"));
+        assert!(String::from_utf8_lossy(&s.acknowledge_effect(1).unwrap())
+            .contains("\"duration_ms\":2000"));
+        let mut s = session(b".wipe MASK 100\ntext");
+        s.enable_host_effects();
+        s.machine.advance(&mut s.store).unwrap();
+        let image = || RgbaImage::filled(1, 1, [255; 4], 4).unwrap();
+        s.wipe = Some(crate::transition::Wipe::new(image(), image(), image(), false, 100).unwrap());
+        s.pending_effect = Some(HostEffect {
+            token: 7,
+            kind: "wipe".into(),
+            name: "MASK".into(),
+            duration_ms: 100,
+            payload: vec![],
+        });
+        let before = s.machine.steps();
+        assert!(s.wipe_frame(8, 50).is_err());
+        let frame = s.wipe_frame(7, 50).unwrap();
+        assert_eq!(frame, s.wipe_frame(7, 50).unwrap());
+        s.wipe_frame(7, u64::MAX).unwrap();
+        assert_eq!(before, s.machine.steps());
+        assert!(s.acknowledge_text(1).is_err());
+        s.acknowledge_effect(7).unwrap();
+        assert!(s.wipe.is_none());
+        assert!(s.wipe_frame(7, 50).is_err());
     }
     #[test]
     fn bad_duration_and_missing_audio_are_terminal() {

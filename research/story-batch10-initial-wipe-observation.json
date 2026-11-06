@@ -1,0 +1,40 @@
+{
+  "scope": "failed 100ms wipe smoke test: no intermediate frame; not a passing run",
+  "run_id": "story_9718847d261d4505bd7c9dec819bdb60",
+  "build": {
+    "libnekopack_probe.so": "c8795bcc216eda03a1a5ddc45589274d487c5318bab69d168042615f27f430f8",
+    "libnekopack_host.so": "2d7a21068b2e77013cecced86b740eb6602f9e61f65c4e2f94ac1cef643fb138",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "0c1e6979afabbed3eaf44bed394a2a28fee580ec15c7d4f13a34864c826bdc65"
+  },
+  "events": [
+    {
+      "event": "begin",
+      "kind": "wipe",
+      "token": 8,
+      "time_ms": 589094054,
+      "value": 100
+    },
+    {
+      "event": "frame",
+      "kind": "wipe",
+      "token": 8,
+      "time_ms": 589094381,
+      "value": 0
+    },
+    {
+      "event": "frame",
+      "kind": "wipe",
+      "token": 8,
+      "time_ms": 589094531,
+      "value": 100
+    },
+    {
+      "event": "ack",
+      "kind": "wipe",
+      "token": 8,
+      "time_ms": 589094531,
+      "value": 477
+    }
+  ]
+}

@@ -48,7 +48,10 @@ def main():
   released=[e for e in host if e['event']=='released']
   if len(released)!=1 or released[0]['value']!=0:raise RuntimeError('players not released')
   if any(e['event']=='ack' and e['time_ms']>released[0]['time_ms'] for e in host):raise RuntimeError('late completion after close')
-  if kind in ['fade','bgm_fade'] and any(e['event']=='ack' and e['token']==observed['token'] for e in host):raise RuntimeError('cancelled fade acknowledged')
+  if kind=='fade' and any(e['event']=='ack' and e['token']==observed['token'] for e in host):raise RuntimeError('cancelled fade acknowledged')
+  if kind=='bgm_fade':
+   assert any(e['event']=='cancelled' and e['token']==observed['token'] for e in host)
+   assert not any(e['event']=='finished' and e['token']==observed['token'] for e in host)
   if b'.ogg' in adb('shell','run-as',package,'ls',f'files/{run}'):raise RuntimeError('audio cache leaked')
   if b'No such file' not in read(run,'error.txt'):raise RuntimeError('host failure during cancellation')
   results.append(dict(game=game,interrupted=kind,run_id=run,host_events=host,closed= True));print('PASS cancelled',kind,flush=True)

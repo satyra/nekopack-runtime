@@ -42,6 +42,28 @@ pub struct RgbaImage {
     pub(crate) pixels: Vec<u8>,
 }
 impl RgbaImage {
+    pub fn from_rgba(
+        width: u32,
+        height: u32,
+        pixels: Vec<u8>,
+        budget: usize,
+    ) -> Result<Self, PixelError> {
+        let expected = u64::from(width)
+            .checked_mul(u64::from(height))
+            .and_then(|n| n.checked_mul(4))
+            .ok_or(PixelError::Budget)?;
+        if width == 0 || height == 0 || expected > budget as u64 {
+            return Err(PixelError::Budget);
+        }
+        if pixels.len() as u64 != expected {
+            return Err(PixelError::Unsupported("RGBA buffer length"));
+        }
+        Ok(Self {
+            width,
+            height,
+            pixels,
+        })
+    }
     pub fn width(&self) -> u32 {
         self.width
     }

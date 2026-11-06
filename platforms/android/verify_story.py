@@ -13,6 +13,8 @@ def main():
  for name in ['adb','desktop','fixtures','output']:p.add_argument('--'+name,type=Path,required=True)
  p.add_argument('--audio-reference',type=Path)
  p.add_argument('--until-boundary',action='store_true')
+ p.add_argument('--wipe-reference',type=Path)
+ p.add_argument('--games',type=int,nargs='+',choices=range(4),default=list(range(4)))
  p.add_argument('--serial',required=True);a=p.parse_args()
  prefix=[str(a.adb),'-s',a.serial];package='org.nekopack.probe'
  def adb(*args):return subprocess.check_output(prefix+list(args),timeout=90)
@@ -49,7 +51,7 @@ def main():
  apkpath=adb('shell','pm','path',package).decode().strip().removeprefix('package:')
  assert adb('shell','sha256sum',apkpath).decode().split()[0]==build['sha256']['nekopack-arm64-probe.apk']
  games=[]
- for i in range(4):
+ for i in a.games:
   run='story_'+uuid.uuid4().hex
   adb('shell','am','start','-S','-n',package+'/.MainActivity','--ei','story_game',str(i),'--es','run_id',run)
   pages=[]
@@ -96,9 +98,16 @@ def main():
    if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
    reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
    for begin,ack in zip(begins,acks):
-    if begin['kind'] in ['fade','wait','bgm_fade']:
+    if begin['kind'] in ['fade','wait','wipe']:
      if ack['value']<begin['value']:raise RuntimeError('premature timed completion')
-     if begin['kind'] in ['fade','bgm_fade'] and not any(e['event']=='frame' and e['token']==begin['token'] and 0<e['value']<1000 for e in host):raise RuntimeError('fade had no intermediate frame')
+     if begin['kind']=='fade' and not any(e['event']=='frame' and e['token']==begin['token'] and 0<e['value']<1000 for e in host):raise RuntimeError('fade had no intermediate frame')
+    elif begin['kind']=='bgm_fade':
+     finished=[e for e in host if e['event']=='finished' and e['token']==begin['token']]
+     cancelled=[e for e in host if e['event']=='cancelled' and e['token']==begin['token']]
+     assert len(finished)+len(cancelled)==1
+     if finished:assert finished[0]['value']>=begin['value']
+     assert ack['value']<begin['value'], 'BGM fade blocked the script'
+     assert any(e['event']=='begin' and e['token']>begin['token'] and e['time_ms']< (finished or cancelled)[0]['time_ms'] for e in host), 'no concurrent script progress'
     elif begin['kind'] in ['bgm','se','voice']:
      token=begin['token'];playing=[e for e in host if e['event']=='playing' and e['token']==token]
      progress=[e for e in host if e['event'] in ['progress','completed'] and e['token']==token and e['value']>0]
@@ -109,14 +118,45 @@ def main():
      if audio_meta['sha256']!=reference[key]:raise RuntimeError('raw DAT audio mismatch')
      audio_meta['progress_observed']=bool(progress)
      audio_meta['completed_after_duration']=completed
-     audio_meta['terminated_at_boundary']=not progress and not completed and token not in last_page_audio
+     audio_meta['ended_in_terminal_span']=not progress and not completed and token not in last_page_audio
      audio.append(audio_meta)
     else:raise RuntimeError('unrecognized host effect in verification')
-    if begin['kind']=='bgm_fade' and not any(e['event']=='stopped' and e['kind']=='bgm' and e['token']==begin['token'] for e in host):raise RuntimeError('BGM fade did not release player')
+    if begin['kind']=='bgm_fade' and not cancelled and not any(e['event']=='stopped' and e['kind']=='bgm' and e['token']==begin['token'] for e in host):raise RuntimeError('BGM fade did not release player')
    if set(reference)!=set(e['kind']+'/'+e['name'].lower() for e in audio):raise RuntimeError('missing expected audio resource')
    if not host or host[-1]['event']!='released' or host[-1]['value']!=0:raise RuntimeError('audio not released')
    if b'.ogg' in adb('shell','run-as',package,'ls',f'files/{run}'):raise RuntimeError('audio cache was not removed')
-  games.append(dict(index=i,run_id=run,boundary=boundary,pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  layout=json.loads(private(run,'layout.json'));assert layout['width']>layout['height'] and layout['orientation']==2 and layout['stage_height']>0
+  wipes=[]
+  for begin in [e for e in host if e['event']=='begin' and e['kind']=='wipe']:
+   assert a.wipe_reference is not None, 'wipe oracle is required'
+   import io,numpy as np
+   from PIL import Image
+   meta=json.loads(private(run,f"effect-{begin['token']}.json"));mask_name=meta['name']
+   folder=a.wipe_reference/str(i)/mask_name
+   old=np.array(Image.open(folder/'old.png').convert('RGBA')).astype('int32')
+   target=np.array(Image.open(folder/'target.png').convert('RGBA')).astype('int32')
+   mask=np.array(Image.open(folder/'mask.png').convert('RGBA')).astype('int32')
+   frames=[e for e in host if e['event']=='frame' and e['kind']=='wipe' and e['token']==begin['token']]
+   assert any(0<e['value']<begin['value'] for e in frames), 'wipe never displayed an intermediate frame'
+   hashes=[]
+   for frame in frames:
+    elapsed=frame['value'];q=min(256,elapsed*256//begin['value'])
+    expected=old if q==0 else target if q>=255 else np.where(mask+q>=255,target,old)
+    raw=private(run,f"wipe-{begin['token']}-{elapsed}.rgba");actual=np.frombuffer(raw,dtype=np.uint8).reshape(old.shape)
+    assert np.array_equal(actual,expected), 'wipe kernel/reference mismatch'
+    hashes.append(dict(elapsed_ms=elapsed,rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest()))
+   wipes.append(dict(token=begin['token'],name=mask_name,frames=hashes,independent_pixels_equal=True))
+  visual=False
+  if boundary and boundary['checkpoint']['scene'].get('visual'):
+   from PIL import Image
+   import io
+   assert a.wipe_reference is not None
+   last=max(e['token'] for e in host if e['event']=='begin' and e['kind']=='fade')
+   actual=Image.open(io.BytesIO(private(run,f'effect-{last}.png'))).convert('RGBA')
+   expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
+   assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
+   visual=True
+  games.append(dict(index=i,run_id=run,layout=layout,wipes=wipes,final_visual_independent_pixels_equal=visual,boundary=boundary,pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()

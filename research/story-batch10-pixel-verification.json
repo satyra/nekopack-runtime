@@ -1,0 +1,1307 @@
+{
+  "scope": "independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim",
+  "pages": [
+    {
+      "game": 0,
+      "page": 1,
+      "source": "P01",
+      "line": 15,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "68c91067a87148bd16c4fc4405555165a5f2e9bcb9702f620f8c8f74e37c1d7d",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 2,
+      "source": "P01",
+      "line": 18,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "68c91067a87148bd16c4fc4405555165a5f2e9bcb9702f620f8c8f74e37c1d7d",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 3,
+      "source": "P01",
+      "line": 21,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "68c91067a87148bd16c4fc4405555165a5f2e9bcb9702f620f8c8f74e37c1d7d",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 4,
+      "source": "P01",
+      "line": 26,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "db6cc7306bc426052b2017125338098eca6a13d4c75c1da6c8c2ac4973ed26cd",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 5,
+      "source": "P01",
+      "line": 32,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 6,
+      "source": "P01",
+      "line": 36,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 7,
+      "source": "P01",
+      "line": 39,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 8,
+      "source": "P01",
+      "line": 43,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 9,
+      "source": "P01",
+      "line": 46,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 10,
+      "source": "P01",
+      "line": 49,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 11,
+      "source": "P01",
+      "line": 52,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 0,
+      "page": 12,
+      "source": "P01",
+      "line": 57,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "decba376aca2e0c7240744a1c6a4d6f5ff918a3fafb19b7406f61f981002bf83",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 1,
+      "source": "012401",
+      "line": 13,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "e3b83c4e542398e515cdc6448bebcf6f7477d16034a6960b388aac3f4808ed9f",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 2,
+      "source": "012401",
+      "line": 22,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "14155be7b95c0f9ffafea074ee2120bb7ccf03cfa32c16140676c93b88df12ad",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 3,
+      "source": "012401",
+      "line": 25,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "14155be7b95c0f9ffafea074ee2120bb7ccf03cfa32c16140676c93b88df12ad",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 4,
+      "source": "012401",
+      "line": 28,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "14155be7b95c0f9ffafea074ee2120bb7ccf03cfa32c16140676c93b88df12ad",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 5,
+      "source": "012401",
+      "line": 32,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "14155be7b95c0f9ffafea074ee2120bb7ccf03cfa32c16140676c93b88df12ad",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 6,
+      "source": "012401",
+      "line": 38,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "3dbff348451af674844235ac14ba001df57980cdeb2cec93012c1bbd6ca4df8f",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 7,
+      "source": "012401",
+      "line": 45,
+      "actor_slots": [
+        2
+      ],
+      "rgba_sha256": "6c3d9584f3ed7a961ba877809f18e97531b32bd3e7396dcc6ee4ee4fd4e3bb21",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 1,
+      "page": 8,
+      "source": "012401",
+      "line": 49,
+      "actor_slots": [
+        2
+      ],
+      "rgba_sha256": "6c3d9584f3ed7a961ba877809f18e97531b32bd3e7396dcc6ee4ee4fd4e3bb21",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 1,
+      "source": "010901",
+      "line": 10,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 2,
+      "source": "010901",
+      "line": 13,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 3,
+      "source": "010901",
+      "line": 16,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 4,
+      "source": "010901",
+      "line": 19,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 5,
+      "source": "010901",
+      "line": 22,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 6,
+      "source": "010901",
+      "line": 25,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 7,
+      "source": "010901",
+      "line": 28,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 8,
+      "source": "010901",
+      "line": 31,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 9,
+      "source": "010901",
+      "line": 34,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 10,
+      "source": "010901",
+      "line": 37,
+      "actor_slots": [],
+      "rgba_sha256": "c1a278749cec50862b38ddd306291242df759ab458eaf3ba194604ac2756128a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 11,
+      "source": "010901",
+      "line": 45,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 12,
+      "source": "010901",
+      "line": 48,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 13,
+      "source": "010901",
+      "line": 51,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 14,
+      "source": "010901",
+      "line": 54,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 15,
+      "source": "010901",
+      "line": 60,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 16,
+      "source": "010901",
+      "line": 64,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 17,
+      "source": "010901",
+      "line": 76,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 18,
+      "source": "010901",
+      "line": 79,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 19,
+      "source": "010901",
+      "line": 82,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 20,
+      "source": "010901",
+      "line": 85,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 21,
+      "source": "010901",
+      "line": 89,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 22,
+      "source": "010901",
+      "line": 93,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 23,
+      "source": "010901",
+      "line": 96,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 24,
+      "source": "010901",
+      "line": 99,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 25,
+      "source": "010901",
+      "line": 103,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 26,
+      "source": "010901",
+      "line": 106,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 27,
+      "source": "010901",
+      "line": 110,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "9ca0ca666eee4596a466df9f4cf9a6e655015bd80efb74b6a7bfdba785c8468e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 28,
+      "source": "010901",
+      "line": 115,
+      "actor_slots": [
+        2,
+        1,
+        3
+      ],
+      "rgba_sha256": "824661cd30783e85dc8199051f0d114590acad420137ba422c76fe48c075c574",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 29,
+      "source": "010901",
+      "line": 119,
+      "actor_slots": [
+        2,
+        1,
+        3
+      ],
+      "rgba_sha256": "824661cd30783e85dc8199051f0d114590acad420137ba422c76fe48c075c574",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 30,
+      "source": "010901",
+      "line": 125,
+      "actor_slots": [
+        2,
+        3,
+        1
+      ],
+      "rgba_sha256": "eb6e8ad49ed305e380e12e3c913bcfcff1a535125e23ecaff6a2681d61bd46a1",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 31,
+      "source": "010901",
+      "line": 130,
+      "actor_slots": [
+        3,
+        1,
+        2
+      ],
+      "rgba_sha256": "39fc89505a4bc9a7a64d9086f4069f1650d426325fef3fc82188c36fa07b20e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 32,
+      "source": "010901",
+      "line": 133,
+      "actor_slots": [
+        3,
+        1,
+        2
+      ],
+      "rgba_sha256": "39fc89505a4bc9a7a64d9086f4069f1650d426325fef3fc82188c36fa07b20e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 33,
+      "source": "010901",
+      "line": 138,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "bc94b3f4242b4a81f3c72c38a10b5853be9a1dabcd59d51b0f6fe9432570f5d1",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 34,
+      "source": "010901",
+      "line": 142,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "bc94b3f4242b4a81f3c72c38a10b5853be9a1dabcd59d51b0f6fe9432570f5d1",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 35,
+      "source": "010901",
+      "line": 147,
+      "actor_slots": [
+        3,
+        1,
+        2
+      ],
+      "rgba_sha256": "3342d7a5790725fd3528220ceb3b1b1df6a026cd786693bb75bdf86cb14dd25c",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 36,
+      "source": "010901",
+      "line": 152,
+      "actor_slots": [
+        1,
+        2,
+        3
+      ],
+      "rgba_sha256": "aa1aa535c72812406dc5c386996ac1e5c382f498f598a1abcac2e24d6492e180",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 37,
+      "source": "010901",
+      "line": 157,
+      "actor_slots": [
+        1,
+        3,
+        2
+      ],
+      "rgba_sha256": "3b633cb21a8a8e235524328ea462441687dce86461e1093b1dc9a5f3d51519fc",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 38,
+      "source": "010901",
+      "line": 162,
+      "actor_slots": [
+        1,
+        2,
+        3
+      ],
+      "rgba_sha256": "5d7907e06535c0a9fcdbf60bf9ee5ea520042fede5a757f9c551eff88ea57b55",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 39,
+      "source": "010901",
+      "line": 167,
+      "actor_slots": [
+        1,
+        3,
+        2
+      ],
+      "rgba_sha256": "10872deff740416b4ea90d612de6b32e1329453bbfd122bdead8dcf6ad1d9645",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 40,
+      "source": "010901",
+      "line": 172,
+      "actor_slots": [
+        3,
+        2,
+        1
+      ],
+      "rgba_sha256": "64e60dc8d5b14f656155722729347631ac3456baa8dcf575896426ccd2a14fd4",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 41,
+      "source": "010901",
+      "line": 178,
+      "actor_slots": [],
+      "rgba_sha256": "b89cada591eb40ac98dc4a43d0cafaa6ec24b1fa2f9ff6251628e454c3c915b7",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 42,
+      "source": "011001",
+      "line": 11,
+      "actor_slots": [],
+      "rgba_sha256": "5d2401f8dcc0dca3bf2cea52341b433e08ad63c0bf35d3db2d5a1862e5cda179",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 43,
+      "source": "011001",
+      "line": 14,
+      "actor_slots": [],
+      "rgba_sha256": "5d2401f8dcc0dca3bf2cea52341b433e08ad63c0bf35d3db2d5a1862e5cda179",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 44,
+      "source": "011001",
+      "line": 20,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 45,
+      "source": "011001",
+      "line": 24,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 46,
+      "source": "011001",
+      "line": 27,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 47,
+      "source": "011001",
+      "line": 30,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 48,
+      "source": "011001",
+      "line": 33,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 49,
+      "source": "011001",
+      "line": 37,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 50,
+      "source": "011001",
+      "line": 41,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "9e5a48bd57e507cb85381319ec6dbbf6673cfc50e2bc13d847502d4cfdc76101",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 51,
+      "source": "011001",
+      "line": 46,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 52,
+      "source": "011001",
+      "line": 50,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 53,
+      "source": "011001",
+      "line": 54,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 54,
+      "source": "011001",
+      "line": 58,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 55,
+      "source": "011001",
+      "line": 61,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 56,
+      "source": "011001",
+      "line": 64,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 57,
+      "source": "011001",
+      "line": 67,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 58,
+      "source": "011001",
+      "line": 70,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 59,
+      "source": "011001",
+      "line": 74,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "1e44fd61c457c4130d6fcafcefd761bfa73405f6c28ac8558eaf5320c4d6eec6",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 60,
+      "source": "011001",
+      "line": 79,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 61,
+      "source": "011001",
+      "line": 82,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 62,
+      "source": "011001",
+      "line": 86,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 63,
+      "source": "011001",
+      "line": 90,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 64,
+      "source": "011001",
+      "line": 94,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 65,
+      "source": "011001",
+      "line": 98,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 66,
+      "source": "011001",
+      "line": 101,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 67,
+      "source": "011001",
+      "line": 105,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 68,
+      "source": "011001",
+      "line": 108,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "c297f3c9d8af18e0da4201182a191142713912f1e38c262052e34018f4892d2a",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 69,
+      "source": "011001",
+      "line": 113,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "3a944fd029995555e4ae06dd2fbc227d431be893923cc6b6f1ee851c1c0915d3",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 70,
+      "source": "011001",
+      "line": 116,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "3a944fd029995555e4ae06dd2fbc227d431be893923cc6b6f1ee851c1c0915d3",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 71,
+      "source": "011001",
+      "line": 128,
+      "actor_slots": [],
+      "rgba_sha256": "0d5a351beea31f6ea0570df6cdb41624af0d9a2e9cc487c198c6b229ce99bdfe",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 2,
+      "page": 72,
+      "source": "011001",
+      "line": 132,
+      "actor_slots": [],
+      "rgba_sha256": "0d5a351beea31f6ea0570df6cdb41624af0d9a2e9cc487c198c6b229ce99bdfe",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 1,
+      "source": "P01",
+      "line": 14,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 2,
+      "source": "P01",
+      "line": 17,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 3,
+      "source": "P01",
+      "line": 20,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 4,
+      "source": "P01",
+      "line": 23,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 5,
+      "source": "P01",
+      "line": 26,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 6,
+      "source": "P01",
+      "line": 29,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 7,
+      "source": "P01",
+      "line": 33,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 8,
+      "source": "P01",
+      "line": 37,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 9,
+      "source": "P01",
+      "line": 40,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 10,
+      "source": "P01",
+      "line": 43,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 11,
+      "source": "P01",
+      "line": 46,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 12,
+      "source": "P01",
+      "line": 50,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 13,
+      "source": "P01",
+      "line": 53,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "4426009c026aa0c8c39607684346edc22c63e9c3a4e4974a8592bb21746a96e5",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 14,
+      "source": "P01",
+      "line": 58,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "a207c6d54f03fc3d7fb934774d26a83fb25723787df1f5f8b48543fd2f23240c",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 15,
+      "source": "P01",
+      "line": 64,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "d01d94aff7813c0046758ee92ca39a4403e7186beae1017a89c4a8346d0f0c67",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    },
+    {
+      "game": 3,
+      "page": 16,
+      "source": "P01",
+      "line": 67,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "d01d94aff7813c0046758ee92ca39a4403e7186beae1017a89c4a8346d0f0c67",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true
+    }
+  ]
+}

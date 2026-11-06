@@ -21,7 +21,7 @@ import java.io.File
 
 /** Validation shell only: all VM lifetime stays within one native call on its worker. */
 class MainActivity : Activity() {
-    private external fun story(descriptors:IntArray,operation:Int,sequence:Long):ByteArray
+    private external fun story(descriptors:IntArray,operation:Int,sequence:Long,elapsedMillis:Long=0):ByteArray
     private var storyWorker:java.util.concurrent.ExecutorService?=null
     private var storyLoaded=false
     private var storyEffects:StoryEffects?=null
@@ -138,10 +138,11 @@ class MainActivity : Activity() {
         val overlay=ImageView(this);overlay.scaleType=ImageView.ScaleType.FIT_CENTER;overlay.alpha=0f
         stage.addView(image,FrameLayout.LayoutParams(-1,-1));stage.addView(overlay,FrameLayout.LayoutParams(-1,-1))
         layout.addView(stage,LinearLayout.LayoutParams(-1,0,1f))
-        val text=TextView(this);text.text="正在读取剧情…";text.textSize=18f;layout.addView(text)
-        val next=Button(this);next.text="继续";next.isEnabled=false;layout.addView(next)
-        val close=Button(this);close.text="结束运行";layout.addView(close)
+        val text=TextView(this);text.text="正在读取剧情…";text.textSize=16f;text.maxLines=3;layout.addView(text)
+        val next=Button(this);next.text="继续";next.isEnabled=false;val controls=LinearLayout(this);controls.addView(next,LinearLayout.LayoutParams(0,-2,1f))
+        val close=Button(this);close.text="结束运行";controls.addView(close,LinearLayout.LayoutParams(0,-2,1f));layout.addView(controls)
         setContentView(layout)
+        layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
         var sequence=0L
 
@@ -152,7 +153,22 @@ class MainActivity : Activity() {
             if(storyLoaded)story(intArrayOf(),3,0)
             runOnUiThread{storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
-        storyEffects=StoryEffects(this,image,overlay,root){error->worker.execute{fail(error)}}
+        storyEffects=StoryEffects(this,image,overlay,root,{token,elapsed,ready->
+            worker.execute{try{
+                if(!storyClosing){
+                    val packet=story(intArrayOf(),5,token,elapsed);val split=packet.indexOf(10.toByte());check(split>=0)
+                    val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.optString("error")}
+                    check(meta.getString("format")=="RGBA8")
+                    val width=meta.getInt("width");val height=meta.getInt("height")
+                    val rgba=packet.copyOfRange(split+1,packet.size);check(rgba.size.toLong()==width.toLong()*height*4)
+                    val pixels=IntArray(width*height)
+                    for(index in pixels.indices){val at=index*4;pixels[index]=((rgba[at+3].toInt() and 255) shl 24) or ((rgba[at].toInt() and 255) shl 16) or ((rgba[at+1].toInt() and 255) shl 8) or (rgba[at+2].toInt() and 255)}
+                    val bitmap=android.graphics.Bitmap.createBitmap(pixels,width,height,android.graphics.Bitmap.Config.ARGB_8888)
+                    File(root,"wipe-$token-$elapsed.rgba").writeBytes(rgba)
+                    runOnUiThread{if(!storyClosing)ready(bitmap)}
+                }
+            }catch(error:Throwable){fail(error)}}
+        }){error->worker.execute{fail(error)}}
         show={packet->
             if(storyClosing) Unit else {
                 val split=packet.indexOf(10.toByte());check(split>=0)
@@ -163,7 +179,9 @@ class MainActivity : Activity() {
                 val payload=packet.copyOfRange(split+1,packet.size)
                 if(metadata.has("host_effect")) {
                     val token=metadata.getLong("token");val kind=metadata.getString("host_effect")
-                    val bitmap=if(kind=="fade")BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
+                    File(root,"effect-$token.json").writeText(metadata.toString())
+                    if(kind in listOf("fade","wipe"))File(root,"effect-$token.png").writeBytes(payload)
+                    val bitmap=if(kind in listOf("fade","wipe"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
                     val file=if(kind in listOf("bgm","se","voice"))File(root,"audio-$token.ogg").also{
                         it.writeBytes(payload)
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}

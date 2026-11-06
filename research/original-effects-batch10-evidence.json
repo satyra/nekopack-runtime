@@ -1,0 +1,118 @@
+{
+  "scope": "read-only PE analysis; no original executable bytes redistributed",
+  "games": [
+    {
+      "file": "Tiny_BoD.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "matches": [
+        {
+          "fade_string_va": "0x550aa0",
+          "string_reference_va": "0x444b66",
+          "default_assignment_va": "0x444b9f",
+          "default_ms": 4000,
+          "assignment": "dword ptr [ebp - 0x21c], 0xfa0"
+        }
+      ],
+      "wipe_kernel_matches": {
+        "hard": {
+          "va": "0x440a48",
+          "bytes": 120,
+          "sha256": "3d57419ceab91ae1e0a7ee47afdeed9f20c86ea49c449ec72bbaef41006ac86f"
+        },
+        "soft": {
+          "va": "0x440ac0",
+          "bytes": 232,
+          "sha256": "f2c52fa9cab387e7523972e249ae96e5597662502dbca54c6349ea183c5eea77"
+        }
+      }
+    },
+    {
+      "file": "Tiny_BfY.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "matches": [
+        {
+          "fade_string_va": "0x550aa0",
+          "string_reference_va": "0x444b66",
+          "default_assignment_va": "0x444b9f",
+          "default_ms": 4000,
+          "assignment": "dword ptr [ebp - 0x21c], 0xfa0"
+        }
+      ],
+      "wipe_kernel_matches": {
+        "hard": {
+          "va": "0x440a48",
+          "bytes": 120,
+          "sha256": "3d57419ceab91ae1e0a7ee47afdeed9f20c86ea49c449ec72bbaef41006ac86f"
+        },
+        "soft": {
+          "va": "0x440ac0",
+          "bytes": 232,
+          "sha256": "f2c52fa9cab387e7523972e249ae96e5597662502dbca54c6349ea183c5eea77"
+        }
+      }
+    },
+    {
+      "file": "Tiny_BoS.exe",
+      "sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+      "matches": [
+        {
+          "fade_string_va": "0x64a058",
+          "string_reference_va": "0x4a67a4",
+          "default_assignment_va": "0x4a67d8",
+          "default_ms": 4000,
+          "assignment": "dword ptr [ebp - 0x274], 0xfa0"
+        }
+      ],
+      "wipe_kernel_matches": {
+        "hard": {
+          "va": "0x48d421",
+          "bytes": 120,
+          "sha256": "3d57419ceab91ae1e0a7ee47afdeed9f20c86ea49c449ec72bbaef41006ac86f"
+        },
+        "soft": {
+          "va": "0x48d499",
+          "bytes": 232,
+          "sha256": "f2c52fa9cab387e7523972e249ae96e5597662502dbca54c6349ea183c5eea77"
+        }
+      }
+    },
+    {
+      "file": "Tiny_BaW.exe",
+      "sha256": "c570d44929360672475db25ec22704ae06ffc20cbabf4a46d0e60325fbe908d0",
+      "matches": [
+        {
+          "fade_string_va": "0x54fa54",
+          "string_reference_va": "0x444ab2",
+          "default_assignment_va": "0x444aeb",
+          "default_ms": 4000,
+          "assignment": "dword ptr [ebp - 0x21c], 0xfa0"
+        }
+      ],
+      "wipe_kernel_matches": {
+        "hard": {
+          "va": "0x4409a4",
+          "bytes": 120,
+          "sha256": "3d57419ceab91ae1e0a7ee47afdeed9f20c86ea49c449ec72bbaef41006ac86f"
+        },
+        "soft": {
+          "va": "0x440a1c",
+          "bytes": 232,
+          "sha256": "f2c52fa9cab387e7523972e249ae96e5597662502dbca54c6349ea183c5eea77"
+        }
+      }
+    }
+  ],
+  "brave_execution": {
+    "audio_schedule_call": "0x4afad0 -> 0x59d528",
+    "audio_state_update": "0x59d576..0x59d58a stores previous/target/duration and resets timer; returns without waiting",
+    "skip_immediate_stop": "0x4afb24..0x4afb4a",
+    "wipe_phase": "0x491313..0x491324: elapsed_ms * 256 / duration_ms",
+    "wipe_endpoints": "0x491367..0x491395: phase <= 0 old, phase >= 255 target",
+    "hard_formula": "mask channel + phase >= 255 selects target, otherwise old",
+    "soft_formula": "alpha=clamp(mask channel+2*phase-255,0,255); old+floor((target-old)*alpha/256)",
+    "wipe_default_ms": {
+      "va": "0x49bc03",
+      "value": 500
+    }
+  }
+}

@@ -42,13 +42,13 @@ Java_org_nekopack_probe_MainActivity_runDat(JNIEnv* env,jobject,jintArray descri
  neko_probe_free(output,length);return result;
 }
 
-extern "C" uint8_t* neko_probe_story(const int32_t*,size_t,int32_t,uint64_t,size_t*);
+extern "C" uint8_t* neko_probe_story(const int32_t*,size_t,int32_t,uint64_t,uint64_t,size_t*);
 extern "C" JNIEXPORT jbyteArray JNICALL
-Java_org_nekopack_probe_MainActivity_story(JNIEnv* env,jobject,jintArray descriptors,jint operation,jlong sequence){
+Java_org_nekopack_probe_MainActivity_story(JNIEnv* env,jobject,jintArray descriptors,jint operation,jlong sequence,jlong elapsed){
  if(!descriptors)return nullptr;
  jsize count=env->GetArrayLength(descriptors);
  jint* fds=env->GetIntArrayElements(descriptors,nullptr);if(!fds)return nullptr;
- size_t length=0;uint8_t* output=neko_probe_story(fds,count,operation,static_cast<uint64_t>(sequence),&length);
+ size_t length=0;uint8_t* output=neko_probe_story(fds,count,operation,static_cast<uint64_t>(sequence),static_cast<uint64_t>(elapsed),&length);
  env->ReleaseIntArrayElements(descriptors,fds,JNI_ABORT);
  if(length>INT_MAX){neko_probe_free(output,length);env->ThrowNew(env->FindClass("java/lang/IllegalStateException"),"story frame too large");return nullptr;}
  jbyteArray result=env->NewByteArray(static_cast<jsize>(length));

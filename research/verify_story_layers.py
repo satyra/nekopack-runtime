@@ -26,7 +26,7 @@ def main():
    page=json.loads(path.read_text(encoding='utf8'))
    # These four tested spans each remain inside one story source. Replay from its start.
    lines=read('script/'+page['source']+'.txt').decode('cp932').splitlines()
-   bg=None;bgcolor=None;overlay=None;layers=[]
+   bg=None;bgcolor=None;overlay=None;visual=None;layers=[]
    colors={'白':[255]*4,'黒':[0,0,0,255]}
    for line in lines[:page['line']]:
     words=line.strip().split()
@@ -35,7 +35,7 @@ def main():
     if command=='.img0':
      bg=args[0] if args and args[0] not in colors else None
      bgcolor=colors.get(args[0]) if args else None
-     if args:overlay=None
+     if args:overlay=None;visual=None
     elif re.fullmatch(r'\.img[1-9]',command):
      slot=int(command[-1]);old=next((l for l in layers if l['slot']==slot),None)
      if not args or args==['clear']:
@@ -59,9 +59,11 @@ def main():
      layers.insert(0 if order=='back' else index if order=='keep' else len(layers),layer)
     elif command=='.imgx':layers=[next(l for l in layers if l['slot']==int(slot)) for slot in args if any(l['slot']==int(slot) for l in layers)]
     elif command in ['.img','.page']:
-     if not args:bg=None;bgcolor=None;overlay=None;layers=[]
-     else:assert command=='.img' and len(args)==1;overlay=colors[args[0]]
-   expected=dict(size=size,background=bg,background_color=bgcolor,overlay=overlay,actors=layers)
+     if not args:bg=None;bgcolor=None;overlay=None;visual=None;layers=[]
+     else:
+      assert command=='.img' and len(args)==1
+      overlay=colors.get(args[0]);visual=None if overlay else args[0]
+   expected=dict(size=size,background=bg,background_color=bgcolor,overlay=overlay,visual=visual,actors=layers)
    assert page['scene']==expected,f'layer metadata mismatch game {i} page {path.stem}'
    canvas=Image.new('RGBA',tuple(size),tuple(overlay or bgcolor or [0,0,0,255]))
    if not overlay:
@@ -69,6 +71,7 @@ def main():
     for layer in layers:
      raw=read(layer['folder']+'/'+layer['name']+'.png');position=tuple(x+y for x,y in zip(layer['anchor'],layer['offset']))
      canvas.alpha_composite(Image.open(io.BytesIO(raw)).convert('RGBA'),position)
+   if visual and not overlay:canvas.alpha_composite(Image.open(io.BytesIO(read('image/visual/'+visual+'.png'))).convert('RGBA'))
    actual=Image.open(path.with_suffix('.png')).convert('RGBA')
    assert actual.size==canvas.size and actual.tobytes()==canvas.tobytes(),f'pixel mismatch game {i} page {path.stem}'
    results.append(dict(game=i,page=int(path.stem)+1,source=page['source'],line=page['line'],actor_slots=[l['slot'] for l in layers],rgba_sha256=hashlib.sha256(actual.tobytes()).hexdigest(),independent_pixels_equal=True,independent_layers_equal=True))

@@ -2,6 +2,7 @@
 pub mod dat;
 mod scene;
 pub mod story;
+pub mod transition;
 use nekopack_script::{
     runtime::{Machine, Request, Scripts, Step},
     system::{ResourceProvider, SystemVm},

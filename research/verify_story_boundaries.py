@@ -7,8 +7,10 @@ from pathlib import Path
 def main():
  p=argparse.ArgumentParser()
  for name in ['cli','games','pages','output']:p.add_argument('--'+name,type=Path,required=True)
+ p.add_argument('--profile',choices=['batch9','batch10'],default='batch10')
  a=p.parse_args();manifest=json.loads(Path('research/metadata-verification.json').read_text(encoding='utf8'))
  expected=[(12,'story1',10,1,196,'unsupported story preview command movie'),(8,'012401',52,2,183,'unsupported full-screen image'),(41,'010901',180,2,340,'BGM fade requires explicit duration in this profile'),(16,'P01',71,2,195,'unsupported full-screen image')]
+ if a.profile=='batch10':expected=[(12,'story1',10,1,196,'unsupported story preview command movie'),(8,'012401',58,2,189,'unsupported story preview command shake'),(72,'011001',137,2,484,'unsupported story preview command shake'),(16,'P01',74,2,198,'unsupported story preview command shake')]
  results=[]
  for i,(g,(count,source,line,depth,steps,error)) in enumerate(zip(manifest['games'],expected)):
   root=a.pages/str(i)

@@ -17,10 +17,11 @@ import org.json.JSONObject
 import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
-class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val failure:(Throwable)->Unit) {
+class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val wipeFrame:(Long,Long,(Bitmap)->Unit)->Unit,private val failure:(Throwable)->Unit) {
     private val handler=Handler(Looper.getMainLooper())
     private val players=mutableMapOf<String,Pair<MediaPlayer,File>>()
     private var animator:ValueAnimator?=null
+    private var bgmAnimator:ValueAnimator?=null
     private var closed=false
     private val audio=context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var focused=false
@@ -29,10 +30,10 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",SystemClock.elapsedRealtime()).put("value",extra).toString()+"\n")
     }
     fun stopVoice(){ release("voice") }
-    private fun release(kind:String){players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
+    private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
     fun close(){
         if(closed)return
-        closed=true;handler.removeCallbacksAndMessages(null);animator?.cancel();animator=null
+        closed=true;handler.removeCallbacksAndMessages(null);animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
         val owned=players.values.toList();players.clear()
         for((player,_) in owned)player.release()
         if(focused)audio.abandonAudioFocus(focus)
@@ -49,21 +50,41 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             when(kind){
                 "wait"->handler.postDelayed({done()},duration)
                 "bgm_fade"->{
+                    bgmAnimator?.cancel();bgmAnimator=null
                     val player=players["bgm"]?.first
-                    val animation=ValueAnimator.ofFloat(1f,0f);animator=animation
-                    animation.duration=duration;animation.interpolator=LinearInterpolator()
-                    var sampled=false
-                    animation.addUpdateListener{
-                        val volume=it.animatedValue as Float
-                        player?.setVolume(volume,volume)
-                        if(!sampled && volume>=0.25f && volume<=0.75f){sampled=true;log("frame",kind,token,(volume*1000).toLong())}
+                    if(player==null){log("stopped","bgm",token);done()} else {
+                        val animation=ValueAnimator.ofFloat(1f,0f);bgmAnimator=animation
+                        animation.duration=duration;animation.interpolator=LinearInterpolator()
+                        var cancelled=false;var sampled=false
+                        animation.addUpdateListener{
+                            val volume=it.animatedValue as Float
+                            player.setVolume(volume,volume)
+                            if(!sampled&&volume>=0.25f&&volume<=0.75f){sampled=true;log("frame",kind,token,(volume*1000).toLong())}
+                        }
+                        animation.addListener(object:AnimatorListenerAdapter(){
+                            override fun onAnimationCancel(animation:Animator){cancelled=true;log("cancelled",kind,token)}
+                            override fun onAnimationEnd(animation:Animator){
+                                if(closed||cancelled)return
+                                bgmAnimator=null;release("bgm");log("stopped","bgm",token)
+                                log("finished",kind,token,SystemClock.elapsedRealtime()-started)
+                            }
+                        })
+                        animation.start();done()
                     }
-                    animation.addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(animation:Animator){
+                }
+                "wipe"->{
+                    check(bitmap!=null)
+                    fun frame(){
                         if(closed)return
-                        animator=null;release("bgm");log("stopped","bgm",token)
-                        handler.postDelayed({done()},(duration-(SystemClock.elapsedRealtime()-started)).coerceAtLeast(0))
-                    }})
-                    animation.start()
+                        val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
+                        wipeFrame(token,elapsed){value->
+                            if(!closed){image.setImageBitmap(value);log("frame",kind,token,elapsed)
+                                if(elapsed==duration){image.setImageBitmap(bitmap);done()}
+                                else handler.postDelayed({frame()},16)
+                            }
+                        }
+                    }
+                    frame()
                 }
                 "fade"->{
                     check(bitmap!=null);overlay.setImageBitmap(bitmap);overlay.alpha=0f

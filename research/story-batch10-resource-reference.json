@@ -1,0 +1,20 @@
+{
+  "scope": "independent raw DAT effect image references; original script commands asserted; device DATs reuse previous batches",
+  "records": [
+    {
+      "game": 1,
+      "logical": "image/visual/EF04.png",
+      "sha256": "810a5b5d057810e70d9d8de3d638fbe23799d0fb15d9ce67f26cb8051795e0cc"
+    },
+    {
+      "game": 1,
+      "logical": "image/mask/EF04.png",
+      "sha256": "5e891cb0ce1e9dadd6c237b6d271a998a54df4d160366a54e20df6a2c7f2cb38"
+    },
+    {
+      "game": 3,
+      "logical": "image/visual/VGVE_00d.png",
+      "sha256": "0dc24e7ac9274954692359c6206db8ebc1483e53dda504fd9f17a8cdfdf484c4"
+    }
+  ]
+}

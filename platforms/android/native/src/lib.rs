@@ -264,6 +264,7 @@ pub unsafe extern "C" fn neko_probe_story(
     count: usize,
     operation: i32,
     sequence: u64,
+    elapsed_ms: u64,
     out_len: *mut usize,
 ) -> *mut u8 {
     use std::os::fd::BorrowedFd;
@@ -297,6 +298,10 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .acknowledge_effect(sequence),
+                5 => state
+                    .as_ref()
+                    .ok_or("no story session")?
+                    .wipe_frame(sequence, elapsed_ms),
                 3 => {
                     *state = None;
                     check(

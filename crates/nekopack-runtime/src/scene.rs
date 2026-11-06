@@ -171,6 +171,7 @@ pub(crate) struct Scene {
     pub background_name: Option<String>,
     pub background_color: Option<[u8; 4]>,
     pub overlay: Option<[u8; 4]>,
+    pub visual: Option<(String, RgbaImage)>,
     pub actors: Vec<Layer>,
 }
 impl Scene {
@@ -181,6 +182,7 @@ impl Scene {
             background_name: None,
             background_color: None,
             overlay: None,
+            visual: None,
             actors: Vec::new(),
         }
     }
@@ -189,10 +191,12 @@ impl Scene {
         self.background_name = None;
         self.background_color = None;
         self.overlay = None;
+        self.visual = None;
         self.actors.clear();
     }
     fn bytes(&self) -> usize {
-        self.background.as_ref().map_or(0, |i| i.pixels().len())
+        self.visual.as_ref().map_or(0, |(_, i)| i.pixels().len())
+            + self.background.as_ref().map_or(0, |i| i.pixels().len())
             + self
                 .actors
                 .iter()
@@ -200,13 +204,34 @@ impl Scene {
                 .sum::<usize>()
     }
     pub fn set_background(&mut self, name: String, image: RgbaImage) -> Result<(), String> {
-        let old = self.background.as_ref().map_or(0, |i| i.pixels().len());
+        let old = self.background.as_ref().map_or(0, |i| i.pixels().len())
+            + self.visual.as_ref().map_or(0, |(_, i)| i.pixels().len());
         if self.bytes() - old + image.pixels().len() > RETAINED_BUDGET {
             return Err("retained scene pixel budget exceeded".into());
         }
         self.background = Some(image);
         self.background_name = Some(name);
         self.background_color = None;
+        self.overlay = None;
+        self.visual = None;
+        Ok(())
+    }
+    pub fn set_visual(&mut self, name: String, image: RgbaImage) -> Result<(), String> {
+        if [image.width(), image.height()] != self.dimensions
+            || image
+                .pixels()
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .any(|p| p[3] != 255)
+        {
+            return Err("unsupported visual size or transparency".into());
+        }
+        let old = self.visual.as_ref().map_or(0, |(_, i)| i.pixels().len());
+        if self.bytes() - old + image.pixels().len() > RETAINED_BUDGET {
+            return Err("retained scene pixel budget exceeded".into());
+        }
+        self.visual = Some((name, image));
         self.overlay = None;
         Ok(())
     }
@@ -263,6 +288,11 @@ impl Scene {
                 canvas.draw(&l.image, [x, y]);
             }
         }
+        if self.overlay.is_none() {
+            if let Some((_, visual)) = &self.visual {
+                canvas.draw(visual, [0, 0]);
+            }
+        }
         let mut png = Vec::new();
         canvas.write_png(&mut png)?;
         Ok(png)
@@ -274,6 +304,6 @@ impl Scene {
                 format!("[{},{},{},{}]", c[0], c[1], c[2], c[3])
             })
         };
-        Ok(format!("{{\"size\":[{},{}],\"background\":{},\"background_color\":{},\"overlay\":{},\"actors\":[{}]}}",self.dimensions[0],self.dimensions[1],self.background_name.as_ref().map(|s|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),color(self.background_color),color(self.overlay),actors.join(",")))
+        Ok(format!("{{\"size\":[{},{}],\"background\":{},\"background_color\":{},\"overlay\":{},\"visual\":{},\"actors\":[{}]}}",self.dimensions[0],self.dimensions[1],self.background_name.as_ref().map(|s|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),color(self.background_color),color(self.overlay),self.visual.as_ref().map(|(s,_)|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),actors.join(",")))
     }
 }
