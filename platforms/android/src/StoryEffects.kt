@@ -49,6 +49,11 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         try {
             when(kind){
                 "wait"->handler.postDelayed({done()},duration)
+                "bgm_stop"->{
+                    release("bgm")
+                    log("stopped",kind,token,if(players.containsKey("bgm"))1 else 0)
+                    done()
+                }
                 "bgm_fade"->{
                     bgmAnimator?.cancel();bgmAnimator=null
                     val player=players["bgm"]?.first

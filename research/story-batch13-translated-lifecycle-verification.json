@@ -1,0 +1,2883 @@
+{
+  "scope": "HOME during fade/BGM; probe-triggered background 35ms after shake / 5ms after flash begins; onPause ends session, no resume/save claim",
+  "device": {
+    "ro.product.cpu.abilist": "x86_64,x86,arm64-v8a,armeabi-v7a,armeabi",
+    "ro.dalvik.vm.native.bridge": "libnb.so",
+    "ro.build.version.sdk": "28",
+    "kernel_machine": "x86_64"
+  },
+  "execution": "translated ARM64",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "474f5b99c7db3deb2283f53381f279017e072e8e2e8d3a674b8d259b25f3ccb6",
+      "libnekopack_host.so": "2d7a21068b2e77013cecced86b740eb6602f9e61f65c4e2f94ac1cef643fb138",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "4c4f9ab1cdb11800821a7c80c6cb0ee684d9abbc46ad6115fbbba268f41db8ef"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1783000 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x068fe0 0x068fe0 R   0x4000\n  LOAD           0x068fe0 0x000000000006cfe0 0x000000000006cfe0 0x0d46f0 0x0d46f0 R E 0x4000\n  LOAD           0x13d6d0 0x00000000001456d0 0x00000000001456d0 0x007550 0x007930 RW  0x4000\n  LOAD           0x144c20 0x0000000000150c20 0x0000000000150c20 0x001420 0x001da8 RW  0x4000\n  DYNAMIC        0x144548 0x000000000014c548 0x000000000014c548 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x13d6d0 0x00000000001456d0 0x00000000001456d0 0x007550 0x007930 R   0x1\n  GNU_EH_FRAME   0x04b118 0x000000000004b118 0x000000000004b118 0x0040d4 0x0040d4 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x144548 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x1160\n  0x0000000000000008 (RELASZ)       42216 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1746\n  0x0000000000000017 (JMPREL)       0xb648\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x14c978\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd0c\n  0x000000000000000a (STRSZ)        1104 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xce0\n  0x0000000000000019 (INIT_ARRAY)   0x14c540\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x14c530\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbc0\n  0x000000006ffffffe (VERNEED)      0xc7c\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6080 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x0008a8 0x0008a8 R   0x4000\n  LOAD           0x0008a8 0x00000000000048a8 0x00000000000048a8 0x0004c8 0x0004c8 R E 0x4000\n  LOAD           0x000d70 0x0000000000008d70 0x0000000000008d70 0x000218 0x000290 RW  0x4000\n  DYNAMIC        0x000d88 0x0000000000008d88 0x0000000000008d88 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000d70 0x0000000000008d70 0x0000000000008d70 0x000218 0x000290 R   0x1\n  GNU_EH_FRAME   0x0006dc 0x00000000000006dc 0x00000000000006dc 0x000054 0x000054 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xd88 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x588\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x5d0\n  0x0000000000000002 (PLTRELSZ)     168 (bytes)\n  0x0000000000000003 (PLTGOT)       0x8f38\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x438\n  0x000000000000000a (STRSZ)        332 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x410\n  0x000000000000001a (FINI_ARRAY)   0x8d78\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x3d8\n  0x000000006ffffffe (VERNEED)      0x3f0\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "tests": [
+    {
+      "game": 0,
+      "interrupted": "fade",
+      "run_id": "cancel_c45eed18717a4275bcada0bfaeff1def",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33002402,
+          "value": 3000
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 33002947,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 33002946
+      },
+      "closed": true
+    },
+    {
+      "game": 2,
+      "interrupted": "bgm",
+      "run_id": "cancel_3a6a3c777a2c43c39d09a4e664ceb1af",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33008977,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33009008,
+          "value": 122993
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33009009,
+          "value": 32
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 33009084,
+          "value": 2000
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33009218,
+          "value": 172
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 33009401,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 33009351
+      },
+      "closed": true
+    },
+    {
+      "game": 2,
+      "interrupted": "bgm_fade",
+      "run_id": "cancel_c1955e59ca8449bb9bea15a0c6898c6b",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33010989,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33011007,
+          "value": 122993
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33011007,
+          "value": 18
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 33011079,
+          "value": 2000
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 1,
+          "time_ms": 33011221,
+          "value": 161
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 33011587,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 2,
+          "time_ms": 33013104,
+          "value": 2025
+        },
+        {
+          "event": "begin",
+          "kind": "bgm_fade",
+          "token": 3,
+          "time_ms": 33028384,
+          "value": 1000
+        },
+        {
+          "event": "ack",
+          "kind": "bgm_fade",
+          "token": 3,
+          "time_ms": 33028385,
+          "value": 1
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 4,
+          "time_ms": 33028424,
+          "value": 2000
+        },
+        {
+          "event": "cancelled",
+          "kind": "bgm_fade",
+          "token": 3,
+          "time_ms": 33028630,
+          "value": 0
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 33028677,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 33028629
+      },
+      "closed": true
+    },
+    {
+      "game": 1,
+      "interrupted": "shake",
+      "run_id": "cancel_bb1d492798724149be7d1d379e7237a5",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33035492,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33036001,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33037507,
+          "value": 2015
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33037533,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33037549,
+          "value": 4647
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33037550,
+          "value": 17
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33037751,
+          "value": 124
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33039769,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33039787,
+          "value": 3599
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33039787,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33039989,
+          "value": 142
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33043442,
+          "value": 3599
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33046267,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33046278,
+          "value": 1774
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33046278,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33046479,
+          "value": 152
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33048104,
+          "value": 1774
+        },
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33048489,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33048504,
+          "value": 152561
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33048504,
+          "value": 15
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33048705,
+          "value": 154
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33052668,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33052686,
+          "value": 1301
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33052686,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33052887,
+          "value": 153
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33054029,
+          "value": 1301
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33054852,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33054865,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33054865,
+          "value": 13
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33055066,
+          "value": 141
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33055801,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33055849,
+          "value": 14
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33055921,
+          "value": 85
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33055978,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33055978,
+          "value": 177
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33056025,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33056036,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33056046,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33056047,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33056249,
+          "value": 151
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33056837,
+          "value": 250
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33056838,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33056873,
+          "value": 11
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 33056936,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 33056906
+      },
+      "closed": true
+    },
+    {
+      "game": 1,
+      "interrupted": "flash",
+      "run_id": "cancel_41f9f0054f2f4f00a0811bb396a88723",
+      "host_events": [
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33062075,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33062584,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 1,
+          "time_ms": 33064090,
+          "value": 2015
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33064109,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33064123,
+          "value": 4647
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33064124,
+          "value": 15
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 2,
+          "time_ms": 33064325,
+          "value": 132
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33066316,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33066328,
+          "value": 3599
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33066328,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33066529,
+          "value": 156
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 3,
+          "time_ms": 33069970,
+          "value": 3599
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33072785,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33072796,
+          "value": 1774
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33072797,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33072998,
+          "value": 156
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 4,
+          "time_ms": 33074606,
+          "value": 1774
+        },
+        {
+          "event": "begin",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33074991,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33075005,
+          "value": 152561
+        },
+        {
+          "event": "ack",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33075005,
+          "value": 14
+        },
+        {
+          "event": "progress",
+          "kind": "bgm",
+          "token": 5,
+          "time_ms": 33075207,
+          "value": 153
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33079268,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33079278,
+          "value": 1301
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33079278,
+          "value": 10
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33079479,
+          "value": 136
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 6,
+          "time_ms": 33080647,
+          "value": 1301
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33081417,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33081429,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33081429,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33081631,
+          "value": 134
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33082379,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33082427,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33082484,
+          "value": 74
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33082548,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 8,
+          "time_ms": 33082549,
+          "value": 170
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 7,
+          "time_ms": 33082597,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33082607,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33082617,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33082617,
+          "value": 10
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33082818,
+          "value": 145
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083390,
+          "value": 250
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 9,
+          "time_ms": 33083391,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083418,
+          "value": 12
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083476,
+          "value": 68
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083524,
+          "value": 113
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083570,
+          "value": 163
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083622,
+          "value": 212
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083671,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 10,
+          "time_ms": 33083671,
+          "value": 281
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 33084192,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 33084201,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 33084202,
+          "value": 10
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 11,
+          "time_ms": 33084403,
+          "value": 154
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 33085074,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 33085108,
+          "value": 8
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 33085162,
+          "value": 64
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 33085210,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 12,
+          "time_ms": 33085210,
+          "value": 136
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 33085265,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 33085286,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 33085286,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 33085488,
+          "value": 139
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086085,
+          "value": 250
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 13,
+          "time_ms": 33086087,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086120,
+          "value": 14
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086170,
+          "value": 70
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086222,
+          "value": 117
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086271,
+          "value": 168
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086327,
+          "value": 224
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086368,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 14,
+          "time_ms": 33086368,
+          "value": 283
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 33088967,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 33088978,
+          "value": 1764
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 33088978,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 33089178,
+          "value": 132
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 15,
+          "time_ms": 33090818,
+          "value": 1764
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 33091117,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 33091129,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 33091129,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 33091330,
+          "value": 148
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 33092111,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 33092140,
+          "value": 4
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 33092199,
+          "value": 65
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 33092268,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 17,
+          "time_ms": 33092268,
+          "value": 157
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 16,
+          "time_ms": 33092284,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 33092325,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 33092336,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 33092336,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 18,
+          "time_ms": 33092536,
+          "value": 140
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093120,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093154,
+          "value": 12
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093211,
+          "value": 74
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093261,
+          "value": 119
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093308,
+          "value": 171
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093357,
+          "value": 217
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093406,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 19,
+          "time_ms": 33093407,
+          "value": 287
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 33093914,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 33093933,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 33093933,
+          "value": 19
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 33094135,
+          "value": 204
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 33094851,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 33094891,
+          "value": 14
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 33094950,
+          "value": 71
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 33095019,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 21,
+          "time_ms": 33095020,
+          "value": 169
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 20,
+          "time_ms": 33095074,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 33095086,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 33095097,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 33095097,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 33095299,
+          "value": 150
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 22,
+          "time_ms": 33097244,
+          "value": 2094
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 33099367,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 33099378,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 33099379,
+          "value": 12
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 33100057,
+          "value": 100
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 23,
+          "time_ms": 33100059,
+          "value": 624
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 33100088,
+          "value": 0
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 33100147,
+          "value": 67
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 33100206,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 24,
+          "time_ms": 33100206,
+          "value": 149
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 33100257,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 33100278,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 33100278,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 33100479,
+          "value": 146
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33100881,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33100916,
+          "value": 18
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33100970,
+          "value": 74
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33101026,
+          "value": 126
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33101080,
+          "value": 182
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33101145,
+          "value": 244
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33101198,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 26,
+          "time_ms": 33101198,
+          "value": 317
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 25,
+          "time_ms": 33101433,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 33101705,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 33101715,
+          "value": 3320
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 33101715,
+          "value": 10
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 27,
+          "time_ms": 33101916,
+          "value": 152
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 33107884,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 33107895,
+          "value": 2789
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 33107895,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 28,
+          "time_ms": 33108096,
+          "value": 143
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 33109920,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 33109931,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 33109931,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 29,
+          "time_ms": 33110131,
+          "value": 138
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 33110881,
+          "value": 50
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 33110920,
+          "value": 17
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 33110978,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 30,
+          "time_ms": 33110978,
+          "value": 97
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 33111038,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 33111059,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 33111059,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 31,
+          "time_ms": 33111260,
+          "value": 146
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33111879,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33111902,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33111954,
+          "value": 59
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33112019,
+          "value": 109
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33112071,
+          "value": 176
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33112129,
+          "value": 230
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33112173,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 32,
+          "time_ms": 33112173,
+          "value": 294
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 33112691,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 33112712,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 33112713,
+          "value": 22
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 33,
+          "time_ms": 33112915,
+          "value": 160
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 33113685,
+          "value": 50
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 33113727,
+          "value": 14
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 33113781,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 34,
+          "time_ms": 33113781,
+          "value": 96
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 33113835,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 33113859,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 33113859,
+          "value": 24
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 35,
+          "time_ms": 33114060,
+          "value": 197
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114682,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114718,
+          "value": 17
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114791,
+          "value": 85
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114851,
+          "value": 149
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114910,
+          "value": 208
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114957,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 36,
+          "time_ms": 33114957,
+          "value": 275
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 33115465,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 33115486,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 33115486,
+          "value": 21
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 37,
+          "time_ms": 33115687,
+          "value": 144
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 33116354,
+          "value": 50
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 33116393,
+          "value": 11
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 33116451,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 38,
+          "time_ms": 33116451,
+          "value": 97
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 33116509,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 33116532,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 33116532,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 39,
+          "time_ms": 33116733,
+          "value": 144
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117332,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117367,
+          "value": 16
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117425,
+          "value": 77
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117476,
+          "value": 126
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117521,
+          "value": 172
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117579,
+          "value": 227
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117627,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 40,
+          "time_ms": 33117627,
+          "value": 295
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 33118151,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 33118175,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 33118175,
+          "value": 24
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 41,
+          "time_ms": 33118377,
+          "value": 145
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 33119064,
+          "value": 50
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 33119113,
+          "value": 18
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 33119186,
+          "value": 50
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 42,
+          "time_ms": 33119187,
+          "value": 123
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 33119244,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 33119267,
+          "value": 2094
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 33119267,
+          "value": 23
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 33119468,
+          "value": 144
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120062,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120086,
+          "value": 3
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120145,
+          "value": 68
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120202,
+          "value": 117
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120264,
+          "value": 184
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120325,
+          "value": 243
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120371,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 44,
+          "time_ms": 33120371,
+          "value": 309
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 43,
+          "time_ms": 33121414,
+          "value": 2094
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 45,
+          "time_ms": 33125780,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 45,
+          "time_ms": 33126300,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 45,
+          "time_ms": 33127832,
+          "value": 2052
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 46,
+          "time_ms": 33144007,
+          "value": 3000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 46,
+          "time_ms": 33144766,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 46,
+          "time_ms": 33147035,
+          "value": 3028
+        },
+        {
+          "event": "begin",
+          "kind": "fade",
+          "token": 47,
+          "time_ms": 33147696,
+          "value": 2000
+        },
+        {
+          "event": "frame",
+          "kind": "fade",
+          "token": 47,
+          "time_ms": 33148218,
+          "value": 258
+        },
+        {
+          "event": "ack",
+          "kind": "fade",
+          "token": 47,
+          "time_ms": 33149731,
+          "value": 2035
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 33149736,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 33149748,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 33149748,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 48,
+          "time_ms": 33149948,
+          "value": 134
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 33150686,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 33150725,
+          "value": 14
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 33150792,
+          "value": 82
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 33150840,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 49,
+          "time_ms": 33150840,
+          "value": 154
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 33150891,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 33150915,
+          "value": 733
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 33150915,
+          "value": 24
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 33151116,
+          "value": 160
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151692,
+          "value": 250
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 50,
+          "time_ms": 33151693,
+          "value": 733
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151720,
+          "value": 13
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151774,
+          "value": 63
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151824,
+          "value": 114
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151877,
+          "value": 160
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151937,
+          "value": 225
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151985,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 51,
+          "time_ms": 33151985,
+          "value": 293
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 33156519,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 33156530,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 33156530,
+          "value": 11
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 52,
+          "time_ms": 33156731,
+          "value": 141
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 33157409,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 33157438,
+          "value": 1
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 33157496,
+          "value": 65
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 33157542,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 53,
+          "time_ms": 33157542,
+          "value": 133
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 33157593,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 33157611,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 33157611,
+          "value": 18
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 33157812,
+          "value": 136
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158386,
+          "value": 250
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 54,
+          "time_ms": 33158387,
+          "value": 618
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158416,
+          "value": 13
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158472,
+          "value": 67
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158522,
+          "value": 117
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158575,
+          "value": 172
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158625,
+          "value": 217
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158700,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 55,
+          "time_ms": 33158700,
+          "value": 314
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 33159221,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 33159230,
+          "value": 735
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 33159230,
+          "value": 9
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 33159430,
+          "value": 155
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 56,
+          "time_ms": 33160011,
+          "value": 735
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 33161301,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 33161313,
+          "value": 1098
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 33161313,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 33161513,
+          "value": 149
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 33162294,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 33162323,
+          "value": 5
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 33162396,
+          "value": 76
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 33162456,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 58,
+          "time_ms": 33162456,
+          "value": 162
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 57,
+          "time_ms": 33162467,
+          "value": 1098
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 33162513,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 33162523,
+          "value": 618
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 33162523,
+          "value": 10
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 33162725,
+          "value": 128
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 59,
+          "time_ms": 33163212,
+          "value": 618
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 33165246,
+          "value": 100
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 33165272,
+          "value": 2
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 33165337,
+          "value": 66
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 33165407,
+          "value": 100
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 60,
+          "time_ms": 33165408,
+          "value": 162
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 33165458,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 33165470,
+          "value": 1365
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 33165470,
+          "value": 12
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 33165671,
+          "value": 145
+        },
+        {
+          "event": "begin",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166087,
+          "value": 250
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166118,
+          "value": 12
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166176,
+          "value": 73
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166227,
+          "value": 121
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166271,
+          "value": 169
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166325,
+          "value": 223
+        },
+        {
+          "event": "frame",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166371,
+          "value": 250
+        },
+        {
+          "event": "ack",
+          "kind": "shake",
+          "token": 62,
+          "time_ms": 33166371,
+          "value": 284
+        },
+        {
+          "event": "begin",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 33166879,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 33166888,
+          "value": 1606
+        },
+        {
+          "event": "ack",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 33166889,
+          "value": 10
+        },
+        {
+          "event": "completed",
+          "kind": "se",
+          "token": 61,
+          "time_ms": 33166893,
+          "value": 1365
+        },
+        {
+          "event": "progress",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 33167089,
+          "value": 121
+        },
+        {
+          "event": "completed",
+          "kind": "voice",
+          "token": 63,
+          "time_ms": 33168569,
+          "value": 1604
+        },
+        {
+          "event": "begin",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 33173118,
+          "value": 0
+        },
+        {
+          "event": "playing",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 33173131,
+          "value": 4592
+        },
+        {
+          "event": "ack",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 33173131,
+          "value": 13
+        },
+        {
+          "event": "begin",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33173815,
+          "value": 500
+        },
+        {
+          "event": "progress",
+          "kind": "se",
+          "token": 64,
+          "time_ms": 33173818,
+          "value": 635
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33173847,
+          "value": 1
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33173914,
+          "value": 75
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33173987,
+          "value": 146
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174047,
+          "value": 206
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174127,
+          "value": 280
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174188,
+          "value": 344
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174252,
+          "value": 412
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174313,
+          "value": 475
+        },
+        {
+          "event": "frame",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174383,
+          "value": 500
+        },
+        {
+          "event": "ack",
+          "kind": "wipe",
+          "token": 65,
+          "time_ms": 33174383,
+          "value": 568
+        },
+        {
+          "event": "begin",
+          "kind": "flash",
+          "token": 66,
+          "time_ms": 33174422,
+          "value": 60
+        },
+        {
+          "event": "released",
+          "kind": "all",
+          "token": 0,
+          "time_ms": 33174506,
+          "value": 0
+        }
+      ],
+      "pause": {
+        "time_ms": 33174440
+      },
+      "closed": true
+    }
+  ]
+}

@@ -307,6 +307,7 @@ impl<R: Read + Seek> StorySession<R> {
         let (duration, payload) = match kind {
             "fade" => (duration_ms(name)?, self.render()?),
             "wait" | "bgm_fade" => (duration_ms(name)?, Vec::new()),
+            "bgm_stop" => (0, Vec::new()),
             "bgm" | "se" | "voice" => {
                 let directory = match kind {
                     "bgm" => "sound/bgm",
@@ -498,6 +499,13 @@ impl<R: Read + Seek> StorySession<R> {
                                 }
                             } else {
                                 return Err("unsupported clear/overlay arguments".into());
+                            }
+                        }
+                        "bgm" if args.is_empty() => {
+                            self.effects.push("bgm_stop".into());
+                            if self.host_mode {
+                                self.emit("bgm_stop", "")?;
+                                return Ok(());
                             }
                         }
                         "bgm" if args.first().is_some_and(|a| a == b"fade") => {
@@ -854,6 +862,32 @@ mod tests {
         );
         s.next(1).unwrap();
         assert!(s.scene.actors.is_empty());
+    }
+    #[test]
+    fn bare_bgm_stops_without_resource_and_waits_for_host_confirmation() {
+        let mut s = session(b".bgm\n.bgm\ntext");
+        s.enable_host_effects();
+        let packet = s.poll_packet().unwrap();
+        let before = s.checkpoint().unwrap();
+        let effect = s.pending_effect.as_ref().unwrap();
+        assert_eq!(
+            (
+                effect.kind.as_str(),
+                effect.name.as_str(),
+                effect.duration_ms
+            ),
+            ("bgm_stop", "", 0)
+        );
+        assert!(effect.payload.is_empty());
+        assert!(s.acknowledge_effect(2).is_err());
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        assert_eq!(s.checkpoint().unwrap(), before);
+        s.acknowledge_effect(1).unwrap();
+        assert_eq!(s.pending_effect.as_ref().unwrap().token, 2);
+        assert!(s.acknowledge_effect(1).is_err());
+        s.acknowledge_effect(2).unwrap();
+        assert!(s.pending_effect.is_none());
+        assert!(s.page.is_some());
     }
     #[test]
     fn bgm_fade_requests_explicit_and_original_default_duration() {

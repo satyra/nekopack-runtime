@@ -1,0 +1,106 @@
+{
+  "scope": "Preserved failed validation, not a passing device run",
+  "run_id": "story_f0c9b515b7d749aca405662bc1b844e2",
+  "apk_sha256": "4c4f9ab1cdb11800821a7c80c6cb0ee684d9abbc46ad6115fbbba268f41db8ef",
+  "failure": "wait_audio at BIRTH page 98 timed out: an SE replaced before a nonzero progress sample was not recognized",
+  "events": [
+    {
+      "event": "begin",
+      "kind": "se",
+      "token": 122,
+      "time_ms": 603554485,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "se",
+      "token": 122,
+      "time_ms": 603554541,
+      "value": 1098
+    },
+    {
+      "event": "ack",
+      "kind": "se",
+      "token": 122,
+      "time_ms": 603554542,
+      "value": 57
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 122,
+      "time_ms": 603554753,
+      "value": 0
+    },
+    {
+      "event": "begin",
+      "kind": "se",
+      "token": 124,
+      "time_ms": 603554806,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "se",
+      "token": 124,
+      "time_ms": 603554916,
+      "value": 733
+    },
+    {
+      "event": "ack",
+      "kind": "se",
+      "token": 124,
+      "time_ms": 603554917,
+      "value": 111
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 124,
+      "time_ms": 603555120,
+      "value": 0
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 124,
+      "time_ms": 603555323,
+      "value": 208
+    },
+    {
+      "event": "completed",
+      "kind": "se",
+      "token": 124,
+      "time_ms": 603555851,
+      "value": 733
+    },
+    {
+      "event": "begin",
+      "kind": "bgm_stop",
+      "token": 126,
+      "time_ms": 603556055,
+      "value": 0
+    },
+    {
+      "event": "stopped",
+      "kind": "bgm_stop",
+      "token": 126,
+      "time_ms": 603556119,
+      "value": 0
+    },
+    {
+      "event": "ack",
+      "kind": "bgm_stop",
+      "token": 126,
+      "time_ms": 603556120,
+      "value": 65
+    }
+  ],
+  "evidence": {
+    "replaced_token": 122,
+    "replacement_token": 124,
+    "duration_ms": 1098,
+    "replacement_requested_after_ms": 265
+  },
+  "resolution": "Accept only demonstrated same-channel replacement before expected duration with successful replacement startup and no late old playback events; rerun full physical-device regression"
+}

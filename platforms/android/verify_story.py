@@ -8,6 +8,29 @@ def completed_audio(events,token):
  playing=[e for e in events if e['event']=='playing' and e['token']==token]
  return len(playing)==1 and playing[0]['value']>0 and any(e['event']=='completed' and e['token']==token and e['time_ms']-playing[0]['time_ms']>=playing[0]['value'] for e in events)
 
+def replacement_audio_token(events,token):
+ playing=[e for e in events if e['event']=='playing' and e['token']==token]
+ if len(playing)!=1 or playing[0]['value']<=0:return None
+ if any(e['event']=='completed' and e['token']==token for e in events):return None
+ start=playing[0];start_index=events.index(start)
+ for index,event in enumerate(events):
+  if index<=start_index:continue
+  if event['event']!='begin' or event['kind']!=start['kind'] or event['token']<=token:continue
+  if not 0<=event['time_ms']-start['time_ms']<start['value']:continue
+  if any(e['token']==token and e['event'] in ['progress','completed'] for e in events[index+1:]):continue
+  replacements=[e for e in events[index+1:] if e['event']=='playing' and e['kind']==start['kind'] and e['token']==event['token'] and e['value']>0 and e['time_ms']>=event['time_ms']]
+  if len(replacements)==1:return event['token']
+ return None
+
+def verify_bgm_stop(host,begin,ack):
+ assert begin['value']==0
+ stopped=[e for e in host if e['event']=='stopped' and e['kind']=='bgm_stop' and e['token']==begin['token']]
+ assert len(stopped)==1 and stopped[0]['value']==0
+ assert host.index(begin)<host.index(stopped[0])<host.index(ack), 'BGM stop acknowledged before release'
+ prior=[e for e in host[:host.index(begin)] if e['event']=='playing' and e['kind']=='bgm']
+ if prior:
+  assert not any(e['token']==prior[-1]['token'] and e['event'] in ['progress','completed'] for e in host[host.index(stopped[0])+1:]), 'released BGM produced late playback events'
+
 def main():
  p=argparse.ArgumentParser()
  for name in ['adb','desktop','fixtures','output']:p.add_argument('--'+name,type=Path,required=True)
@@ -36,7 +59,7 @@ def main():
    events=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
    tokens={e['token'] for e in events if e['event']=='begin' and e['kind'] in ['bgm','se','voice']}
    advanced={e['token'] for e in events if e['event'] in ['progress','completed'] and e['value']>0}
-   if all(token in advanced or completed_audio(events,token) for token in tokens):return
+   if all(token in advanced or completed_audio(events,token) or replacement_audio_token(events,token) is not None for token in tokens):return
    time.sleep(.2)
   raise RuntimeError('audio did not advance within the observation window')
  def tap(text):
@@ -98,6 +121,8 @@ def main():
   host=[];audio=[]
   if a.audio_reference:
    host=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
+   stop_count=sum(effect=='bgm_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
+   assert sum(e['event']=='begin' and e['kind']=='bgm_stop' for e in host)==stop_count, 'missing or duplicated BGM stop request'
    begins=[e for e in host if e['event']=='begin'];acks=[e for e in host if e['event']=='ack']
    if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
    reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
@@ -112,17 +137,21 @@ def main():
      if finished:assert finished[0]['value']>=begin['value']
      assert ack['value']<begin['value'], 'BGM fade blocked the script'
      assert any(e['event']=='begin' and e['token']>begin['token'] and e['time_ms']< (finished or cancelled)[0]['time_ms'] for e in host), 'no concurrent script progress'
+    elif begin['kind']=='bgm_stop':
+     verify_bgm_stop(host,begin,ack)
     elif begin['kind'] in ['bgm','se','voice']:
      token=begin['token'];playing=[e for e in host if e['event']=='playing' and e['token']==token]
      progress=[e for e in host if e['event'] in ['progress','completed'] and e['token']==token and e['value']>0]
      completed=completed_audio(host,token)
-     if len(playing)!=1 or (not progress and not completed and token in last_page_audio):raise RuntimeError('audio never started or advanced')
+     replacement=replacement_audio_token(host,token)
+     if len(playing)!=1 or (not progress and not completed and replacement is None and token in last_page_audio):raise RuntimeError('audio never started, advanced, completed or demonstrably replaced')
      audio_meta=json.loads(private(run,f'audio-{token}.json'))
      key=audio_meta['kind']+'/'+audio_meta['name'].lower()
      if audio_meta['sha256']!=reference[key]:raise RuntimeError('raw DAT audio mismatch')
      audio_meta['progress_observed']=bool(progress)
      audio_meta['completed_after_duration']=completed
-     audio_meta['ended_in_terminal_span']=not progress and not completed and token not in last_page_audio
+     audio_meta['replaced_by_token']=replacement
+     audio_meta['ended_in_terminal_span']=not progress and not completed and replacement is None and token not in last_page_audio
      audio.append(audio_meta)
     else:raise RuntimeError('unrecognized host effect in verification')
     if begin['kind']=='bgm_fade' and not cancelled and not any(e['event']=='stopped' and e['kind']=='bgm' and e['token']==begin['token'] for e in host):raise RuntimeError('BGM fade did not release player')
