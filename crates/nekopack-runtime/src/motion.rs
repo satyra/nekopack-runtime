@@ -1,9 +1,10 @@
-//! Original 0x438640: rightward ease-in/out and `_` vertical sine excursion.
+//! Original 0x438640: timed actor operations, including cancelling `[]` components.
 pub(crate) const DURATION_MS: u64 = 250;
 #[derive(Clone, Debug)]
 enum Kind {
     Rightward,
     Dip,
+    Stationary,
 }
 #[derive(Clone, Debug)]
 pub(crate) struct Motion {
@@ -46,6 +47,11 @@ impl Motion {
         motion.kind = Kind::Dip;
         Ok(motion)
     }
+    pub fn stationary(slot: u8, start: [i32; 2], center: [i32; 2]) -> Result<Self, String> {
+        let mut motion = Self::new(slot, start, 0, center)?;
+        motion.kind = Kind::Stationary;
+        Ok(motion)
+    }
     pub fn position(&self, elapsed: u64) -> [i32; 2] {
         if elapsed == 0 {
             return self.start;
@@ -55,6 +61,7 @@ impl Motion {
         }
         let t = elapsed as f64 / DURATION_MS as f64;
         match self.kind {
+            Kind::Stationary => self.start,
             Kind::Rightward => {
                 let weight = (((t - 0.5) * std::f64::consts::PI).sin() + 1.0) * 0.5;
                 let relative = f64::from(self.start[0] - self.center[0])
@@ -71,6 +78,7 @@ impl Motion {
     pub fn metadata(&self) -> String {
         let vertical = match self.kind {
             Kind::Rightward => String::new(),
+            Kind::Stationary => format!(",\"kind\":\"stationary\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":0",self.start[1],self.end[1],self.center[1]),
             Kind::Dip => format!(
                 ",\"kind\":\"dip\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_y\":50",
                 self.start[1], self.end[1], self.center[1]
@@ -95,6 +103,14 @@ mod tests {
         let m = Motion::new(2, [440, 360], 350, [640, 360]).unwrap();
         assert_eq!(m.position(50), [474, 360]);
         assert!(Motion::new(1, [i32::MAX, 0], 50, [0, 0]).is_err());
+    }
+    #[test]
+    fn cancelled_horizontal_components_retain_a_stationary_timed_operation() {
+        let motion = Motion::stationary(6, [990, -1], [640, 360]).unwrap();
+        for t in [0, 1, 50, 125, 249, 250, 999] {
+            assert_eq!(motion.position(t), [990, -1]);
+        }
+        assert!(motion.metadata().contains("\"kind\":\"stationary\""));
     }
     #[test]
     fn dip_is_positive_y_sine_with_no_persistent_displacement() {

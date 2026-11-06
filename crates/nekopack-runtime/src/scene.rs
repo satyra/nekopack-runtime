@@ -1,4 +1,4 @@
-//! Observed Tiny Dungeon layer profile. Verified default rightward and vertical dip motions only.
+//! Observed Tiny Dungeon layer profile. Verified default rightward, vertical dip and stationary `[]` operations.
 use crate::quote;
 use nekopack_image::RgbaImage;
 use std::collections::BTreeMap;
@@ -84,6 +84,9 @@ mod tests {
         let dip = plan(&[b"_".to_vec()], &macros, 640).unwrap();
         assert!(dip.dip);
         assert_eq!(dip.order, Order::Keep);
+        let stationary = plan(&[b"[]".to_vec()], &macros, 640).unwrap();
+        assert!(stationary.stationary);
+        assert_eq!(stationary.order, Order::Keep);
         let nested = BTreeMap::from([
             ("alias".into(), vec!["_".into()]),
             ("_".into(), vec!["front".into()]),
@@ -99,6 +102,10 @@ mod tests {
             vec![b">".to_vec(), b"face".to_vec()],
             vec![b"center".to_vec(), b">".to_vec()],
             vec![b"__".to_vec()],
+            vec![b"[".to_vec()],
+            vec![b"][".to_vec()],
+            vec![b"[]".to_vec(), b"_".to_vec()],
+            vec![b"[]".to_vec(), b"face".to_vec()],
             vec![b"_2".to_vec()],
             vec![b"_".to_vec(), b">".to_vec()],
             vec![b"center".to_vec(), b"_".to_vec()],
@@ -116,6 +123,7 @@ pub(crate) struct Plan {
     pub x: Option<i32>,
     pub rightward: Option<i32>,
     pub dip: bool,
+    pub stationary: bool,
     pub order: Order,
     pub clear: bool,
 }
@@ -142,6 +150,7 @@ pub(crate) fn plan(
         x: None,
         rightward: None,
         dip: false,
+        stationary: false,
         order: Order::Front,
         clear: words.is_empty(),
     };
@@ -149,9 +158,15 @@ pub(crate) fn plan(
         if macros.contains_key(word) {
             return Err("nested image macros are unsupported".into());
         }
-        if word == "_" || (!word.is_empty() && word.bytes().all(|b| b == b'>')) {
+        if matches!(word.as_str(), "_" | "[]")
+            || (!word.is_empty() && word.bytes().all(|b| b == b'>'))
+        {
             if index + 1 != words.len() || p.x.is_some() {
                 return Err("motion must be the sole terminal position modifier".into());
+            }
+            if word == "[]" {
+                p.stationary = true;
+                continue;
             }
             if word == "_" {
                 p.dip = true;
@@ -215,7 +230,7 @@ pub(crate) fn plan(
             }
         }
     }
-    if (p.rightward.is_some() || p.dip)
+    if (p.rightward.is_some() || p.dip || p.stationary)
         && p.name.is_none()
         && !words
             .iter()

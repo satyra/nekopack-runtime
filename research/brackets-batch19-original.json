@@ -1,0 +1,218 @@
+{
+  "scope": "BLESS original static disassembly, same EXE as prior original evidence; no dynamic original screen parity",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "facts": [
+    {
+      "va": "0x43ceec",
+      "instruction": "mov dword ptr [ebp - 0x58], edx"
+    },
+    {
+      "va": "0x43cefe",
+      "instruction": "mov dword ptr [ebp - 0x64], 1"
+    },
+    {
+      "va": "0x43cfa0",
+      "instruction": "cmp eax, 0x5d"
+    },
+    {
+      "va": "0x43cfa5",
+      "instruction": "je 0x43cff7"
+    },
+    {
+      "va": "0x43cfac",
+      "instruction": "sub eax, 0x1b"
+    },
+    {
+      "va": "0x43cfaf",
+      "instruction": "je 0x43cfef"
+    },
+    {
+      "va": "0x43cff2",
+      "instruction": "sub dword ptr [ebp - 0x58], ecx"
+    },
+    {
+      "va": "0x43cffa",
+      "instruction": "add dword ptr [ebp - 0x58], eax"
+    },
+    {
+      "va": "0x43d022",
+      "instruction": "mov bl, byte ptr [edi]"
+    },
+    {
+      "va": "0x43d024",
+      "instruction": "inc edi"
+    },
+    {
+      "va": "0x43d027",
+      "instruction": "jne 0x43cefe"
+    },
+    {
+      "va": "0x43d04f",
+      "instruction": "mov edx, dword ptr [ebp - 0x58]"
+    },
+    {
+      "va": "0x43d055",
+      "instruction": "add edx, edx"
+    },
+    {
+      "va": "0x43d057",
+      "instruction": "lea edx, [edx + edx*4]"
+    },
+    {
+      "va": "0x43d05a",
+      "instruction": "lea edx, [edx + edx*4]"
+    },
+    {
+      "va": "0x43d05d",
+      "instruction": "mov dword ptr [ecx + 0xc], edx"
+    },
+    {
+      "va": "0x43d07f",
+      "instruction": "mov al, 1"
+    },
+    {
+      "va": "0x4389a2",
+      "instruction": "mov dword ptr [ebp - 0x1c4], 0xfa"
+    },
+    {
+      "va": "0x43971e",
+      "instruction": "push ebx"
+    },
+    {
+      "va": "0x439726",
+      "instruction": "call 0x43cea4"
+    },
+    {
+      "va": "0x43972e",
+      "instruction": "test al, al"
+    },
+    {
+      "va": "0x439730",
+      "instruction": "je 0x43975a"
+    },
+    {
+      "va": "0x43974d",
+      "instruction": "call 0x43ab98"
+    },
+    {
+      "va": "0x438555",
+      "instruction": "test edx, edx"
+    },
+    {
+      "va": "0x438557",
+      "instruction": "je 0x437c1d"
+    },
+    {
+      "va": "0x438561",
+      "instruction": "call 0x4b5558"
+    },
+    {
+      "va": "0x438651",
+      "instruction": "mov edx, dword ptr [esi + 4]"
+    },
+    {
+      "va": "0x438669",
+      "instruction": "call 0x4b556c"
+    },
+    {
+      "va": "0x438674",
+      "instruction": "cmp edx, eax"
+    },
+    {
+      "va": "0x438676",
+      "instruction": "jl 0x438692"
+    },
+    {
+      "va": "0x438679",
+      "instruction": "call 0x437c0c"
+    },
+    {
+      "va": "0x4386e9",
+      "instruction": "jne 0x4386f6"
+    },
+    {
+      "va": "0x4386f0",
+      "instruction": "je 0x438786"
+    },
+    {
+      "va": "0x438792",
+      "instruction": "je 0x4387d8"
+    },
+    {
+      "va": "0x4387dd",
+      "instruction": "je 0x438813"
+    },
+    {
+      "va": "0x438816",
+      "instruction": "mov al, 1"
+    },
+    {
+      "va": "0x437174",
+      "instruction": "xor eax, eax"
+    },
+    {
+      "va": "0x437176",
+      "instruction": "mov dword ptr [edi + 0xa4], eax"
+    },
+    {
+      "va": "0x43717c",
+      "instruction": "mov dword ptr [edi + 0xa0], eax"
+    },
+    {
+      "va": "0x437182",
+      "instruction": "mov dword ptr [edi + 0x9c], eax"
+    },
+    {
+      "va": "0x437188",
+      "instruction": "mov dword ptr [edi + 0x98], eax"
+    }
+  ],
+  "spans": [
+    {
+      "va": "0x43cea4",
+      "length": 494,
+      "sha256": "d4e21c59856366435fc9a912b30b94f4804f06ff382df7cf7bad134b326a14b0"
+    },
+    {
+      "va": "0x438640",
+      "length": 516,
+      "sha256": "c38673f8f8cf82074c3eeb1b34c0833f28ba53ab4de2f0dbd4bbbdf8de799b3a"
+    },
+    {
+      "va": "0x437c0c",
+      "length": 2404,
+      "sha256": "b7d002ab129da9d5575072190a4ef5a9f4e09a62eb5f92718d35880bacec23a1"
+    },
+    {
+      "va": "0x43971e",
+      "length": 60,
+      "sha256": "90e6e722a366e30ede8e5eeb17e8745ba48ca8c27c0888ec3b88c323691d18ef"
+    },
+    {
+      "va": "0x437174",
+      "length": 31,
+      "sha256": "f9846d001ea7dd7c4fb4810cf28eb6fd37d2bc54d3945fb82e6c78a5b6d8c950"
+    }
+  ],
+  "semantics": {
+    "symbol": "[]",
+    "temporary_x_count_steps": [
+      0,
+      -1,
+      0
+    ],
+    "temporary_x_amplitude": 0,
+    "permanent_displacement": [
+      0,
+      0
+    ],
+    "default_duration_ms": 250,
+    "scheduling": "active timer while dialogue runs, including zero displacement; not an additional blocking wait",
+    "image_change": "preceding image resource operation still executes",
+    "actor_clear": "clears current and base XY; reload without position uses canvas center"
+  },
+  "limits": [
+    "Only terminal literal [] added; other bracket forms and multi-operation queues remain unsupported",
+    "Headless final PNG cannot alone prove stationary timer dispatch"
+  ]
+}

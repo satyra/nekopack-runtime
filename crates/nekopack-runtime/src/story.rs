@@ -498,7 +498,9 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(x) = p.x {
             anchor[0] = x;
         }
-        let motion = if p.dip {
+        let motion = if p.stationary {
+            Some(crate::motion::Motion::stationary(slot, anchor, center)?)
+        } else if p.dip {
             Some(crate::motion::Motion::dip(slot, anchor, center)?)
         } else {
             p.rightward
@@ -1445,6 +1447,40 @@ mod tests {
         s.acknowledge_text(2).unwrap();
         assert_eq!(s.scene.actors[0].anchor, [450, 50]);
         assert!(s.page_frame(2, 250).is_err());
+    }
+    #[test]
+    fn stationary_motion_is_not_discarded_or_an_extra_script_wait() {
+        let mut s = moving_session(b".img6 []\nfirst\nsecond");
+        let page = s.poll_packet().unwrap();
+        let steps = s.machine.steps();
+        assert!(s
+            .page
+            .as_ref()
+            .unwrap()
+            .motion
+            .as_ref()
+            .unwrap()
+            .contains("stationary"));
+        assert!(s.pending_effect.is_none());
+        let first = s.page_frame(1, 0).unwrap();
+        let split = first.iter().position(|b| *b == b'\n').unwrap();
+        for time in [50, 125, 250] {
+            let packet = s.page_frame(1, time).unwrap();
+            let split2 = packet.iter().position(|b| *b == b'\n').unwrap();
+            assert_eq!(&packet[split2 + 1..], &first[split + 1..]);
+            assert_eq!(s.machine.steps(), steps);
+            assert_eq!(s.poll_packet().unwrap(), page);
+        }
+        assert!(s.page_frame(1, 249).is_err());
+        s.acknowledge_text(1).unwrap();
+        assert!(s.motions.is_empty());
+        assert_eq!(s.scene.actors[0].anchor, [400, 0]);
+        assert!(s.page_frame(1, 250).is_err());
+        let mut early = moving_session(b".img6 []\nfirst\nsecond");
+        early.poll_packet().unwrap();
+        early.acknowledge_text(1).unwrap();
+        assert_eq!(early.page.as_ref().unwrap().text, "second");
+        assert_eq!(early.scene.actors[0].anchor, [400, 0]);
     }
     #[test]
     fn motion_early_next_finishes_position_and_unverified_queue_combinations_stop() {

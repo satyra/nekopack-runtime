@@ -1,0 +1,51 @@
+{
+  "scope": "BLESS only, PGKM10 native ARM64; original DAT via SAF; explicit movie skip; no dynamic original screen parity or full-game claim",
+  "apk_sha256": "6afcc072bc84b78e09386704de25065e3dbbc1d032d44460ed51689051c0654b",
+  "unchanged_prefix_pages": 59,
+  "total_pages": 175,
+  "next_boundary": {
+    "source": "012501",
+    "line": 121,
+    "steps": 994,
+    "unsupported": "BGM between queued actor motion and dialogue"
+  },
+  "independent_motion_frames": {
+    "159": 8,
+    "56": 8,
+    "57": 8,
+    "60": 8
+  },
+  "stationary_frames_identical": true,
+  "independent_scene_pages": 175,
+  "independent_transition_snapshots": 11,
+  "audio_requests": 82,
+  "audio_terminal_only_exemptions": 0,
+  "normal_boundary_and_cancel_vm_live_bytes": 0,
+  "cancel_target_page": 60,
+  "cancel_after_intermediate_frame": true,
+  "checks": {
+    "workspace_tests": {
+      "passed": true,
+      "log_sha256": "5f7522f56c0bfd05a6b06b48b4b01a314c6de9afb997e2406ea5584bf525e2eb"
+    },
+    "clippy": {
+      "passed": true,
+      "log_sha256": "b33ed04ede69a917e19920f52fba60f92973af20cd8223082556d2539a174bc3"
+    },
+    "python_tests": {
+      "passed": true,
+      "log_sha256": "d41f3c846ddc49b0edee5f0cc7d1f92afb009ffd88a2bdac06fe9b8c1e024766"
+    }
+  },
+  "reports": {
+    "brackets-batch19-audio-evidence.json": "1efc55b9b2878436cba9e6e967f003a8bd9c10eee32f1be0c25e0c63391dd443",
+    "brackets-batch19-audio-reference.json": "3707bc9e2367194951f2bac3314028bcbb9bf80d53242384afa317d99a215bca",
+    "brackets-batch19-cancel.json": "0912db0b98080b0d2b7d70e90c757102a6c996f60a08c015c12eafb6042ce852",
+    "brackets-batch19-desktop.json": "86477166664bee8925c4613e6c55d4d617e98de6cb8010a308fd59ddf34fbded",
+    "brackets-batch19-effects.json": "bc5171d1f22b983fb3dd87d5cbe21274b30fa678d16db81c62d5bfd6b7231e62",
+    "brackets-batch19-frames.json": "2116c31f35f9c7d0f67e19fe7627997a045479a003fc1339101f14ee3a7e67ad",
+    "brackets-batch19-layers.json": "a65d77702ae85229afbc6fff3ab3b2c62a05a1f6a22760f848d78536829e2ee7",
+    "brackets-batch19-native.json": "c7e7d4806d9133b0abc083737764c8309973092b68446297876c59372f723a8b",
+    "brackets-batch19-original.json": "5a0c9a763387f31104f0984b823bcfbf6616a07f79a5c428ad71cedf60b9ce96"
+  }
+}

@@ -1,0 +1,689 @@
+{
+  "scope": "Replay of captured device events; replacement is interruption evidence, not proof of audible progress; terminal spans retain their original bounded-observation limitation",
+  "verifier_sha256_lf_utf8": "30aba1e968fe9cacb5b233bf70c6c4bbf63f9e93fa764d71a5640f52ba78bd9a",
+  "reports": [
+    {
+      "report": "brackets-batch19-native.json",
+      "report_sha256_lf_utf8": "c7e7d4806d9133b0abc083737764c8309973092b68446297876c59372f723a8b",
+      "execution": "native ARM64",
+      "apk_sha256": "6afcc072bc84b78e09386704de25065e3dbbc1d032d44460ed51689051c0654b",
+      "games": [
+        {
+          "index": 0,
+          "audio": [
+            {
+              "token": 2,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 3,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 4,
+              "terminal_span_only": false
+            },
+            {
+              "token": 4,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 5,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 6,
+              "kind": "se",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 9,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 36,
+              "terminal_span_only": false
+            },
+            {
+              "token": 11,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 12,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 13,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 14,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 15,
+              "terminal_span_only": false
+            },
+            {
+              "token": 15,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 16,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 17,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 18,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 20,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 21,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 22,
+              "terminal_span_only": false
+            },
+            {
+              "token": 22,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 23,
+              "terminal_span_only": false
+            },
+            {
+              "token": 23,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 24,
+              "terminal_span_only": false
+            },
+            {
+              "token": 24,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 25,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 26,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 27,
+              "terminal_span_only": false
+            },
+            {
+              "token": 27,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 28,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 29,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 30,
+              "terminal_span_only": false
+            },
+            {
+              "token": 30,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 31,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 32,
+              "terminal_span_only": false
+            },
+            {
+              "token": 32,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 33,
+              "terminal_span_only": false
+            },
+            {
+              "token": 33,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 34,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 36,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 46,
+              "terminal_span_only": false
+            },
+            {
+              "token": 38,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 39,
+              "terminal_span_only": false
+            },
+            {
+              "token": 39,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 40,
+              "terminal_span_only": false
+            },
+            {
+              "token": 40,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 41,
+              "terminal_span_only": false
+            },
+            {
+              "token": 41,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 42,
+              "terminal_span_only": false
+            },
+            {
+              "token": 42,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 44,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 45,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 46,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 47,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 48,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 49,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 50,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 51,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 52,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 53,
+              "terminal_span_only": false
+            },
+            {
+              "token": 53,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 54,
+              "terminal_span_only": false
+            },
+            {
+              "token": 54,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 55,
+              "terminal_span_only": false
+            },
+            {
+              "token": 55,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 56,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 57,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 58,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 59,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 60,
+              "terminal_span_only": false
+            },
+            {
+              "token": 60,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 61,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 62,
+              "terminal_span_only": false
+            },
+            {
+              "token": 62,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 63,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 64,
+              "terminal_span_only": false
+            },
+            {
+              "token": 64,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 65,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 66,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 67,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 68,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 69,
+              "terminal_span_only": false
+            },
+            {
+              "token": 69,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 70,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 71,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 72,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 82,
+              "terminal_span_only": false
+            },
+            {
+              "token": 76,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 77,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 78,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 82,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 83,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 84,
+              "terminal_span_only": false
+            },
+            {
+              "token": 84,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 85,
+              "terminal_span_only": false
+            },
+            {
+              "token": 85,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 86,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 87,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 88,
+              "terminal_span_only": false
+            },
+            {
+              "token": 88,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 89,
+              "terminal_span_only": false
+            },
+            {
+              "token": 89,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 90,
+              "terminal_span_only": false
+            },
+            {
+              "token": 90,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 91,
+              "terminal_span_only": false
+            },
+            {
+              "token": 91,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 92,
+              "terminal_span_only": false
+            },
+            {
+              "token": 92,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 93,
+              "terminal_span_only": false
+            },
+            {
+              "token": 93,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 94,
+              "terminal_span_only": false
+            },
+            {
+              "token": 94,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 95,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 96,
+              "terminal_span_only": false
+            },
+            {
+              "token": 96,
+              "kind": "voice",
+              "progress_observed": false,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            }
+          ],
+          "stops": [
+            {
+              "token": 43,
+              "ack_elapsed_ms": 33,
+              "release_before_ack": true,
+              "no_late_old_bgm_events": true
+            },
+            {
+              "token": 80,
+              "ack_elapsed_ms": 38,
+              "release_before_ack": true,
+              "no_late_old_bgm_events": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
