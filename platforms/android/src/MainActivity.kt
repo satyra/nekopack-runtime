@@ -5,6 +5,11 @@ import android.net.Uri
 import android.provider.DocumentsContract
 import android.os.ParcelFileDescriptor
 import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ImageView
+import android.graphics.BitmapFactory
+import org.json.JSONObject
+import java.util.concurrent.Executors
 import android.app.Activity
 import android.os.Bundle
 import android.os.Build
@@ -15,11 +20,19 @@ import java.io.File
 
 /** Validation shell only: all VM lifetime stays within one native call on its worker. */
 class MainActivity : Activity() {
+    private external fun story(descriptors:IntArray,operation:Int,sequence:Long):ByteArray
+    private var storyWorker:java.util.concurrent.ExecutorService?=null
+    private var storyLoaded=false
     private external fun runDat(descriptors: IntArray, choice: Int): ByteArray
     private external fun runChecks(root: ByteArray): ByteArray
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if(intent.hasExtra("story_game")) {
+            val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null) ?: error("select DAT tree through SAF first")
+            startStory(Uri.parse(saved),intent.getIntExtra("story_game",0))
+            return
+        }
         if (intent.getBooleanExtra("saf", false)) {
             if(intent.getBooleanExtra("reuse_grant",false)) {
                 val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null) ?: error("no persisted DAT selection")
@@ -108,6 +121,68 @@ class MainActivity : Activity() {
             check(temporary.renameTo(File(root,"report.txt")))
             runOnUiThread{view.text=report}
         },"NekoPackSAF").start()
+    }
+
+    private fun startStory(tree:Uri,game:Int) {
+        require(game in 0..3)
+        val runId=intent.getStringExtra("run_id") ?: "story-manual"
+        require(Regex("[a-zA-Z0-9_-]{1,64}").matches(runId))
+        val root=File(filesDir,runId);root.mkdirs()
+        val layout=LinearLayout(this);layout.orientation=LinearLayout.VERTICAL
+        val image=ImageView(this);image.scaleType=ImageView.ScaleType.FIT_CENTER
+        layout.addView(image,LinearLayout.LayoutParams(-1,0,1f))
+        val text=TextView(this);text.text="正在读取剧情…";text.textSize=18f;layout.addView(text)
+        val next=Button(this);next.text="继续";next.isEnabled=false;layout.addView(next)
+        val close=Button(this);close.text="结束预览（无音频／转场）";layout.addView(close)
+        setContentView(layout)
+        val worker=Executors.newSingleThreadExecutor();storyWorker=worker
+        var sequence=0L
+        fun show(packet:ByteArray) {
+            val split=packet.indexOf(10.toByte());check(split>=0)
+            val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8))
+            check(!metadata.has("error")){metadata.optString("error")}
+            val token=metadata.getLong("sequence")
+            val png=packet.copyOfRange(split+1,packet.size)
+            val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid story bitmap")
+            File(root,"page-$token.json").writeText(metadata.toString())
+            File(root,"page-$token.png").writeBytes(png)
+            // Polling may not acknowledge dialogue or move the PC.
+            check(packet.contentEquals(story(intArrayOf(),1,0))){"poll advanced story"}
+            runOnUiThread {if(!isDestroyed){sequence=token;image.setImageBitmap(bitmap);text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true}}
+        }
+        fun fail(error:Throwable) {
+            File(root,"error.txt").writeText("${error.javaClass.name}: ${error.message}")
+            if(storyLoaded)story(intArrayOf(),3,0)
+            runOnUiThread{if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
+        }
+        worker.execute {
+            try {
+                System.loadLibrary("nekopack_host");storyLoaded=true
+                val top=children(tree,DocumentsContract.getTreeDocumentId(tree))
+                val selected=if(top.any{it.first.endsWith(".dat",true)}) top else {
+                    val child=top.single{it.first==game.toString()}
+                    children(tree,DocumentsContract.getDocumentId(child.second))
+                }
+                val opened=mutableListOf<ParcelFileDescriptor>()
+                val packet=try {
+                    for((_,uri) in selected.filter{it.first.endsWith(".dat",true)})opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
+                    story(opened.map{it.fd}.toIntArray(),0,0)
+                }finally{opened.forEach{it.close()}}
+                show(packet)
+            }catch(error:Throwable){fail(error)}
+        }
+        next.setOnClickListener {
+            next.isEnabled=false;val token=sequence
+            worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
+        }
+        close.setOnClickListener {
+            next.isEnabled=false;close.isEnabled=false
+            worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
+        }
+    }
+    override fun onDestroy() {
+        storyWorker?.let {worker->worker.execute{if(storyLoaded)story(intArrayOf(),3,0)};worker.shutdown()}
+        super.onDestroy()
     }
 
 }

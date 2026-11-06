@@ -1,5 +1,6 @@
 //! Shared bounded title execution and raw DAT resources; no platform APIs.
 pub mod dat;
+pub mod story;
 use nekopack_script::{
     runtime::{Machine, Request, Scripts, Step},
     system::{ResourceProvider, SystemVm},
@@ -35,6 +36,13 @@ pub fn run_title(
     choice: i32,
     output: &mut impl Write,
 ) -> Result<(), Box<dyn Error>> {
+    bootstrap(store, choice, output).map(|_| ())
+}
+fn bootstrap(
+    store: &mut impl GameResources,
+    choice: i32,
+    output: &mut impl Write,
+) -> Result<(Machine, SystemVm), Box<dyn Error>> {
     let mut machine = Machine::new(store.load(b"start")?, 10000, 64);
     let mut system = SystemVm::try_new()?;
     let metadata = store.setup()?;
@@ -84,6 +92,9 @@ pub fn run_title(
                     }
                 }
                 match request {
+                    Request::Speaker(_) | Request::Text(_) => {
+                        return Err("unexpected dialogue during title bootstrap".into())
+                    }
                     Request::System(name) => {
                         let data = store.system(&name)?;
                         system
@@ -164,5 +175,5 @@ pub fn run_title(
     for ((bank, index), value) in machine.variables.slots() {
         writeln!(output, "slot\t{}\t{index}\t{value}", char::from(*bank))?;
     }
-    Ok(())
+    Ok((machine, system))
 }

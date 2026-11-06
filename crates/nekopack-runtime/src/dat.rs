@@ -37,7 +37,7 @@ impl<R: Read + Seek> DatGame<R> {
         }
         Ok(Self { archives, catalog })
     }
-    fn read(&mut self, dir: &str, name: &str) -> Result<Vec<u8>, String> {
+    pub(crate) fn read(&mut self, dir: &str, name: &str) -> Result<Vec<u8>, String> {
         if name.contains(['/', '\\', '\0']) || name == ".." {
             return Err("resource name is not a basename".into());
         }

@@ -117,6 +117,8 @@ impl Frame {
 }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Request {
+    Speaker(Vec<Vec<u8>>),
+    Text(Vec<u8>),
     System(Vec<u8>),
     Command {
         name: Vec<u8>,
@@ -138,6 +140,7 @@ pub struct Machine {
     pending: Option<Request>,
     steps: usize,
     max_steps: usize,
+    dialogue: bool,
     max_depth: usize,
 }
 impl Machine {
@@ -148,8 +151,13 @@ impl Machine {
             pending: None,
             steps: 0,
             max_steps,
+            dialogue: false,
             max_depth,
         }
+    }
+    /// Enable the observed colon-speaker and UTF-8 text profile explicitly.
+    pub fn enable_dialogue(&mut self) {
+        self.dialogue = true;
     }
     pub fn location(&self) -> Option<(&[u8], usize)> {
         self.stack.last().map(|f| {
@@ -264,6 +272,28 @@ impl Machine {
                     }
                 }
                 let request = Request::Command { name, args, rows };
+                self.pending = Some(request.clone());
+                return Ok(Step::Request(request));
+            } else if self.dialogue {
+                std::str::from_utf8(&raw).map_err(|_| "dialogue requires decoded UTF-8")?;
+                if raw.iter().any(|b| *b < 32 && *b != b'\t') {
+                    return Err("unsupported dialogue control".into());
+                }
+                let request = if raw.starts_with(b":") {
+                    let fields: Vec<_> =
+                        raw[1..].split(|b| *b == b':').map(|s| s.to_vec()).collect();
+                    if fields.len() != 3 {
+                        return Err("speaker requires name:voice:actor".into());
+                    }
+                    Request::Speaker(fields)
+                } else {
+                    if raw.iter().any(|b| *b < 32 && *b != b'\t')
+                        || matches!(raw[0], b'@' | b'#' | b'*' | b'!')
+                    {
+                        return Err("unsupported dialogue control".into());
+                    }
+                    Request::Text(raw)
+                };
                 self.pending = Some(request.clone());
                 return Ok(Step::Request(request));
             } else {
@@ -515,5 +545,73 @@ mod tests {
         vars.names.insert(b"c".to_vec(), Value::Constant(1));
         assert!(vars.set(b"c", 2).is_err());
         assert!(vars.get(b"missing").is_err());
+    }
+}
+
+#[cfg(test)]
+mod dialogue_tests {
+    use super::*;
+    struct NoCalls;
+    impl Scripts for NoCalls {
+        fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+            Err("unexpected call".into())
+        }
+    }
+    #[test]
+    fn dialogue_is_opt_in_and_waits_for_ack() {
+        let source = Source {
+            name: b"story".to_vec(),
+            bytes: b":Alice:voice:actor\nHello\nWorld\n.unknown".to_vec(),
+        };
+        let mut vm = Machine::new(source.clone(), 100, 4);
+        assert!(vm.advance(&mut NoCalls).is_err());
+        let mut vm = Machine::new(source, 100, 4);
+        vm.enable_dialogue();
+        assert!(matches!(
+            vm.advance(&mut NoCalls).unwrap(),
+            Step::Request(Request::Speaker(_))
+        ));
+        vm.complete(None).unwrap();
+        let first = vm.advance(&mut NoCalls).unwrap();
+        let steps = vm.steps();
+        let location = vm.location().unwrap().1;
+        assert_eq!(first, Step::Request(Request::Text(b"Hello".to_vec())));
+        assert_eq!(vm.advance(&mut NoCalls).unwrap(), first);
+        assert_eq!(vm.steps(), steps);
+        assert_eq!(vm.location().unwrap().1, location);
+        vm.complete(None).unwrap();
+        assert_eq!(
+            vm.advance(&mut NoCalls).unwrap(),
+            Step::Request(Request::Text(b"World".to_vec()))
+        );
+        vm.complete(None).unwrap();
+        assert!(
+            matches!(vm.advance(&mut NoCalls).unwrap(),Step::Request(Request::Command{name,..}) if name==b"unknown")
+        );
+    }
+    #[test]
+    fn malformed_speaker_and_text_budget_stop() {
+        let mut vm = Machine::new(
+            Source {
+                name: vec![],
+                bytes: b":incomplete\ntext".to_vec(),
+            },
+            10,
+            4,
+        );
+        vm.enable_dialogue();
+        assert!(vm.advance(&mut NoCalls).unwrap_err().contains("speaker"));
+        let mut vm = Machine::new(
+            Source {
+                name: vec![],
+                bytes: b"one\ntwo".to_vec(),
+            },
+            1,
+            4,
+        );
+        vm.enable_dialogue();
+        vm.advance(&mut NoCalls).unwrap();
+        vm.complete(None).unwrap();
+        assert!(vm.advance(&mut NoCalls).unwrap_err().contains("budget"));
     }
 }

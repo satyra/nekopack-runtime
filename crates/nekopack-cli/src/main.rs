@@ -136,6 +136,28 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
+        ("preview-story", n) if n >= 4 => {
+            let files = args[3..]
+                .iter()
+                .map(File::open)
+                .collect::<Result<Vec<_>, _>>()?;
+            let store = nekopack_runtime::dat::DatGame::mount(files)?;
+            let mut session = nekopack_runtime::story::StorySession::open(store, 1)?;
+            let count: usize = args[2].to_str().ok_or("invalid count")?.parse()?;
+            std::fs::create_dir_all(&args[1])?;
+            for i in 0..count {
+                let page = if i == 0 {
+                    session.page()?
+                } else {
+                    session.next(i as u64)?
+                };
+                std::fs::write(
+                    Path::new(&args[1]).join(format!("{i}.json")),
+                    page.metadata()?,
+                )?;
+                std::fs::write(Path::new(&args[1]).join(format!("{i}.png")), &page.png)?;
+            }
+        }
         ("run-dat-title", 3) => {
             let mut files = Vec::new();
             for entry in std::fs::read_dir(&args[1])? {

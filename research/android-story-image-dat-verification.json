@@ -1,0 +1,25 @@
+{
+  "scope": "device complete image.dat SHA-256 against prior original archive audit",
+  "games": [
+    {
+      "game": 0,
+      "sha256": "10499a9d839977153e2570274ed87cb325c0845b766083c175f346b754328e12",
+      "original_archive": true
+    },
+    {
+      "game": 1,
+      "sha256": "8d5437f2a4ef9a7879b5edb13424bc17171046ce703b8ee295438689abe9e333",
+      "original_archive": true
+    },
+    {
+      "game": 2,
+      "sha256": "4cd96091772ed431fa83ba0ba5d4887cf34e06e322320e7761fb2ccac0309869",
+      "original_archive": true
+    },
+    {
+      "game": 3,
+      "sha256": "237ae5d5839c202621a922e264c193f392686eb4f1cea66b852f50bba17038c2",
+      "original_archive": true
+    }
+  ]
+}

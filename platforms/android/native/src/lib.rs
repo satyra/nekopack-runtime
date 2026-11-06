@@ -251,3 +251,91 @@ pub unsafe extern "C" fn neko_probe_dat(
     std::mem::forget(bytes);
     ptr
 }
+
+#[cfg(target_os = "android")]
+thread_local! {static STORY:std::cell::RefCell<Option<nekopack_runtime::story::StorySession<std::fs::File>>>=const {std::cell::RefCell::new(None)};}
+/// All operations must execute on the same dedicated host worker.
+/// # Safety
+/// fds is readable for count valid borrowed descriptors; out_len is writable.
+#[cfg(target_os = "android")]
+#[no_mangle]
+pub unsafe extern "C" fn neko_probe_story(
+    fds: *const i32,
+    count: usize,
+    operation: i32,
+    sequence: u64,
+    out_len: *mut usize,
+) -> *mut u8 {
+    use std::os::fd::BorrowedFd;
+    let result = std::panic::catch_unwind(|| {
+        STORY.with(|cell| -> Result<Vec<u8>, Box<dyn Error>> {
+            let mut state = cell.borrow_mut();
+            match operation {
+                0 => {
+                    if state.is_some() {
+                        return Err("story session already open".into());
+                    }
+                    let mut files = Vec::new();
+                    for &fd in unsafe { std::slice::from_raw_parts(fds, count) } {
+                        files.push(std::fs::File::from(
+                            unsafe { BorrowedFd::borrow_raw(fd) }.try_clone_to_owned()?,
+                        ));
+                    }
+                    *state = Some(nekopack_runtime::story::StorySession::open(
+                        nekopack_runtime::dat::DatGame::mount(files)?,
+                        1,
+                    )?);
+                    Ok(state.as_mut().unwrap().page()?.packet()?)
+                }
+                1 => Ok(state.as_mut().ok_or("no story session")?.page()?.packet()?),
+                2 => Ok(state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .next(sequence)?
+                    .packet()?),
+                3 => {
+                    *state = None;
+                    check(
+                        SystemVm::validation_live_bytes() == 0,
+                        "story close VM leak",
+                    )?;
+                    Ok(b"{\"closed\":true}\n".to_vec())
+                }
+                _ => Err("unknown story operation".into()),
+            }
+        })
+    });
+    let bytes = match result {
+        Ok(Ok(bytes)) => bytes,
+        other => {
+            STORY.with(|cell| {
+                *cell.borrow_mut() = None;
+            });
+            let message = match other {
+                Ok(Err(e)) => e.to_string(),
+                Err(payload) => {
+                    std::mem::forget(payload);
+                    "Rust story callback panic".into()
+                }
+                _ => unreachable!(),
+            };
+            format!(
+                "{{\"error\":\"{}\"}}\n",
+                message
+                    .replace('\\', "\\\\")
+                    .replace('"', "\\\"")
+                    .replace('\n', "\\n")
+                    .replace('\r', "\\r")
+                    .replace('\t', "\\t")
+            )
+            .into_bytes()
+        }
+    };
+    let mut bytes = bytes.into_boxed_slice();
+    unsafe {
+        *out_len = bytes.len();
+    }
+    let pointer = bytes.as_mut_ptr();
+    std::mem::forget(bytes);
+    pointer
+}
