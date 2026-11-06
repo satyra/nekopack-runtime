@@ -1,4 +1,4 @@
-//! Minimal static story preview. Audio and timed transitions are recorded, not played.
+//! Cooperative story presentation. Explicit host mode waits for effect acknowledgements.
 use crate::{array, bootstrap, dat::DatGame, quote};
 use nekopack_image::{decode_png, Mng, RgbaImage};
 use nekopack_script::{
@@ -31,6 +31,51 @@ impl Page {
         Ok(bytes)
     }
 }
+
+pub struct HostEffect {
+    pub token: u64,
+    pub kind: String,
+    pub name: String,
+    pub duration_ms: u64,
+    pub payload: Vec<u8>,
+}
+impl HostEffect {
+    pub fn packet(&self) -> Result<Vec<u8>, String> {
+        let mut result = format!(
+            "{{\"host_effect\":{},\"token\":{},\"name\":{},\"duration_ms\":{}}}\n",
+            quote(self.kind.as_bytes())?,
+            self.token,
+            quote(self.name.as_bytes())?,
+            self.duration_ms
+        )
+        .into_bytes();
+        result.extend(&self.payload);
+        Ok(result)
+    }
+}
+fn duration_ms(text: &str) -> Result<u64, String> {
+    let (whole, fraction) = text.split_once('.').unwrap_or((text, ""));
+    if whole.is_empty()
+        || !whole.bytes().all(|b| b.is_ascii_digit())
+        || fraction.len() > 3
+        || !fraction.bytes().all(|b| b.is_ascii_digit())
+    {
+        return Err(
+            "invalid duration; expected nonnegative seconds with at most 3 decimal places".into(),
+        );
+    }
+    let whole = whole.parse::<u64>().map_err(|_| "duration overflow")?;
+    let fraction = if fraction.is_empty() {
+        0
+    } else {
+        fraction.parse::<u64>().unwrap() * 10u64.pow(3 - fraction.len() as u32)
+    };
+    whole
+        .checked_mul(1000)
+        .and_then(|v| v.checked_add(fraction))
+        .filter(|v| *v <= i32::MAX as u64)
+        .ok_or("duration overflow".into())
+}
 pub struct StorySession<R: Read + Seek> {
     store: DatGame<R>,
     machine: Machine,
@@ -44,6 +89,10 @@ pub struct StorySession<R: Read + Seek> {
     voice: String,
     sequence: u64,
     failed: bool,
+    host_mode: bool,
+    pending_effect: Option<HostEffect>,
+    host_sequence: u64,
+    effects: Vec<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
     pub fn open(mut store: DatGame<R>, choice: i32) -> Result<Self, Box<dyn Error>> {
@@ -64,6 +113,10 @@ impl<R: Read + Seek> StorySession<R> {
             voice: String::new(),
             sequence: 0,
             failed: false,
+            host_mode: false,
+            pending_effect: None,
+            host_sequence: 0,
+            effects: Vec::new(),
         })
     }
     /// Polling retains the exact pending text. Only a matching sequence acknowledges it.
@@ -71,13 +124,15 @@ impl<R: Read + Seek> StorySession<R> {
         if self.failed {
             return Err("story session stopped after error".into());
         }
-        if self.page.is_none() {
+        if self.page.is_none() && self.pending_effect.is_none() {
             if let Err(e) = self.advance() {
                 self.failed = true;
                 return Err(e);
             }
         }
-        Ok(self.page.as_ref().unwrap())
+        self.page
+            .as_ref()
+            .ok_or_else(|| "host effect requires acknowledgement".into())
     }
     pub fn next(&mut self, sequence: u64) -> Result<&Page, Box<dyn Error>> {
         if self.failed {
@@ -92,40 +147,124 @@ impl<R: Read + Seek> StorySession<R> {
         self.voice.clear();
         self.page()
     }
+
+    /// Enable once before polling; headless fixtures retain their explicit static profile.
+    pub fn enable_host_effects(&mut self) {
+        self.host_mode = true;
+    }
+    pub fn poll_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed {
+            return Err("story session stopped after error".into());
+        }
+        if self.page.is_none() && self.pending_effect.is_none() {
+            if let Err(e) = self.advance() {
+                self.failed = true;
+                return Err(e);
+            }
+        }
+        if let Some(effect) = &self.pending_effect {
+            Ok(effect.packet()?)
+        } else {
+            Ok(self
+                .page
+                .as_ref()
+                .ok_or("no pending story event")?
+                .packet()?)
+        }
+    }
+    pub fn acknowledge_effect(&mut self, token: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed {
+            return Err("story session stopped after error".into());
+        }
+        if self.pending_effect.as_ref().map(|e| e.token) != Some(token) {
+            return Err("stale or missing host acknowledgement".into());
+        }
+        self.machine.complete(None)?;
+        self.pending_effect = None;
+        self.poll_packet()
+    }
+    pub fn acknowledge_text(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed {
+            return Err("story session stopped after error".into());
+        }
+        if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
+            return Err("stale or missing dialogue acknowledgement".into());
+        }
+        self.machine.complete(None)?;
+        self.page = None;
+        self.speaker.clear();
+        self.voice.clear();
+        self.poll_packet()
+    }
+    fn emit(&mut self, kind: &str, name: &str) -> Result<(), Box<dyn Error>> {
+        let (duration, payload) = match kind {
+            "fade" => (duration_ms(name)?, self.render()?),
+            "wait" => (duration_ms(name)?, Vec::new()),
+            "bgm" | "se" | "voice" => {
+                let directory = match kind {
+                    "bgm" => "sound/bgm",
+                    "se" => "sound/se",
+                    _ => "voice",
+                };
+                let bytes = self.store.read(directory, &format!("{name}.ogg"))?;
+                if !bytes.starts_with(b"OggS") {
+                    return Err("audio resource is not Ogg".into());
+                }
+                (0, bytes)
+            }
+            _ => return Err("unsupported host effect".into()),
+        };
+        self.host_sequence += 1;
+        self.pending_effect = Some(HostEffect {
+            token: self.host_sequence,
+            kind: kind.into(),
+            name: name.into(),
+            duration_ms: duration,
+            payload,
+        });
+        Ok(())
+    }
+    fn render(&self) -> Result<Vec<u8>, Box<dyn Error>> {
+        let mut canvas = RgbaImage::filled(
+            self.dimensions[0],
+            self.dimensions[1],
+            self.solid.unwrap_or([0, 0, 0, 255]),
+            PIXELS,
+        )?;
+        if self.solid.is_none() {
+            if let Some(bg) = &self.background {
+                canvas.draw(bg, [0, 0]);
+            }
+            if let Some((actor, pos)) = &self.actor {
+                let x = i32::try_from(self.dimensions[0] / 2)?
+                    .checked_add(pos[0])
+                    .ok_or("actor position overflow")?;
+                let y = i32::try_from(self.dimensions[1] / 2)?
+                    .checked_add(pos[1])
+                    .ok_or("actor position overflow")?;
+                canvas.draw(actor, [x, y]);
+            }
+        }
+        let mut png = Vec::new();
+        canvas.write_png(&mut png)?;
+        Ok(png)
+    }
     fn advance(&mut self) -> Result<(), Box<dyn Error>> {
-        let mut effects = Vec::new();
         loop {
             match self.machine.advance(&mut self.store)? {
                 Step::Finished => return Err("story ended".into()),
                 Step::Request(Request::Speaker(fields)) => {
                     self.speaker = String::from_utf8(fields[0].clone())?;
                     self.voice = String::from_utf8(fields[1].clone())?;
+                    if self.host_mode && !self.voice.is_empty() {
+                        self.emit("voice", &self.voice.clone())?;
+                        return Ok(());
+                    }
                     self.machine.complete(None)?;
                 }
                 Step::Request(Request::Text(text)) => {
+                    let png = self.render()?;
                     let (source, line) = self.machine.location().unwrap();
-                    let mut canvas = RgbaImage::filled(
-                        self.dimensions[0],
-                        self.dimensions[1],
-                        self.solid.unwrap_or([0, 0, 0, 255]),
-                        PIXELS,
-                    )?;
-                    if self.solid.is_none() {
-                        if let Some(bg) = &self.background {
-                            canvas.draw(bg, [0, 0]);
-                        }
-                        if let Some((actor, pos)) = &self.actor {
-                            let x = i32::try_from(self.dimensions[0] / 2)?
-                                .checked_add(pos[0])
-                                .ok_or("actor position overflow")?;
-                            let y = i32::try_from(self.dimensions[1] / 2)?
-                                .checked_add(pos[1])
-                                .ok_or("actor position overflow")?;
-                            canvas.draw(actor, [x, y]);
-                        }
-                    }
-                    let mut png = Vec::new();
-                    canvas.write_png(&mut png)?;
                     self.sequence += 1;
                     self.page = Some(Page {
                         sequence: self.sequence,
@@ -134,7 +273,7 @@ impl<R: Read + Seek> StorySession<R> {
                         speaker: self.speaker.clone(),
                         voice: self.voice.clone(),
                         text: String::from_utf8(text)?,
-                        effects,
+                        effects: std::mem::take(&mut self.effects),
                         png,
                     });
                     return Ok(());
@@ -185,7 +324,12 @@ impl<R: Read + Seek> StorySession<R> {
                             if args.len() != 1 {
                                 return Err("preview effect requires one argument".into());
                             }
-                            effects.push(format!("{command} {}", std::str::from_utf8(&args[0])?));
+                            let name = std::str::from_utf8(&args[0])?;
+                            self.effects.push(format!("{command} {name}"));
+                            if self.host_mode {
+                                self.emit(command, name)?;
+                                return Ok(());
+                            }
                         }
                         _ => {
                             return Err(
@@ -260,6 +404,50 @@ mod tests {
             voice: String::new(),
             sequence: 0,
             failed: false,
+            host_mode: false,
+            pending_effect: None,
+            host_sequence: 0,
+            effects: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn host_wait_requires_matching_completion_before_text() {
+        let mut s = session(b".wait 0.125\nfirst\n.wait 0\nsecond");
+        s.enable_host_effects();
+        let pending = s.poll_packet().unwrap();
+        assert!(String::from_utf8(pending.clone())
+            .unwrap()
+            .contains("\"duration_ms\":125"));
+        let location = s.machine.location().unwrap().1;
+        let budget = s.machine.steps();
+        assert_eq!(s.poll_packet().unwrap(), pending);
+        assert_eq!(s.machine.steps(), budget);
+        assert!(s.acknowledge_text(1).is_err());
+        assert!(s.acknowledge_effect(9).is_err());
+        assert_eq!(s.machine.location().unwrap().1, location);
+        let page = s.acknowledge_effect(1).unwrap();
+        assert_eq!(s.poll_packet().unwrap(), page);
+        assert!(s.acknowledge_effect(1).is_err());
+        let second = s.acknowledge_text(1).unwrap();
+        assert!(String::from_utf8(second)
+            .unwrap()
+            .contains("\"host_effect\":\"wait\""));
+        let text = s.acknowledge_effect(2).unwrap();
+        assert!(String::from_utf8_lossy(&text).contains("second"));
+    }
+    #[test]
+    fn bad_duration_and_missing_audio_are_terminal() {
+        assert_eq!(duration_ms("2.5").unwrap(), 2500);
+        for invalid in ["-1", "NaN", "inf", "1.0001", "99999999999999999999"] {
+            assert!(duration_ms(invalid).is_err());
+        }
+        for source in [b".wait -1\ntext".as_slice(), b".bgm missing\ntext"] {
+            let mut s = session(source);
+            s.enable_host_effects();
+            assert!(s.poll_packet().is_err());
+            assert!(s.page.is_none());
+            assert!(s.poll_packet().unwrap_err().to_string().contains("stopped"));
         }
     }
     #[test]

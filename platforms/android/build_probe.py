@@ -53,7 +53,7 @@ def main():
     classes=out/'host.jar'
     run(java,'-cp',str(args.kotlin_lib/'*'),'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
         '-no-stdlib','-no-reflect','-classpath',os.pathsep.join(map(str,[android,kotlin])),
-        '-jvm-target','1.8','-d',classes,ROOT/'platforms/android/src/MainActivity.kt')
+        '-jvm-target','1.8','-d',classes,*sorted((ROOT/'platforms/android/src').glob('*.kt')))
     dex=out/'dex'
     dex.mkdir(exist_ok=True)
     run(java,'-cp',build/'lib/d8.jar','com.android.tools.r8.D8','--min-api','23',

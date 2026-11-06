@@ -7,6 +7,7 @@ from pathlib import Path
 def main():
  p=argparse.ArgumentParser()
  for name in ['adb','desktop','fixtures','output']:p.add_argument('--'+name,type=Path,required=True)
+ p.add_argument('--audio-reference',type=Path)
  p.add_argument('--serial',required=True);a=p.parse_args()
  prefix=[str(a.adb),'-s',a.serial];package='org.nekopack.probe'
  def adb(*args):return subprocess.check_output(prefix+list(args),timeout=90)
@@ -49,17 +50,38 @@ def main():
    lines=source.read_bytes().split(b'\n');assert lines[actual['line']-1].strip().decode('utf8')==actual['text']
    pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=hashlib.sha256(png).hexdigest(),metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
    if n==1:tap('继续')
-  tap('结束预览（无音频／转场）')
+  tap('结束运行' if a.audio_reference else '结束预览（无音频／转场）')
   deadline=time.monotonic()+15
   while time.monotonic()<deadline:
    if private(run,'closed.txt')==b'closed; VM live bytes=0':break
    time.sleep(.2)
   else:raise RuntimeError('session did not close cleanly')
   if b'No such file' not in private(run,'error.txt'):raise RuntimeError('host reported a story error')
-  games.append(dict(index=i,run_id=run,pages=pages,actual_ui_next=True,closed_vm_live_bytes=0))
+  host=[];audio=[]
+  if a.audio_reference:
+   host=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
+   begins=[e for e in host if e['event']=='begin'];acks=[e for e in host if e['event']=='ack']
+   if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
+   reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
+   for begin,ack in zip(begins,acks):
+    if begin['kind'] in ['fade','wait']:
+     if ack['value']<begin['value']:raise RuntimeError('premature timed completion')
+     if begin['kind']=='fade' and not any(e['event']=='frame' and e['token']==begin['token'] and 0<e['value']<1000 for e in host):raise RuntimeError('fade had no intermediate frame')
+    else:
+     token=begin['token'];playing=[e for e in host if e['event']=='playing' and e['token']==token]
+     progress=[e for e in host if e['event'] in ['progress','completed'] and e['token']==token and e['value']>0]
+     if len(playing)!=1 or not progress:raise RuntimeError('audio never started or advanced')
+     audio_meta=json.loads(private(run,f'audio-{token}.json'))
+     key=audio_meta['kind']+'/'+audio_meta['name'].lower()
+     if audio_meta['sha256']!=reference[key]:raise RuntimeError('raw DAT audio mismatch')
+     audio.append(audio_meta)
+   if set(reference)!=set(e['kind']+'/'+e['name'].lower() for e in audio):raise RuntimeError('missing expected audio resource')
+   if not host or host[-1]['event']!='released' or host[-1]['value']!=0:raise RuntimeError('audio not released')
+   if b'.ogg' in adb('shell','run-as',package,'ls',f'files/{run}'):raise RuntimeError('audio cache was not removed')
+  games.append(dict(index=i,run_id=run,pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
- result=dict(scope='two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else 'inspect device properties',device=device,build=build,games=games)
+ result=dict(scope='two text pages per game; host-driven audio and timed fade' if a.audio_reference else 'two text pages per game; static scene preview; audio and transitions recorded only',execution='translated ARM64' if device['kernel_machine']=='x86_64' else 'inspect device properties',device=device,build=build,games=games)
  a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

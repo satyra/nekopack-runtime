@@ -1,0 +1,18 @@
+{
+  "scope": "independent reference DAT decoder hashes for audio in the two validated story pages",
+  "games": [
+    {
+      "voice/ka_p01_0000": "3a238ecc0d82763aaf33aaaa70151938f058dabfb377a052c8c114d78ce0dfdb"
+    },
+    {
+      "se/se_004": "0dff63d50d7d02e35b76beb47f59c28b1216ebc99cd6065478c90eff9be9e4c2",
+      "voice/ba_012401_0000": "35d67e3fb4174eb2602828fb187004cf87de2c633372b6e62cdb21594bcc6162"
+    },
+    {
+      "bgm/bgm012": "0f01fe3a82d40627f2e81e28c465c6ba84fd898764e560d5beb1c69bd1173f4e"
+    },
+    {
+      "bgm/bgm013": "48a9f376ff8d0c106d5ac104f584ee3a3bcc2f1983b0fe7f65153d19fb6fabca"
+    }
+  ]
+}

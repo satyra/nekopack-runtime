@@ -285,14 +285,18 @@ pub unsafe extern "C" fn neko_probe_story(
                         nekopack_runtime::dat::DatGame::mount(files)?,
                         1,
                     )?);
-                    Ok(state.as_mut().unwrap().page()?.packet()?)
+                    state.as_mut().unwrap().enable_host_effects();
+                    state.as_mut().unwrap().poll_packet()
                 }
-                1 => Ok(state.as_mut().ok_or("no story session")?.page()?.packet()?),
-                2 => Ok(state
+                1 => state.as_mut().ok_or("no story session")?.poll_packet(),
+                2 => state
                     .as_mut()
                     .ok_or("no story session")?
-                    .next(sequence)?
-                    .packet()?),
+                    .acknowledge_text(sequence),
+                4 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .acknowledge_effect(sequence),
                 3 => {
                     *state = None;
                     check(

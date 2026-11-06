@@ -7,6 +7,7 @@ import android.os.ParcelFileDescriptor
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ImageView
+import android.widget.FrameLayout
 import android.graphics.BitmapFactory
 import org.json.JSONObject
 import java.util.concurrent.Executors
@@ -23,6 +24,9 @@ class MainActivity : Activity() {
     private external fun story(descriptors:IntArray,operation:Int,sequence:Long):ByteArray
     private var storyWorker:java.util.concurrent.ExecutorService?=null
     private var storyLoaded=false
+    private var storyEffects:StoryEffects?=null
+    private var storyRunRoot:File?=null
+    @Volatile private var storyClosing=false
     private external fun runDat(descriptors: IntArray, choice: Int): ByteArray
     private external fun runChecks(root: ByteArray): ByteArray
 
@@ -127,33 +131,55 @@ class MainActivity : Activity() {
         require(game in 0..3)
         val runId=intent.getStringExtra("run_id") ?: "story-manual"
         require(Regex("[a-zA-Z0-9_-]{1,64}").matches(runId))
-        val root=File(filesDir,runId);root.mkdirs()
+        val root=File(filesDir,runId);root.mkdirs();storyRunRoot=root
         val layout=LinearLayout(this);layout.orientation=LinearLayout.VERTICAL
         val image=ImageView(this);image.scaleType=ImageView.ScaleType.FIT_CENTER
-        layout.addView(image,LinearLayout.LayoutParams(-1,0,1f))
+        val stage=FrameLayout(this);stage.setBackgroundColor(android.graphics.Color.BLACK)
+        val overlay=ImageView(this);overlay.scaleType=ImageView.ScaleType.FIT_CENTER;overlay.alpha=0f
+        stage.addView(image,FrameLayout.LayoutParams(-1,-1));stage.addView(overlay,FrameLayout.LayoutParams(-1,-1))
+        layout.addView(stage,LinearLayout.LayoutParams(-1,0,1f))
         val text=TextView(this);text.text="正在读取剧情…";text.textSize=18f;layout.addView(text)
         val next=Button(this);next.text="继续";next.isEnabled=false;layout.addView(next)
-        val close=Button(this);close.text="结束预览（无音频／转场）";layout.addView(close)
+        val close=Button(this);close.text="结束运行";layout.addView(close)
         setContentView(layout)
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
         var sequence=0L
-        fun show(packet:ByteArray) {
-            val split=packet.indexOf(10.toByte());check(split>=0)
-            val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8))
-            check(!metadata.has("error")){metadata.optString("error")}
-            val token=metadata.getLong("sequence")
-            val png=packet.copyOfRange(split+1,packet.size)
-            val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid story bitmap")
-            File(root,"page-$token.json").writeText(metadata.toString())
-            File(root,"page-$token.png").writeBytes(png)
-            // Polling may not acknowledge dialogue or move the PC.
-            check(packet.contentEquals(story(intArrayOf(),1,0))){"poll advanced story"}
-            runOnUiThread {if(!isDestroyed){sequence=token;image.setImageBitmap(bitmap);text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true}}
-        }
+
+        lateinit var show:(ByteArray)->Unit
         fun fail(error:Throwable) {
+            storyClosing=true
             File(root,"error.txt").writeText("${error.javaClass.name}: ${error.message}")
             if(storyLoaded)story(intArrayOf(),3,0)
-            runOnUiThread{if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
+            runOnUiThread{storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
+        }
+        storyEffects=StoryEffects(this,image,overlay,root){error->worker.execute{fail(error)}}
+        show={packet->
+            if(storyClosing) Unit else {
+                val split=packet.indexOf(10.toByte());check(split>=0)
+                val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8))
+                check(!metadata.has("error")){metadata.optString("error")}
+                check(packet.contentEquals(story(intArrayOf(),1,0))){"poll advanced story"}
+                val payload=packet.copyOfRange(split+1,packet.size)
+                if(metadata.has("host_effect")) {
+                    val token=metadata.getLong("token");val kind=metadata.getString("host_effect")
+                    val bitmap=if(kind=="fade")BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
+                    val file=if(kind in listOf("bgm","se","voice"))File(root,"audio-$token.ogg").also{
+                        it.writeBytes(payload)
+                        val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
+                        File(root,"audio-$token.json").writeText(JSONObject().put("kind",kind).put("name",metadata.getString("name")).put("sha256",digest).toString())
+                    } else null
+                    runOnUiThread{
+                        if(storyClosing){file?.delete()}else storyEffects!!.run(metadata,bitmap,file){
+                            if(!storyClosing)worker.execute{try{show(story(intArrayOf(),4,token))}catch(error:Throwable){fail(error)}}
+                        }
+                    }
+                }else {
+                    val token=metadata.getLong("sequence")
+                    val bitmap=BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid story bitmap")
+                    File(root,"page-$token.json").writeText(metadata.toString());File(root,"page-$token.png").writeBytes(payload)
+                    runOnUiThread {if(!isDestroyed&&!storyClosing){sequence=token;image.setImageBitmap(bitmap);text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true}}
+                }
+            }
         }
         worker.execute {
             try {
@@ -172,16 +198,21 @@ class MainActivity : Activity() {
             }catch(error:Throwable){fail(error)}
         }
         next.setOnClickListener {
-            next.isEnabled=false;val token=sequence
+            next.isEnabled=false;storyEffects?.stopVoice();val token=sequence
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         }
         close.setOnClickListener {
-            next.isEnabled=false;close.isEnabled=false
+            next.isEnabled=false;close.isEnabled=false;storyClosing=true;storyEffects?.close()
             worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
         }
     }
+    override fun onStop() {
+        super.onStop()
+        if(storyWorker!=null && !isFinishing){storyClosing=true;storyEffects?.close();finish()}
+    }
     override fun onDestroy() {
-        storyWorker?.let {worker->worker.execute{if(storyLoaded)story(intArrayOf(),3,0)};worker.shutdown()}
+        storyClosing=true;storyEffects?.close()
+        storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()
     }
 

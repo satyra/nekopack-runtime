@@ -1,0 +1,40 @@
+{
+  "scope": "full device sound.dat and voice.dat checksums against original archive audit",
+  "archives": [
+    {
+      "game": 0,
+      "name": "sound.dat",
+      "sha256": "67745244b294d9962fbed37311e83049e692ce4034764df4e8834a6a95f0c877"
+    },
+    {
+      "game": 0,
+      "name": "voice.dat",
+      "sha256": "f447bc2cb02d77b6fce3e7658d648efa90ab521c853056cb69bf9531f148ab6e"
+    },
+    {
+      "game": 1,
+      "name": "sound.dat",
+      "sha256": "9419ee591dbac029aa034221880b018a592065ab9e4a694f73e672357f4aac27"
+    },
+    {
+      "game": 1,
+      "name": "voice.dat",
+      "sha256": "9c659a75add75fa2ac0f11ceadff27f896a56b45fa94f176b53f90252f0f201a"
+    },
+    {
+      "game": 2,
+      "name": "sound.dat",
+      "sha256": "a006f4ae8937d5fee1fa5d32e7fdc7fe5862575a1a8b2feb833a203f306dd05b"
+    },
+    {
+      "game": 2,
+      "name": "voice.dat",
+      "sha256": "af136e52adeb0a323608e2b8205a6f267f0978fcf55dc0c58f50c4067410ad27"
+    },
+    {
+      "game": 3,
+      "name": "sound.dat",
+      "sha256": "6e13ccf279bd4d19594d51408ccddfb76b205d219a3229c516fe4017e8274549"
+    }
+  ]
+}
