@@ -498,7 +498,11 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(x) = p.x {
             anchor[0] = x;
         }
-        let motion = if p.stationary {
+        let motion = if let Some(amplitude) = p.excursion_x {
+            Some(crate::motion::Motion::horizontal_excursion(
+                slot, anchor, amplitude, center,
+            )?)
+        } else if p.stationary {
             Some(crate::motion::Motion::stationary(slot, anchor, center)?)
         } else if p.dip {
             Some(crate::motion::Motion::dip(slot, anchor, center)?)
@@ -1392,6 +1396,43 @@ mod tests {
         assert!(s.acknowledge_text(1).is_err());
     }
     #[test]
+    fn left_excursion_frames_and_early_next_keep_base_position() {
+        for early in [false, true] {
+            let mut s = moving_session(b".img6 [[[[\nfirst\nsecond");
+            s.scene.actors[0].anchor[0] = 200;
+            let packet = s.poll_packet().unwrap();
+            let steps = s.machine.steps();
+            let samples = if early {
+                vec![(0, 200), (125, 0)]
+            } else {
+                vec![(0, 200), (50, 83), (125, 0), (200, 83), (250, 200)]
+            };
+            for (time, x) in samples {
+                let frame = s.page_frame(1, time).unwrap();
+                let split = frame.iter().position(|b| *b == b'\n').unwrap();
+                let pixels = &frame[split + 1..];
+                assert_eq!(&pixels[x * 4..x * 4 + 4], [83, 88, 137, 255]);
+                assert_eq!(
+                    pixels
+                        .as_chunks::<4>()
+                        .0
+                        .iter()
+                        .filter(|p| **p != [0, 0, 0, 255])
+                        .count(),
+                    1
+                );
+                assert_eq!(s.poll_packet().unwrap(), packet);
+                assert_eq!(s.machine.steps(), steps);
+            }
+            s.acknowledge_text(1).unwrap();
+            assert_eq!(s.scene.actors[0].anchor, [200, 0]);
+            assert_eq!(s.scene.actors[0].filter, crate::filter::Filter::Night);
+            assert!(s.motions.is_empty());
+            assert!(s.page.as_ref().unwrap().motion.is_none());
+            assert!(s.page_frame(1, 250).is_err());
+        }
+    }
+    #[test]
     fn dip_frames_restore_y_and_early_next_never_commits_peak_or_reorders() {
         for early in [false, true] {
             let mut s = moving_session(b".img6 _\nfirst\nsecond");
@@ -1526,7 +1567,7 @@ mod tests {
             bytes.extend(b"OggS");
             std::io::Cursor::new(bytes)
         }
-        for modifier in ["[]", ">", "_"] {
+        for modifier in ["[]", ">", "_", "[[[["] {
             let text = format!(".img6 {modifier}\n.bgm music\n:name:line:actor\nfirst\nsecond");
             let mut s = moving_session(text.as_bytes());
             s.store = DatGame::mount([

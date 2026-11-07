@@ -1,4 +1,4 @@
-//! Observed Tiny Dungeon layer profile. Verified default rightward, vertical dip and stationary `[]` operations.
+//! Observed Tiny Dungeon layer profile; unverified actor modifiers remain rejected.
 use crate::quote;
 use nekopack_image::RgbaImage;
 use std::collections::BTreeMap;
@@ -87,6 +87,9 @@ mod tests {
         let stationary = plan(&[b"[]".to_vec()], &macros, 640).unwrap();
         assert!(stationary.stationary);
         assert_eq!(stationary.order, Order::Keep);
+        let excursion = plan(&[b"[[[[".to_vec()], &macros, 640).unwrap();
+        assert_eq!(excursion.excursion_x, Some(-200));
+        assert_eq!(excursion.order, Order::Keep);
         let nested = BTreeMap::from([
             ("alias".into(), vec!["_".into()]),
             ("_".into(), vec!["front".into()]),
@@ -102,7 +105,9 @@ mod tests {
             vec![b">".to_vec(), b"face".to_vec()],
             vec![b"center".to_vec(), b">".to_vec()],
             vec![b"__".to_vec()],
-            vec![b"[".to_vec()],
+            vec![b"[2".to_vec()],
+            vec![b"[[".to_vec(), b"face".to_vec()],
+            vec![b"center".to_vec(), b"[[".to_vec()],
             vec![b"][".to_vec()],
             vec![b"[]".to_vec(), b"_".to_vec()],
             vec![b"[]".to_vec(), b"face".to_vec()],
@@ -124,6 +129,7 @@ pub(crate) struct Plan {
     pub rightward: Option<i32>,
     pub dip: bool,
     pub stationary: bool,
+    pub excursion_x: Option<i32>,
     pub order: Order,
     pub clear: bool,
 }
@@ -151,6 +157,7 @@ pub(crate) fn plan(
         rightward: None,
         dip: false,
         stationary: false,
+        excursion_x: None,
         order: Order::Front,
         clear: words.is_empty(),
     };
@@ -160,6 +167,7 @@ pub(crate) fn plan(
         }
         if matches!(word.as_str(), "_" | "[]")
             || (!word.is_empty() && word.bytes().all(|b| b == b'>'))
+            || (!word.is_empty() && word.bytes().all(|b| b == b'['))
         {
             if index + 1 != words.len() || p.x.is_some() {
                 return Err("motion must be the sole terminal position modifier".into());
@@ -170,6 +178,15 @@ pub(crate) fn plan(
             }
             if word == "_" {
                 p.dip = true;
+                continue;
+            }
+            if word.bytes().all(|b| b == b'[') {
+                p.excursion_x = Some(
+                    i32::try_from(word.len())
+                        .ok()
+                        .and_then(|n| n.checked_mul(-50))
+                        .ok_or("actor excursion overflow")?,
+                );
                 continue;
             }
             p.rightward = Some(
@@ -230,7 +247,7 @@ pub(crate) fn plan(
             }
         }
     }
-    if (p.rightward.is_some() || p.dip || p.stationary)
+    if (p.rightward.is_some() || p.dip || p.stationary || p.excursion_x.is_some())
         && p.name.is_none()
         && !words
             .iter()

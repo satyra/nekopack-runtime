@@ -1,0 +1,164 @@
+{
+  "scope": "BLESS original static disassembly and source command; not live original screen parity",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "script_sha256": "fb0723a98c42e9810d7bcf9b73d062df4706cad2724256881e35d7d471fc7e5b",
+  "facts": [
+    {
+      "va": "0x43ceec",
+      "instruction": "mov dword ptr [ebp - 0x58], edx"
+    },
+    {
+      "va": "0x43cefe",
+      "instruction": "mov dword ptr [ebp - 0x64], 1"
+    },
+    {
+      "va": "0x43cfaf",
+      "instruction": "je 0x43cfef"
+    },
+    {
+      "va": "0x43cff2",
+      "instruction": "sub dword ptr [ebp - 0x58], ecx"
+    },
+    {
+      "va": "0x43d022",
+      "instruction": "mov bl, byte ptr [edi]"
+    },
+    {
+      "va": "0x43d024",
+      "instruction": "inc edi"
+    },
+    {
+      "va": "0x43d027",
+      "instruction": "jne 0x43cefe"
+    },
+    {
+      "va": "0x43d04f",
+      "instruction": "mov edx, dword ptr [ebp - 0x58]"
+    },
+    {
+      "va": "0x43d055",
+      "instruction": "add edx, edx"
+    },
+    {
+      "va": "0x43d057",
+      "instruction": "lea edx, [edx + edx*4]"
+    },
+    {
+      "va": "0x43d05a",
+      "instruction": "lea edx, [edx + edx*4]"
+    },
+    {
+      "va": "0x43d05d",
+      "instruction": "mov dword ptr [ecx + 0xc], edx"
+    },
+    {
+      "va": "0x4389a2",
+      "instruction": "mov dword ptr [ebp - 0x1c4], 0xfa"
+    },
+    {
+      "va": "0x4386b8",
+      "instruction": "mov ecx, dword ptr [eax + 0xc]"
+    },
+    {
+      "va": "0x4386bb",
+      "instruction": "mov dword ptr [ebp - 0x30], ecx"
+    },
+    {
+      "va": "0x438794",
+      "instruction": "fld qword ptr [ebp - 0x10]"
+    },
+    {
+      "va": "0x438797",
+      "instruction": "fmul qword ptr [0x438834]"
+    },
+    {
+      "va": "0x4387a3",
+      "instruction": "call 0x5061f8"
+    },
+    {
+      "va": "0x50620d",
+      "instruction": "fsin"
+    },
+    {
+      "va": "0x4387b1",
+      "instruction": "fild dword ptr [ebp - 0x4c]"
+    },
+    {
+      "va": "0x4387b4",
+      "instruction": "fild dword ptr [ebp - 0x30]"
+    },
+    {
+      "va": "0x4387b7",
+      "instruction": "fmul qword ptr [ebp - 0x20]"
+    },
+    {
+      "va": "0x4387ba",
+      "instruction": "faddp st(1)"
+    },
+    {
+      "va": "0x4387bc",
+      "instruction": "call 0x504990"
+    },
+    {
+      "va": "0x50499f",
+      "instruction": "or dword ptr [ebp - 4], 0xc01"
+    },
+    {
+      "va": "0x437c1d",
+      "instruction": "mov eax, dword ptr [esi + 8]"
+    },
+    {
+      "va": "0x437c20",
+      "instruction": "add dword ptr [edi + 0x98], eax"
+    },
+    {
+      "va": "0x437c26",
+      "instruction": "mov edx, dword ptr [esi + 0xc]"
+    },
+    {
+      "va": "0x437c29",
+      "instruction": "add dword ptr [edi + 0x9c], edx"
+    }
+  ],
+  "spans": [
+    {
+      "va": "0x43cea4",
+      "length": 494,
+      "sha256": "d4e21c59856366435fc9a912b30b94f4804f06ff382df7cf7bad134b326a14b0"
+    },
+    {
+      "va": "0x438640",
+      "length": 516,
+      "sha256": "c38673f8f8cf82074c3eeb1b34c0833f28ba53ab4de2f0dbd4bbbdf8de799b3a"
+    },
+    {
+      "va": "0x437c0c",
+      "length": 2404,
+      "sha256": "b7d002ab129da9d5575072190a4ef5a9f4e09a62eb5f92718d35880bacec23a1"
+    }
+  ],
+  "semantics": {
+    "symbol": "[[[[",
+    "count_steps": [
+      0,
+      -1,
+      -2,
+      -3,
+      -4
+    ],
+    "amplitude_x": -200,
+    "permanent_displacement": [
+      0,
+      0
+    ],
+    "duration_ms": 250,
+    "curve": "base centered X + amplitude_x * sin(pi * elapsed / duration), truncate toward zero, then add canvas center",
+    "completion": "only permanent dx/dy are committed; transient X returns to base",
+    "source": "012501",
+    "command_line": 582
+  },
+  "limits": [
+    "Repeated terminal [ only; counts, speed modifiers, mixed symbols and multi-operation queues remain unsupported",
+    "No dynamic original timing or full-game compatibility claim"
+  ]
+}

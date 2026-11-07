@@ -5,6 +5,7 @@ enum Kind {
     Rightward,
     Dip,
     Stationary,
+    HorizontalExcursion(i32),
 }
 #[derive(Clone, Debug)]
 pub(crate) struct Motion {
@@ -52,6 +53,22 @@ impl Motion {
         motion.kind = Kind::Stationary;
         Ok(motion)
     }
+    pub fn horizontal_excursion(
+        slot: u8,
+        start: [i32; 2],
+        amplitude: i32,
+        center: [i32; 2],
+    ) -> Result<Self, String> {
+        let mut motion = Self::new(slot, start, 0, center)?;
+        start[0]
+            .checked_add(amplitude)
+            .ok_or("actor excursion peak overflow")?;
+        (start[0] - center[0])
+            .checked_add(amplitude)
+            .ok_or("actor excursion relative peak overflow")?;
+        motion.kind = Kind::HorizontalExcursion(amplitude);
+        Ok(motion)
+    }
     pub fn position(&self, elapsed: u64) -> [i32; 2] {
         if elapsed == 0 {
             return self.start;
@@ -62,6 +79,11 @@ impl Motion {
         let t = elapsed as f64 / DURATION_MS as f64;
         match self.kind {
             Kind::Stationary => self.start,
+            Kind::HorizontalExcursion(amplitude) => {
+                let relative = f64::from(self.start[0] - self.center[0])
+                    + f64::from(amplitude) * (t * std::f64::consts::PI).sin();
+                [self.center[0] + relative as i32, self.start[1]]
+            }
             Kind::Rightward => {
                 let weight = (((t - 0.5) * std::f64::consts::PI).sin() + 1.0) * 0.5;
                 let relative = f64::from(self.start[0] - self.center[0])
@@ -78,6 +100,7 @@ impl Motion {
     pub fn metadata(&self) -> String {
         let vertical = match self.kind {
             Kind::Rightward => String::new(),
+            Kind::HorizontalExcursion(amplitude) => format!(",\"kind\":\"horizontal_excursion\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":{amplitude}",self.start[1],self.end[1],self.center[1]),
             Kind::Stationary => format!(",\"kind\":\"stationary\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":0",self.start[1],self.end[1],self.center[1]),
             Kind::Dip => format!(
                 ",\"kind\":\"dip\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_y\":50",
@@ -93,6 +116,25 @@ impl Motion {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn left_brackets_return_to_anchor_and_truncate_centered_coordinates() {
+        let m = Motion::horizontal_excursion(1, [1120, 360], -200, [640, 360]).unwrap();
+        assert_eq!(
+            [0, 50, 125, 200, 250, 999].map(|t| m.position(t)),
+            [
+                [1120, 360],
+                [1002, 360],
+                [920, 360],
+                [1002, 360],
+                [1120, 360],
+                [1120, 360]
+            ]
+        );
+        let negative = Motion::horizontal_excursion(1, [440, 360], -200, [640, 360]).unwrap();
+        assert_eq!(negative.position(50), [323, 360]);
+        assert!(Motion::horizontal_excursion(1, [i32::MIN + 199, 0], -200, [0, 0]).is_err());
+        assert!(Motion::horizontal_excursion(1, [0, 0], -200, [i32::MAX, 0]).is_err());
+    }
     #[test]
     fn original_curve_centered_truncation_and_endpoints() {
         let m = Motion::new(6, [640, 360], 350, [640, 360]).unwrap();

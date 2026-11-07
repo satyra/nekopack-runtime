@@ -1,0 +1,55 @@
+{
+  "scope": "BLESS only, PGKM10 native ARM64; original DAT via SAF; explicit movie skip; no dynamic original timing parity or full-game claim",
+  "apk_sha256": "9ccba6db463f3431e9501a98f43987c0a90a3e89014e5c0d0eff7884fe1d5dd1",
+  "unchanged_prefix_pages": 269,
+  "total_pages": 500,
+  "next_boundary": {
+    "source": "012603",
+    "line": 211,
+    "steps": 2650,
+    "unsupported": ".img2 _ >>>>"
+  },
+  "independent_motion_frames": {
+    "159": 7,
+    "176": 8,
+    "270": 7,
+    "56": 7,
+    "57": 7,
+    "60": 7
+  },
+  "excursion_first_last_pixels_identical": true,
+  "following_page_base_anchor": [
+    1120,
+    360
+  ],
+  "independent_scene_pages": 500,
+  "independent_transition_snapshots": 25,
+  "audio_requests": 291,
+  "audio_terminal_only_exemptions": 0,
+  "normal_boundary_vm_live_bytes": 0,
+  "background_cancellation": "not rerun this batch; shared unchanged Android channel previously verified in Batch20; early page advance tested in current Rust unit tests",
+  "checks": {
+    "workspace_tests": {
+      "passed": true,
+      "log_sha256": "3594381e2c27e2251e3305996c5cac6b617b22e7baa9db92d70df22335d3a8ab"
+    },
+    "clippy": {
+      "passed": true,
+      "log_sha256": "1482b3541b1a23e6dc2acf3e2821459133002fc8b47f2e717da243db2b2bb5f1"
+    },
+    "python_tests": {
+      "passed": true,
+      "log_sha256": "ac6e9da8bd627c0143d4f0935a2191f667799eff6766b01790f29565bc679b61"
+    }
+  },
+  "reports": {
+    "excursion-batch21-audio-evidence.json": "eca5469e88c972fa4a6d0a76a393150240c6b04094977cf8cf1c37efe9f8f436",
+    "excursion-batch21-audio-reference.json": "6b913c82f900f4a15b444b1f3dd9b6aa585338845cdd22a1faac08ff47d2cf0e",
+    "excursion-batch21-desktop.json": "14c42a4da46884d00e7a2df1ad4c6e90e3e6c703bdb750c9b03f3e0c9fb4ecb7",
+    "excursion-batch21-effects.json": "bbaf8d073249c7a519e93bb0491f15f531bdbd1ebd16f7f9b0f76d0da520b7f0",
+    "excursion-batch21-frames.json": "ffcb07af4acece44f5f1a9fadf739ea75489628e61b83aff40e4674635a2fa0b",
+    "excursion-batch21-layers.json": "7b484a635dd1cd31bf2d24529c99055f79b24f4bcdf558540556da082fa8dd25",
+    "excursion-batch21-native.json": "641786215d29608c5b1655b14c351cc6f1cce7f8cfe219f94601e3345508450f",
+    "excursion-batch21-original.json": "305102dd6822953cc89048e65d51a88b704eb75f1961338ef87b31bf1964f412"
+  }
+}
