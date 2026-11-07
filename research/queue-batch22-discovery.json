@@ -1,0 +1,111 @@
+{
+  "scope": "desktop headless discovery only; Android regression intentionally limited to 502 pages",
+  "pages": 563,
+  "boundary": {
+    "source": "012701",
+    "line": 9,
+    "depth": 2,
+    "steps": 2988,
+    "slots": [
+      [
+        71,
+        800,
+        1
+      ],
+      [
+        71,
+        801,
+        0
+      ],
+      [
+        71,
+        802,
+        0
+      ],
+      [
+        71,
+        803,
+        0
+      ],
+      [
+        71,
+        804,
+        0
+      ],
+      [
+        71,
+        900,
+        0
+      ],
+      [
+        71,
+        901,
+        0
+      ],
+      [
+        71,
+        902,
+        0
+      ],
+      [
+        71,
+        903,
+        0
+      ],
+      [
+        71,
+        904,
+        0
+      ],
+      [
+        76,
+        100,
+        0
+      ],
+      [
+        76,
+        900,
+        0
+      ],
+      [
+        76,
+        901,
+        0
+      ],
+      [
+        76,
+        902,
+        0
+      ],
+      [
+        76,
+        903,
+        0
+      ]
+    ],
+    "scene": {
+      "size": [
+        1280,
+        720
+      ],
+      "background": null,
+      "background_color": null,
+      "overlay": null,
+      "visual": null,
+      "actors": [],
+      "filter": null
+    },
+    "effects": [
+      "fade 3",
+      "bgm BGM008"
+    ],
+    "voice": "",
+    "labels": {
+      "title": "\uff12\uff17\u65e5\u76ee\uff1a\u571f\u306e\u66dc\u65e5",
+      "route": "\u7b2c\uff11\u7ae0",
+      "caption": "Tiny Dungeon \uff5eBLESS of DRAGON\uff5e \u7b2c\uff11\u7ae0 \uff12\uff17\u65e5\u76ee\uff1a\u571f\u306e\u66dc\u65e5",
+      "in_route": true
+    }
+  },
+  "boundary_message": "story 012701:9 depth=2 steps=2988: unsupported story preview command env"
+}

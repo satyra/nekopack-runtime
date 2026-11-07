@@ -79,16 +79,16 @@ mod tests {
         )
         .unwrap();
         let move_plan = plan(&[b">>>>>>>".to_vec()], &macros, 640).unwrap();
-        assert_eq!(move_plan.rightward, Some(350));
+        assert_eq!(move_plan.motions, [MotionKind::Rightward(350)]);
         assert_eq!(move_plan.order, Order::Keep);
         let dip = plan(&[b"_".to_vec()], &macros, 640).unwrap();
-        assert!(dip.dip);
+        assert_eq!(dip.motions, [MotionKind::Dip]);
         assert_eq!(dip.order, Order::Keep);
         let stationary = plan(&[b"[]".to_vec()], &macros, 640).unwrap();
-        assert!(stationary.stationary);
+        assert_eq!(stationary.motions, [MotionKind::Stationary]);
         assert_eq!(stationary.order, Order::Keep);
         let excursion = plan(&[b"[[[[".to_vec()], &macros, 640).unwrap();
-        assert_eq!(excursion.excursion_x, Some(-200));
+        assert_eq!(excursion.motions, [MotionKind::Excursion(-200)]);
         assert_eq!(excursion.order, Order::Keep);
         let nested = BTreeMap::from([
             ("alias".into(), vec!["_".into()]),
@@ -109,10 +109,8 @@ mod tests {
             vec![b"[[".to_vec(), b"face".to_vec()],
             vec![b"center".to_vec(), b"[[".to_vec()],
             vec![b"][".to_vec()],
-            vec![b"[]".to_vec(), b"_".to_vec()],
             vec![b"[]".to_vec(), b"face".to_vec()],
             vec![b"_2".to_vec()],
-            vec![b"_".to_vec(), b">".to_vec()],
             vec![b"center".to_vec(), b"_".to_vec()],
             vec![b"left9".to_vec()],
             vec![b"clear".to_vec(), b"face".to_vec()],
@@ -121,15 +119,19 @@ mod tests {
         }
     }
 }
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum MotionKind {
+    Rightward(i32),
+    Dip,
+    Stationary,
+    Excursion(i32),
+}
 #[derive(Debug)]
 pub(crate) struct Plan {
     pub name: Option<String>,
     pub folder: Option<String>,
     pub x: Option<i32>,
-    pub rightward: Option<i32>,
-    pub dip: bool,
-    pub stationary: bool,
-    pub excursion_x: Option<i32>,
+    pub motions: Vec<MotionKind>,
     pub order: Order,
     pub clear: bool,
 }
@@ -154,14 +156,11 @@ pub(crate) fn plan(
         name: None,
         folder: None,
         x: None,
-        rightward: None,
-        dip: false,
-        stationary: false,
-        excursion_x: None,
+        motions: Vec::new(),
         order: Order::Front,
         clear: words.is_empty(),
     };
-    for (index, word) in words.iter().enumerate() {
+    for word in &words {
         if macros.contains_key(word) {
             return Err("nested image macros are unsupported".into());
         }
@@ -169,33 +168,36 @@ pub(crate) fn plan(
             || (!word.is_empty() && word.bytes().all(|b| b == b'>'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'['))
         {
-            if index + 1 != words.len() || p.x.is_some() {
-                return Err("motion must be the sole terminal position modifier".into());
+            if p.x.is_some() {
+                return Err("motion cannot follow an absolute position".into());
             }
             if word == "[]" {
-                p.stationary = true;
+                p.motions.push(MotionKind::Stationary);
                 continue;
             }
             if word == "_" {
-                p.dip = true;
+                p.motions.push(MotionKind::Dip);
                 continue;
             }
             if word.bytes().all(|b| b == b'[') {
-                p.excursion_x = Some(
+                p.motions.push(MotionKind::Excursion(
                     i32::try_from(word.len())
                         .ok()
                         .and_then(|n| n.checked_mul(-50))
                         .ok_or("actor excursion overflow")?,
-                );
+                ));
                 continue;
             }
-            p.rightward = Some(
+            p.motions.push(MotionKind::Rightward(
                 i32::try_from(word.len())
                     .ok()
                     .and_then(|n| n.checked_mul(50))
                     .ok_or("actor motion overflow")?,
-            );
+            ));
             continue;
+        }
+        if !p.motions.is_empty() {
+            return Err("only motion tokens may follow a motion".into());
         }
         match word.as_str() {
             "front" => p.order = Order::Front,
@@ -247,7 +249,7 @@ pub(crate) fn plan(
             }
         }
     }
-    if (p.rightward.is_some() || p.dip || p.stationary || p.excursion_x.is_some())
+    if !p.motions.is_empty()
         && p.name.is_none()
         && !words
             .iter()

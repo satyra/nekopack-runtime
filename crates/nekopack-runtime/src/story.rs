@@ -149,7 +149,7 @@ pub struct StorySession<R: Read + Seek> {
     system: SystemVm,
     labels: StoryLabels,
     scene: Scene,
-    motions: Vec<crate::motion::Motion>,
+    motions: Vec<crate::motion::Queue>,
     motion_elapsed: u64,
     presented: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
@@ -347,17 +347,19 @@ impl<R: Read + Seek> StorySession<R> {
         {
             return Err("stale or missing dialogue motion request".into());
         }
-        if elapsed_ms < self.motion_elapsed || elapsed_ms > crate::motion::DURATION_MS {
+        if elapsed_ms < self.motion_elapsed {
             return Err("invalid dialogue motion clock".into());
         }
-        let positions = self
-            .motions
-            .iter()
+        let mut motions = self.motions.clone();
+        let positions = motions
+            .iter_mut()
             .map(|m| (m.slot, m.position(elapsed_ms)))
             .collect::<Vec<_>>();
         let frame = self.scene.render_pixels(&positions)?;
+        let finished = motions.iter().all(|m| m.finished());
+        self.motions = motions;
         self.motion_elapsed = elapsed_ms;
-        let mut packet = format!("{{\"frame_kind\":\"motion\",\"sequence\":{sequence},\"elapsed_ms\":{elapsed_ms},\"width\":{},\"height\":{},\"format\":\"RGBA8\"}}\n", frame.width(), frame.height()).into_bytes();
+        let mut packet = format!("{{\"frame_kind\":\"motion\",\"sequence\":{sequence},\"elapsed_ms\":{elapsed_ms},\"finished\":{finished},\"width\":{},\"height\":{},\"format\":\"RGBA8\"}}\n", frame.width(), frame.height()).into_bytes();
         packet.extend_from_slice(frame.pixels());
         Ok(packet)
     }
@@ -498,22 +500,25 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(x) = p.x {
             anchor[0] = x;
         }
-        let motion = if let Some(amplitude) = p.excursion_x {
-            Some(crate::motion::Motion::horizontal_excursion(
-                slot, anchor, amplitude, center,
-            )?)
-        } else if p.stationary {
-            Some(crate::motion::Motion::stationary(slot, anchor, center)?)
-        } else if p.dip {
-            Some(crate::motion::Motion::dip(slot, anchor, center)?)
-        } else {
-            p.rightward
-                .map(|dx| crate::motion::Motion::new(slot, anchor, dx, center))
-                .transpose()?
-        };
-        if let Some(m) = &motion {
-            anchor = m.end;
+        let mut segments = Vec::new();
+        for kind in &p.motions {
+            use crate::{motion::Motion, scene::MotionKind};
+            let segment = match kind {
+                MotionKind::Rightward(dx) => Motion::new(slot, anchor, *dx, center)?,
+                MotionKind::Dip => Motion::dip(slot, anchor, center)?,
+                MotionKind::Stationary => Motion::stationary(slot, anchor, center)?,
+                MotionKind::Excursion(dx) => {
+                    Motion::horizontal_excursion(slot, anchor, *dx, center)?
+                }
+            };
+            anchor = segment.end;
+            segments.push(segment);
         }
+        let motion = if segments.is_empty() {
+            None
+        } else {
+            Some(crate::motion::Queue::new(slot, segments))
+        };
         if p.name.is_none() && p.folder.is_none() {
             let index = self
                 .scene
@@ -575,7 +580,7 @@ impl<R: Read + Seek> StorySession<R> {
                     } else {
                         Some(format!(
                             "{{\"duration_ms\":{},\"actors\":[{}]}}",
-                            crate::motion::DURATION_MS,
+                            self.motions.iter().map(|m| m.duration()).max().unwrap(),
                             self.motions
                                 .iter()
                                 .map(|m| m.metadata())
@@ -1351,6 +1356,60 @@ mod tests {
         s
     }
     #[test]
+    fn page_finishes_only_after_all_actor_queues_finish() {
+        let mut s = moving_session(b".img6 _ >>>>\n.img5 []\nfirst");
+        s.scene.actors.push(Layer {
+            filter: crate::filter::Filter::None,
+            filter_pending: false,
+            slot: 5,
+            name: "other".into(),
+            folder: "image/actor".into(),
+            image: RgbaImage::filled(1, 1, [255, 0, 0, 255], PIXELS).unwrap(),
+            offset: [0, 0],
+            anchor: [10, 0],
+        });
+        s.poll_packet().unwrap();
+        for (time, finished) in [(0, false), (270, false), (500, false), (520, true)] {
+            let frame = s.page_frame(1, time).unwrap();
+            let split = frame.iter().position(|b| *b == b'\n').unwrap();
+            assert!(std::str::from_utf8(&frame[..split])
+                .unwrap()
+                .contains(&format!("\"finished\":{finished}")));
+            assert_eq!(&frame[split + 1 + 40..split + 1 + 44], [255, 0, 0, 255]);
+            assert_eq!(s.motions[1].finished(), time >= 250);
+        }
+        assert_eq!(
+            s.scene.actors.iter().find(|l| l.slot == 6).unwrap().anchor,
+            [600, 0]
+        );
+    }
+    #[test]
+    fn queued_segments_complete_in_core_without_advancing_dialogue() {
+        for early in [false, true] {
+            let mut s = moving_session(b".img6 _ >>>>\nfirst\nsecond");
+            let page = s.poll_packet().unwrap();
+            let steps = s.machine.steps();
+            assert_eq!(s.scene.actors[0].anchor, [600, 0]);
+            for (time, done) in [(0, false), (270, false), (500, false), (520, true)] {
+                let frame = s.page_frame(1, time).unwrap();
+                let header =
+                    std::str::from_utf8(frame.split(|b| *b == b'\n').next().unwrap()).unwrap();
+                assert!(header.contains(&format!("\"finished\":{done}")));
+                assert_eq!(s.page_frame(1, time).unwrap(), frame);
+                assert_eq!(s.poll_packet().unwrap(), page);
+                assert_eq!(s.machine.steps(), steps);
+                if early {
+                    break;
+                }
+            }
+            s.acknowledge_text(1).unwrap();
+            assert_eq!(s.scene.actors[0].anchor, [600, 0]);
+            assert!(s.motions.is_empty());
+            assert!(s.page_frame(1, 999).is_err());
+            assert_eq!(s.page.as_ref().unwrap().text, "second");
+        }
+    }
+    #[test]
     fn dialogue_motion_is_concurrent_tokened_monotonic_and_keeps_cached_filter() {
         let mut s = moving_session(b".img6 >>>>>>>\nfirst\nsecond");
         let packet = s.poll_packet().unwrap();
@@ -1380,7 +1439,7 @@ mod tests {
             assert_eq!(s.poll_packet().unwrap(), packet);
         }
         assert!(s.page_frame(1, 249).is_err());
-        assert!(s.page_frame(1, 251).is_err());
+        assert!(s.page_frame(1, 251).is_ok());
         assert_eq!(
             location,
             (

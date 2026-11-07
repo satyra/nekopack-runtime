@@ -17,7 +17,7 @@ import org.json.JSONObject
 import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
-class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val wipeFrame:(String,Long,Long,(Bitmap)->Unit)->Unit,private val failure:(Throwable)->Unit) {
+class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val failure:(Throwable)->Unit) {
     private val handler=Handler(Looper.getMainLooper())
     private val players=mutableMapOf<String,Pair<MediaPlayer,File>>()
     private var animator:ValueAnimator?=null
@@ -26,28 +26,28 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     @Volatile private var motionSequence=0L
     private var motionFinished=false
     fun isMotionActive(sequence:Long)=!closed && motionSequence==sequence
-    private fun motionLog(event:String,sequence:Long,elapsed:Long) {
-        File(root,"motion-events.jsonl").appendText(JSONObject().put("event",event).put("sequence",sequence).put("elapsed_ms",elapsed).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
+    private fun motionLog(event:String,sequence:Long,elapsed:Long,finished:Boolean=false) {
+        File(root,"motion-events.jsonl").appendText(JSONObject().put("event",event).put("sequence",sequence).put("elapsed_ms",elapsed).put("finished",finished).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
     }
     fun stopMotion(){
         val old=motionSequence;motionSequence=0
         if(old!=0L&&!motionFinished)motionLog("cancelled",old,0)
     }
     // Runs alongside the visible dialogue and voice; no host-effect ACK or script advancement.
-    fun runMotion(sequence:Long,duration:Long){
+    fun runMotion(sequence:Long){
         stopMotion();motionSequence=sequence;motionFinished=false
-        wipeFrame("motion",sequence,0){initial->
+        wipeFrame("motion",sequence,0){initial,_->
             if(isMotionActive(sequence)){
                 image.setImageBitmap(initial)
                 val started=SystemClock.elapsedRealtime()
                 motionLog("begin",sequence,0);motionLog("frame",sequence,0)
                 fun frame(){
                     if(!isMotionActive(sequence))return
-                    val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
-                    wipeFrame("motion",sequence,elapsed){value->
+                    val elapsed=SystemClock.elapsedRealtime()-started
+                    wipeFrame("motion",sequence,elapsed){value,finished->
                         if(isMotionActive(sequence)){
-                            image.setImageBitmap(value);motionLog("frame",sequence,elapsed)
-                            if(elapsed==duration){motionFinished=true;motionLog("finished",sequence,elapsed)}
+                            image.setImageBitmap(value);motionLog("frame",sequence,elapsed,finished)
+                            if(finished){motionFinished=true;motionLog("finished",sequence,elapsed,true)}
                             else handler.postDelayed({frame()},16)
                         }
                     }
@@ -121,7 +121,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     val phases=duration/30;var phase=0L
                     fun frame(){
                         if(closed)return
-                        wipeFrame(kind,token,phase){value->
+                        wipeFrame(kind,token,phase){value,_->
                             if(!closed){image.setImageBitmap(value);log("frame",kind,token,phase);phase++
                                 if(phase==phases)done() else handler.postDelayed({frame()},30)
                             }
@@ -134,7 +134,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     fun frame(){
                         if(closed)return
                         val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
-                        wipeFrame(kind,token,elapsed){value->
+                        wipeFrame(kind,token,elapsed){value,_->
                             if(!closed){image.setImageBitmap(value);log("frame",kind,token,elapsed)
                                 if(elapsed==duration){if(kind=="wipe")image.setImageBitmap(bitmap);done()}
                                 else handler.postDelayed({frame()},16)

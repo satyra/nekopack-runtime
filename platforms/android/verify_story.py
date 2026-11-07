@@ -124,7 +124,8 @@ def main():
     assert selected[0]['event']=='begin' and selected[-1]['event']=='finished'
     assert not any(e['event']=='cancelled' for e in selected)
     frames=[e for e in selected if e['event']=='frame'];duration=actual['motion']['duration_ms']
-    assert frames[0]['elapsed_ms']==0 and frames[-1]['elapsed_ms']==duration
+    assert frames[0]['elapsed_ms']==0 and frames[-1]['elapsed_ms']>=duration
+    assert frames[-1]['finished'] and not any(e['finished'] for e in frames[:-1])
     assert any(0<e['elapsed_ms']<duration for e in frames)
     assert [e['elapsed_ms'] for e in frames]==sorted(set(e['elapsed_ms'] for e in frames))
     assert selected[-1]['time_ms']-selected[0]['time_ms']>=duration

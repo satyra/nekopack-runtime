@@ -1,0 +1,118 @@
+{
+  "scope": "BLESS static original FIFO and raw DAT; not original live timing or skip semantics",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "source_sha256": "99b01e026471884dbf390d8777e13c3b3374d181f3270bdfe9aac316934a2c2c",
+  "facts": [
+    {
+      "va": "0x4389a2",
+      "instruction": "mov dword ptr [ebp - 0x1c4], 0xfa"
+    },
+    {
+      "va": "0x438f18",
+      "instruction": "call 0x43a11c"
+    },
+    {
+      "va": "0x438f34",
+      "instruction": "mov dword ptr [ebp - 0x198], ecx"
+    },
+    {
+      "va": "0x439726",
+      "instruction": "call 0x43cea4"
+    },
+    {
+      "va": "0x43974d",
+      "instruction": "call 0x43ab98"
+    },
+    {
+      "va": "0x43a0d1",
+      "instruction": "inc dword ptr [ebp - 0x1e4]"
+    },
+    {
+      "va": "0x43a0e5",
+      "instruction": "jb 0x438e21"
+    },
+    {
+      "va": "0x43a136",
+      "instruction": "call 0x438570"
+    },
+    {
+      "va": "0x438584",
+      "instruction": "push 0x1c"
+    },
+    {
+      "va": "0x438586",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x43cba7",
+      "instruction": "call 0x43cddc"
+    },
+    {
+      "va": "0x43cbaf",
+      "instruction": "inc dword ptr [ebx + 0x24]"
+    },
+    {
+      "va": "0x437c20",
+      "instruction": "add dword ptr [edi + 0x98], eax"
+    },
+    {
+      "va": "0x437c29",
+      "instruction": "add dword ptr [edi + 0x9c], edx"
+    },
+    {
+      "va": "0x437cee",
+      "instruction": "rep movsd dword ptr es:[edi], dword ptr [esi]"
+    },
+    {
+      "va": "0x438539",
+      "instruction": "inc dword ptr [ebx + 0x20]"
+    },
+    {
+      "va": "0x438548",
+      "instruction": "dec dword ptr [ebx + 0x24]"
+    },
+    {
+      "va": "0x438557",
+      "instruction": "je 0x437c1d"
+    },
+    {
+      "va": "0x438561",
+      "instruction": "call 0x4b5558"
+    },
+    {
+      "va": "0x4b5564",
+      "instruction": "mov dword ptr [ebx], eax"
+    },
+    {
+      "va": "0x438679",
+      "instruction": "call 0x437c0c"
+    },
+    {
+      "va": "0x43868a",
+      "instruction": "xor edx, edx"
+    }
+  ],
+  "semantics": {
+    "source": "012603",
+    "line": 211,
+    "tokens": [
+      "_",
+      ">>>>"
+    ],
+    "segment_duration_ms": 250,
+    "initial_anchor": [
+      640,
+      360
+    ],
+    "end_anchor": [
+      840,
+      360
+    ],
+    "ordering": "per-actor FIFO",
+    "late_frame": "next timed segment starts at current request time; overshoot discarded"
+  },
+  "unverified": [
+    "original live screen timing",
+    "which user actions invoke drain-all"
+  ]
+}

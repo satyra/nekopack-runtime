@@ -113,9 +113,95 @@ impl Motion {
         )
     }
 }
+// Each actor owns its clock. A late frame starts only the next segment at now.
+#[derive(Clone, Debug)]
+pub(crate) struct Queue {
+    pub slot: u8,
+    segments: Vec<Motion>,
+    current: usize,
+    started: u64,
+}
+impl Queue {
+    pub fn new(slot: u8, segments: Vec<Motion>) -> Self {
+        assert!(!segments.is_empty());
+        Self {
+            slot,
+            segments,
+            current: 0,
+            started: 0,
+        }
+    }
+    pub fn duration(&self) -> u64 {
+        self.segments.len() as u64 * DURATION_MS
+    }
+    pub fn finished(&self) -> bool {
+        self.current == self.segments.len()
+    }
+    pub fn position(&mut self, elapsed: u64) -> [i32; 2] {
+        if !self.finished() && elapsed - self.started >= DURATION_MS {
+            self.current += 1;
+            self.started = elapsed;
+        }
+        if self.finished() {
+            self.segments.last().unwrap().end
+        } else {
+            self.segments[self.current].position(elapsed - self.started)
+        }
+    }
+    pub fn metadata(&self) -> String {
+        if self.segments.len() == 1 {
+            return self.segments[0].metadata();
+        }
+        format!(
+            "{{\"slot\":{},\"kind\":\"queue\",\"segments\":[{}]}}",
+            self.slot,
+            self.segments
+                .iter()
+                .map(Motion::metadata)
+                .collect::<Vec<_>>()
+                .join(",")
+        )
+    }
+}
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn queue_discards_overshoot_and_actors_finish_independently() {
+        let center = [640, 360];
+        let mut queue = Queue::new(
+            2,
+            vec![
+                Motion::dip(2, center, center).unwrap(),
+                Motion::new(2, center, 200, center).unwrap(),
+            ],
+        );
+        let mut other = Queue::new(1, vec![Motion::stationary(1, center, center).unwrap()]);
+        assert_eq!(queue.position(125), [640, 410]);
+        assert_eq!(queue.position(270), center);
+        assert!(!queue.finished());
+        assert_eq!(other.position(270), center);
+        assert!(other.finished());
+        assert_eq!(queue.position(270), center);
+        assert_eq!(queue.position(395), [740, 360]);
+        assert_eq!(queue.position(519), [839, 360]);
+        assert!(!queue.finished());
+        assert_eq!(queue.position(520), [840, 360]);
+        assert!(queue.finished());
+        assert_eq!(queue.position(9999), [840, 360]);
+        let mut late = Queue::new(
+            2,
+            vec![
+                Motion::dip(2, center, center).unwrap(),
+                Motion::new(2, center, 200, center).unwrap(),
+            ],
+        );
+        assert_eq!(late.position(9000), center);
+        assert!(!late.finished());
+        assert_eq!(late.position(9000), center);
+        assert_eq!(late.position(9250), [840, 360]);
+        assert!(late.finished());
+    }
     #[test]
     fn left_brackets_return_to_anchor_and_truncate_centered_coordinates() {
         let m = Motion::horizontal_excursion(1, [1120, 360], -200, [640, 360]).unwrap();

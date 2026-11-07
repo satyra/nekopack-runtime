@@ -181,7 +181,7 @@ class MainActivity : Activity() {
                     for(index in pixels.indices){val at=index*4;pixels[index]=((rgba[at+3].toInt() and 255) shl 24) or ((rgba[at].toInt() and 255) shl 16) or ((rgba[at+1].toInt() and 255) shl 8) or (rgba[at+2].toInt() and 255)}
                     val bitmap=android.graphics.Bitmap.createBitmap(pixels,width,height,android.graphics.Bitmap.Config.ARGB_8888)
                     File(root,"${meta.optString("frame_kind","wipe")}-$token-$elapsed.rgba").writeBytes(rgba)
-                    runOnUiThread{if(!storyClosing)ready(bitmap)}
+                    runOnUiThread{if(!storyClosing)ready(bitmap,if(kind=="motion")meta.getBoolean("finished") else false)}
                 }
             }catch(error:Throwable){fail(error)}}
         }){error->worker.execute{fail(error)}}
@@ -229,7 +229,7 @@ class MainActivity : Activity() {
                     File(root,"page-$token.json").writeText(metadata.toString());File(root,"page-$token.png").writeBytes(payload)
                     runOnUiThread {if(!isDestroyed&&!storyClosing){sequence=token;text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true
                         if(metadata.has("motion")){
-                            storyEffects!!.runMotion(token,metadata.getJSONObject("motion").getLong("duration_ms"))
+                            storyEffects!!.runMotion(token)
                             if(intent.getBooleanExtra("close_on_motion",false) && (!intent.hasExtra("close_on_motion_sequence") || token==intent.getIntExtra("close_on_motion_sequence",0).toLong()))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
                         }else image.setImageBitmap(bitmap)}}
                 }

@@ -1,0 +1,25 @@
+{
+  "scope": "Batch 22 cross-report consistency; see individual executable verifiers",
+  "pages": 502,
+  "unchanged_prefix_pages": 500,
+  "native_motion_frames": 57,
+  "queue_frames": 13,
+  "queue_second_segment_start_ms": 254,
+  "queue_finished_request_ms": 537,
+  "audio_requests": 292,
+  "effect_snapshots": 25,
+  "cancel_page": 501,
+  "apk_sha256": "b252c98ee3a5999a914ea46d3f205c7cdbad37b731137cfed38ab23cf540727e",
+  "reports": {
+    "original": "4ece239fa01fe1ad223780c48cb88963f3ac26ba2398cf6c06e7230291acb388",
+    "desktop": "ebc5c4a657e8606f78272dc3a05dfd544a86bebbdde7a81f1df84c6d57c22ca6",
+    "discovery": "f81201820644c2d8a1446f5e8956822bb329bb54d1f62d4ea64c02ca834e4f2e",
+    "native": "eded37a5d312a380e4f73cdef11628cabc90b6a2f655c42d2e151a389cb60403",
+    "cancel": "9b30811e2c0573c1ef81231ded77d3bd40e2b2e10bb4cb58d1e5448878202330",
+    "frames": "299b2f8edc88081eb72656f0c9eda52afe18e91492f74ecf89598535c9e9c83c",
+    "layers": "c3a1b4cec740e66cee8ecaa24f1368d618cf7a86618e9984518c8495588c6745",
+    "effects": "fc12d2214d8d5bccc5635aeb2bc7d1dbd4c602a6b62b6204272d2502f52b8c75",
+    "audio-reference": "e7334d9f4569033e5834df54cd6a0ea17a44abef56e1ca0552604f44fff0f4d1",
+    "audio-evidence": "fbdcc7dd111e008ff3558504b228999369082935cb4ce16d5275f80aadd2f85b"
+  }
+}

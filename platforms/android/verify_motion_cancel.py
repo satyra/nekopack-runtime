@@ -8,10 +8,19 @@ prefix=[str(a.adb),'-s',a.serial];pkg='org.nekopack.probe';run='motion_cancel_'+
 
 def adb(*args):return subprocess.check_output(prefix+list(args),timeout=90)
 def read(name):return adb('exec-out','run-as',pkg,'cat',f'files/{run}/{name}')
+continue_point=None
 def tap(text):
+ global continue_point
+ # The cancellation run verifies every resulting page. Reuse the observed button
+ # within the fixed landscape story layout; movie UI transitions invalidate it.
+ if text=='继续' and continue_point is not None:
+  adb('shell','input','tap',*continue_point);return
+ continue_point=None
  adb('shell','uiautomator','dump','/sdcard/neko-motion-cancel.xml');xml=adb('shell','cat','/sdcard/neko-motion-cancel.xml')
  node=next(n for n in ET.fromstring(xml).iter('node') if n.get('text')==text and n.get('enabled')=='true')
- x,y,r,b=map(int,re.findall(r'\d+',node.get('bounds')));adb('shell','input','tap',str((x+r)//2),str((y+b)//2))
+ x,y,r,b=map(int,re.findall(r'\d+',node.get('bounds')));point=(str((x+r)//2),str((y+b)//2))
+ if text=='继续':continue_point=point
+ adb('shell','input','tap',*point)
 build=json.loads(Path('.local/android-probe/build.json').read_text());apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:')
 assert adb('shell','sha256sum',apk).decode().split()[0]==build['sha256']['nekopack-arm64-probe.apk']
 device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']};device['kernel_machine']=adb('shell','uname','-m').decode().strip()
