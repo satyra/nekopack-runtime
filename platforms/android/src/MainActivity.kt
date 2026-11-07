@@ -198,7 +198,7 @@ class MainActivity : Activity() {
                     File(root,"effect-$token.json").writeText(metadata.toString())
                     if(kind in listOf("fade","wipe","shake","flash"))File(root,"effect-$token.png").writeBytes(payload)
                     val bitmap=if(kind in listOf("fade","wipe","shake","flash"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
-                    val file=if(kind in listOf("bgm","se","voice"))File(root,"audio-$token.ogg").also{
+                    val file=if(kind in listOf("bgm","env","se","voice"))File(root,"audio-$token.ogg").also{
                         it.writeBytes(payload)
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
                         File(root,"audio-$token.json").writeText(JSONObject().put("kind",kind).put("name",metadata.getString("name")).put("sha256",digest).toString())

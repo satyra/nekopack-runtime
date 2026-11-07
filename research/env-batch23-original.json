@@ -1,0 +1,333 @@
+{
+  "scope": "BLESS original static executable and raw DAT; no original live acoustic parity claim",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "facts": [
+    {
+      "va": "0x4bf6d4",
+      "instruction": "push 0xf4240"
+    },
+    {
+      "va": "0x4bf7f6",
+      "instruction": "call 0x46fd50"
+    },
+    {
+      "va": "0x46fd90",
+      "instruction": "fdivp st(1)"
+    },
+    {
+      "va": "0x46fd95",
+      "instruction": "call 0x504cf4"
+    },
+    {
+      "va": "0x46fd9d",
+      "instruction": "fmul dword ptr [0x46fde8]"
+    },
+    {
+      "va": "0x504880",
+      "instruction": "fldlg2"
+    },
+    {
+      "va": "0x4448a7",
+      "instruction": "mov byte ptr [ebp - 0x20e], 0"
+    },
+    {
+      "va": "0x4448ae",
+      "instruction": "mov byte ptr [ebp - 0x20f], 0"
+    },
+    {
+      "va": "0x445283",
+      "instruction": "je 0x4452bd"
+    },
+    {
+      "va": "0x445299",
+      "instruction": "mov ecx, 0x32"
+    },
+    {
+      "va": "0x4452a0",
+      "instruction": "mov ecx, 0x64"
+    },
+    {
+      "va": "0x4452a5",
+      "instruction": "mov dword ptr [ebp - 0x214], ecx"
+    },
+    {
+      "va": "0x4465f8",
+      "instruction": "jne 0x446847"
+    },
+    {
+      "va": "0x446606",
+      "instruction": "jne 0x446847"
+    },
+    {
+      "va": "0x4c00a9",
+      "instruction": "cmp eax, 0x200000"
+    },
+    {
+      "va": "0x4c00ae",
+      "instruction": "jae 0x4c00e5"
+    },
+    {
+      "va": "0x4446d9",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x4446db",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4446f3",
+      "instruction": "push 0x550a62"
+    },
+    {
+      "va": "0x4446f8",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4446fa",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x444706",
+      "instruction": "call 0x4447dc"
+    },
+    {
+      "va": "0x444717",
+      "instruction": "push 2"
+    },
+    {
+      "va": "0x444719",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x44480f",
+      "instruction": "mov byte ptr [edx + 8], cl"
+    },
+    {
+      "va": "0x444818",
+      "instruction": "mov byte ptr [eax + 9], dl"
+    },
+    {
+      "va": "0x44489f",
+      "instruction": "mov byte ptr [ebp - 0x20d], cl"
+    },
+    {
+      "va": "0x444ad3",
+      "instruction": "mov byte ptr [ebp - 0x20d], 1"
+    },
+    {
+      "va": "0x444b12",
+      "instruction": "mov byte ptr [ebp - 0x20d], 0"
+    },
+    {
+      "va": "0x4453ab",
+      "instruction": "mov cl, byte ptr [ebp - 0x20d]"
+    },
+    {
+      "va": "0x445ccf",
+      "instruction": "mov byte ptr [ebp - 0x18d], dl"
+    },
+    {
+      "va": "0x445fca",
+      "instruction": "movsx edx, byte ptr [eax + 9]"
+    },
+    {
+      "va": "0x445fd1",
+      "instruction": "lea ebx, [edx + edx*4]"
+    },
+    {
+      "va": "0x445fd4",
+      "instruction": "lea ebx, [edx + ebx*4]"
+    },
+    {
+      "va": "0x445fd7",
+      "instruction": "shl ebx, 3"
+    },
+    {
+      "va": "0x445fda",
+      "instruction": "add ebx, 0x584340"
+    },
+    {
+      "va": "0x445fe2",
+      "instruction": "je 0x446598"
+    },
+    {
+      "va": "0x44600d",
+      "instruction": "call 0x4c03ac"
+    },
+    {
+      "va": "0x446082",
+      "instruction": "call 0x4492a4"
+    },
+    {
+      "va": "0x4460ea",
+      "instruction": "mov cl, byte ptr [ebp - 0x18d]"
+    },
+    {
+      "va": "0x4460f6",
+      "instruction": "call 0x4c0024"
+    },
+    {
+      "va": "0x4c0208",
+      "instruction": "mov dl, byte ptr [ebp + 0x10]"
+    },
+    {
+      "va": "0x4c020f",
+      "instruction": "call dword ptr [ecx + 4]"
+    },
+    {
+      "va": "0x4bf865",
+      "instruction": "call 0x46fb44"
+    },
+    {
+      "va": "0x46fb78",
+      "instruction": "mov edx, 1"
+    },
+    {
+      "va": "0x46fb89",
+      "instruction": "call dword ptr [eax + 0x30]"
+    },
+    {
+      "va": "0x446610",
+      "instruction": "call 0x4c03ac"
+    },
+    {
+      "va": "0x4c0405",
+      "instruction": "mov dword ptr [ebx + 4], edx"
+    },
+    {
+      "va": "0x44686e",
+      "instruction": "ret"
+    },
+    {
+      "va": "0x44717c",
+      "instruction": "mov ebx, 0x5843e8"
+    },
+    {
+      "va": "0x4471b7",
+      "instruction": "push 0x550b40"
+    },
+    {
+      "va": "0x4471bd",
+      "instruction": "call 0x4492a4"
+    },
+    {
+      "va": "0x4471c5",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4471cc",
+      "instruction": "call 0x4c0024"
+    }
+  ],
+  "commands": [
+    {
+      "source": "script/012701.txt",
+      "line": 9,
+      "command": ".env ENV_001"
+    },
+    {
+      "source": "script/012701.txt",
+      "line": 164,
+      "command": ".env"
+    },
+    {
+      "source": "script/012901.txt",
+      "line": 7,
+      "command": ".env ENV_002"
+    },
+    {
+      "source": "script/012901.txt",
+      "line": 110,
+      "command": ".env"
+    },
+    {
+      "source": "script/023805.txt",
+      "line": 285,
+      "command": ".env ENV_000"
+    },
+    {
+      "source": "script/023805.txt",
+      "line": 434,
+      "command": ".env ENV_001"
+    },
+    {
+      "source": "script/023805.txt",
+      "line": 465,
+      "command": ".env"
+    },
+    {
+      "source": "script/036202.txt",
+      "line": 242,
+      "command": ".env ENV_000"
+    },
+    {
+      "source": "script/036202.txt",
+      "line": 258,
+      "command": ".env"
+    },
+    {
+      "source": "script/036203.txt",
+      "line": 5,
+      "command": ".env ENV_000"
+    },
+    {
+      "source": "script/036204h.txt",
+      "line": 5,
+      "command": ".env ENV_001"
+    },
+    {
+      "source": "script/036204h.txt",
+      "line": 679,
+      "command": ".env"
+    }
+  ],
+  "resources": [
+    {
+      "channels": 2,
+      "decoded_pcm_bytes": 2080752,
+      "name": "env_000",
+      "sha256": "8420dc09d45984e112626498612fbdd71127ae77e46fdae5844cba629a16bc29",
+      "sample_rate": 44100,
+      "total_samples": 520188,
+      "duration_seconds": 11.795646258503401,
+      "vorbis_comments": 0
+    },
+    {
+      "channels": 2,
+      "decoded_pcm_bytes": 704536,
+      "name": "env_001",
+      "sha256": "d676a2107d88f6a3bb3a537a38eb5ba547be2c768bc8068b02deaa3369bd0e64",
+      "sample_rate": 44100,
+      "total_samples": 176134,
+      "duration_seconds": 3.993968253968254,
+      "vorbis_comments": 0
+    },
+    {
+      "channels": 2,
+      "decoded_pcm_bytes": 1632168,
+      "name": "env_002",
+      "sha256": "b9a9f84db7c60d86b56b501607acf8e98368ca357d1339da73268c06cd3d0c92",
+      "sample_rate": 44100,
+      "total_samples": 408042,
+      "duration_seconds": 9.252653061224489,
+      "vorbis_comments": 0
+    }
+  ],
+  "semantics": {
+    "directory": "sound/env",
+    "channel_index": 1,
+    "bgm_channel_index": 0,
+    "se_channel_index": 2,
+    "default_loop": true,
+    "default_command_volume_percent": 50,
+    "volume_mapping": "command/category/fade percent factors multiplied, divided by 1000000; 2000*log10(ratio) to DirectSound attenuation",
+    "named": "release selected channel handle, load resource, start looping; no wait for end of audio",
+    "empty": "release selected channel immediately; no implicit fade",
+    "restore": "original restores the saved env channel name with looping; runtime save/resume not added in this batch"
+  },
+  "limits": [
+    "Only bare stop and one resource name are implemented; explicit once/loop, volume, pan and fade modifiers remain rejected",
+    "Original master/category volume, loop seam quality and complete save/resume are not verified",
+    "The original BGM descriptor also defaults to 50; its existing adapter gain behavior is unchanged in this env-only batch and needs separate alignment"
+  ]
+}

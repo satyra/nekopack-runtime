@@ -15,10 +15,10 @@ def main():
    if page['voice']:wanted.add(('voice',page['voice']))
    for effect in page['effects']:
     kind,_,name=effect.partition(' ')
-    if kind in ['bgm','se'] and not name.startswith('fade '):wanted.add((kind,name))
+    if kind in ['bgm','env','se'] and not name.startswith('fade '):wanted.add((kind,name))
   rows={}
   for kind,name in sorted(wanted):
-   logical=({'bgm':'sound/bgm','se':'sound/se','voice':'voice'}[kind]+'/'+name+'.ogg').lower()
+   logical=({'bgm':'sound/bgm','env':'sound/env','se':'sound/se','voice':'voice'}[kind]+'/'+name+'.ogg').lower()
    selected=[(priority,pack) for priority,pack in packs if logical in pack.entries]
    highest=max(priority for priority,_ in selected);best=[pack for priority,pack in selected if priority==highest]
    if len(best)!=1:raise RuntimeError('ambiguous reference audio')

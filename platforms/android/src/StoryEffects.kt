@@ -88,6 +88,12 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         try {
             when(kind){
                 "wait"->handler.postDelayed({done()},duration)
+                "env_stop"->{
+                    release("env")
+                    log("stopped",kind,token,if(players.containsKey("env"))1 else 0)
+                    players["bgm"]?.first?.let{if(it.isPlaying)log("peer_playing","bgm",token,it.currentPosition.toLong())}
+                    done()
+                }
                 "bgm_stop"->{
                     release("bgm")
                     log("stopped",kind,token,if(players.containsKey("bgm"))1 else 0)
@@ -159,7 +165,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     }})
                     animation.start()
                 }
-                "bgm","se","voice"->{
+                "bgm","env","se","voice"->{
                     check(file!=null)
                     if(!focused){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};focused=true}
                     release(kind)
@@ -168,14 +174,28 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     player.setDataSource(file.absolutePath)
                     player.setOnPreparedListener{
                         if(!closed && players[kind]?.first===it){
-                            try{it.isLooping=kind=="bgm";it.start();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong());done()
+                            try{
+                                if(kind=="env"){
+                                    it.isLooping=meta.getBoolean("loop")
+                                    val percent=meta.getInt("volume_percent");val gain=percent/100f
+                                    it.setVolume(gain,gain);log("gain",kind,token,percent.toLong())
+                                }else it.isLooping=kind=="bgm"
+                                it.start();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong())
+                                if(kind=="env"){
+                                    log("looping",kind,token,if(it.isLooping)1 else 0)
+                                    players["bgm"]?.first?.let{peer->if(peer.isPlaying)log("peer_playing","bgm",token,peer.currentPosition.toLong())}
+                                }
+                                done()
                                 handler.postDelayed(object:Runnable {
                                     private var samples=0
+                                    private var previousPosition=-1L
                                     override fun run(){
                                         if(closed||players[kind]?.first!==player||!player.isPlaying)return
                                         val position=player.currentPosition.toLong();samples++
                                         log("progress",kind,token,position)
-                                        if(position==0L&&samples<25)handler.postDelayed(this,200)
+                                        if(kind=="env" && position<previousPosition)log("looped",kind,token,position)
+                                        previousPosition=position
+                                        if(kind=="env" || (position==0L&&samples<25))handler.postDelayed(this,200)
                                     }
                                 },200)}
                             catch(error:Throwable){failure(error)}

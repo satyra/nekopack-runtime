@@ -1,0 +1,30 @@
+{
+  "scope": "Final env APK only; incomplete/superseded runs excluded",
+  "pages": 598,
+  "new_native_pages": 96,
+  "unchanged_desktop_prefix": 563,
+  "independent_new_page_pixels": 96,
+  "motion_frames": 67,
+  "audio_requests": 354,
+  "effect_snapshots": 31,
+  "environment_start_page": 564,
+  "environment_stop_page": 593,
+  "bgm_stop_page": 598,
+  "environment_loop_wraps": 10,
+  "command_volume_percent": 50,
+  "cancel_page": 564,
+  "vm_live_bytes": 0,
+  "apk_sha256": "de2cacd9792ea3a9c1f02fc1f0387d19bd5f16121a918b618f308cf751ffaba0",
+  "reports": {
+    "original": "b23a25c20722fa32a7170c91034ef1a33586eed4d30bb51f5aa3ae49b73fc969",
+    "desktop": "cd2adf5c4e94b31037878c68bd78697839e7d53eca57f8a448562091f71765c1",
+    "native": "25d1fae32368a13d7dbfa3efde5b2e83c64d167eb1af13afb6df4afc3f55a4af",
+    "cancel": "22cad2eda25d65614a88c1cd0e7daeafc60e12a4fa90aad1e071c1cd826e6128",
+    "evidence": "07efab7b8eb7e0bb3e13e6b9cb768e791e6ea497009627ca3418c2c72bf6c18a",
+    "frames": "3b929e24552f6ec2f6417ba7669abd693b0f42dbf6a564b62cbdd5290d6b1c7e",
+    "new-layers": "ccaaec14310445c288654e6f499030d2a630192095afffba0deebfaac8ea79e8",
+    "effects": "30b80133f6df2de849ac2dd4cbadd401b338186ea9f8df210a997ee860fceeb1",
+    "audio-reference": "cb9cabccfbc2a25cb8d34c6507f0003765c984b78364fc8aed05dc81d027aad1",
+    "audio-evidence": "b29900eed9e6d347901b8d4a9e34cfd4a879691097b8b043e3acc7b50fb75db3"
+  }
+}

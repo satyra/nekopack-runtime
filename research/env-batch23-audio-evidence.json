@@ -1,0 +1,2888 @@
+{
+  "scope": "Replay of captured device events; replacement is interruption evidence, not proof of audible progress; terminal spans retain their original bounded-observation limitation",
+  "verifier_sha256_lf_utf8": "954374bd7b0ce75784178012d973c7310f2edbc2afe6324d8a9fd622b0e05589",
+  "reports": [
+    {
+      "report": "env-batch23-native.json",
+      "report_sha256_lf_utf8": "390a5cb40d5b8a1275e7bca589a3831ae47e812377f1f4a6ecd4b1b69d6e0ab2",
+      "execution": "native ARM64",
+      "apk_sha256": "de2cacd9792ea3a9c1f02fc1f0387d19bd5f16121a918b618f308cf751ffaba0",
+      "games": [
+        {
+          "index": 0,
+          "audio": [
+            {
+              "token": 2,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 3,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 4,
+              "terminal_span_only": false
+            },
+            {
+              "token": 4,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 5,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 6,
+              "kind": "se",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 9,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 36,
+              "terminal_span_only": false
+            },
+            {
+              "token": 11,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 12,
+              "terminal_span_only": false
+            },
+            {
+              "token": 12,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 13,
+              "terminal_span_only": false
+            },
+            {
+              "token": 13,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 14,
+              "terminal_span_only": false
+            },
+            {
+              "token": 14,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 15,
+              "terminal_span_only": false
+            },
+            {
+              "token": 15,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 16,
+              "terminal_span_only": false
+            },
+            {
+              "token": 16,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 17,
+              "terminal_span_only": false
+            },
+            {
+              "token": 17,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 18,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 20,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 21,
+              "terminal_span_only": false
+            },
+            {
+              "token": 21,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 22,
+              "terminal_span_only": false
+            },
+            {
+              "token": 22,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 23,
+              "terminal_span_only": false
+            },
+            {
+              "token": 23,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 24,
+              "terminal_span_only": false
+            },
+            {
+              "token": 24,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 25,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 26,
+              "terminal_span_only": false
+            },
+            {
+              "token": 26,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 27,
+              "terminal_span_only": false
+            },
+            {
+              "token": 27,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 28,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 29,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 30,
+              "terminal_span_only": false
+            },
+            {
+              "token": 30,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 31,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 32,
+              "terminal_span_only": false
+            },
+            {
+              "token": 32,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 33,
+              "terminal_span_only": false
+            },
+            {
+              "token": 33,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 34,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 36,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 46,
+              "terminal_span_only": false
+            },
+            {
+              "token": 38,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 39,
+              "terminal_span_only": false
+            },
+            {
+              "token": 39,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 40,
+              "terminal_span_only": false
+            },
+            {
+              "token": 40,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 41,
+              "terminal_span_only": false
+            },
+            {
+              "token": 41,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 42,
+              "terminal_span_only": false
+            },
+            {
+              "token": 42,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 44,
+              "terminal_span_only": false
+            },
+            {
+              "token": 44,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 45,
+              "terminal_span_only": false
+            },
+            {
+              "token": 45,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 46,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 72,
+              "terminal_span_only": false
+            },
+            {
+              "token": 47,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 48,
+              "terminal_span_only": false
+            },
+            {
+              "token": 48,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 49,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 50,
+              "terminal_span_only": false
+            },
+            {
+              "token": 50,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 51,
+              "terminal_span_only": false
+            },
+            {
+              "token": 51,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 52,
+              "terminal_span_only": false
+            },
+            {
+              "token": 52,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 53,
+              "terminal_span_only": false
+            },
+            {
+              "token": 53,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 54,
+              "terminal_span_only": false
+            },
+            {
+              "token": 54,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 55,
+              "terminal_span_only": false
+            },
+            {
+              "token": 55,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 56,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 57,
+              "terminal_span_only": false
+            },
+            {
+              "token": 57,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 58,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 59,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 60,
+              "terminal_span_only": false
+            },
+            {
+              "token": 60,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 61,
+              "terminal_span_only": false
+            },
+            {
+              "token": 61,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 62,
+              "terminal_span_only": false
+            },
+            {
+              "token": 62,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 63,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 64,
+              "terminal_span_only": false
+            },
+            {
+              "token": 64,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 65,
+              "terminal_span_only": false
+            },
+            {
+              "token": 65,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 66,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 67,
+              "terminal_span_only": false
+            },
+            {
+              "token": 67,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 68,
+              "terminal_span_only": false
+            },
+            {
+              "token": 68,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 69,
+              "terminal_span_only": false
+            },
+            {
+              "token": 69,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 70,
+              "terminal_span_only": false
+            },
+            {
+              "token": 70,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 71,
+              "terminal_span_only": false
+            },
+            {
+              "token": 71,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 72,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 82,
+              "terminal_span_only": false
+            },
+            {
+              "token": 76,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 77,
+              "terminal_span_only": false
+            },
+            {
+              "token": 77,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 78,
+              "terminal_span_only": false
+            },
+            {
+              "token": 78,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 82,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 97,
+              "terminal_span_only": false
+            },
+            {
+              "token": 83,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 84,
+              "terminal_span_only": false
+            },
+            {
+              "token": 84,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 85,
+              "terminal_span_only": false
+            },
+            {
+              "token": 85,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 86,
+              "terminal_span_only": false
+            },
+            {
+              "token": 86,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 87,
+              "terminal_span_only": false
+            },
+            {
+              "token": 87,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 88,
+              "terminal_span_only": false
+            },
+            {
+              "token": 88,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 89,
+              "terminal_span_only": false
+            },
+            {
+              "token": 89,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 90,
+              "terminal_span_only": false
+            },
+            {
+              "token": 90,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 91,
+              "terminal_span_only": false
+            },
+            {
+              "token": 91,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 92,
+              "terminal_span_only": false
+            },
+            {
+              "token": 92,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 93,
+              "terminal_span_only": false
+            },
+            {
+              "token": 93,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 94,
+              "terminal_span_only": false
+            },
+            {
+              "token": 94,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 95,
+              "terminal_span_only": false
+            },
+            {
+              "token": 95,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 96,
+              "terminal_span_only": false
+            },
+            {
+              "token": 96,
+              "kind": "voice",
+              "progress_observed": false,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 97,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 109,
+              "terminal_span_only": false
+            },
+            {
+              "token": 98,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 99,
+              "terminal_span_only": false
+            },
+            {
+              "token": 99,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 100,
+              "terminal_span_only": false
+            },
+            {
+              "token": 100,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 101,
+              "terminal_span_only": false
+            },
+            {
+              "token": 101,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 102,
+              "terminal_span_only": false
+            },
+            {
+              "token": 102,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 103,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 104,
+              "terminal_span_only": false
+            },
+            {
+              "token": 104,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 105,
+              "terminal_span_only": false
+            },
+            {
+              "token": 105,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 106,
+              "terminal_span_only": false
+            },
+            {
+              "token": 106,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 107,
+              "terminal_span_only": false
+            },
+            {
+              "token": 107,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 109,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 111,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 112,
+              "terminal_span_only": false
+            },
+            {
+              "token": 112,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 113,
+              "terminal_span_only": false
+            },
+            {
+              "token": 113,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 114,
+              "terminal_span_only": false
+            },
+            {
+              "token": 114,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 115,
+              "terminal_span_only": false
+            },
+            {
+              "token": 115,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 116,
+              "terminal_span_only": false
+            },
+            {
+              "token": 116,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 117,
+              "terminal_span_only": false
+            },
+            {
+              "token": 117,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 118,
+              "terminal_span_only": false
+            },
+            {
+              "token": 118,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 119,
+              "terminal_span_only": false
+            },
+            {
+              "token": 119,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 120,
+              "terminal_span_only": false
+            },
+            {
+              "token": 120,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 121,
+              "terminal_span_only": false
+            },
+            {
+              "token": 121,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 122,
+              "terminal_span_only": false
+            },
+            {
+              "token": 122,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 123,
+              "terminal_span_only": false
+            },
+            {
+              "token": 123,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 124,
+              "terminal_span_only": false
+            },
+            {
+              "token": 124,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 125,
+              "terminal_span_only": false
+            },
+            {
+              "token": 125,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 126,
+              "terminal_span_only": false
+            },
+            {
+              "token": 126,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 127,
+              "terminal_span_only": false
+            },
+            {
+              "token": 127,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 128,
+              "terminal_span_only": false
+            },
+            {
+              "token": 128,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 129,
+              "terminal_span_only": false
+            },
+            {
+              "token": 129,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 130,
+              "terminal_span_only": false
+            },
+            {
+              "token": 130,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 131,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 132,
+              "terminal_span_only": false
+            },
+            {
+              "token": 132,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 133,
+              "terminal_span_only": false
+            },
+            {
+              "token": 133,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 134,
+              "terminal_span_only": false
+            },
+            {
+              "token": 134,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 135,
+              "terminal_span_only": false
+            },
+            {
+              "token": 135,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 136,
+              "terminal_span_only": false
+            },
+            {
+              "token": 136,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 137,
+              "terminal_span_only": false
+            },
+            {
+              "token": 137,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 138,
+              "terminal_span_only": false
+            },
+            {
+              "token": 138,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 139,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 140,
+              "terminal_span_only": false
+            },
+            {
+              "token": 140,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 141,
+              "terminal_span_only": false
+            },
+            {
+              "token": 141,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 142,
+              "terminal_span_only": false
+            },
+            {
+              "token": 142,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 143,
+              "terminal_span_only": false
+            },
+            {
+              "token": 143,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 144,
+              "terminal_span_only": false
+            },
+            {
+              "token": 144,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 145,
+              "terminal_span_only": false
+            },
+            {
+              "token": 145,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 146,
+              "terminal_span_only": false
+            },
+            {
+              "token": 146,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 147,
+              "terminal_span_only": false
+            },
+            {
+              "token": 147,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 148,
+              "terminal_span_only": false
+            },
+            {
+              "token": 148,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 149,
+              "terminal_span_only": false
+            },
+            {
+              "token": 149,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 150,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 151,
+              "terminal_span_only": false
+            },
+            {
+              "token": 151,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 152,
+              "terminal_span_only": false
+            },
+            {
+              "token": 152,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 153,
+              "terminal_span_only": false
+            },
+            {
+              "token": 153,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 154,
+              "terminal_span_only": false
+            },
+            {
+              "token": 154,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 155,
+              "terminal_span_only": false
+            },
+            {
+              "token": 155,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 156,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 157,
+              "terminal_span_only": false
+            },
+            {
+              "token": 157,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 158,
+              "terminal_span_only": false
+            },
+            {
+              "token": 158,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 159,
+              "terminal_span_only": false
+            },
+            {
+              "token": 159,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 160,
+              "terminal_span_only": false
+            },
+            {
+              "token": 160,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 161,
+              "terminal_span_only": false
+            },
+            {
+              "token": 161,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 162,
+              "terminal_span_only": false
+            },
+            {
+              "token": 162,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 163,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 164,
+              "terminal_span_only": false
+            },
+            {
+              "token": 164,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 165,
+              "terminal_span_only": false
+            },
+            {
+              "token": 165,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 168,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 185,
+              "terminal_span_only": false
+            },
+            {
+              "token": 169,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 171,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 172,
+              "terminal_span_only": false
+            },
+            {
+              "token": 172,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 173,
+              "terminal_span_only": false
+            },
+            {
+              "token": 173,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 174,
+              "terminal_span_only": false
+            },
+            {
+              "token": 174,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 175,
+              "terminal_span_only": false
+            },
+            {
+              "token": 175,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 176,
+              "terminal_span_only": false
+            },
+            {
+              "token": 176,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 177,
+              "terminal_span_only": false
+            },
+            {
+              "token": 177,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 178,
+              "terminal_span_only": false
+            },
+            {
+              "token": 178,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 179,
+              "terminal_span_only": false
+            },
+            {
+              "token": 179,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 180,
+              "terminal_span_only": false
+            },
+            {
+              "token": 180,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 181,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 182,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 183,
+              "terminal_span_only": false
+            },
+            {
+              "token": 183,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 185,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 236,
+              "terminal_span_only": false
+            },
+            {
+              "token": 187,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 188,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 189,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 190,
+              "terminal_span_only": false
+            },
+            {
+              "token": 190,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 191,
+              "terminal_span_only": false
+            },
+            {
+              "token": 191,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 192,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 193,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 194,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 195,
+              "terminal_span_only": false
+            },
+            {
+              "token": 195,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 196,
+              "terminal_span_only": false
+            },
+            {
+              "token": 196,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 197,
+              "terminal_span_only": false
+            },
+            {
+              "token": 197,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 198,
+              "terminal_span_only": false
+            },
+            {
+              "token": 198,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 199,
+              "terminal_span_only": false
+            },
+            {
+              "token": 199,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 200,
+              "terminal_span_only": false
+            },
+            {
+              "token": 200,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 201,
+              "terminal_span_only": false
+            },
+            {
+              "token": 201,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 202,
+              "terminal_span_only": false
+            },
+            {
+              "token": 202,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 203,
+              "terminal_span_only": false
+            },
+            {
+              "token": 203,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 204,
+              "terminal_span_only": false
+            },
+            {
+              "token": 204,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 205,
+              "terminal_span_only": false
+            },
+            {
+              "token": 205,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 206,
+              "terminal_span_only": false
+            },
+            {
+              "token": 206,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 207,
+              "terminal_span_only": false
+            },
+            {
+              "token": 207,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 208,
+              "terminal_span_only": false
+            },
+            {
+              "token": 208,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 209,
+              "terminal_span_only": false
+            },
+            {
+              "token": 209,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 210,
+              "terminal_span_only": false
+            },
+            {
+              "token": 210,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 211,
+              "terminal_span_only": false
+            },
+            {
+              "token": 211,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 212,
+              "terminal_span_only": false
+            },
+            {
+              "token": 212,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 213,
+              "terminal_span_only": false
+            },
+            {
+              "token": 213,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 214,
+              "terminal_span_only": false
+            },
+            {
+              "token": 214,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 215,
+              "terminal_span_only": false
+            },
+            {
+              "token": 215,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 216,
+              "terminal_span_only": false
+            },
+            {
+              "token": 216,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 217,
+              "terminal_span_only": false
+            },
+            {
+              "token": 217,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 218,
+              "terminal_span_only": false
+            },
+            {
+              "token": 218,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 219,
+              "terminal_span_only": false
+            },
+            {
+              "token": 219,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 220,
+              "terminal_span_only": false
+            },
+            {
+              "token": 220,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 221,
+              "terminal_span_only": false
+            },
+            {
+              "token": 221,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 222,
+              "terminal_span_only": false
+            },
+            {
+              "token": 222,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 223,
+              "terminal_span_only": false
+            },
+            {
+              "token": 223,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 224,
+              "terminal_span_only": false
+            },
+            {
+              "token": 224,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 225,
+              "terminal_span_only": false
+            },
+            {
+              "token": 225,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 226,
+              "terminal_span_only": false
+            },
+            {
+              "token": 226,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 227,
+              "terminal_span_only": false
+            },
+            {
+              "token": 227,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 228,
+              "terminal_span_only": false
+            },
+            {
+              "token": 228,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 229,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 230,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 231,
+              "terminal_span_only": false
+            },
+            {
+              "token": 231,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 232,
+              "terminal_span_only": false
+            },
+            {
+              "token": 232,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 233,
+              "terminal_span_only": false
+            },
+            {
+              "token": 233,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 234,
+              "terminal_span_only": false
+            },
+            {
+              "token": 234,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 236,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 257,
+              "terminal_span_only": false
+            },
+            {
+              "token": 238,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 239,
+              "terminal_span_only": false
+            },
+            {
+              "token": 239,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 240,
+              "terminal_span_only": false
+            },
+            {
+              "token": 240,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 241,
+              "terminal_span_only": false
+            },
+            {
+              "token": 241,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 242,
+              "terminal_span_only": false
+            },
+            {
+              "token": 242,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 243,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 244,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 245,
+              "terminal_span_only": false
+            },
+            {
+              "token": 245,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 246,
+              "terminal_span_only": false
+            },
+            {
+              "token": 246,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 247,
+              "terminal_span_only": false
+            },
+            {
+              "token": 247,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 248,
+              "terminal_span_only": false
+            },
+            {
+              "token": 248,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 249,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 250,
+              "terminal_span_only": false
+            },
+            {
+              "token": 250,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 251,
+              "terminal_span_only": false
+            },
+            {
+              "token": 251,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 252,
+              "terminal_span_only": false
+            },
+            {
+              "token": 252,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 253,
+              "terminal_span_only": false
+            },
+            {
+              "token": 253,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 254,
+              "terminal_span_only": false
+            },
+            {
+              "token": 254,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 257,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 275,
+              "terminal_span_only": false
+            },
+            {
+              "token": 258,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 259,
+              "terminal_span_only": false
+            },
+            {
+              "token": 259,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 260,
+              "terminal_span_only": false
+            },
+            {
+              "token": 260,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 261,
+              "terminal_span_only": false
+            },
+            {
+              "token": 261,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 262,
+              "terminal_span_only": false
+            },
+            {
+              "token": 262,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 263,
+              "terminal_span_only": false
+            },
+            {
+              "token": 263,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 264,
+              "terminal_span_only": false
+            },
+            {
+              "token": 264,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 265,
+              "terminal_span_only": false
+            },
+            {
+              "token": 265,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 266,
+              "terminal_span_only": false
+            },
+            {
+              "token": 266,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 267,
+              "terminal_span_only": false
+            },
+            {
+              "token": 267,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 268,
+              "terminal_span_only": false
+            },
+            {
+              "token": 268,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 269,
+              "terminal_span_only": false
+            },
+            {
+              "token": 269,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 270,
+              "terminal_span_only": false
+            },
+            {
+              "token": 270,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 271,
+              "terminal_span_only": false
+            },
+            {
+              "token": 271,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 272,
+              "terminal_span_only": false
+            },
+            {
+              "token": 272,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 273,
+              "terminal_span_only": false
+            },
+            {
+              "token": 273,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 278,
+              "terminal_span_only": false
+            },
+            {
+              "token": 275,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 277,
+              "kind": "se",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 278,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 279,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 280,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 281,
+              "terminal_span_only": false
+            },
+            {
+              "token": 281,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 282,
+              "terminal_span_only": false
+            },
+            {
+              "token": 282,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 283,
+              "terminal_span_only": false
+            },
+            {
+              "token": 283,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 284,
+              "terminal_span_only": false
+            },
+            {
+              "token": 284,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 285,
+              "terminal_span_only": false
+            },
+            {
+              "token": 285,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 286,
+              "terminal_span_only": false
+            },
+            {
+              "token": 286,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 288,
+              "terminal_span_only": false
+            },
+            {
+              "token": 287,
+              "kind": "se",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 288,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 289,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 292,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 293,
+              "terminal_span_only": false
+            },
+            {
+              "token": 293,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 294,
+              "terminal_span_only": false
+            },
+            {
+              "token": 294,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 295,
+              "terminal_span_only": false
+            },
+            {
+              "token": 295,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 296,
+              "terminal_span_only": false
+            },
+            {
+              "token": 296,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 297,
+              "terminal_span_only": false
+            },
+            {
+              "token": 297,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 298,
+              "terminal_span_only": false
+            },
+            {
+              "token": 298,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 299,
+              "terminal_span_only": false
+            },
+            {
+              "token": 299,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 300,
+              "terminal_span_only": false
+            },
+            {
+              "token": 300,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 301,
+              "terminal_span_only": false
+            },
+            {
+              "token": 301,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 302,
+              "terminal_span_only": false
+            },
+            {
+              "token": 302,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 303,
+              "terminal_span_only": false
+            },
+            {
+              "token": 303,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 304,
+              "terminal_span_only": false
+            },
+            {
+              "token": 304,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 305,
+              "terminal_span_only": false
+            },
+            {
+              "token": 305,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 306,
+              "terminal_span_only": false
+            },
+            {
+              "token": 306,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 307,
+              "terminal_span_only": false
+            },
+            {
+              "token": 307,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 308,
+              "terminal_span_only": false
+            },
+            {
+              "token": 308,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 309,
+              "terminal_span_only": false
+            },
+            {
+              "token": 309,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 310,
+              "terminal_span_only": false
+            },
+            {
+              "token": 310,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 311,
+              "terminal_span_only": false
+            },
+            {
+              "token": 311,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 312,
+              "terminal_span_only": false
+            },
+            {
+              "token": 312,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 313,
+              "terminal_span_only": false
+            },
+            {
+              "token": 313,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 314,
+              "terminal_span_only": false
+            },
+            {
+              "token": 314,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 315,
+              "terminal_span_only": false
+            },
+            {
+              "token": 315,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 316,
+              "terminal_span_only": false
+            },
+            {
+              "token": 316,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 317,
+              "terminal_span_only": false
+            },
+            {
+              "token": 317,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 318,
+              "terminal_span_only": false
+            },
+            {
+              "token": 318,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 319,
+              "terminal_span_only": false
+            },
+            {
+              "token": 319,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 320,
+              "terminal_span_only": false
+            },
+            {
+              "token": 320,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 321,
+              "terminal_span_only": false
+            },
+            {
+              "token": 321,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 322,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 323,
+              "terminal_span_only": false
+            },
+            {
+              "token": 323,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 324,
+              "terminal_span_only": false
+            },
+            {
+              "token": 324,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 325,
+              "terminal_span_only": false
+            },
+            {
+              "token": 325,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 326,
+              "terminal_span_only": false
+            },
+            {
+              "token": 326,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 327,
+              "terminal_span_only": false
+            },
+            {
+              "token": 327,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 328,
+              "terminal_span_only": false
+            },
+            {
+              "token": 328,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 329,
+              "terminal_span_only": false
+            },
+            {
+              "token": 329,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 330,
+              "terminal_span_only": false
+            },
+            {
+              "token": 330,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 331,
+              "terminal_span_only": false
+            },
+            {
+              "token": 331,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 332,
+              "terminal_span_only": false
+            },
+            {
+              "token": 332,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 333,
+              "terminal_span_only": false
+            },
+            {
+              "token": 333,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 334,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 335,
+              "terminal_span_only": false
+            },
+            {
+              "token": 335,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 336,
+              "terminal_span_only": false
+            },
+            {
+              "token": 336,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 337,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 338,
+              "terminal_span_only": false
+            },
+            {
+              "token": 338,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 339,
+              "terminal_span_only": false
+            },
+            {
+              "token": 339,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 340,
+              "terminal_span_only": false
+            },
+            {
+              "token": 340,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 341,
+              "terminal_span_only": false
+            },
+            {
+              "token": 341,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 342,
+              "terminal_span_only": false
+            },
+            {
+              "token": 342,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 343,
+              "terminal_span_only": false
+            },
+            {
+              "token": 343,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 344,
+              "terminal_span_only": false
+            },
+            {
+              "token": 344,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 346,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 365,
+              "terminal_span_only": false
+            },
+            {
+              "token": 348,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 349,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 350,
+              "terminal_span_only": false
+            },
+            {
+              "token": 350,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 351,
+              "terminal_span_only": false
+            },
+            {
+              "token": 351,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 353,
+              "terminal_span_only": false
+            },
+            {
+              "token": 352,
+              "kind": "se",
+              "progress_observed": false,
+              "completed_after_duration": true,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 353,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 354,
+              "terminal_span_only": false
+            },
+            {
+              "token": 354,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 355,
+              "terminal_span_only": false
+            },
+            {
+              "token": 355,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 356,
+              "terminal_span_only": false
+            },
+            {
+              "token": 356,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 357,
+              "terminal_span_only": false
+            },
+            {
+              "token": 357,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 358,
+              "terminal_span_only": false
+            },
+            {
+              "token": 358,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 359,
+              "terminal_span_only": false
+            },
+            {
+              "token": 359,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 360,
+              "terminal_span_only": false
+            },
+            {
+              "token": 360,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 361,
+              "terminal_span_only": false
+            },
+            {
+              "token": 361,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 362,
+              "terminal_span_only": false
+            },
+            {
+              "token": 362,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 365,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 370,
+              "terminal_span_only": false
+            },
+            {
+              "token": 366,
+              "kind": "env",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 368,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 369,
+              "terminal_span_only": false
+            },
+            {
+              "token": 369,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 370,
+              "kind": "bgm",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 371,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 372,
+              "terminal_span_only": false
+            },
+            {
+              "token": 372,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 373,
+              "terminal_span_only": false
+            },
+            {
+              "token": 373,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 374,
+              "terminal_span_only": false
+            },
+            {
+              "token": 374,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 375,
+              "terminal_span_only": false
+            },
+            {
+              "token": 375,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 376,
+              "terminal_span_only": false
+            },
+            {
+              "token": 376,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 377,
+              "terminal_span_only": false
+            },
+            {
+              "token": 377,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 378,
+              "terminal_span_only": false
+            },
+            {
+              "token": 378,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 379,
+              "terminal_span_only": false
+            },
+            {
+              "token": 379,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 380,
+              "terminal_span_only": false
+            },
+            {
+              "token": 380,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 381,
+              "terminal_span_only": false
+            },
+            {
+              "token": 381,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 382,
+              "terminal_span_only": false
+            },
+            {
+              "token": 382,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 383,
+              "terminal_span_only": false
+            },
+            {
+              "token": 383,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 384,
+              "terminal_span_only": false
+            },
+            {
+              "token": 384,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 385,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            },
+            {
+              "token": 388,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 389,
+              "terminal_span_only": false
+            },
+            {
+              "token": 389,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": 390,
+              "terminal_span_only": false
+            },
+            {
+              "token": 390,
+              "kind": "voice",
+              "progress_observed": true,
+              "completed_after_duration": false,
+              "replaced_by_token": null,
+              "terminal_span_only": false
+            }
+          ],
+          "stops": [
+            {
+              "token": 43,
+              "ack_elapsed_ms": 45,
+              "release_before_ack": true,
+              "channel": "bgm",
+              "no_late_released_channel_events": true
+            },
+            {
+              "token": 80,
+              "ack_elapsed_ms": 44,
+              "release_before_ack": true,
+              "channel": "bgm",
+              "no_late_released_channel_events": true
+            },
+            {
+              "token": 166,
+              "ack_elapsed_ms": 52,
+              "release_before_ack": true,
+              "channel": "bgm",
+              "no_late_released_channel_events": true
+            },
+            {
+              "token": 386,
+              "ack_elapsed_ms": 37,
+              "release_before_ack": true,
+              "channel": "env",
+              "no_late_released_channel_events": true
+            },
+            {
+              "token": 391,
+              "ack_elapsed_ms": 48,
+              "release_before_ack": true,
+              "channel": "bgm",
+              "no_late_released_channel_events": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

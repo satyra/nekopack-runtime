@@ -9,6 +9,7 @@ def main():
  p=argparse.ArgumentParser()
  for name in ['games','reference-root','pages','output']:p.add_argument('--'+name,type=Path,required=True)
  p.add_argument('--effects',action='store_true')
+ p.add_argument('--expected-count',type=int)
  p.add_argument('--actor-filter',action='store_true')
  p.add_argument('--rightward-motion',action='store_true')
  p.add_argument('--vertical-dip',action='store_true')
@@ -98,6 +99,8 @@ def main():
    if a.actor_filter:record['actor_filters']=[l['filter'] for l in layers]
    record['effect_token' if a.effects else 'page']=int(path.stem)+(0 if a.effects else 1)
    results.append(record)
-  print('PASS independent layers/pixels',i,flush=True)
+  print('Checked independent layers/pixels',i,flush=True)
+ if a.expected_count is not None:assert len(results)==a.expected_count,(len(results),a.expected_count)
  a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',actor_filter_profile=a.actor_filter,rightward_motion_endpoint_profile=a.rightward_motion,vertical_dip_endpoint_profile=a.vertical_dip,stationary_brackets_endpoint_profile=a.stationary_brackets,left_excursion_endpoint_profile=a.left_excursion,**{'snapshots' if a.effects else 'pages':results}),indent=2)+'\n',encoding='utf8')
+ print('PASS independent layers/pixels',len(results),flush=True)
 if __name__=='__main__':main()

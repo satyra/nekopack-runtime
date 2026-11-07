@@ -22,14 +22,17 @@ def replacement_audio_token(events,token):
   if len(replacements)==1:return event['token']
  return None
 
-def verify_bgm_stop(host,begin,ack):
+def verify_channel_stop(host,begin,ack,channel):
  assert begin['value']==0
- stopped=[e for e in host if e['event']=='stopped' and e['kind']=='bgm_stop' and e['token']==begin['token']]
+ stopped=[e for e in host if e['event']=='stopped' and e['kind']==channel+'_stop' and e['token']==begin['token']]
  assert len(stopped)==1 and stopped[0]['value']==0
- assert host.index(begin)<host.index(stopped[0])<host.index(ack), 'BGM stop acknowledged before release'
- prior=[e for e in host[:host.index(begin)] if e['event']=='playing' and e['kind']=='bgm']
+ assert host.index(begin)<host.index(stopped[0])<host.index(ack), 'channel stop acknowledged before release'
+ prior=[e for e in host[:host.index(begin)] if e['event']=='playing' and e['kind']==channel]
  if prior:
-  assert not any(e['token']==prior[-1]['token'] and e['event'] in ['progress','completed'] for e in host[host.index(stopped[0])+1:]), 'released BGM produced late playback events'
+  assert not any(e['token']==prior[-1]['token'] and e['event'] in ['progress','completed','looped'] for e in host[host.index(stopped[0])+1:]), 'released channel produced late playback events'
+
+def verify_bgm_stop(host,begin,ack):
+ verify_channel_stop(host,begin,ack,"bgm")
 
 def main():
  p=argparse.ArgumentParser()
@@ -38,6 +41,8 @@ def main():
  p.add_argument('--audio-reference',type=Path)
  p.add_argument('--until-boundary',action='store_true')
  p.add_argument('--allow-page-limit',action='store_true')
+ p.add_argument('--reuse-continue-bounds',action='store_true')
+ p.add_argument('--require-env-loop',action='store_true')
  p.add_argument('--wipe-reference',type=Path)
  p.add_argument('--effect-captures',type=Path)
  p.add_argument('--motion-captures',type=Path)
@@ -73,19 +78,26 @@ def main():
   deadline=time.monotonic()+10
   while time.monotonic()<deadline:
    events=[json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()]
-   tokens={e['token'] for e in events if e['event']=='begin' and e['kind'] in ['bgm','se','voice']}
+   tokens={e['token'] for e in events if e['event']=='begin' and e['kind'] in ['bgm','env','se','voice']}
    advanced={e['token'] for e in events if e['event'] in ['progress','completed'] and e['value']>0}
    if all(token in advanced or completed_audio(events,token) or replacement_audio_token(events,token) is not None for token in tokens):return
    time.sleep(.2)
   raise RuntimeError('audio did not advance within the observation window')
+ continue_point=None
  def tap(text):
+  nonlocal continue_point
+  if a.reuse_continue_bounds and text=='继续' and continue_point is not None:
+   adb('shell','input','tap',*continue_point);return
+  continue_point=None
   deadline=time.monotonic()+15
   while time.monotonic()<deadline:
    adb('shell','uiautomator','dump','/sdcard/neko-story-ui.xml')
    xml=adb('shell','cat','/sdcard/neko-story-ui.xml')
    for node in ET.fromstring(xml).iter('node'):
     if node.get('text')==text and node.get('enabled')=='true':
-     x,y,r,b=map(int,re.findall(r'\d+',node.get('bounds')));adb('shell','input','tap',str((x+r)//2),str((y+b)//2));return
+     x,y,r,b=map(int,re.findall(r'\d+',node.get('bounds')));point=(str((x+r)//2),str((y+b)//2))
+     if text=='继续':continue_point=point
+     adb('shell','input','tap',*point);return
    time.sleep(.3)
   raise RuntimeError('enabled control not found: '+text)
  build=json.loads(Path('.local/android-probe/build.json').read_text())
@@ -137,6 +149,14 @@ def main():
      assert len(rgba)==actual['scene']['size'][0]*actual['scene']['size'][1]*4
      (folder/f'{elapsed}.rgba').write_bytes(rgba)
     motions.append(dict(sequence=n,events=selected,captured_frames=len(frames)))
+   if a.require_env_loop and any(effect.startswith('env ') for effect in actual['effects']):
+    deadline=time.monotonic()+60
+    while time.monotonic()<deadline:
+     environment_events=[json.loads(line) for line in private(run,'host-events.jsonl').splitlines()]
+     token=next(e['token'] for e in reversed(environment_events) if e['event']=='begin' and e['kind']=='env')
+     if any(e['event']=='looped' and e['token']==token for e in environment_events):break
+     time.sleep(.2)
+    else:raise RuntimeError('environment audio never demonstrated a loop')
    if n in a.screen_pages:
     import io
     from PIL import Image
@@ -152,7 +172,7 @@ def main():
     folder=a.screen_captures/str(i);folder.mkdir(parents=True,exist_ok=True);(folder/f'{n}.png').write_bytes(capture)
     pages[-1]['screen']=dict(dialogue_visible=True,landscape=True,sha256=hashlib.sha256(capture).hexdigest())
    if a.audio_reference:wait_audio(run)
-   if a.audio_reference:last_page_audio={e['token'] for e in [json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()] if e['event']=='begin' and e['kind'] in ['bgm','se','voice']}
+   if a.audio_reference:last_page_audio={e['token'] for e in [json.loads(line) for line in private(run,'host-events.jsonl').decode().splitlines()] if e['event']=='begin' and e['kind'] in ['bgm','env','se','voice']}
    if n<count or to_boundary:tap('继续')
   boundary=None
   if to_boundary:
@@ -203,6 +223,7 @@ def main():
      assert stop['value']==0 and stop['time_ms']<=started['time_ms']
    stop_count=sum(effect=='bgm_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
    assert sum(e['event']=='begin' and e['kind']=='bgm_stop' for e in host)==stop_count, 'missing or duplicated BGM stop request'
+   assert sum(e['event']=='begin' and e['kind']=='env_stop' for e in host)==sum(effect=='env_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
    begins=[e for e in host if e['event']=='begin'];acks=[e for e in host if e['event']=='ack']
    if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
    reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
@@ -217,9 +238,9 @@ def main():
      if finished:assert finished[0]['value']>=begin['value']
      assert ack['value']<begin['value'], 'BGM fade blocked the script'
      assert any(e['event']=='begin' and e['token']>begin['token'] and e['time_ms']< (finished or cancelled)[0]['time_ms'] for e in host), 'no concurrent script progress'
-    elif begin['kind']=='bgm_stop':
-     verify_bgm_stop(host,begin,ack)
-    elif begin['kind'] in ['bgm','se','voice']:
+    elif begin['kind'] in ['bgm_stop','env_stop']:
+     verify_channel_stop(host,begin,ack,begin['kind'].removesuffix('_stop'))
+    elif begin['kind'] in ['bgm','env','se','voice']:
      token=begin['token'];playing=[e for e in host if e['event']=='playing' and e['token']==token]
      progress=[e for e in host if e['event'] in ['progress','completed'] and e['token']==token and e['value']>0]
      completed=completed_audio(host,token)
@@ -334,7 +355,7 @@ def main():
    expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
    assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
    visual=True
-  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,motions=motions,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,motions=motions,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,continue_bounds_reused=a.reuse_continue_bounds,env_loop_required=a.require_env_loop,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()

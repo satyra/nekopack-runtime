@@ -104,6 +104,9 @@ impl HostEffect {
         let mut extra = checkpoint
             .map(|c| format!(",\"checkpoint\":{c}"))
             .unwrap_or_default();
+        if self.kind == "env" {
+            extra.push_str(",\"loop\":true,\"volume_percent\":50");
+        }
         if self.kind == "movie" {
             extra.push_str(&format!(",\"movie_left_skip\":{}", self.movie_left_skip));
         }
@@ -414,10 +417,11 @@ impl<R: Read + Seek> StorySession<R> {
         let (duration, payload) = match kind {
             "fade" => (duration_ms(name)?, self.render()?),
             "wait" | "bgm_fade" => (duration_ms(name)?, Vec::new()),
-            "bgm_stop" => (0, Vec::new()),
-            "bgm" | "se" | "voice" => {
+            "bgm_stop" | "env_stop" => (0, Vec::new()),
+            "bgm" | "env" | "se" | "voice" => {
                 let directory = match kind {
                     "bgm" => "sound/bgm",
+                    "env" => "sound/env",
                     "se" => "sound/se",
                     _ => "voice",
                 };
@@ -727,6 +731,32 @@ impl<R: Read + Seek> StorySession<R> {
                                     movie_left_skip: args.len() == 2,
                                     payload: Vec::new(),
                                 });
+                                return Ok(());
+                            }
+                        }
+                        "env" => {
+                            let (kind, name) = match args.as_slice() {
+                                [] => ("env_stop", ""),
+                                [name] => {
+                                    let name = std::str::from_utf8(name)?;
+                                    if name.is_empty()
+                                        || ["fade", "loop", "once", "pan", "volume"].contains(&name)
+                                    {
+                                        return Err(
+                                            "unsupported environment audio arguments".into()
+                                        );
+                                    }
+                                    ("env", name)
+                                }
+                                _ => return Err("unsupported environment audio arguments".into()),
+                            };
+                            self.effects.push(if name.is_empty() {
+                                kind.into()
+                            } else {
+                                format!("{kind} {name}")
+                            });
+                            if self.host_mode {
+                                self.emit(kind, name)?;
                                 return Ok(());
                             }
                         }
@@ -1604,28 +1634,98 @@ mod tests {
             assert!(s.failed);
         }
     }
+    fn audio_pack(directory: &[u8], name: &[u8]) -> std::io::Cursor<Vec<u8>> {
+        // Minimal archive payload tests dispatch, not Ogg decoding (covered on device).
+        let mut bytes = b"NEKOPACK".to_vec();
+        for word in [
+            1,
+            0,
+            0,
+            16,
+            nekopack_archive::name_hash(1, directory),
+            1,
+            nekopack_archive::name_hash(1, name),
+            4,
+            0,
+            4,
+        ] {
+            bytes.extend(word.to_le_bytes());
+        }
+        bytes.extend(b"OggS");
+        std::io::Cursor::new(bytes)
+    }
+
+    #[test]
+    fn environment_audio_uses_own_resource_channel_and_ordered_acknowledgements() {
+        let mut s =
+            session(b".bgm music\n.env rain\n:name:line:actor\nfirst\n.env rain\n.env\nsecond");
+        s.store = DatGame::mount([
+            audio_pack(b"sound/bgm", b"music.ogg"),
+            audio_pack(b"sound/env", b"rain.ogg"),
+            audio_pack(b"voice", b"line.ogg"),
+        ])
+        .unwrap();
+        s.enable_host_effects();
+        for (token, kind) in [(1, "bgm"), (2, "env"), (3, "voice")] {
+            let packet = s.poll_packet().unwrap();
+            let effect = s.pending_effect.as_ref().unwrap();
+            assert_eq!(effect.kind, kind);
+            if kind == "env" {
+                assert!(String::from_utf8_lossy(&packet)
+                    .contains("\"loop\":true,\"volume_percent\":50"));
+            }
+            assert_eq!(effect.payload, b"OggS");
+            let steps = s.machine.steps();
+            assert_eq!(s.poll_packet().unwrap(), packet);
+            assert!(s.acknowledge_effect(token + 1).is_err());
+            assert_eq!(s.machine.steps(), steps);
+            s.acknowledge_effect(token).unwrap();
+        }
+        assert_eq!(s.page.as_ref().unwrap().effects, ["bgm music", "env rain"]);
+        s.acknowledge_text(1).unwrap();
+        assert_eq!(s.pending_effect.as_ref().unwrap().kind, "env");
+        s.acknowledge_effect(4).unwrap();
+        let stop = s.pending_effect.as_ref().unwrap();
+        assert_eq!(stop.kind, "env_stop");
+        assert!(stop.payload.is_empty());
+        assert_eq!(stop.duration_ms, 0);
+        assert!(s.acknowledge_effect(4).is_err());
+        s.acknowledge_effect(5).unwrap();
+        assert_eq!(s.page.as_ref().unwrap().text, "second");
+        assert_eq!(s.page.as_ref().unwrap().effects, ["env rain", "env_stop"]);
+    }
+    #[test]
+    fn environment_stop_is_resource_free_and_unverified_options_fail() {
+        let mut s = session(b".env\n.env\ntext");
+        s.enable_host_effects();
+        s.poll_packet().unwrap();
+        s.acknowledge_effect(1).unwrap();
+        s.acknowledge_effect(2).unwrap();
+        assert_eq!(s.page.as_ref().unwrap().effects, ["env_stop", "env_stop"]);
+        for text in [
+            b".env fade\ntext".as_slice(),
+            b".env loop\ntext",
+            b".env once\ntext",
+            b".env rain 50\ntext",
+        ] {
+            for host in [true, false] {
+                let mut s = session(text);
+                if host {
+                    s.enable_host_effects();
+                }
+                assert!(s.poll_packet().is_err());
+                assert!(s.failed);
+                assert!(s.pending_effect.is_none());
+            }
+        }
+        let mut missing = session(b".env missing\ntext");
+        missing.enable_host_effects();
+        assert!(missing.poll_packet().is_err());
+        assert!(missing.failed);
+        assert!(missing.pending_effect.is_none());
+    }
     #[test]
     fn queued_motion_survives_bgm_and_voice_acknowledgements_exactly_once() {
-        fn audio_pack(directory: &[u8], name: &[u8]) -> std::io::Cursor<Vec<u8>> {
-            // Minimal archive payload tests dispatch, not Ogg decoding (covered on device).
-            let mut bytes = b"NEKOPACK".to_vec();
-            for word in [
-                1,
-                0,
-                0,
-                16,
-                nekopack_archive::name_hash(1, directory),
-                1,
-                nekopack_archive::name_hash(1, name),
-                4,
-                0,
-                4,
-            ] {
-                bytes.extend(word.to_le_bytes());
-            }
-            bytes.extend(b"OggS");
-            std::io::Cursor::new(bytes)
-        }
         for modifier in ["[]", ">", "_", "[[[["] {
             let text = format!(".img6 {modifier}\n.bgm music\n:name:line:actor\nfirst\nsecond");
             let mut s = moving_session(text.as_bytes());
