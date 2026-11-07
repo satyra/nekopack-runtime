@@ -1,0 +1,162 @@
+{
+  "scope": "independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim",
+  "actor_filter_profile": true,
+  "rightward_motion_endpoint_profile": true,
+  "vertical_dip_endpoint_profile": true,
+  "stationary_brackets_endpoint_profile": true,
+  "snapshots": [
+    {
+      "game": 0,
+      "source": "P01",
+      "line": 10,
+      "actor_slots": [],
+      "rgba_sha256": "4e84683337a46bda3d2e4d7c4305ab47abbf243a3f766245b54eecfc65f1f724",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 1
+    },
+    {
+      "game": 0,
+      "source": "P01",
+      "line": 61,
+      "actor_slots": [
+        1
+      ],
+      "rgba_sha256": "521ea6af3ad0aa79c1bf5e394a96a096fe21f303ee3d05128108ccdcb57e9f22",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [
+        null
+      ],
+      "effect_token": 7
+    },
+    {
+      "game": 0,
+      "source": "012401",
+      "line": 9,
+      "actor_slots": [],
+      "rgba_sha256": "d3fb63525540ef5afc77226990ea14386172097432127e11e144ab0081568739",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 10
+    },
+    {
+      "game": 0,
+      "source": "012401",
+      "line": 132,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 19
+    },
+    {
+      "game": 0,
+      "source": "012402",
+      "line": 146,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 35
+    },
+    {
+      "game": 0,
+      "source": "012403",
+      "line": 6,
+      "actor_slots": [],
+      "rgba_sha256": "f0963521815deff0e7f91212d8b637f7217b3facc5e7621af05cbd293789021d",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 37
+    },
+    {
+      "game": 0,
+      "source": "012403",
+      "line": 310,
+      "actor_slots": [
+        2,
+        1
+      ],
+      "rgba_sha256": "c39f1466ae97b199b30762117833ee77040e791a1ad61300a550f0d635580b8e",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [
+        null,
+        null
+      ],
+      "effect_token": 73
+    },
+    {
+      "game": 0,
+      "source": "012403",
+      "line": 336,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 74
+    },
+    {
+      "game": 0,
+      "source": "012404",
+      "line": 6,
+      "actor_slots": [],
+      "rgba_sha256": "87d2977d5142554c0efcd6f976b2af85e906a33bad6ac0fc2673e0f47fb3118c",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 75
+    },
+    {
+      "game": 0,
+      "source": "012404",
+      "line": 38,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 79
+    },
+    {
+      "game": 0,
+      "source": "012501",
+      "line": 8,
+      "actor_slots": [],
+      "rgba_sha256": "aa4c471726b762830c8a8ff42a30dd62cce45c2c01862d726cacca179a79131f",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 81
+    },
+    {
+      "game": 0,
+      "source": "012501",
+      "line": 223,
+      "actor_slots": [],
+      "rgba_sha256": "771fa16b358e3195e00973cb8baa582a84f3c38d9ab2218742169515211b9889",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 108
+    },
+    {
+      "game": 0,
+      "source": "012501",
+      "line": 227,
+      "actor_slots": [],
+      "rgba_sha256": "aa4c471726b762830c8a8ff42a30dd62cce45c2c01862d726cacca179a79131f",
+      "independent_pixels_equal": true,
+      "independent_layers_equal": true,
+      "actor_filters": [],
+      "effect_token": 110
+    }
+  ]
+}

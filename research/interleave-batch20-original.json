@@ -1,0 +1,107 @@
+{
+  "scope": "BLESS original DAT and pinned native sound/image paths; static evidence, not dynamic original timing parity",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "script_sha256": "fb0723a98c42e9810d7bcf9b73d062df4706cad2724256881e35d7d471fc7e5b",
+  "message_sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+  "facts": [
+    {
+      "va": "0x445fe2",
+      "instruction": "je 0x446598"
+    },
+    {
+      "va": "0x44600d",
+      "instruction": "call 0x4c03ac"
+    },
+    {
+      "va": "0x446082",
+      "instruction": "call 0x4492a4"
+    },
+    {
+      "va": "0x4460f6",
+      "instruction": "call 0x4c0024"
+    },
+    {
+      "va": "0x446102",
+      "instruction": "call 0x4c04e8"
+    },
+    {
+      "va": "0x446114",
+      "instruction": "call 0x4c0558"
+    },
+    {
+      "va": "0x44611c",
+      "instruction": "push 0xa"
+    },
+    {
+      "va": "0x44611e",
+      "instruction": "call 0x5470a4"
+    },
+    {
+      "va": "0x5470a4",
+      "instruction": "jmp dword ptr [0x5af320]"
+    },
+    {
+      "va": "0x446576",
+      "instruction": "je 0x446847"
+    },
+    {
+      "va": "0x44686e",
+      "instruction": "ret"
+    },
+    {
+      "va": "0x43974d",
+      "instruction": "call 0x43ab98"
+    },
+    {
+      "va": "0x438669",
+      "instruction": "call 0x4b556c"
+    },
+    {
+      "va": "0x44100b",
+      "instruction": "call 0x43e610"
+    },
+    {
+      "va": "0x40c83b",
+      "instruction": "call 0x440fec"
+    }
+  ],
+  "spans": [
+    {
+      "va": "0x445fc4",
+      "length": 351,
+      "sha256": "a9fb88bb2b8da616aa587150e277f54f3ff09af4dd7f0b6766fa9eeede9963f2"
+    },
+    {
+      "va": "0x44656e",
+      "length": 43,
+      "sha256": "5d6a166500dbd5fc6e74f1fedb4a0ad65075e4fa24929dea6831b8ff9337f45a"
+    },
+    {
+      "va": "0x446847",
+      "length": 40,
+      "sha256": "7a0fd710459feaca90ac9657a4380dba3fcc8214b02866883af328d277ffca59"
+    }
+  ],
+  "semantics": {
+    "source": "012501",
+    "command_lines": [
+      120,
+      121,
+      124,
+      125
+    ],
+    "order": [
+      "enqueue actor operation",
+      "replace BGM channel",
+      "start dialogue voice",
+      "render dialogue and update actor motion"
+    ],
+    "sound_path": "release previous handle, load/start named resource, apply volume/pan, Sleep(10), return; not a wait for BGM completion",
+    "runtime_contract": "retain motion through BGM and voice start acknowledgements; no additional motion ACK"
+  },
+  "limits": [
+    "Only the named single-argument BGM interleave is enabled",
+    "No claim of matching original device latency or sample-accurate music timing",
+    "Bare BGM, fades, waits and other command interleaves remain separately guarded"
+  ]
+}

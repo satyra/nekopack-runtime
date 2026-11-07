@@ -606,6 +606,9 @@ impl<R: Read + Seek> StorySession<R> {
                 Step::Request(Request::Command { name, args, .. }) => {
                     let command = std::str::from_utf8(&name)?;
                     if !self.motions.is_empty()
+                        // Named BGM switches return before dialogue rendering in the original.
+                        // Keep the queued motion across the host's audio-start acknowledgement.
+                        && !(command == "bgm" && args.len() == 1)
                         && !matches!(
                             command,
                             "img1"
@@ -1493,11 +1496,83 @@ mod tests {
         for text in [
             b".img6 >\n.img6 >\ntext".as_slice(),
             b".img6 >\n.fade\ntext",
+            b".img6 []\n.wait 1\ntext",
+            b".img6 []\n.bgm\ntext",
         ] {
             let mut s = moving_session(text);
             assert!(s.poll_packet().is_err());
             assert!(s.failed);
         }
+    }
+    #[test]
+    fn queued_motion_survives_bgm_and_voice_acknowledgements_exactly_once() {
+        fn audio_pack(directory: &[u8], name: &[u8]) -> std::io::Cursor<Vec<u8>> {
+            // Minimal archive payload tests dispatch, not Ogg decoding (covered on device).
+            let mut bytes = b"NEKOPACK".to_vec();
+            for word in [
+                1,
+                0,
+                0,
+                16,
+                nekopack_archive::name_hash(1, directory),
+                1,
+                nekopack_archive::name_hash(1, name),
+                4,
+                0,
+                4,
+            ] {
+                bytes.extend(word.to_le_bytes());
+            }
+            bytes.extend(b"OggS");
+            std::io::Cursor::new(bytes)
+        }
+        for modifier in ["[]", ">", "_"] {
+            let text = format!(".img6 {modifier}\n.bgm music\n:name:line:actor\nfirst\nsecond");
+            let mut s = moving_session(text.as_bytes());
+            s.store = DatGame::mount([
+                audio_pack(b"sound/bgm", b"music.ogg"),
+                audio_pack(b"voice", b"line.ogg"),
+            ])
+            .unwrap();
+            let bgm = s.poll_packet().unwrap();
+            assert_eq!(s.pending_effect.as_ref().unwrap().kind, "bgm");
+            let steps = s.machine.steps();
+            assert_eq!(s.poll_packet().unwrap(), bgm);
+            assert!(s.acknowledge_effect(2).is_err());
+            assert_eq!(s.machine.steps(), steps);
+            assert_eq!(s.motions.len(), 1);
+            assert!(s.page_frame(1, 0).is_err());
+            let voice = s.acknowledge_effect(1).unwrap();
+            assert_eq!(s.pending_effect.as_ref().unwrap().kind, "voice");
+            assert_eq!(s.poll_packet().unwrap(), voice);
+            assert!(s.acknowledge_effect(1).is_err());
+            assert_eq!(s.motions.len(), 1);
+            s.acknowledge_effect(2).unwrap();
+            assert!(s.pending_effect.is_none());
+            assert_eq!(s.page.as_ref().unwrap().effects, ["bgm music"]);
+            assert_eq!(s.page.as_ref().unwrap().voice, "line");
+            assert!(s.page.as_ref().unwrap().motion.is_some());
+            assert_eq!(s.host_sequence, 2);
+            assert!(s.acknowledge_effect(2).is_err());
+            let steps = s.machine.steps();
+            for elapsed in [0, 125, 250] {
+                s.page_frame(1, elapsed).unwrap();
+            }
+            assert_eq!(s.machine.steps(), steps);
+            s.acknowledge_text(1).unwrap();
+            assert!(s.motions.is_empty());
+            assert!(s.page.as_ref().unwrap().motion.is_none());
+            assert!(s.page.as_ref().unwrap().effects.is_empty());
+        }
+        let mut missing = moving_session(b".img6 []\n.bgm missing\ntext");
+        assert!(missing
+            .poll_packet()
+            .unwrap_err()
+            .to_string()
+            .contains("missing"));
+        assert!(missing.failed);
+        assert!(missing.pending_effect.is_none());
+        assert!(missing.poll_packet().is_err());
     }
     #[test]
     fn actor_offsets_use_canvas_center_and_solid_overlay_retains_layers() {

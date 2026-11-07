@@ -1,0 +1,67 @@
+{
+  "scope": "BLESS only, PGKM10 native ARM64; original DAT via SAF; explicit movie skip; no dynamic original timing parity or full-game claim",
+  "apk_sha256": "241b4a9486ec4c7871dd8e7d60e07bc173fd72e734bbb527513fdb33a6fabea4",
+  "unchanged_prefix_pages": 175,
+  "total_pages": 269,
+  "next_boundary": {
+    "source": "012501",
+    "line": 582,
+    "steps": 1455,
+    "unsupported": "[[[["
+  },
+  "independent_motion_frames": {
+    "159": 8,
+    "176": 7,
+    "56": 8,
+    "57": 8,
+    "60": 8
+  },
+  "bgm_interleave": [
+    {
+      "sequence": 176,
+      "bgm_token": 97,
+      "voice_token": 98,
+      "replaced_bgm_token": 82,
+      "no_late_replaced_bgm_callbacks": true,
+      "bgm_started_ms": 641278263,
+      "bgm_ack_ms": 641278263,
+      "voice_started_ms": 641278309,
+      "voice_ack_ms": 641278310,
+      "motion_started_ms": 641278767,
+      "music_duration_ms": 125679,
+      "ordered_start_acks_before_motion": true
+    }
+  ],
+  "independent_scene_pages": 269,
+  "independent_transition_snapshots": 13,
+  "audio_requests": 138,
+  "audio_terminal_only_exemptions": 0,
+  "normal_boundary_and_cancel_vm_live_bytes": 0,
+  "cancel_target_page": 176,
+  "cancel_after_intermediate_frame": true,
+  "checks": {
+    "workspace_tests": {
+      "passed": true,
+      "log_sha256": "71297affcdfd50cb2a37fec0b8aa00669e595f4057b2908f30b38c50df7ae767"
+    },
+    "clippy": {
+      "passed": true,
+      "log_sha256": "84b3cc9e74337ea68abd60b9e928b65f8d0b87cfac955549330782c14855fb59"
+    },
+    "python_tests": {
+      "passed": true,
+      "log_sha256": "ff3b1438544d9aa2c552401f0123d54eac06b91b0295f3773671c14161e22544"
+    }
+  },
+  "reports": {
+    "interleave-batch20-audio-evidence.json": "54fffc2eb070bee3cb36c0eb8ad8ef7118b2341da57e647663f541f5e9164c42",
+    "interleave-batch20-audio-reference.json": "3d544ccd1307bfa92902cca919e5f75232f28777a27b721bb61ec422a9a9e66f",
+    "interleave-batch20-cancel.json": "99f21d46e484e0b8db4ee40dd047d7582ab2ceb4da593e91c339773daf2e584f",
+    "interleave-batch20-desktop.json": "6c40ddaa2219c35e16f40772de6097bfb0fe0022a623f0a4a7e41fd6ab66dd81",
+    "interleave-batch20-effects.json": "83f3d57f88c3c30486f67e10dcd5f790b69074388204f19643dec2807c1b89b8",
+    "interleave-batch20-frames.json": "ecb3f150d77244e03ade728ab79a89b20c251cd919cec1ec86932be25b918bbf",
+    "interleave-batch20-layers.json": "1d09cbb7234fb31d5a24073eb82eb13b97c08cc24a866b856af7f864896e46c3",
+    "interleave-batch20-native.json": "52ccd2b703a0503db9d667f3e3867c990df51edbdea167966b73567b84508a92",
+    "interleave-batch20-original.json": "f577640033021a770daa06df3f3d466f59975694735e42408f51e32fe756bdd5"
+  }
+}
