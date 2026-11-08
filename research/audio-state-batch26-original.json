@@ -1,0 +1,55 @@
+{
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "facts": [
+    {
+      "va": "0x4446d4",
+      "instruction": "push 0x550a54"
+    },
+    {
+      "va": "0x4446d9",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x4446db",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4446dd",
+      "instruction": "push 0x550a50"
+    },
+    {
+      "va": "0x4446e7",
+      "instruction": "call 0x4447dc"
+    },
+    {
+      "va": "0x44480f",
+      "instruction": "mov byte ptr [edx + 8], cl"
+    },
+    {
+      "va": "0x444818",
+      "instruction": "mov byte ptr [eax + 9], dl"
+    },
+    {
+      "va": "0x445292",
+      "instruction": "mov dl, byte ptr [eax + 8]"
+    },
+    {
+      "va": "0x445297",
+      "instruction": "je 0x4452a0"
+    },
+    {
+      "va": "0x445299",
+      "instruction": "mov ecx, 0x32"
+    },
+    {
+      "va": "0x4452a0",
+      "instruction": "mov ecx, 0x64"
+    },
+    {
+      "va": "0x4452a5",
+      "instruction": "mov dword ptr [ebp - 0x214], ecx"
+    }
+  ],
+  "default_command_volume_percent": 50,
+  "limit": "Static code evidence only. Config category volume, voice ducking and acoustic parity are not verified here."
+}

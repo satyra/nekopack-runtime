@@ -1,0 +1,16 @@
+{
+  "scope": "Native ARM64 BLESS audio corrections; not full lifecycle/save/interaction compatibility",
+  "pages": 793,
+  "audio_requests": 493,
+  "gain_checks": {
+    "se": 7,
+    "bgm": 19,
+    "env": 1
+  },
+  "closed_vm_live_bytes": 0,
+  "apk_sha256": "c78a31d1de336a656dd93589843f65ac120ee4a7e87f2af93a17d9548744e5f7",
+  "reports": {
+    "native": "6665b724c39212efc80deb228142aa3134091ab298e3203e8fbfe844201f238b",
+    "story": "5fa060ad34a9e55c7dbdebf89c5e422f6c371e1ca3aed703754a09bf8f2424e2"
+  }
+}

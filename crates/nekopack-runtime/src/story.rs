@@ -105,7 +105,7 @@ impl HostEffect {
         let mut extra = checkpoint
             .map(|c| format!(",\"checkpoint\":{c}"))
             .unwrap_or_default();
-        if self.kind == "env" {
+        if matches!(self.kind.as_str(), "bgm" | "env") {
             extra.push_str(&format!(
                 ",\"loop\":{},\"volume_percent\":50",
                 self.audio_loop
@@ -1798,7 +1798,7 @@ mod tests {
             let packet = s.poll_packet().unwrap();
             let effect = s.pending_effect.as_ref().unwrap();
             assert_eq!(effect.kind, kind);
-            if kind == "env" {
+            if matches!(kind, "bgm" | "env") {
                 assert!(String::from_utf8_lossy(&packet)
                     .contains("\"loop\":true,\"volume_percent\":50"));
             }

@@ -231,7 +231,12 @@ class MainActivity : Activity() {
                         if(metadata.has("motion")){
                             storyEffects!!.runMotion(token)
                             if(intent.getBooleanExtra("close_on_motion",false) && (!intent.hasExtra("close_on_motion_sequence") || token==intent.getIntExtra("close_on_motion_sequence",0).toLong()))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
-                        }else image.setImageBitmap(bitmap)}}
+                        }else image.setImageBitmap(bitmap)
+                        if(token==13L&&intent.getBooleanExtra("audio_state_probe",false)){
+                            next.isEnabled=false
+                            probeAudioState(this,storyEffects!!,root){error->worker.execute{fail(error)}}
+                        }
+                    }}
                 }
             }
         }
