@@ -1,0 +1,28 @@
+{
+  "scope": "BLESS only; 606-page bounded native ARM64 regression; ordinary ADB, no su used",
+  "pages": 606,
+  "new_native_pages": 8,
+  "unchanged_desktop_prefix": 604,
+  "motion_frames": 75,
+  "leftward_frames": 8,
+  "audio_requests": 360,
+  "effect_snapshots": 32,
+  "vm_live_bytes": 0,
+  "apk_sha256": "83d90a0db8d8c985386dcc1679807a0ce2adee1e2c194aa9463eea99db5c95fa",
+  "reports": {
+    "original": "71652011e90d157aa9e8f4943536749f05b8ff3265a8473a1c3266a9f0d20b54",
+    "desktop": "3fd3ff0119683f50188e3e49bf6c1852dc613d1fbef30eadbe66f98b80ff0673",
+    "native": "a1884128d74ecb494f6234a649863ce195517b6af9b87563957e11cee25a6136",
+    "cancel": "774304ad508b8a27f823f1539547522c0e3c5f3f82555c6edce0685c921f4635",
+    "frames": "7e23fbf9d8286f729943011ccca5675f9a842a561f9df8064d64ca490699689f",
+    "layers": "9f3f9c43f025437521b5b6075ef20b15e9221a29762c6e6f4b237b5d23c8f717",
+    "effects": "2f70871b48778e575a8ac8e1bf32390d9aba8c3a24d009c5dd6f04ecc8281ced",
+    "audio-reference": "580a51e0df5dc3e54bd0ccfeb1f83e346e9c4d176c8ca67a25fd6a5e98890a46",
+    "audio-evidence": "fdb97dca4b80c0d6a4c93f53cac1211607ceaca2965b153b6bd822909dc665ef"
+  },
+  "local_log_sha256": {
+    "tests": "eb00c19da44a879439897fc6c7a230e8ee93daac6ccf60ec8834273252c19e83",
+    "clippy": "3e4f684e666203c47c104641f3a149c0e3ff5d2bf8c47aada77b769cae80a561",
+    "build": "6627a9ec37d6ac45baf67b3e36ad0129ee4d07b7cc9b125a29a378568cb39569"
+  }
+}

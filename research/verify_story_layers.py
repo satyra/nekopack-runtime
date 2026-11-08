@@ -12,6 +12,7 @@ def main():
  p.add_argument('--expected-count',type=int)
  p.add_argument('--actor-filter',action='store_true')
  p.add_argument('--rightward-motion',action='store_true')
+ p.add_argument('--leftward-motion',action='store_true')
  p.add_argument('--vertical-dip',action='store_true')
  p.add_argument('--stationary-brackets',action='store_true')
  p.add_argument('--left-excursion',action='store_true')
@@ -54,16 +55,17 @@ def main():
      if not args or args==['clear']:
       layers=[l for l in layers if l['slot']!=slot];continue
      tokens=[token for word in args for token in macros.get(word,[word])]
-     names=[t for t in tokens if t not in ['front','back','keep','center','/','/big'] and not re.fullmatch(r'(left|right)[1-4]?',t) and not (a.rightward_motion and re.fullmatch(r'>+',t)) and not (a.vertical_dip and t=='_') and not (a.stationary_brackets and t=='[]') and not (a.left_excursion and re.fullmatch(r'\[+',t))]
+     names=[t for t in tokens if t not in ['front','back','keep','center','/','/big'] and not re.fullmatch(r'(left|right)[1-4]?',t) and not ((a.rightward_motion and re.fullmatch(r'>+',t)) or (a.leftward_motion and re.fullmatch(r'<+',t))) and not (a.vertical_dip and t=='_') and not (a.stationary_brackets and t=='[]') and not (a.left_excursion and re.fullmatch(r'\[+',t))]
      assert len(names)<=1
      name=names[0] if names else old['name']
      folder=('image/actor' if names else old['folder'])
      anchor=list(old['anchor']) if old else [size[0]//2,size[1]//2]
-     order='keep' if not names and any((a.rightward_motion and re.fullmatch(r'>+',t)) or (a.vertical_dip and t=='_') or (a.stationary_brackets and t=='[]') or (a.left_excursion and re.fullmatch(r'\[+',t)) for t in tokens) else 'front'
+     order='keep' if not names and any((a.rightward_motion and re.fullmatch(r'>+',t)) or (a.leftward_motion and re.fullmatch(r'<+',t)) or (a.vertical_dip and t=='_') or (a.stationary_brackets and t=='[]') or (a.left_excursion and re.fullmatch(r'\[+',t)) for t in tokens) else 'front'
      for t in tokens:
       if t in ['front','back','keep']:order=t
       elif t in ['/','/big']:folder='image/actor'+t.rstrip('/')
       elif a.rightward_motion and re.fullmatch(r'>+',t):anchor[0]+=len(t)*50
+      elif a.leftward_motion and re.fullmatch(r'<+',t):anchor[0]-=len(t)*50
       elif t=='center':anchor[0]=size[0]//2
       elif re.fullmatch(r'(left|right)[1-4]?',t):anchor[0]=size[0]//2+(-1 if t.startswith('left') else 1)*160*(int(t[-1]) if t[-1].isdigit() else 1)
      raw=read(folder+'/'+name+'.png');geo=png_geometry(raw)
@@ -101,6 +103,6 @@ def main():
    results.append(record)
   print('Checked independent layers/pixels',i,flush=True)
  if a.expected_count is not None:assert len(results)==a.expected_count,(len(results),a.expected_count)
- a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',actor_filter_profile=a.actor_filter,rightward_motion_endpoint_profile=a.rightward_motion,vertical_dip_endpoint_profile=a.vertical_dip,stationary_brackets_endpoint_profile=a.stationary_brackets,left_excursion_endpoint_profile=a.left_excursion,**{'snapshots' if a.effects else 'pages':results}),indent=2)+'\n',encoding='utf8')
+ a.output.write_text(json.dumps(dict(scope='independent archive decoder, source replay of static layer commands and Pillow; no original-engine parity claim',actor_filter_profile=a.actor_filter,rightward_motion_endpoint_profile=a.rightward_motion,leftward_motion_endpoint_profile=a.leftward_motion,vertical_dip_endpoint_profile=a.vertical_dip,stationary_brackets_endpoint_profile=a.stationary_brackets,left_excursion_endpoint_profile=a.left_excursion,**{'snapshots' if a.effects else 'pages':results}),indent=2)+'\n',encoding='utf8')
  print('PASS independent layers/pixels',len(results),flush=True)
 if __name__=='__main__':main()

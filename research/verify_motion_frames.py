@@ -10,6 +10,7 @@ p.add_argument('--include-bgm-interleave',action='store_true')
 p.add_argument('--include-left-excursion',action='store_true')
 p.add_argument('--include-queue',action='store_true')
 p.add_argument('--include-env-chapter',action='store_true')
+p.add_argument('--include-leftward',action='store_true')
 a=p.parse_args();sys.path.insert(0,str(a.reference_root));from portkit.neko import Archive
 manifest=json.loads(Path('research/metadata-verification.json').read_text(encoding='utf8'))['games'][0]
 packs=[(s['priority'],Archive(a.games/s['file'])) for s in manifest['sources'] if any(x in s['file'] for x in ['image.dat','system.dat','script.dat','patch'])]
@@ -17,26 +18,27 @@ def read(name):
  choices=[(p,pack) for p,pack in packs if name.lower() in pack.entries];best=max(p for p,_ in choices);selected=[pack for p,pack in choices if p==best];assert len(selected)==1
  return selected[0].read(name)
 report=json.loads(a.device_report.read_text(encoding='utf8'));assert report['execution']=='native ARM64';assert len(report['games'])==1 and report['games'][0]['index']==0
-game=report['games'][0];expected_pages=[56,57,60,159,176,270,501,521] if a.include_env_chapter else [56,57,60,159,176,270,501] if a.include_queue else [56,57,60,159,176,270] if a.include_left_excursion else [56,57,60,159,176] if a.include_bgm_interleave else [56,57,60,159] if a.include_stationary else [56,57] if a.include_dip else [56];assert [m['sequence'] for m in game['motions']]==expected_pages and game['closed_vm_live_bytes']==0
+game=report['games'][0];expected_pages=[56,57,60,159,176,270,501,521,605] if a.include_leftward else [56,57,60,159,176,270,501,521] if a.include_env_chapter else [56,57,60,159,176,270,501] if a.include_queue else [56,57,60,159,176,270] if a.include_left_excursion else [56,57,60,159,176] if a.include_bgm_interleave else [56,57,60,159] if a.include_stationary else [56,57] if a.include_dip else [56];assert [m['sequence'] for m in game['motions']]==expected_pages and game['closed_vm_live_bytes']==0
 assert sorted(int(d.name) for d in (a.captures/'0').iterdir() if d.is_dir())==expected_pages
 rows=[];interleave=[]
 for capture in sorted((a.captures/'0').iterdir()):
- page=json.loads((capture/'page.json').read_text(encoding='utf8'));sequence=page['sequence'];dip=sequence in [57,521];excursion=sequence==270;stationary=sequence in [60,159,176];slot=7 if sequence==521 else 2 if sequence==501 else 1 if sequence in [159,176,270] else 6
+ page=json.loads((capture/'page.json').read_text(encoding='utf8'));sequence=page['sequence'];dip=sequence in [57,521];excursion=sequence==270;stationary=sequence in [60,159,176];slot=3 if sequence==605 else 7 if sequence==521 else 2 if sequence==501 else 1 if sequence in [159,176,270] else 6
  assert hashlib.sha256(json.dumps(page,sort_keys=True,ensure_ascii=False).encode()).hexdigest()==next(p for p in game['pages'] if p['sequence']==sequence)['metadata_sha256']
- source,line,command_line,command,background={56:('012402',76,72,'.img6 SGVE00Aa >>>>>>>','BG201d'),57:('012402',84,81,'.img6 _','BG201d'),60:('012402',97,94,'.img6 SGVE201a []','BG201d'),159:('012501',31,27,'.img1 SGVE101a []','BG005a'),176:('012501',125,120,'.img1 SGVE00Aa []','BG005a'),270:('012501',585,582,'.img1 [[[[','BG005a'),501:('012603',215,211,'.img2 _ >>>>','BG005a'),521:('012603',319,316,'.img7 SGDE008a _','BG005a')}[sequence]
+ source,line,command_line,command,background={56:('012402',76,72,'.img6 SGVE00Aa >>>>>>>','BG201d'),57:('012402',84,81,'.img6 _','BG201d'),60:('012402',97,94,'.img6 SGVE201a []','BG201d'),159:('012501',31,27,'.img1 SGVE101a []','BG005a'),176:('012501',125,120,'.img1 SGVE00Aa []','BG005a'),270:('012501',585,582,'.img1 [[[[','BG005a'),501:('012603',215,211,'.img2 _ >>>>','BG005a'),521:('012603',319,316,'.img7 SGDE008a _','BG005a'),605:('012702',70,67,'.img3 SGMY011a right3 <<<<<<<<<','BG002c')}[sequence]
  assert [page['source'],page['line']]==[source,line]
- lines=read('script/'+source+'.txt').decode('cp932').splitlines();assert lines[command_line-1].strip()==command;assert lines[line-1].strip()==page['text']
+ lines=read('script/'+source+'.txt').decode('cp932').splitlines();assert lines[command_line-1].strip()==command;assert lines[line-1].strip(' \t\r')==page['text']
  wanted=dict(slot=slot,start_x=640 if sequence in [56,159,176,521] else 990,end_x=640 if sequence in [159,176,521] else 990,center_x=640)
  if dip:wanted.update(kind='dip',start_y=360,end_y=360,center_y=360,amplitude_y=50)
  if stationary:wanted.update(kind='stationary',start_y=360,end_y=360,center_y=360,amplitude_x=0)
  if excursion:wanted.update(start_x=1120,end_x=1120,kind='horizontal_excursion',start_y=360,end_y=360,center_y=360,amplitude_x=-200)
+ if sequence==605:wanted.update(start_x=1120,end_x=670)
  if sequence==501:
   wanted=dict(slot=2,kind='queue',segments=[dict(slot=2,start_x=640,end_x=640,center_x=640,kind='dip',start_y=360,end_y=360,center_y=360,amplitude_y=50),dict(slot=2,start_x=640,end_x=840,center_x=640)])
  assert page['motion']==dict(duration_ms=500 if sequence==501 else 250,actors=[wanted])
  events=json.loads((capture/'events.json').read_text());frames=[e for e in events if e['event']=='frame'];assert any(0<e['elapsed_ms']<250 for e in frames)
  assert events==next(m for m in game['motions'] if m['sequence']==sequence)['events']
  host=game['host_events'];voice=[e for e in host if e['event']=='playing' and e['kind']=='voice' and e['time_ms']<=events[0]['time_ms']];assert voice
- if sequence!=159:
+ if sequence not in [159,605]:
   token=voice[-1]['token'];audio_begins=[e for e in host if e['event']=='begin' and e['kind'] in ['bgm','env','se','voice']];assert len(audio_begins)==len(game['audio']);assert next(meta for begin,meta in zip(audio_begins,game['audio']) if begin['token']==token)['name']=={56:'UR_012402_0001',57:'VE_012402_0002',60:'VE_012402_0003',176:'VE_012501_0003',270:'VE_012501_0011',501:'NO_012603_0004',521:'DE_012603_0007'}[sequence]
   if sequence==176:
    assert lines[120].strip()=='.bgm BGM021' and page['effects']==['bgm BGM021']
@@ -62,6 +64,7 @@ for capture in sorted((a.captures/'0').iterdir()):
  segment=0;started=0
  for e in frames:
   requested=e['elapsed_ms'];t=min(requested,250);x=wanted['start_x'] if stationary or dip else 990 if t==250 else 640+int(350*(math.sin((t/250-.5)*math.pi)+1)*.5)
+  if sequence==605:x=1120 if t==0 else 670 if t==250 else 640+int(480-450*(math.sin((t/250-.5)*math.pi)+1)*.5)
   if excursion:x=1120 if t in [0,250] else 640+int(480-200*math.sin(t/250*math.pi))
   y=360+(int(50*math.sin(t/250*math.pi)) if dip and 0<t<250 else 0)
   if sequence==501:
@@ -92,10 +95,14 @@ for sequence in expected_pages:
   assert group[0]['rgba_sha256']==group[-1]['rgba_sha256']
   assert all(r[f'actor{7 if sequence==521 else 6}_x']==(640 if sequence==521 else 990) and 360<=r[f'actor{7 if sequence==521 else 6}_y']<=410 for r in group)
   assert any(r[f'actor{7 if sequence==521 else 6}_y']>360 for r in group)
+ elif sequence==605:
+  assert group[0]['actor3_x']==1120 and group[-1]['actor3_x']==670
+  assert all(670<=r['actor3_x']<=1120 and r['actor3_y']==360 for r in group)
+  assert all(a['actor3_x']>=b['actor3_x'] for a,b in zip(group,group[1:]))
  elif sequence==270:
   assert group[0]['rgba_sha256']==group[-1]['rgba_sha256']
   assert all(r['actor1_y']==360 and 920<=r['actor1_x']<=1120 for r in group)
   assert any(r['actor1_x']<1120 for r in group)
  else:assert group[0]['actor6_x']==640 and group[-1]['actor6_x']==990
-a.output.write_text(json.dumps(dict(scope='BLESS native ARM64; every captured motion frame compared with independent raw DAT/Pillow and pinned original curve, not original screen parity',device_report_sha256=hashlib.sha256(a.device_report.read_bytes()).hexdigest(),build=report['build'],voice_started_before_motion_pages=[n for n in expected_pages if n!=159],bgm_interleave=interleave,frames=rows),indent=2)+'\n')
+a.output.write_text(json.dumps(dict(scope='BLESS native ARM64; every captured motion frame compared with independent raw DAT/Pillow and pinned original curve, not original screen parity',device_report_sha256=hashlib.sha256(a.device_report.read_bytes()).hexdigest(),build=report['build'],voice_started_before_motion_pages=[n for n in expected_pages if n not in [159,605]],bgm_interleave=interleave,frames=rows),indent=2)+'\n')
 print('PASS independent motion frames',len(rows))

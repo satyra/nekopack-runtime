@@ -1,0 +1,647 @@
+{
+  "scope": "BLESS native ARM64; every captured motion frame compared with independent raw DAT/Pillow and pinned original curve, not original screen parity",
+  "device_report_sha256": "a1884128d74ecb494f6234a649863ce195517b6af9b87563957e11cee25a6136",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "2ad1f3a97f823fde4b1d4d4201fe8096dd01a36a94bc9db5859c15b0fa60d651",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "83d90a0db8d8c985386dcc1679807a0ce2adee1e2c194aa9463eea99db5c95fa"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1934992 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06fa38 0x06fa38 R   0x4000\n  LOAD           0x06fa38 0x0000000000073a38 0x0000000000073a38 0x0eb008 0x0eb008 R E 0x4000\n  LOAD           0x15aa40 0x0000000000162a40 0x0000000000162a40 0x007bc0 0x0085c0 RW  0x4000\n  LOAD           0x162600 0x000000000016e600 0x000000000016e600 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x161ef8 0x0000000000169ef8 0x0000000000169ef8 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x15aa40 0x0000000000162a40 0x0000000000162a40 0x007bc0 0x0085c0 R   0x1\n  GNU_EH_FRAME   0x04e810 0x000000000004e810 0x000000000004e810 0x004784 0x004784 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x161ef8 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       43992 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1819\n  0x0000000000000017 (JMPREL)       0xbd80\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x16a358\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x169ef0\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x169ee0\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "voice_started_before_motion_pages": [
+    56,
+    57,
+    60,
+    176,
+    270,
+    501,
+    521
+  ],
+  "bgm_interleave": [
+    {
+      "sequence": 176,
+      "bgm_token": 97,
+      "voice_token": 98,
+      "replaced_bgm_token": 82,
+      "no_late_replaced_bgm_callbacks": true,
+      "bgm_started_ms": 39370285,
+      "bgm_ack_ms": 39370286,
+      "voice_started_ms": 39370322,
+      "voice_ack_ms": 39370323,
+      "motion_started_ms": 39370758,
+      "music_duration_ms": 125679,
+      "ordered_start_acks_before_motion": true
+    }
+  ],
+  "frames": [
+    {
+      "sequence": 159,
+      "elapsed_ms": 0,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 17,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 62,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 110,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 152,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 195,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 238,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 159,
+      "elapsed_ms": 284,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "d63d829de0934d809961f198a2426bbdc727ec4dd8417c34e723ca39210bee56",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 0,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 16,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 60,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 105,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 151,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 191,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 242,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 176,
+      "elapsed_ms": 285,
+      "actor1_x": 640,
+      "actor1_y": 360,
+      "rgba_sha256": "79820d16a64eafe65cf20f1181c8e5f52c68b3c0ebf40a66ec9caefb310c5765",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 0,
+      "actor1_x": 1120,
+      "actor1_y": 360,
+      "rgba_sha256": "f2ed6da4a6fcc3cd2c64cf6db3f7dc93acc547e6ae6170776d0caf78317b8506",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 19,
+      "actor1_x": 1072,
+      "actor1_y": 360,
+      "rgba_sha256": "a485bbfd9182f665e35360392f3cee73553d6a6d16c4b1313c7e87f4beaa85d7",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 66,
+      "actor1_x": 972,
+      "actor1_y": 360,
+      "rgba_sha256": "3cff8c0d3332863be5177a6c06246eb0aa455a509ebaf5d0531ee50c032f1fd5",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 116,
+      "actor1_x": 921,
+      "actor1_y": 360,
+      "rgba_sha256": "94059a8814944b0329ebf043cdaa614ad535bfea8d576e7f5eeadf969f2f4222",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 161,
+      "actor1_x": 940,
+      "actor1_y": 360,
+      "rgba_sha256": "f224ec5c950554736dfce3eabbb2b02fa408a8971739a8d297fb3a0b9d6895ac",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 207,
+      "actor1_x": 1017,
+      "actor1_y": 360,
+      "rgba_sha256": "2d4e38d238adb1f81db2aa418772757f25036664981f8f57ae2cfc172e1147b0",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 270,
+      "elapsed_ms": 265,
+      "actor1_x": 1120,
+      "actor1_y": 360,
+      "rgba_sha256": "f2ed6da4a6fcc3cd2c64cf6db3f7dc93acc547e6ae6170776d0caf78317b8506",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 0,
+      "actor2_x": 640,
+      "actor2_y": 360,
+      "rgba_sha256": "3270226dfcbb6bce1ee61abb9e6a29097062f35dec30694e40a26066c95e3047",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 19,
+      "actor2_x": 640,
+      "actor2_y": 371,
+      "rgba_sha256": "f31cccf85309114bf68a94b2bd034e1c7f2465ba2c0e9a5b63d15bb5d0000f18",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 73,
+      "actor2_x": 640,
+      "actor2_y": 399,
+      "rgba_sha256": "9ed336d4a165c42f4a9edfe74ddc004f2123071e9bbafda5047a18fd3f76f41b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 120,
+      "actor2_x": 640,
+      "actor2_y": 409,
+      "rgba_sha256": "3bd85dc8a177368969e4e447a5ed13eb8eb8da19bc0f6fc6bc5b6d7327f3c6f3",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 166,
+      "actor2_x": 640,
+      "actor2_y": 403,
+      "rgba_sha256": "ecc9b2a8d9f6ddc4497d93de7e140f2a2a2ccc536d38978b3d26ac6702aedf8b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 211,
+      "actor2_x": 640,
+      "actor2_y": 383,
+      "rgba_sha256": "b86f16fccbc47f80656d8d27efa0be399875566de036763a086d60cf3d4396d9",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 258,
+      "actor2_x": 640,
+      "actor2_y": 360,
+      "rgba_sha256": "3270226dfcbb6bce1ee61abb9e6a29097062f35dec30694e40a26066c95e3047",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 305,
+      "actor2_x": 656,
+      "actor2_y": 360,
+      "rgba_sha256": "7faab08e40d02f0b72c295df86a4c31b4189d23d4ae8ded1e98f2d1f0b78c24a",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 355,
+      "actor2_x": 705,
+      "actor2_y": 360,
+      "rgba_sha256": "2998a75bbb0c4bff3210b360fae748c57ede8e86d7dbd5086992eab92076894b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 404,
+      "actor2_x": 766,
+      "actor2_y": 360,
+      "rgba_sha256": "54407c5e2d9cca4eba68f02671bdc04cd6f03e9f53fc423067f4e751454c3c15",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 450,
+      "actor2_x": 814,
+      "actor2_y": 360,
+      "rgba_sha256": "d3e5cfae7457e357d1f40ae4e0273a3c3f1c7d67cd898713e1698ff362e033c0",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 495,
+      "actor2_x": 838,
+      "actor2_y": 360,
+      "rgba_sha256": "98647ef8b5715d04746ce9f8e0f6338706951f63c91e80c643c977f0fbb09f29",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 501,
+      "elapsed_ms": 555,
+      "actor2_x": 840,
+      "actor2_y": 360,
+      "rgba_sha256": "63a206dde89c0810b1bef0472b2d167806d8f2eb7b0ef7020edfc192314dd51b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 0,
+      "actor7_x": 640,
+      "actor7_y": 360,
+      "rgba_sha256": "86586ead8d6a260966a9af9714fdf702bdeb8be15a1e4fd6f8f831632c4dba59",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 16,
+      "actor7_x": 640,
+      "actor7_y": 369,
+      "rgba_sha256": "41e4c2385dac245623ffd291deb2f261343322eedb436f81e3ccf30d8a1561f9",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 58,
+      "actor7_x": 640,
+      "actor7_y": 393,
+      "rgba_sha256": "e09150c82895d4681f624f1b570c8e848911d3ae1348016e08cd4e2df1cc783e",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 110,
+      "actor7_x": 640,
+      "actor7_y": 409,
+      "rgba_sha256": "627a5f6b422b5831c73474bda3fa2d202415804096b621c50ee2e83daab8c822",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 155,
+      "actor7_x": 640,
+      "actor7_y": 406,
+      "rgba_sha256": "013f9ce18e297a739a966a9fd9364aae130bb26c1918b25f4a2ddc36bcdd6633",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 203,
+      "actor7_x": 640,
+      "actor7_y": 387,
+      "rgba_sha256": "ced5166ac2277f9ab3b70262655a012b894cb2b0e25b15a58243650beb453cc9",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 247,
+      "actor7_x": 640,
+      "actor7_y": 361,
+      "rgba_sha256": "bd60a86148abf204fb76598b7f75d92405a24a87c033aa8e61cef799a982ada4",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 521,
+      "elapsed_ms": 292,
+      "actor7_x": 640,
+      "actor7_y": 360,
+      "rgba_sha256": "86586ead8d6a260966a9af9714fdf702bdeb8be15a1e4fd6f8f831632c4dba59",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 0,
+      "actor6_x": 640,
+      "actor6_y": 360,
+      "rgba_sha256": "b52215aa35d8bc5e220b459f8ff87881385c417465fd30b5c92b29e94721e7a3",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 18,
+      "actor6_x": 644,
+      "actor6_y": 360,
+      "rgba_sha256": "d8e07ab7e7eb9d5182521e091254a2f96ca0c718895efdf43f0b56a3243411a4",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 62,
+      "actor6_x": 690,
+      "actor6_y": 360,
+      "rgba_sha256": "90d6fb1688116c4bb67f13f518c81636281e58a7eaf0b4c8968721ccffa40ce1",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 107,
+      "actor6_x": 775,
+      "actor6_y": 360,
+      "rgba_sha256": "0a3c7579a2ff0d2594e27b76ee62ff16c1e798c87da9f27e4c470be923457f3d",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 154,
+      "actor6_x": 877,
+      "actor6_y": 360,
+      "rgba_sha256": "1dc3b71261202e3363a6c8680fd0c0fe0b412452fc757fa3c2f5d0540b6255d1",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 195,
+      "actor6_x": 949,
+      "actor6_y": 360,
+      "rgba_sha256": "386340ba872868f4df9c0f2b1ef03e9e4da837fe73f215b94430b45d99cef49b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 242,
+      "actor6_x": 989,
+      "actor6_y": 360,
+      "rgba_sha256": "5aec577085dcebc8eb3e2aae150445c1395ca1969dee93facbf45bb50a4ee12e",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 56,
+      "elapsed_ms": 291,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "5ef5999a6bdbe9ae55477258936024d03e9b8d1f377eae6be078d4f0a2ef3953",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 0,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "fed86e03ccdb27a31dc7e842523b915ca3a6e411f700949a6a19502269c0946a",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 21,
+      "actor6_x": 990,
+      "actor6_y": 373,
+      "rgba_sha256": "9ac1a2f3b82eaccb08834daf81b01570ae5eef5a57745c18f05b99132fce6e2b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 70,
+      "actor6_x": 990,
+      "actor6_y": 398,
+      "rgba_sha256": "f70631a5a27a63e39ab4ebbb6b7521f6e53e84535be849a39b494e498362db50",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 114,
+      "actor6_x": 990,
+      "actor6_y": 409,
+      "rgba_sha256": "0a520b771efba85f64783ef42f9a29c141727b1ceee7f661b30c9e9d17af448e",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 160,
+      "actor6_x": 990,
+      "actor6_y": 405,
+      "rgba_sha256": "159cbfbe91092308e5db39f0e32e6bc8373b062a18b01ba4d175c52febeea29b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 220,
+      "actor6_x": 990,
+      "actor6_y": 378,
+      "rgba_sha256": "1dbd7d4c4e13ab122fdd361e07d6675246aae71a9b5ecf345cbe5fed9c574eef",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 57,
+      "elapsed_ms": 265,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "fed86e03ccdb27a31dc7e842523b915ca3a6e411f700949a6a19502269c0946a",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 0,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 18,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 61,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 110,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 160,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 204,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 244,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 60,
+      "elapsed_ms": 285,
+      "actor6_x": 990,
+      "actor6_y": 360,
+      "rgba_sha256": "44d2530732a4e673ef6ef30f593763527b62eb03a33ded7f000167523c23d084",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 0,
+      "actor3_x": 1120,
+      "actor3_y": 360,
+      "rgba_sha256": "32e041156e1cc24c8e0d72afec5ba60173df4d8a83faaaaaf5f31e6167e0e082",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 18,
+      "actor3_x": 1114,
+      "actor3_y": 360,
+      "rgba_sha256": "2a1afac858407edaf2e8ddf41ada8cab692ff3880901c9b0b2229ec65a2a8e6a",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 70,
+      "actor3_x": 1038,
+      "actor3_y": 360,
+      "rgba_sha256": "cffb2b1a2afcd1f6f6d53df8dfd384430306f6f7594de472bdf777e9239a67b1",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 114,
+      "actor3_x": 926,
+      "actor3_y": 360,
+      "rgba_sha256": "f2899d51bae366950d8d277fe1f88989a89cf25bb860c4b4b0521bc6f52840a6",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 158,
+      "actor3_x": 804,
+      "actor3_y": 360,
+      "rgba_sha256": "82d6578e95b5ae0ad5d3744c3205bc60da9e8867b513b552dc37b6597523d66c",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 200,
+      "actor3_x": 712,
+      "actor3_y": 360,
+      "rgba_sha256": "7685401aeb4a7876fddcb428da2a259bf18975082a969a25a23c69a93bc4dc96",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 241,
+      "actor3_x": 671,
+      "actor3_y": 360,
+      "rgba_sha256": "7da60ad98dd413c1c22b6eae89e7782cfd5b9311cfd95c689a8ef6e34c793b3b",
+      "independent_pixels_equal": true
+    },
+    {
+      "sequence": 605,
+      "elapsed_ms": 283,
+      "actor3_x": 670,
+      "actor3_y": 360,
+      "rgba_sha256": "9e460072bc8ec78c1727188844472e9bd1d8da161ddf703bc21f34d0eec23c2f",
+      "independent_pixels_equal": true
+    }
+  ]
+}

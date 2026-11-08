@@ -2,7 +2,7 @@
 pub(crate) const DURATION_MS: u64 = 250;
 #[derive(Clone, Debug)]
 enum Kind {
-    Rightward,
+    Horizontal,
     Dip,
     Stationary,
     HorizontalExcursion(i32),
@@ -36,7 +36,7 @@ impl Motion {
             start,
             end,
             center,
-            kind: Kind::Rightward,
+            kind: Kind::Horizontal,
         })
     }
     pub fn dip(slot: u8, start: [i32; 2], center: [i32; 2]) -> Result<Self, String> {
@@ -84,7 +84,7 @@ impl Motion {
                     + f64::from(amplitude) * (t * std::f64::consts::PI).sin();
                 [self.center[0] + relative as i32, self.start[1]]
             }
-            Kind::Rightward => {
+            Kind::Horizontal => {
                 let weight = (((t - 0.5) * std::f64::consts::PI).sin() + 1.0) * 0.5;
                 let relative = f64::from(self.start[0] - self.center[0])
                     + (f64::from(self.end[0]) - f64::from(self.start[0])) * weight;
@@ -99,7 +99,7 @@ impl Motion {
     }
     pub fn metadata(&self) -> String {
         let vertical = match self.kind {
-            Kind::Rightward => String::new(),
+            Kind::Horizontal => String::new(),
             Kind::HorizontalExcursion(amplitude) => format!(",\"kind\":\"horizontal_excursion\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":{amplitude}",self.start[1],self.end[1],self.center[1]),
             Kind::Stationary => format!(",\"kind\":\"stationary\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":0",self.start[1],self.end[1],self.center[1]),
             Kind::Dip => format!(
@@ -231,6 +231,15 @@ mod tests {
         let m = Motion::new(2, [440, 360], 350, [640, 360]).unwrap();
         assert_eq!(m.position(50), [474, 360]);
         assert!(Motion::new(1, [i32::MAX, 0], 50, [0, 0]).is_err());
+    }
+    #[test]
+    fn leftward_motion_truncates_centered_coordinates_and_keeps_negative_endpoint() {
+        let m = Motion::new(1, [160, 360], -450, [640, 360]).unwrap();
+        assert_eq!(
+            [0, 50, 125, 200, 250, 999].map(|t| m.position(t)[0]),
+            [160, 118, -65, -247, -290, -290]
+        );
+        assert!(Motion::new(1, [i32::MIN, 0], -50, [0, 0]).is_err());
     }
     #[test]
     fn cancelled_horizontal_components_retain_a_stationary_timed_operation() {

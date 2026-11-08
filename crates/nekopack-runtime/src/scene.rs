@@ -79,8 +79,19 @@ mod tests {
         )
         .unwrap();
         let move_plan = plan(&[b">>>>>>>".to_vec()], &macros, 640).unwrap();
-        assert_eq!(move_plan.motions, [MotionKind::Rightward(350)]);
+        assert_eq!(move_plan.motions, [MotionKind::Horizontal(350)]);
         assert_eq!(move_plan.order, Order::Keep);
+        let left = plan(&[b"<<<<<<<<<".to_vec()], &macros, 640).unwrap();
+        assert_eq!(left.motions, [MotionKind::Horizontal(-450)]);
+        assert_eq!(left.order, Order::Keep);
+        let positioned = plan(
+            &[b"face".to_vec(), b"right3".to_vec(), b"<<<<<<<<<".to_vec()],
+            &macros,
+            640,
+        )
+        .unwrap();
+        assert_eq!(positioned.x, Some(1120));
+        assert_eq!(positioned.motions, [MotionKind::Horizontal(-450)]);
         let dip = plan(&[b"_".to_vec()], &macros, 640).unwrap();
         assert_eq!(dip.motions, [MotionKind::Dip]);
         assert_eq!(dip.order, Order::Keep);
@@ -102,16 +113,15 @@ mod tests {
         for args in [
             vec![b"to".to_vec()],
             vec![b">2".to_vec()],
+            vec![b"<2".to_vec()],
+            vec![b"<>".to_vec()],
             vec![b">".to_vec(), b"face".to_vec()],
-            vec![b"center".to_vec(), b">".to_vec()],
             vec![b"__".to_vec()],
             vec![b"[2".to_vec()],
             vec![b"[[".to_vec(), b"face".to_vec()],
-            vec![b"center".to_vec(), b"[[".to_vec()],
             vec![b"][".to_vec()],
             vec![b"[]".to_vec(), b"face".to_vec()],
             vec![b"_2".to_vec()],
-            vec![b"center".to_vec(), b"_".to_vec()],
             vec![b"left9".to_vec()],
             vec![b"clear".to_vec(), b"face".to_vec()],
         ] {
@@ -121,7 +131,7 @@ mod tests {
 }
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) enum MotionKind {
-    Rightward(i32),
+    Horizontal(i32),
     Dip,
     Stationary,
     Excursion(i32),
@@ -166,11 +176,9 @@ pub(crate) fn plan(
         }
         if matches!(word.as_str(), "_" | "[]")
             || (!word.is_empty() && word.bytes().all(|b| b == b'>'))
+            || (!word.is_empty() && word.bytes().all(|b| b == b'<'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'['))
         {
-            if p.x.is_some() {
-                return Err("motion cannot follow an absolute position".into());
-            }
             if word == "[]" {
                 p.motions.push(MotionKind::Stationary);
                 continue;
@@ -188,10 +196,10 @@ pub(crate) fn plan(
                 ));
                 continue;
             }
-            p.motions.push(MotionKind::Rightward(
+            p.motions.push(MotionKind::Horizontal(
                 i32::try_from(word.len())
                     .ok()
-                    .and_then(|n| n.checked_mul(50))
+                    .and_then(|n| n.checked_mul(if word.starts_with('<') { -50 } else { 50 }))
                     .ok_or("actor motion overflow")?,
             ));
             continue;

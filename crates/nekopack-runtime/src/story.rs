@@ -508,7 +508,7 @@ impl<R: Read + Seek> StorySession<R> {
         for kind in &p.motions {
             use crate::{motion::Motion, scene::MotionKind};
             let segment = match kind {
-                MotionKind::Rightward(dx) => Motion::new(slot, anchor, *dx, center)?,
+                MotionKind::Horizontal(dx) => Motion::new(slot, anchor, *dx, center)?,
                 MotionKind::Dip => Motion::dip(slot, anchor, center)?,
                 MotionKind::Stationary => Motion::stationary(slot, anchor, center)?,
                 MotionKind::Excursion(dx) => {
@@ -1436,6 +1436,27 @@ mod tests {
             assert_eq!(s.scene.actors[0].anchor, [600, 0]);
             assert!(s.motions.is_empty());
             assert!(s.page_frame(1, 999).is_err());
+            assert_eq!(s.page.as_ref().unwrap().text, "second");
+        }
+    }
+    #[test]
+    fn leftward_queue_survives_poll_and_early_dialogue_completion() {
+        for early in [true, false] {
+            let mut s = moving_session(b".img6 <<<<< >\nfirst\nsecond");
+            let packet = s.poll_packet().unwrap();
+            let steps = s.machine.steps();
+            s.page_frame(1, 125).unwrap();
+            assert_eq!(s.poll_packet().unwrap(), packet);
+            if !early {
+                s.page_frame(1, 250).unwrap();
+                assert!(!s.motions[0].finished());
+                s.page_frame(1, 500).unwrap();
+                assert!(s.motions[0].finished());
+            }
+            assert_eq!(s.machine.steps(), steps);
+            s.acknowledge_text(1).unwrap();
+            assert_eq!(s.scene.actors[0].anchor, [200, 0]);
+            assert!(s.motions.is_empty());
             assert_eq!(s.page.as_ref().unwrap().text, "second");
         }
     }
