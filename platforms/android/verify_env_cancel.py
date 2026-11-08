@@ -1,3 +1,5 @@
+# Historical destructive-onPause verifier (batches <= 26).
+# Current pause/resume and explicit destruction: verify_lifecycle.py.
 """BLESS-only regression to an ADB Home-triggered background while the real looping audio is playing."""
 import argparse,hashlib,json,re,subprocess,time,uuid,xml.etree.ElementTree as ET
 from pathlib import Path

@@ -22,6 +22,10 @@ import java.io.File
 /** Validation shell only: all VM lifetime stays within one native call on its worker. */
 class MainActivity : Activity() {
     private external fun story(descriptors:IntArray,operation:Int,sequence:Long,elapsedMillis:Long=0):ByteArray
+    private val timeline=SessionTimeline()
+    private var lifecycleGeneration=0L
+    private val instanceId=java.util.UUID.randomUUID().toString()
+    private var lifecycleFailure:(Throwable)->Unit={throw it}
     private var storyWorker:java.util.concurrent.ExecutorService?=null
     private var movieHost:MovieHost?=null
     private var storyLoaded=false
@@ -43,6 +47,7 @@ class MainActivity : Activity() {
             val items=if(top.any{it.first.endsWith(".dat",true)})top else children(tree,DocumentsContract.getDocumentId(top.single{it.first==game.toString()}.second))
             val uri=items.single{it.first.equals("op.mpg",true)}.second
             System.loadLibrary("nekopack_host")
+            lifecycleFailure={error->File(root,"error.txt").writeText(error.toString());movieHost?.close()}
             movieHost=MovieHost(this,stage,root)
             movieHost!!.start(uri,1,intent.getBooleanExtra("movie_left_skip",false),{reason->File(root,"movie-complete.json").writeText(JSONObject().put("reason",reason).toString());val text=TextView(this);text.text="视频验证完成";setContentView(text)},{error->File(root,"error.txt").writeText(error.toString())})
             return
@@ -169,7 +174,8 @@ class MainActivity : Activity() {
             if(storyLoaded)story(intArrayOf(),3,0)
             runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
-        storyEffects=StoryEffects(this,image,overlay,root,{kind,token,elapsed,ready->
+        lifecycleFailure={error->worker.execute{fail(error)}}
+        storyEffects=StoryEffects(this,image,overlay,root,timeline,{kind,token,elapsed,ready->
             worker.execute{try{
                 if(!storyClosing && (kind!="motion" || storyEffects!!.isMotionActive(token))){
                     val packet=story(intArrayOf(),if(kind=="motion")8 else if(kind=="flash")6 else 5,token,elapsed);val split=packet.indexOf(10.toByte());check(split>=0)
@@ -181,7 +187,13 @@ class MainActivity : Activity() {
                     for(index in pixels.indices){val at=index*4;pixels[index]=((rgba[at+3].toInt() and 255) shl 24) or ((rgba[at].toInt() and 255) shl 16) or ((rgba[at+1].toInt() and 255) shl 8) or (rgba[at+2].toInt() and 255)}
                     val bitmap=android.graphics.Bitmap.createBitmap(pixels,width,height,android.graphics.Bitmap.Config.ARGB_8888)
                     File(root,"${meta.optString("frame_kind","wipe")}-$token-$elapsed.rgba").writeBytes(rgba)
-                    runOnUiThread{if(!storyClosing)ready(bitmap,if(kind=="motion")meta.getBoolean("finished") else false)}
+                    runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){
+                        val finished=if(kind=="motion")meta.getBoolean("finished") else false
+                        ready(bitmap,finished)
+                        if(kind=="motion"&&elapsed>0&&!finished&&intent.getBooleanExtra("close_on_motion",false)&&!intent.getBooleanExtra("motion_pause_used",false)&&(!intent.hasExtra("close_on_motion_sequence")||token==intent.getIntExtra("close_on_motion_sequence",0).toLong())){
+                            intent.putExtra("motion_pause_used",true);moveTaskToBack(true)
+                        }
+                    }}}
                 }
             }catch(error:Throwable){fail(error)}}
         }){error->worker.execute{fail(error)}}
@@ -204,7 +216,7 @@ class MainActivity : Activity() {
                         File(root,"audio-$token.json").writeText(JSONObject().put("kind",kind).put("name",metadata.getString("name")).put("sha256",digest).toString())
                     } else null
                     val movieUri=if(kind=="movie")selectedFiles.single{it.first.equals(metadata.getString("name"),true)}.second else null
-                    runOnUiThread{
+                    runOnUiThread{timeline.post(cancel={file?.delete();bitmap?.recycle()}){
                         if(storyClosing){file?.delete()}else {
                             if(kind=="shake" || kind=="wipe") {
                                 val old=(image.drawable as? android.graphics.drawable.BitmapDrawable)?.bitmap
@@ -212,31 +224,34 @@ class MainActivity : Activity() {
                             }
                             // Probe-only lifecycle injection: preserve the original duration, background during the real request.
                             if((kind=="shake" && intent.getBooleanExtra("close_on_shake",false)) || (kind=="flash" && intent.getBooleanExtra("close_on_flash",false)))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},if(kind=="flash")5L else 35L)
+                            if(kind==intent.getStringExtra("pause_on_effect")&&!intent.getBooleanExtra("effect_pause_used",false)){
+                                intent.putExtra("effect_pause_used",true)
+                                image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
+                            }
                             if(kind=="movie"){
                                 storyEffects!!.beginMovie(token)
                                 movieHost=MovieHost(this,stage,root)
                                 movieHost!!.start(movieUri!!,token,metadata.getBoolean("movie_left_skip"),{reason->
-                                    if(!storyClosing)worker.execute{try{show(story(intArrayOf(),7,token,reason.toLong()))}catch(error:Throwable){fail(error)}}
+                                    timeline.post{if(!storyClosing)worker.execute{try{show(story(intArrayOf(),7,token,reason.toLong()))}catch(error:Throwable){fail(error)}}}
                                 },{error->worker.execute{fail(error)}})
                             }else storyEffects!!.run(metadata,bitmap,file){
                             if(!storyClosing)worker.execute{try{show(story(intArrayOf(),4,token))}catch(error:Throwable){fail(error)}}
                             }
                         }
-                    }
+                    }}
                 }else {
                     val token=metadata.getLong("sequence")
                     val bitmap=BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid story bitmap")
                     File(root,"page-$token.json").writeText(metadata.toString());File(root,"page-$token.png").writeBytes(payload)
-                    runOnUiThread {if(!isDestroyed&&!storyClosing){sequence=token;text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true
+                    runOnUiThread {timeline.post(cancel={bitmap.recycle()}){if(!isDestroyed&&!storyClosing){sequence=token;text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true
                         if(metadata.has("motion")){
                             storyEffects!!.runMotion(token)
-                            if(intent.getBooleanExtra("close_on_motion",false) && (!intent.hasExtra("close_on_motion_sequence") || token==intent.getIntExtra("close_on_motion_sequence",0).toLong()))image.postDelayed({if(!storyClosing)moveTaskToBack(true)},80)
                         }else image.setImageBitmap(bitmap)
                         if(token==13L&&intent.getBooleanExtra("audio_state_probe",false)){
                             next.isEnabled=false
                             probeAudioState(this,storyEffects!!,root){error->worker.execute{fail(error)}}
                         }
-                    }}
+                    }}}
                 }
             }
         }
@@ -267,11 +282,26 @@ class MainActivity : Activity() {
         }
     }
     override fun onPause() {
+        lifecycleGeneration++
+        timeline.pause();storyEffects?.pause();movieHost?.pause()
+        if(intent.getBooleanExtra("lifecycle_probe",false)){
+            val generation=lifecycleGeneration
+            for((delay,label) in listOf(500L to "paused_stable_1",1500L to "paused_stable_2")){
+                window.decorView.postDelayed({if(!storyClosing&&timeline.paused&&lifecycleGeneration==generation)storyEffects?.lifecycleAudio(label)},delay)
+            }
+        }
+        storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","paused").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
+        if(intent.getBooleanExtra("finish_while_paused",false)&&!isFinishing)window.decorView.postDelayed({finish()},300)
         super.onPause()
-        if((storyWorker!=null || movieHost!=null) && !isFinishing){File(storyRunRoot!!,"lifecycle-pause.json").writeText(org.json.JSONObject().put("time_ms",android.os.SystemClock.elapsedRealtime()).toString());storyClosing=true;movieHost?.close();storyEffects?.close();finish()}
+    }
+    override fun onResume() {
+        super.onResume()
+        lifecycleGeneration++
+        timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}
+        storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        storyClosing=true;movieHost?.close();storyEffects?.close()
+        storyClosing=true;timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()
     }

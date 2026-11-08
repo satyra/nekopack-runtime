@@ -1,3 +1,5 @@
+# Historical destructive-onPause verifier (batches <= 26).
+# Current pause/resume and explicit destruction: verify_lifecycle.py.
 """Background a real BLESS story movie and require both decoder and VM cleanup."""
 import argparse,json,re,subprocess,time,uuid,xml.etree.ElementTree as ET
 from pathlib import Path

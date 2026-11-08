@@ -1,0 +1,23 @@
+{
+  "scope": "Live Activity background recovery, not durable save/process recreation",
+  "apk_sha256": "c1f10241d8fef4607e5af2a9f9fc6d14e0d9bc2062d2ccdceb8916e00d6634f2",
+  "lifecycle_cycles": 6,
+  "lifecycle_pages": 61,
+  "regression_pages": 793,
+  "audio_requests": 493,
+  "motion_frames": 87,
+  "paused_motion_logical_ms": 264,
+  "paused_motion_wall_ms": 2983,
+  "natural_movie_frames": 2497,
+  "natural_movie_samples": 4590720,
+  "vm_live_bytes": 0,
+  "reports": {
+    "native": "17507dac946e3af5649ade5aaf4b959800333035b6b8e0aed5d0ba63607721af",
+    "destroy": "fa8aac6c03d0eba30d6f750a78906365a2348dc3f30a085281e1341df46c45bf",
+    "movie": "9dd12c5b35e065ed8e50d6e2390260dcf500d4fe2ac5c1a61313413190756c5d",
+    "audio": "4e123fded304870633dcf22550eaa06bcc0ffd63389fdc7944750cd91fe1f3d5",
+    "story": "0ace0b52a43400f1d5eed59cbe242c7fe6de747cc0cdbc42f7bf32b207dfd464",
+    "frames": "68aee80d13d5090e30f0d3f8f20264bcc2caa46940b5cd813fab7fd7ef3a39a3",
+    "audio-evidence": "3d6eda39c99d9086c452a5d954fe18b22601a2423252adf47e1b4253104267cf"
+  }
+}

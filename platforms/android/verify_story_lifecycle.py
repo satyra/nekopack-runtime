@@ -1,3 +1,5 @@
+# Historical destructive-onPause verifier (batches <= 26).
+# Current pause/resume and explicit destruction: verify_lifecycle.py.
 """Interrupt actual host effects with HOME; ensure cancellation and VM cleanup."""
 import argparse,json,re,subprocess,time,uuid,xml.etree.ElementTree as ET
 from pathlib import Path

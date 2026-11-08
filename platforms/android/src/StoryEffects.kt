@@ -4,8 +4,6 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.media.AudioManager
 import android.media.AudioAttributes
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.animation.ValueAnimator
 import android.animation.Animator
@@ -17,8 +15,7 @@ import org.json.JSONObject
 import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
-class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val failure:(Throwable)->Unit) {
-    private val handler=Handler(Looper.getMainLooper())
+class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val timeline:SessionTimeline,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val failure:(Throwable)->Unit) {
     private val players=mutableMapOf<String,Pair<MediaPlayer,File>>()
     private var animator:ValueAnimator?=null
     private var bgmAnimator:ValueAnimator?=null
@@ -45,20 +42,20 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         wipeFrame("motion",sequence,0){initial,_->
             if(isMotionActive(sequence)){
                 image.setImageBitmap(initial)
-                val started=SystemClock.elapsedRealtime()
+                val started=timeline.now()
                 motionLog("begin",sequence,0);motionLog("frame",sequence,0)
                 fun frame(){
                     if(!isMotionActive(sequence))return
-                    val elapsed=SystemClock.elapsedRealtime()-started
+                    val elapsed=timeline.now()-started
                     wipeFrame("motion",sequence,elapsed){value,finished->
                         if(isMotionActive(sequence)){
                             image.setImageBitmap(value);motionLog("frame",sequence,elapsed,finished)
                             if(finished){motionFinished=true;motionLog("finished",sequence,elapsed,true)}
-                            else handler.postDelayed({frame()},16)
+                            else timeline.post(16){frame()}
                         }
                     }
                 }
-                handler.postDelayed({frame()},16)
+                timeline.post(16){frame()}
             }
         }
     }
@@ -71,6 +68,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         players.getValue(kind).first.setVolume(gain.output,gain.output)
     }
     private fun regainFocus() {
+        if(timeline.paused){focused=false;return}
         focused=true;focusSuspended=false;ducked=false
         for(kind in gains.keys)applyGain(kind)
         for(kind in focusPaused) {
@@ -80,7 +78,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             log(if(prepared!=null)"playing" else "resumed",kind,audioTokens.getValue(kind),player.duration.toLong())
             prepared?.invoke()
         }
-        focusPaused.clear();bgmAnimator?.resume()
+        focusPaused.clear();if(!timeline.paused)bgmAnimator?.resume()
     }
     private val focus=AudioManager.OnAudioFocusChangeListener { change->
         if(!closed) {
@@ -105,6 +103,34 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private fun log(event:String,kind:String,token:Long,extra:Long=0) {
         File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",SystemClock.elapsedRealtime()).put("value",extra).toString()+"\n")
     }
+    internal fun lifecycleAudio(event:String){
+        val channels=JSONObject()
+        for(kind in gains.keys){
+            val player=players.getValue(kind).first
+            channels.put(kind,JSONObject().put("token",audioTokens.getValue(kind)).put("player_id",System.identityHashCode(player)).put("playing",player.isPlaying).put("position",player.currentPosition).put("gain",gains.getValue(kind).output))
+        }
+        File(root,"audio-lifecycle.jsonl").appendText(JSONObject().put("event",event).put("time_ms",SystemClock.elapsedRealtime()).put("channels",channels).toString()+"\n")
+    }
+    fun pause(){
+        if(closed)return
+        for(kind in gains.keys){
+            val player=players.getValue(kind).first
+            if(player.isPlaying){player.pause();focusPaused.add(kind);log("paused",kind,audioTokens.getValue(kind),player.currentPosition.toLong())}
+        }
+        animator?.pause();bgmAnimator?.pause()
+        audio.abandonAudioFocus(focus);focused=false
+        log("lifecycle_paused","all",0,timeline.now());lifecycleAudio("paused")
+    }
+    fun resume(){
+        if(closed)return
+        lifecycleAudio("resuming")
+        if(players.isNotEmpty()){
+            check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied on resume"}
+            regainFocus()
+        }
+        animator?.resume()
+        log("lifecycle_resumed","all",0,timeline.now());lifecycleAudio("resumed")
+    }
     fun beginMovie(token:Long){
         for(kind in players.keys.toList())release(kind)
         if(focused){audio.abandonAudioFocus(focus);focused=false}
@@ -119,7 +145,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
     fun close(){
         if(closed)return
-        stopMotion();closed=true;handler.removeCallbacksAndMessages(null);animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
+        stopMotion();closed=true;timeline.close();animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
         val owned=players.values.toList();players.clear();gains.clear();focusPaused.clear();pendingStart.clear();audioTokens.clear()
         for((player,_) in owned)player.release()
         if(focused)audio.abandonAudioFocus(focus)
@@ -130,11 +156,11 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     fun run(meta:JSONObject,bitmap:Bitmap?,file:File?,complete:()->Unit){
         if(closed){file?.delete();return}
         val kind=meta.getString("host_effect");val token=meta.getLong("token");val duration=meta.getLong("duration_ms")
-        val started=SystemClock.elapsedRealtime();log("begin",kind,token,duration)
-        fun done(){if(!closed){log("ack",kind,token,SystemClock.elapsedRealtime()-started);complete()}}
+        val started=timeline.now();log("begin",kind,token,duration)
+        fun done(){timeline.post{if(!closed){log("ack",kind,token,timeline.now()-started);complete()}}}
         try {
             when(kind){
-                "wait"->handler.postDelayed({done()},duration)
+                "wait"->timeline.post(duration){done()}
                 "env_stop","se_stop"->{
                     val channel=kind.removeSuffix("_stop")
                     release(channel)
@@ -168,10 +194,10 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                             override fun onAnimationEnd(animation:Animator){
                                 if(closed||cancelled)return
                                 bgmAnimator=null;release("bgm");log("stopped","bgm",token)
-                                log("finished",kind,token,SystemClock.elapsedRealtime()-started)
+                                log("finished",kind,token,timeline.now()-started)
                             }
                         })
-                        animation.start();if(focusSuspended)animation.pause();done()
+                        animation.start();if(focusSuspended||timeline.paused)animation.pause();done()
                     }
                 }
                 "flash"->{
@@ -181,25 +207,25 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                         if(closed)return
                         wipeFrame(kind,token,phase){value,_->
                             if(!closed){image.setImageBitmap(value);log("frame",kind,token,phase);phase++
-                                if(phase==phases)done() else handler.postDelayed({frame()},30)
+                                if(phase==phases)done() else timeline.post(30){frame()}
                             }
                         }
                     }
-                    handler.postDelayed({frame()},30)
+                    timeline.post(30){frame()}
                 }
                 "wipe","shake"->{
                     check(bitmap!=null)
                     fun frame(){
                         if(closed)return
-                        val elapsed=(SystemClock.elapsedRealtime()-started).coerceAtMost(duration)
+                        val elapsed=(timeline.now()-started).coerceAtMost(duration)
                         wipeFrame(kind,token,elapsed){value,_->
                             if(!closed){image.setImageBitmap(value);log("frame",kind,token,elapsed)
                                 if(elapsed==duration){if(kind=="wipe")image.setImageBitmap(bitmap);done()}
-                                else handler.postDelayed({frame()},16)
+                                else timeline.post(16){frame()}
                             }
                         }
                     }
-                    image.postOnAnimation{frame()}
+                    image.postOnAnimation{timeline.post{frame()}}
                 }
                 "fade"->{
                     check(bitmap!=null);overlay.setImageBitmap(bitmap);overlay.alpha=0f
@@ -212,14 +238,14 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     animation.addListener(object:AnimatorListenerAdapter(){override fun onAnimationEnd(animation:Animator){
                         if(closed)return
                         image.setImageBitmap(bitmap);overlay.setImageDrawable(null);overlay.alpha=0f;animator=null
-                        val remaining=(duration-(SystemClock.elapsedRealtime()-started)).coerceAtLeast(0)
-                        handler.postDelayed({done()},remaining)
+                        val remaining=(duration-(timeline.now()-started)).coerceAtLeast(0)
+                        timeline.post(remaining){done()}
                     }})
                     animation.start()
                 }
                 "bgm","env","se","voice"->{
                     check(file!=null)
-                    if(!focused){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};regainFocus()}
+                    if(!focused&&!timeline.paused){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};regainFocus()}
                     release(kind)
                     val player=MediaPlayer();players[kind]=player to file
                     player.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(if(kind=="voice")AudioAttributes.CONTENT_TYPE_SPEECH else AudioAttributes.CONTENT_TYPE_MUSIC).build())
@@ -235,26 +261,26 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                     it.setVolume(gain.output,gain.output);log("gain",kind,token,percent.toLong())
                                 }else {it.isLooping=false;gains[kind]=AudioGain(1f)}
                                 applyGain(kind)
-                                if(focusSuspended){focusPaused.add(kind);pendingStart[kind]={done()};log("focus_pending",kind,token)}
+                                if(focusSuspended||timeline.paused){focusPaused.add(kind);pendingStart[kind]={done()};log("focus_pending",kind,token)}
                                 else {it.start();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong())}
                                 if(kind=="env" || kind=="se"){
                                     log("looping",kind,token,if(it.isLooping)1 else 0)
                                     players["bgm"]?.first?.let{peer->if(peer.isPlaying)log("peer_playing","bgm",token,peer.currentPosition.toLong())}
                                 }
-                                if(!focusSuspended)done()
-                                handler.postDelayed(object:Runnable {
+                                if(!focusSuspended&&!timeline.paused)done()
+                                val progress=object:Runnable {
                                     private var samples=0
                                     private var previousPosition=-1L
                                     override fun run(){
                                         if(closed||players[kind]?.first!==player)return
-                                        if(!player.isPlaying){if(focusPaused.contains(kind))handler.postDelayed(this,200);return}
+                                        if(!player.isPlaying){if(focusPaused.contains(kind))timeline.post(200){run()};return}
                                         val position=player.currentPosition.toLong();samples++
                                         log("progress",kind,token,position)
                                         if((kind=="env" || kind=="se") && position<previousPosition)log("looped",kind,token,position)
                                         previousPosition=position
-                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples<25))handler.postDelayed(this,200)
+                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples<25))timeline.post(200){run()}
                                     }
-                                },200)}
+                                };timeline.post(200){progress.run()}}
                             catch(error:Throwable){failure(error)}
                         }
                     }

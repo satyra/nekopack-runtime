@@ -1,0 +1,544 @@
+{
+  "run_id": "lifecycle_3e1b6b900b64468b99fc7a124c8890e4",
+  "execution": "native ARM64",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "f206f9a87c9a5ddac2746d91a0205dcde9c597bdd0bdf3eb683f089877dc4655",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "c1f10241d8fef4607e5af2a9f9fc6d14e0d9bc2062d2ccdceb8916e00d6634f2"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1936464 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06fab8 0x06fab8 R   0x4000\n  LOAD           0x06fab8 0x0000000000073ab8 0x0000000000073ab8 0x0eb4b8 0x0eb4b8 R E 0x4000\n  LOAD           0x15af70 0x0000000000162f70 0x0000000000162f70 0x007bd8 0x008090 RW  0x4000\n  LOAD           0x162b48 0x000000000016eb48 0x000000000016eb48 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x162440 0x000000000016a440 0x000000000016a440 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x15af70 0x0000000000162f70 0x0000000000162f70 0x007bd8 0x008090 R   0x1\n  GNU_EH_FRAME   0x04e890 0x000000000004e890 0x000000000004e890 0x004784 0x004784 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x162440 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44016 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1820\n  0x0000000000000017 (JMPREL)       0xbd98\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x16a8a0\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x16a438\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x16a428\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "cycles": [
+    {
+      "label": "movie",
+      "paused": {
+        "event": "paused",
+        "time_ms": 50875671,
+        "active_ms": 50875589,
+        "instance": "46e7b02a-5c16-4384-b2ae-6181060e13ca"
+      },
+      "resumed": {
+        "event": "resumed",
+        "time_ms": 50878319,
+        "active_ms": 50875590,
+        "instance": "46e7b02a-5c16-4384-b2ae-6181060e13ca"
+      },
+      "pid": "24743",
+      "stable_files": {
+        "host-events.jsonl": "cb11a887a959aac0b06d17a813b6d68cd158a87d8cf76e749101eb90738ae538",
+        "motion-events.jsonl": "41403fcf526171a0e1a367fc214da371684d48517cce7d42466ff4d3f38aed62",
+        "movie-1-events.jsonl": "50def1c0b0873953b650b2af477b595d2b0605fdc43fd641539bb6de15e89b75"
+      },
+      "before": {
+        "frames": 120,
+        "samples": 221184,
+        "head": 216384,
+        "event": "progress",
+        "time_ms": 50875263
+      },
+      "after": {
+        "frames": 240,
+        "samples": 441216,
+        "head": 436531,
+        "event": "progress",
+        "time_ms": 50882883
+      }
+    }
+  ],
+  "pages": [],
+  "movie_events": [
+    {
+      "head": 0,
+      "active_ms": 50869879,
+      "event": "resumed",
+      "time_ms": 50869895
+    },
+    {
+      "head": 0,
+      "active_ms": 50869879,
+      "event": "resumed",
+      "time_ms": 50869903
+    },
+    {
+      "event": "surface_created",
+      "time_ms": 50869966
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "fps": 24,
+      "sample_rate": 44100,
+      "duration": 103.91666666666666,
+      "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+      "source_bytes": 106680900,
+      "left_skip": false,
+      "event": "started",
+      "time_ms": 50870347
+    },
+    {
+      "frames": 120,
+      "samples": 220032,
+      "head": 214502,
+      "event": "progress",
+      "time_ms": 50875255
+    },
+    {
+      "frames": 120,
+      "samples": 220032,
+      "head": 214502,
+      "event": "progress",
+      "time_ms": 50875257
+    },
+    {
+      "frames": 120,
+      "samples": 221184,
+      "head": 216384,
+      "event": "progress",
+      "time_ms": 50875263
+    },
+    {
+      "head": 235200,
+      "active_ms": 50875580,
+      "event": "paused",
+      "time_ms": 50875669
+    },
+    {
+      "event": "surface_destroyed",
+      "time_ms": 50876285
+    },
+    {
+      "head": 235200,
+      "active_ms": 50875580,
+      "event": "resumed",
+      "time_ms": 50878319
+    },
+    {
+      "event": "surface_created",
+      "time_ms": 50878338
+    },
+    {
+      "frames": 240,
+      "samples": 440064,
+      "head": 434649,
+      "event": "progress",
+      "time_ms": 50882870
+    },
+    {
+      "frames": 240,
+      "samples": 441216,
+      "head": 436531,
+      "event": "progress",
+      "time_ms": 50882883
+    },
+    {
+      "frames": 360,
+      "samples": 660096,
+      "head": 656678,
+      "event": "progress",
+      "time_ms": 50887877
+    },
+    {
+      "frames": 360,
+      "samples": 661248,
+      "head": 656678,
+      "event": "progress",
+      "time_ms": 50887884
+    },
+    {
+      "frames": 480,
+      "samples": 881280,
+      "head": 876825,
+      "event": "progress",
+      "time_ms": 50892876
+    },
+    {
+      "frames": 480,
+      "samples": 881280,
+      "head": 876825,
+      "event": "progress",
+      "time_ms": 50892877
+    },
+    {
+      "frames": 600,
+      "samples": 1101312,
+      "head": 1096972,
+      "event": "progress",
+      "time_ms": 50897889
+    },
+    {
+      "frames": 600,
+      "samples": 1102464,
+      "head": 1096972,
+      "event": "progress",
+      "time_ms": 50897890
+    },
+    {
+      "frames": 600,
+      "samples": 1103616,
+      "head": 1098854,
+      "event": "progress",
+      "time_ms": 50897901
+    },
+    {
+      "frames": 720,
+      "samples": 1322496,
+      "head": 1317120,
+      "event": "progress",
+      "time_ms": 50902885
+    },
+    {
+      "frames": 720,
+      "samples": 1322496,
+      "head": 1317120,
+      "event": "progress",
+      "time_ms": 50902886
+    },
+    {
+      "frames": 720,
+      "samples": 1323648,
+      "head": 1319001,
+      "event": "progress",
+      "time_ms": 50902892
+    },
+    {
+      "frames": 840,
+      "samples": 1542528,
+      "head": 1537267,
+      "event": "progress",
+      "time_ms": 50907886
+    },
+    {
+      "frames": 840,
+      "samples": 1543680,
+      "head": 1539148,
+      "event": "progress",
+      "time_ms": 50907888
+    },
+    {
+      "frames": 840,
+      "samples": 1543680,
+      "head": 1539148,
+      "event": "progress",
+      "time_ms": 50907888
+    },
+    {
+      "frames": 960,
+      "samples": 1762560,
+      "head": 1761177,
+      "event": "progress",
+      "time_ms": 50912926
+    },
+    {
+      "frames": 960,
+      "samples": 1763712,
+      "head": 1761177,
+      "event": "progress",
+      "time_ms": 50912928
+    },
+    {
+      "frames": 960,
+      "samples": 1764864,
+      "head": 1761177,
+      "event": "progress",
+      "time_ms": 50912928
+    },
+    {
+      "frames": 1080,
+      "samples": 1983744,
+      "head": 1979443,
+      "event": "progress",
+      "time_ms": 50917895
+    },
+    {
+      "frames": 1080,
+      "samples": 1984896,
+      "head": 1979443,
+      "event": "progress",
+      "time_ms": 50917897
+    },
+    {
+      "frames": 1080,
+      "samples": 1984896,
+      "head": 1979443,
+      "event": "progress",
+      "time_ms": 50917897
+    },
+    {
+      "frames": 1200,
+      "samples": 2203776,
+      "head": 2199590,
+      "event": "progress",
+      "time_ms": 50922899
+    },
+    {
+      "frames": 1200,
+      "samples": 2204928,
+      "head": 2199590,
+      "event": "progress",
+      "time_ms": 50922900
+    },
+    {
+      "frames": 1200,
+      "samples": 2206080,
+      "head": 2201472,
+      "event": "progress",
+      "time_ms": 50922901
+    },
+    {
+      "frames": 1320,
+      "samples": 2424960,
+      "head": 2419737,
+      "event": "progress",
+      "time_ms": 50927887
+    },
+    {
+      "frames": 1320,
+      "samples": 2424960,
+      "head": 2419737,
+      "event": "progress",
+      "time_ms": 50927888
+    },
+    {
+      "frames": 1320,
+      "samples": 2426112,
+      "head": 2421619,
+      "event": "progress",
+      "time_ms": 50927899
+    },
+    {
+      "frames": 1440,
+      "samples": 2644992,
+      "head": 2639884,
+      "event": "progress",
+      "time_ms": 50932881
+    },
+    {
+      "frames": 1440,
+      "samples": 2646144,
+      "head": 2641766,
+      "event": "progress",
+      "time_ms": 50932888
+    },
+    {
+      "frames": 1440,
+      "samples": 2646144,
+      "head": 2641766,
+      "event": "progress",
+      "time_ms": 50932889
+    },
+    {
+      "frames": 1560,
+      "samples": 2866176,
+      "head": 2861913,
+      "event": "progress",
+      "time_ms": 50937908
+    },
+    {
+      "frames": 1560,
+      "samples": 2866176,
+      "head": 2861913,
+      "event": "progress",
+      "time_ms": 50937909
+    },
+    {
+      "frames": 1560,
+      "samples": 2867328,
+      "head": 2861913,
+      "event": "progress",
+      "time_ms": 50937910
+    },
+    {
+      "frames": 1680,
+      "samples": 3086208,
+      "head": 3082060,
+      "event": "progress",
+      "time_ms": 50942878
+    },
+    {
+      "frames": 1680,
+      "samples": 3087360,
+      "head": 3082060,
+      "event": "progress",
+      "time_ms": 50942879
+    },
+    {
+      "frames": 1680,
+      "samples": 3087360,
+      "head": 3082060,
+      "event": "progress",
+      "time_ms": 50942879
+    },
+    {
+      "frames": 1800,
+      "samples": 3306240,
+      "head": 3302208,
+      "event": "progress",
+      "time_ms": 50947886
+    },
+    {
+      "frames": 1800,
+      "samples": 3307392,
+      "head": 3302208,
+      "event": "progress",
+      "time_ms": 50947887
+    },
+    {
+      "frames": 1800,
+      "samples": 3308544,
+      "head": 3304089,
+      "event": "progress",
+      "time_ms": 50947903
+    },
+    {
+      "frames": 1920,
+      "samples": 3527424,
+      "head": 3522355,
+      "event": "progress",
+      "time_ms": 50952889
+    },
+    {
+      "frames": 1920,
+      "samples": 3527424,
+      "head": 3522355,
+      "event": "progress",
+      "time_ms": 50952890
+    },
+    {
+      "frames": 1920,
+      "samples": 3528576,
+      "head": 3524236,
+      "event": "progress",
+      "time_ms": 50952902
+    },
+    {
+      "frames": 2040,
+      "samples": 3747456,
+      "head": 3742502,
+      "event": "progress",
+      "time_ms": 50957891
+    },
+    {
+      "frames": 2040,
+      "samples": 3748608,
+      "head": 3744384,
+      "event": "progress",
+      "time_ms": 50957893
+    },
+    {
+      "frames": 2040,
+      "samples": 3748608,
+      "head": 3744384,
+      "event": "progress",
+      "time_ms": 50957893
+    },
+    {
+      "frames": 2160,
+      "samples": 3968640,
+      "head": 3964531,
+      "event": "progress",
+      "time_ms": 50962894
+    },
+    {
+      "frames": 2160,
+      "samples": 3968640,
+      "head": 3964531,
+      "event": "progress",
+      "time_ms": 50962895
+    },
+    {
+      "frames": 2160,
+      "samples": 3969792,
+      "head": 3964531,
+      "event": "progress",
+      "time_ms": 50962896
+    },
+    {
+      "frames": 2280,
+      "samples": 4188672,
+      "head": 4184678,
+      "event": "progress",
+      "time_ms": 50967883
+    },
+    {
+      "frames": 2280,
+      "samples": 4189824,
+      "head": 4184678,
+      "event": "progress",
+      "time_ms": 50967884
+    },
+    {
+      "frames": 2280,
+      "samples": 4189824,
+      "head": 4184678,
+      "event": "progress",
+      "time_ms": 50967885
+    },
+    {
+      "frames": 2400,
+      "samples": 4408704,
+      "head": 4404825,
+      "event": "progress",
+      "time_ms": 50972901
+    },
+    {
+      "frames": 2400,
+      "samples": 4409856,
+      "head": 4404825,
+      "event": "progress",
+      "time_ms": 50972902
+    },
+    {
+      "frames": 2400,
+      "samples": 4411008,
+      "head": 4406707,
+      "event": "progress",
+      "time_ms": 50972909
+    },
+    {
+      "reason": 0,
+      "frames": 2497,
+      "samples": 4590720,
+      "head": 4590720,
+      "peak_bytes": 8523472,
+      "elapsed_ms": 107196,
+      "error": null,
+      "event": "closed",
+      "time_ms": 50977164
+    }
+  ],
+  "host_events": [],
+  "audio_lifecycle": [],
+  "motion_events": [],
+  "lifecycle": [
+    {
+      "event": "resumed",
+      "time_ms": 50869903,
+      "active_ms": 50869825,
+      "instance": "46e7b02a-5c16-4384-b2ae-6181060e13ca"
+    },
+    {
+      "event": "paused",
+      "time_ms": 50875671,
+      "active_ms": 50875589,
+      "instance": "46e7b02a-5c16-4384-b2ae-6181060e13ca"
+    },
+    {
+      "event": "resumed",
+      "time_ms": 50878319,
+      "active_ms": 50875590,
+      "instance": "46e7b02a-5c16-4384-b2ae-6181060e13ca"
+    }
+  ],
+  "movie_natural_completion": true,
+  "destroyed_while_paused": false,
+  "vm_live_bytes": null
+}
