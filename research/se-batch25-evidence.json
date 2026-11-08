@@ -1,0 +1,19 @@
+{
+  "scope": "Native player events/position evidence, not acoustic or original dynamic parity",
+  "report_sha256": "2e3d03b71edeed989e2aa52e195dd94df8639a21edc57b57be68096a6d0c2adf",
+  "apk_sha256": "ed03a980094c5a1c2a8e8d1726cf9777b51ecab664eff7098172fb53e22de967",
+  "once_page": 783,
+  "loop_page": 786,
+  "stop_page": 789,
+  "following_voice_page": 793,
+  "once_token": 539,
+  "loop_token": 540,
+  "stop_token": 541,
+  "default_once_completed": true,
+  "observed_wraps": 5,
+  "gain_percent": 100,
+  "nonblocking_start_ack": true,
+  "bgm_survived_stop": true,
+  "no_late_se_after_stop": true,
+  "vm_live_bytes": 0
+}

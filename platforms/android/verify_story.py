@@ -43,6 +43,7 @@ def main():
  p.add_argument('--allow-page-limit',action='store_true')
  p.add_argument('--reuse-continue-bounds',action='store_true')
  p.add_argument('--require-env-loop',action='store_true')
+ p.add_argument('--require-se-loop',action='store_true')
  p.add_argument('--wipe-reference',type=Path)
  p.add_argument('--effect-captures',type=Path)
  p.add_argument('--motion-captures',type=Path)
@@ -149,14 +150,15 @@ def main():
      assert len(rgba)==actual['scene']['size'][0]*actual['scene']['size'][1]*4
      (folder/f'{elapsed}.rgba').write_bytes(rgba)
     motions.append(dict(sequence=n,events=selected,captured_frames=len(frames)))
-   if a.require_env_loop and any(effect.startswith('env ') for effect in actual['effects']):
+   for looping_channel,required in [('env',a.require_env_loop),('se',a.require_se_loop)]:
+    if not required or not any(effect.startswith(looping_channel+' ') and (looping_channel=='env' or effect.endswith(' loop')) for effect in actual['effects']):continue
     deadline=time.monotonic()+60
     while time.monotonic()<deadline:
-     environment_events=[json.loads(line) for line in private(run,'host-events.jsonl').splitlines()]
-     token=next(e['token'] for e in reversed(environment_events) if e['event']=='begin' and e['kind']=='env')
-     if any(e['event']=='looped' and e['token']==token for e in environment_events):break
+     playback_events=[json.loads(line) for line in private(run,'host-events.jsonl').splitlines()]
+     token=next(e['token'] for e in reversed(playback_events) if e['event']=='begin' and e['kind']==looping_channel)
+     if any(e['event']=='looped' and e['token']==token for e in playback_events):break
      time.sleep(.2)
-    else:raise RuntimeError('environment audio never demonstrated a loop')
+    else:raise RuntimeError(looping_channel+' audio never demonstrated a loop')
    if n in a.screen_pages:
     import io
     from PIL import Image
@@ -224,6 +226,7 @@ def main():
    stop_count=sum(effect=='bgm_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
    assert sum(e['event']=='begin' and e['kind']=='bgm_stop' for e in host)==stop_count, 'missing or duplicated BGM stop request'
    assert sum(e['event']=='begin' and e['kind']=='env_stop' for e in host)==sum(effect=='env_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
+   assert sum(e['event']=='begin' and e['kind']=='se_stop' for e in host)==sum(effect=='se_stop' for page in pages+([boundary['checkpoint']] if boundary else []) for effect in page['effects'])
    begins=[e for e in host if e['event']=='begin'];acks=[e for e in host if e['event']=='ack']
    if [e['token'] for e in begins]!=[e['token'] for e in acks]:raise RuntimeError('missing/duplicate host completion')
    reference=json.loads(a.audio_reference.read_text(encoding='utf8'))['games'][i]
@@ -238,7 +241,7 @@ def main():
      if finished:assert finished[0]['value']>=begin['value']
      assert ack['value']<begin['value'], 'BGM fade blocked the script'
      assert any(e['event']=='begin' and e['token']>begin['token'] and e['time_ms']< (finished or cancelled)[0]['time_ms'] for e in host), 'no concurrent script progress'
-    elif begin['kind'] in ['bgm_stop','env_stop']:
+    elif begin['kind'] in ['bgm_stop','env_stop','se_stop']:
      verify_channel_stop(host,begin,ack,begin['kind'].removesuffix('_stop'))
     elif begin['kind'] in ['bgm','env','se','voice']:
      token=begin['token'];playing=[e for e in host if e['event']=='playing' and e['token']==token]
@@ -355,7 +358,7 @@ def main():
    expected=Image.open(a.wipe_reference/str(i)/'visual.png').convert('RGBA')
    assert actual.size==expected.size and actual.tobytes()==expected.tobytes()
    visual=True
-  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,motions=motions,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,continue_bounds_reused=a.reuse_continue_bounds,env_loop_required=a.require_env_loop,closed_vm_live_bytes=0,host_events=host,audio=audio))
+  games.append(dict(index=i,run_id=run,movies=movies,layout=layout,motions=motions,wipes=wipes,shakes=shakes,flashes=flashes,final_visual_independent_pixels_equal=visual,boundary=boundary,page_limit_reached=bool(a.until_boundary and not to_boundary),pages=pages,actual_ui_next=True,continue_bounds_reused=a.reuse_continue_bounds,env_loop_required=a.require_env_loop,se_loop_required=a.require_se_loop,closed_vm_live_bytes=0,host_events=host,audio=audio))
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()

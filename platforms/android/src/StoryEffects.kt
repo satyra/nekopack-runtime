@@ -88,9 +88,10 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         try {
             when(kind){
                 "wait"->handler.postDelayed({done()},duration)
-                "env_stop"->{
-                    release("env")
-                    log("stopped",kind,token,if(players.containsKey("env"))1 else 0)
+                "env_stop","se_stop"->{
+                    val channel=kind.removeSuffix("_stop")
+                    release(channel)
+                    log("stopped",kind,token,if(players.containsKey(channel))1 else 0)
                     players["bgm"]?.first?.let{if(it.isPlaying)log("peer_playing","bgm",token,it.currentPosition.toLong())}
                     done()
                 }
@@ -175,13 +176,13 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     player.setOnPreparedListener{
                         if(!closed && players[kind]?.first===it){
                             try{
-                                if(kind=="env"){
+                                if(kind=="env" || kind=="se"){
                                     it.isLooping=meta.getBoolean("loop")
                                     val percent=meta.getInt("volume_percent");val gain=percent/100f
                                     it.setVolume(gain,gain);log("gain",kind,token,percent.toLong())
                                 }else it.isLooping=kind=="bgm"
                                 it.start();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong())
-                                if(kind=="env"){
+                                if(kind=="env" || kind=="se"){
                                     log("looping",kind,token,if(it.isLooping)1 else 0)
                                     players["bgm"]?.first?.let{peer->if(peer.isPlaying)log("peer_playing","bgm",token,peer.currentPosition.toLong())}
                                 }
@@ -193,9 +194,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                         if(closed||players[kind]?.first!==player||!player.isPlaying)return
                                         val position=player.currentPosition.toLong();samples++
                                         log("progress",kind,token,position)
-                                        if(kind=="env" && position<previousPosition)log("looped",kind,token,position)
+                                        if((kind=="env" || kind=="se") && position<previousPosition)log("looped",kind,token,position)
                                         previousPosition=position
-                                        if(kind=="env" || (position==0L&&samples<25))handler.postDelayed(this,200)
+                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples<25))handler.postDelayed(this,200)
                                     }
                                 },200)}
                             catch(error:Throwable){failure(error)}

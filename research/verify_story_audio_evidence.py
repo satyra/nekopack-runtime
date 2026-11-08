@@ -14,6 +14,7 @@ def main():
    stop_count=sum(effect=='bgm_stop' for page in game['pages']+([game['boundary']['checkpoint']] if game['boundary'] else []) for effect in page['effects'])
    assert sum(e['event']=='begin' and e['kind']=='bgm_stop' for e in host)==stop_count
    assert sum(e['event']=='begin' and e['kind']=='env_stop' for e in host)==sum(effect=='env_stop' for page in game['pages']+([game['boundary']['checkpoint']] if game['boundary'] else []) for effect in page['effects'])
+   assert sum(e['event']=='begin' and e['kind']=='se_stop' for e in host)==sum(effect=='se_stop' for page in game['pages']+([game['boundary']['checkpoint']] if game['boundary'] else []) for effect in page['effects'])
    assert len(begins)==len(game['audio']);audio=[];stops=[]
    for begin,metadata in zip(begins,game['audio']):
     token=begin['token'];assert begin['kind']==metadata['kind']
@@ -24,7 +25,7 @@ def main():
     terminal=metadata['ended_in_terminal_span']
     assert progress or completed or replacement is not None or terminal
     audio.append(dict(token=token,kind=begin['kind'],progress_observed=progress,completed_after_duration=completed,replaced_by_token=replacement,terminal_span_only=terminal and not progress and not completed and replacement is None))
-   for begin in [e for e in host if e['event']=='begin' and e['kind'] in ['bgm_stop','env_stop']]:
+   for begin in [e for e in host if e['event']=='begin' and e['kind'] in ['bgm_stop','env_stop','se_stop']]:
     acks=[e for e in host if e['event']=='ack' and e['token']==begin['token']];assert len(acks)==1
     v.verify_channel_stop(host,begin,acks[0],begin['kind'].removesuffix('_stop'));stops.append(dict(token=begin['token'],ack_elapsed_ms=acks[0]['value'],release_before_ack=True,channel=begin['kind'].removesuffix('_stop'),no_late_released_channel_events=True))
    games.append(dict(index=game['index'],audio=audio,stops=stops))

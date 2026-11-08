@@ -1,10 +1,10 @@
-"""BLESS-only regression to a probe-triggered background while the real environment audio is playing."""
+"""BLESS-only regression to an ADB Home-triggered background while the real looping audio is playing."""
 import argparse,hashlib,json,re,subprocess,time,uuid,xml.etree.ElementTree as ET
 from pathlib import Path
 p=argparse.ArgumentParser()
 for n in ['adb','desktop','output']:p.add_argument('--'+n,type=Path,required=True)
-p.add_argument('--serial',required=True);p.add_argument('--page',type=int,default=564);a=p.parse_args();assert a.page>0
-prefix=[str(a.adb),'-s',a.serial];pkg='org.nekopack.probe';run='env_cancel_'+uuid.uuid4().hex
+p.add_argument('--channel',choices=['env','se'],default='env');p.add_argument('--serial',required=True);p.add_argument('--page',type=int,default=564);a=p.parse_args();assert a.page>0
+prefix=[str(a.adb),'-s',a.serial];pkg='org.nekopack.probe';run=a.channel+'_cancel_'+uuid.uuid4().hex
 
 def adb(*args):return subprocess.check_output(prefix+list(args),timeout=90)
 def read(name):return adb('exec-out','run-as',pkg,'cat',f'files/{run}/{name}')
@@ -42,9 +42,9 @@ for n in range(1,a.page+1):
  pages.append(dict(sequence=n,source=page['source'],line=page['line'],metadata_sha256=hashlib.sha256(raw).hexdigest()))
  if n<a.page:tap('继续')
 before=[json.loads(line) for line in read('host-events.jsonl').splitlines()]
-env=next(e for e in reversed(before) if e['event']=='playing' and e['kind']=='env');token=env['token']
+env=next(e for e in reversed(before) if e['event']=='playing' and e['kind']==a.channel);token=env['token']
 assert env['value']>0
-assert any(e['event']=='gain' and e['token']==token and e['value']==50 for e in before)
+assert any(e['event']=='gain' and e['token']==token and e['value']==(50 if a.channel=='env' else 100) for e in before)
 assert any(e['event']=='looping' and e['token']==token and e['value']==1 for e in before)
 assert any(e['event']=='progress' and e['token']==token and e['value']>0 for e in before)
 assert not any(e['event']=='completed' and e['token']==token for e in before)
@@ -62,5 +62,5 @@ for name in [f'page-{a.page+1}.json','error.txt','boundary.json']:assert b'No su
 host=[json.loads(line) for line in read('host-events.jsonl').splitlines()];assert host[-1]['event']=='released' and host[-1]['value']==0
 assert b'.ogg' not in adb('shell','run-as',pkg,'ls',f'files/{run}')
 movie=[json.loads(line) for line in read('movie-8-events.jsonl').splitlines()];assert movie[-1]['event']=='closed' and movie[-1]['reason']==2 and movie[-1]['error'] is None
-result=dict(scope=f'BLESS real title-to-page{a.page}; actual Home key while environment audio is playing; onPause ends session, not resumable save',execution='native ARM64',device=device,run_id=run,build=build,pages=pages,target_page=a.page,environment_token=token,environment_before_pause=[e for e in before if e['token']==token],pause=pause,host_events=host,movie_end=movie[-1],vm_live_bytes=0,no_late_audio_after_close=True)
-a.output.write_text(json.dumps(result,indent=2)+'\n');print('PASS BLESS active environment cancellation and VM cleanup',flush=True)
+result=dict(scope=f'BLESS real title-to-page{a.page}; actual Home key while {a.channel} audio is playing; onPause ends session, not resumable save',execution='native ARM64',device=device,run_id=run,build=build,pages=pages,target_page=a.page,channel=a.channel,**({"environment_token":token,"environment_before_pause":[e for e in before if e['token']==token]} if a.channel=='env' else {"sound_effect_token":token,"sound_effect_before_pause":[e for e in before if e['token']==token]}),pause=pause,host_events=host,movie_end=movie[-1],vm_live_bytes=0,no_late_audio_after_close=True)
+a.output.write_text(json.dumps(result,indent=2)+'\n');print('PASS BLESS active',a.channel,'cancellation and VM cleanup',flush=True)

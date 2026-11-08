@@ -26,14 +26,15 @@ class AudioEvidence(unittest.TestCase):
   module.verify_bgm_stop(events+[dict(event='progress',kind='voice',token=3,value=100)],begin,ack)
   for event in ['progress','completed']:
    with self.assertRaises(AssertionError):module.verify_bgm_stop(events+[dict(playing,event=event)],begin,ack)
- def test_environment_stop_rejects_late_loop_but_preserves_bgm_progress(self):
-  playing=dict(event='playing',kind='env',token=1,value=3994)
-  begin=dict(event='begin',kind='env_stop',token=2,value=0)
-  stopped=dict(begin,event='stopped');ack=dict(begin,event='ack')
-  events=[playing,begin,stopped,ack,dict(event='progress',kind='bgm',token=3,value=100)]
-  module.verify_channel_stop(events,begin,ack,'env')
-  for event in ['progress','completed','looped']:
-   with self.assertRaises(AssertionError):module.verify_channel_stop(events+[dict(playing,event=event)],begin,ack,'env')
+ def test_loop_channel_stop_rejects_late_events_but_preserves_bgm_progress(self):
+  for channel in ['env','se']:
+   playing=dict(event='playing',kind=channel,token=1,value=3994)
+   begin=dict(event='begin',kind=channel+'_stop',token=2,value=0)
+   stopped=dict(begin,event='stopped');ack=dict(begin,event='ack')
+   events=[playing,begin,stopped,ack,dict(event='progress',kind='bgm',token=3,value=100)]
+   module.verify_channel_stop(events,begin,ack,channel)
+   for event in ['progress','completed','looped']:
+    with self.assertRaises(AssertionError):module.verify_channel_stop(events+[dict(playing,event=event)],begin,ack,channel)
  def test_zero_position_completion_requires_elapsed_duration_and_matching_token(self):
   start=dict(event='playing',token=6,value=324,time_ms=1000)
   self.assertFalse(module.completed_audio([start],6))

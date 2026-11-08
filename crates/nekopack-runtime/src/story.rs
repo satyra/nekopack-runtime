@@ -94,6 +94,7 @@ pub struct HostEffect {
     pub name: String,
     pub duration_ms: u64,
     pub movie_left_skip: bool,
+    pub audio_loop: bool,
     pub payload: Vec<u8>,
 }
 impl HostEffect {
@@ -105,7 +106,16 @@ impl HostEffect {
             .map(|c| format!(",\"checkpoint\":{c}"))
             .unwrap_or_default();
         if self.kind == "env" {
-            extra.push_str(",\"loop\":true,\"volume_percent\":50");
+            extra.push_str(&format!(
+                ",\"loop\":{},\"volume_percent\":50",
+                self.audio_loop
+            ));
+        }
+        if self.kind == "se" {
+            extra.push_str(&format!(
+                ",\"loop\":{},\"volume_percent\":100",
+                self.audio_loop
+            ));
         }
         if self.kind == "movie" {
             extra.push_str(&format!(",\"movie_left_skip\":{}", self.movie_left_skip));
@@ -417,7 +427,7 @@ impl<R: Read + Seek> StorySession<R> {
         let (duration, payload) = match kind {
             "fade" => (duration_ms(name)?, self.render()?),
             "wait" | "bgm_fade" => (duration_ms(name)?, Vec::new()),
-            "bgm_stop" | "env_stop" => (0, Vec::new()),
+            "bgm_stop" | "env_stop" | "se_stop" => (0, Vec::new()),
             "bgm" | "env" | "se" | "voice" => {
                 let directory = match kind {
                     "bgm" => "sound/bgm",
@@ -440,6 +450,7 @@ impl<R: Read + Seek> StorySession<R> {
             name: name.into(),
             duration_ms: duration,
             movie_left_skip: false,
+            audio_loop: matches!(kind, "env" | "bgm"),
             payload,
         });
         Ok(())
@@ -729,6 +740,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     name: name.into(),
                                     duration_ms: 0,
                                     movie_left_skip: args.len() == 2,
+                                    audio_loop: false,
                                     payload: Vec::new(),
                                 });
                                 return Ok(());
@@ -807,6 +819,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     name: normalized,
                                     duration_ms: spec.duration_ms(),
                                     movie_left_skip: false,
+                                    audio_loop: false,
                                     payload: target,
                                 });
                                 return Ok(());
@@ -850,6 +863,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     name: options.join(" "),
                                     duration_ms: u64::from(motion.duration_ms()),
                                     movie_left_skip: false,
+                                    audio_loop: false,
                                     payload: target,
                                 });
                                 return Ok(());
@@ -912,6 +926,7 @@ impl<R: Read + Seek> StorySession<R> {
                                     name: name.into(),
                                     duration_ms: duration,
                                     movie_left_skip: false,
+                                    audio_loop: false,
                                     payload: target,
                                 });
                                 self.wipe = Some(wipe);
@@ -939,7 +954,38 @@ impl<R: Read + Seek> StorySession<R> {
                             }
                             self.presented = Some(self.render()?);
                         }
-                        "bgm" | "se" | "wait" => {
+                        "se" => {
+                            if args.is_empty() {
+                                self.effects.push("se_stop".into());
+                                if self.host_mode {
+                                    self.emit("se_stop", "")?;
+                                    return Ok(());
+                                }
+                            } else {
+                                let name = std::str::from_utf8(&args[0])?;
+                                if name.is_empty()
+                                    || ["loop", "once", "fade", "volume", "pan"].contains(&name)
+                                {
+                                    return Err("unsupported sound effect arguments".into());
+                                }
+                                let looping = match args.as_slice() {
+                                    [_] => false,
+                                    [_, option] if option == b"loop" => true,
+                                    [_, option] if option == b"once" => false,
+                                    _ => return Err("unsupported sound effect arguments".into()),
+                                };
+                                self.effects.push(format!(
+                                    "se {name}{}",
+                                    if looping { " loop" } else { "" }
+                                ));
+                                if self.host_mode {
+                                    self.emit("se", name)?;
+                                    self.pending_effect.as_mut().unwrap().audio_loop = looping;
+                                    return Ok(());
+                                }
+                            }
+                        }
+                        "bgm" | "wait" => {
                             if args.len() != 1 {
                                 return Err("preview effect requires one argument".into());
                             }
@@ -1320,6 +1366,7 @@ mod tests {
             name: "MASK".into(),
             duration_ms: 100,
             movie_left_skip: false,
+            audio_loop: false,
             payload: vec![],
         });
         let before = s.machine.steps();
@@ -1676,6 +1723,66 @@ mod tests {
         std::io::Cursor::new(bytes)
     }
 
+    #[test]
+    fn sound_effect_loop_once_and_stop_are_ordered_and_nonblocking() {
+        let mut s =
+            session(b".se knock\nfirst\n.se knock loop\nsecond\n.se knock once\n.se\n.se\nthird");
+        s.store = DatGame::mount([audio_pack(b"sound/se", b"knock.ogg")]).unwrap();
+        s.enable_host_effects();
+        for (token, looping) in [(1, false), (2, true), (3, false)] {
+            let packet = s.poll_packet().unwrap();
+            let e = s.pending_effect.as_ref().unwrap();
+            assert_eq!(e.kind, "se");
+            assert_eq!(e.payload, b"OggS");
+            assert_eq!(e.audio_loop, looping);
+            assert!(String::from_utf8_lossy(&packet)
+                .contains(&format!("\"loop\":{looping},\"volume_percent\":100")));
+            let steps = s.machine.steps();
+            assert_eq!(s.poll_packet().unwrap(), packet);
+            assert!(s.acknowledge_effect(token + 1).is_err());
+            assert_eq!(s.machine.steps(), steps);
+            s.acknowledge_effect(token).unwrap();
+            if token < 3 {
+                s.acknowledge_text(token).unwrap();
+            }
+        }
+        for token in [4, 5] {
+            let e = s.pending_effect.as_ref().unwrap();
+            assert_eq!(e.kind, "se_stop");
+            assert!(e.payload.is_empty());
+            assert_eq!(e.duration_ms, 0);
+            s.acknowledge_effect(token).unwrap();
+        }
+        assert_eq!(s.page.as_ref().unwrap().text, "third");
+        assert_eq!(
+            s.page.as_ref().unwrap().effects,
+            ["se knock", "se_stop", "se_stop"]
+        );
+    }
+    #[test]
+    fn sound_effect_invalid_options_and_missing_resource_fail() {
+        for text in [
+            b".se loop".as_slice(),
+            b".se knock fade",
+            b".se knock loop once",
+            b".se knock 50",
+        ] {
+            for host in [false, true] {
+                let mut s = session(text);
+                if host {
+                    s.enable_host_effects();
+                }
+                assert!(s.poll_packet().is_err());
+                assert!(s.failed);
+                assert!(s.pending_effect.is_none());
+            }
+        }
+        let mut s = session(b".se missing loop");
+        s.enable_host_effects();
+        assert!(s.poll_packet().is_err());
+        assert!(s.failed);
+        assert!(s.pending_effect.is_none());
+    }
     #[test]
     fn environment_audio_uses_own_resource_channel_and_ordered_acknowledgements() {
         let mut s =

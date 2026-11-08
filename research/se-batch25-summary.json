@@ -1,0 +1,29 @@
+{
+  "scope": "BLESS bounded 793-page native ARM64 regression, ordinary ADB without root",
+  "pages": 793,
+  "new_native_pages": 187,
+  "unchanged_desktop_prefix": 785,
+  "motion_frames": 88,
+  "audio_requests": 493,
+  "effect_snapshots": 42,
+  "se_loop_wraps": 5,
+  "vm_live_bytes": 0,
+  "apk_sha256": "ed03a980094c5a1c2a8e8d1726cf9777b51ecab664eff7098172fb53e22de967",
+  "reports": {
+    "original": "10e640a3581773849cb1d395a280d02b70774803f2a26582e055d1c948737032",
+    "desktop": "35772e9cf766cccc13165edee3f83c9781ce44d088f296102d2b6bfb171db6df",
+    "native": "2e3d03b71edeed989e2aa52e195dd94df8639a21edc57b57be68096a6d0c2adf",
+    "cancel": "82eb794ea6f77299006e61a9723049a515360941385482d9fc9972d7e75ce903",
+    "frames": "2ff0895f0fa6e03edd77486b0c9608f0fe04bd58d3eff0b6d8467d0875bed27c",
+    "layers": "3e5bea7e3cdeaacbd5aceae719129ee19973610dc0adf90fd063c63648f12d51",
+    "effects": "d22c376bfa848901a179d8237b3e395ddf50ea3081381f9fc25eb6eb136798cb",
+    "evidence": "e454a5a02a87b73da72ea54617854795256fa576cd42a83301f2361551cd28b6",
+    "audio-reference": "d4f2ccc473bfedc64a6ee5cea892b1e7f0908cb71caacb2df86cbac9a99418a7",
+    "audio-evidence": "1356e8e3daff2932d9426ad527cc1fde3e8a5f5adc186ac269566bde8091f096"
+  },
+  "local_log_sha256": {
+    "tests": "11b6edf659f482f29505cb01f8e7f567c946036e4db8e794045de7e2a7802a60",
+    "clippy": "aab7c383482ab184daa399d0e3a480e479b0445966ca757e84247b7ae313dddf",
+    "build": "a85a619b9bb036a407f5553c4313aa6e5b2698d9df08927c2903a2b8e4f533d4"
+  }
+}

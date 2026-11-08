@@ -15,6 +15,7 @@ def main():
    if page['voice']:wanted.add(('voice',page['voice']))
    for effect in page['effects']:
     kind,_,name=effect.partition(' ')
+    if kind=='se' and name.endswith(' loop'):name=name.removesuffix(' loop')
     if kind in ['bgm','env','se'] and not name.startswith('fade '):wanted.add((kind,name))
   rows={}
   for kind,name in sorted(wanted):
