@@ -1,0 +1,67 @@
+{
+  "scope": "BLESS static raw DAT and pinned original PE evidence, not dynamic original rendering parity",
+  "message_sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+  "config_sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "native": [
+    {
+      "va": "0x406e37",
+      "instruction": "push 0x40b944"
+    },
+    {
+      "va": "0x406e3c",
+      "instruction": "push 0x54832a"
+    },
+    {
+      "va": "0x40b947",
+      "instruction": "call 0x446a34"
+    },
+    {
+      "va": "0x446a34",
+      "instruction": "push 0x584598"
+    },
+    {
+      "va": "0x446a39",
+      "instruction": "call 0x4c03ac"
+    },
+    {
+      "va": "0x446a3f",
+      "instruction": "ret"
+    },
+    {
+      "va": "0x406e55",
+      "instruction": "push 0x40b950"
+    },
+    {
+      "va": "0x406e5a",
+      "instruction": "push 0x548336"
+    },
+    {
+      "va": "0x40b953",
+      "instruction": "call 0x446a40"
+    },
+    {
+      "va": "0x446a40",
+      "instruction": "push 0x7d0"
+    },
+    {
+      "va": "0x446a4c",
+      "instruction": "call 0x4c04e8"
+    }
+  ],
+  "handle_release_evidence": "research/original-bgm-stop-batch13-verification.json",
+  "facts": {
+    "default_speed": 50,
+    "default_keep_voice": 1,
+    "progress": "floor(active_ms*(speed+10)/1000), instant at speed 100",
+    "incomplete_next": "set maximum display speed without returning from message",
+    "complete_next": "return from message; stop voice for 0, preserve for 1, FadeVoice for 2",
+    "stop_voice": "direct call to the same verified handle-release routine 0x4c03ac used by empty-name sound stop",
+    "fade_voice": "entry passes 2000 to shared fade function; full envelope/completion behavior not verified here"
+  },
+  "limits": [
+    "Original Glyph.Build/Build2 layout is not implemented; current plain text reveals Unicode scalar values",
+    "FadeVoice full envelope/completion remains unverified; KeepVoice=2 is rejected",
+    "Auto, skip, backlog, rich text, MuteBGM and persistent settings remain outside this batch"
+  ]
+}

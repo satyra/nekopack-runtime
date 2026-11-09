@@ -162,6 +162,7 @@ class MainActivity : Activity() {
         val next=Button(this);next.text="继续";next.isEnabled=false;val controls=LinearLayout(this);controls.addView(next,LinearLayout.LayoutParams(0,-2,1f))
         val close=Button(this);close.text="结束运行";controls.addView(close,LinearLayout.LayoutParams(0,-2,1f));layout.addView(controls)
         val settings=Button(this);settings.text="音量";settings.isEnabled=false;controls.addView(settings,LinearLayout.LayoutParams(0,-2,1f))
+        val textSettings=Button(this);textSettings.text="文字";textSettings.isEnabled=false;controls.addView(textSettings,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -169,6 +170,12 @@ class MainActivity : Activity() {
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
         lateinit var show:(ByteArray)->Unit
+        lateinit var dialogue:DialoguePresentation
+        var textConfig:JSONObject?=null
+        fun applyTextConfig(bytes:ByteArray){
+            val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
+            runOnUiThread{timeline.post{if(!storyClosing){textConfig=config;textSettings.isEnabled=true;File(root,"text-config-events.jsonl").appendText(config.toString()+"\n")}}}
+        }
         var audioConfig:JSONObject?=null
         fun applyAudioConfig(bytes:ByteArray) {
             val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
@@ -184,6 +191,15 @@ class MainActivity : Activity() {
             runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
         lifecycleFailure={error->worker.execute{fail(error)}}
+        dialogue=DialoguePresentation(text,timeline,root,{op,token,elapsed,done->
+            worker.execute{try{if(!storyClosing){
+                val state=JSONObject(String(story(intArrayOf(),op,token,elapsed),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
+                runOnUiThread{timeline.post{if(!storyClosing)done(state)}}
+            }}catch(error:Throwable){fail(error)}}
+        },{enabled->next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false))},{stopVoice->
+            storyEffects?.stopMotion();storyEffects?.finishDialogue(sequence,stopVoice);val token=sequence
+            worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
+        })
         storyEffects=StoryEffects(this,image,overlay,root,timeline,{kind,token,elapsed,ready->
             worker.execute{try{
                 if(!storyClosing && (kind!="motion" || storyEffects!!.isMotionActive(token))){
@@ -252,7 +268,7 @@ class MainActivity : Activity() {
                     val token=metadata.getLong("sequence")
                     val bitmap=BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid story bitmap")
                     File(root,"page-$token.json").writeText(metadata.toString());File(root,"page-$token.png").writeBytes(payload)
-                    runOnUiThread {timeline.post(cancel={bitmap.recycle()}){if(!isDestroyed&&!storyClosing){sequence=token;text.text=metadata.getString("speaker")+"\n"+metadata.getString("text");next.isEnabled=true
+                    runOnUiThread {timeline.post(cancel={bitmap.recycle()}){if(!isDestroyed&&!storyClosing){sequence=token;dialogue.show(token,metadata.getString("speaker"))
                         if(metadata.has("motion")){
                             storyEffects!!.runMotion(token)
                         }else image.setImageBitmap(bitmap)
@@ -279,12 +295,24 @@ class MainActivity : Activity() {
                     story(opened.map{it.fd}.toIntArray(),0,0)
                 }finally{opened.forEach{it.close()}}
                 applyAudioConfig(story(intArrayOf(),9,0))
+                applyTextConfig(story(intArrayOf(),13,0))
                 show(packet)
             }catch(error:Throwable){fail(error)}
         }
-        next.setOnClickListener {
-            next.isEnabled=false;storyEffects?.stopMotion();storyEffects?.stopVoice();val token=sequence
-            worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
+        next.setOnClickListener {dialogue.click()}
+        textSettings.setOnClickListener {
+            val config=textConfig!!;val panel=LinearLayout(this);panel.orientation=LinearLayout.VERTICAL
+            val label=TextView(this);label.text="文字速度 ${config.getInt("speed")}%（下一页生效）";panel.addView(label)
+            val speed=android.widget.SeekBar(this);speed.max=100;speed.progress=config.getInt("speed");speed.contentDescription="text_speed";panel.addView(speed)
+            fun update(field:Long,value:Long){worker.execute{try{if(!storyClosing)applyTextConfig(story(intArrayOf(),14,field,value))}catch(error:Throwable){fail(error)}}}
+            speed.setOnSeekBarChangeListener(object:android.widget.SeekBar.OnSeekBarChangeListener{
+                override fun onStartTrackingTouch(bar:android.widget.SeekBar){}
+                override fun onProgressChanged(bar:android.widget.SeekBar,value:Int,fromUser:Boolean){label.text="文字速度 $value%（下一页生效）"}
+                override fun onStopTrackingTouch(bar:android.widget.SeekBar){update(0,bar.progress.toLong())}
+            })
+            val keep=android.widget.Switch(this);keep.text="换页保留语音";keep.contentDescription="keep_voice";keep.isChecked=config.getInt("keep_voice")==1;panel.addView(keep)
+            keep.setOnCheckedChangeListener{_,checked->update(1,if(checked)1 else 0)}
+            android.app.AlertDialog.Builder(this).setTitle("文字（当前会话）").setView(panel).setPositiveButton("返回剧情",null).show()
         }
         settings.setOnClickListener {
             val config=audioConfig!!
@@ -305,7 +333,7 @@ class MainActivity : Activity() {
             android.app.AlertDialog.Builder(this).setTitle("音量（当前会话）").setView(panel).setPositiveButton("返回剧情",null).show()
         }
         close.setOnClickListener {
-            next.isEnabled=false;close.isEnabled=false;storyClosing=true;movieHost?.close();storyEffects?.close()
+            next.isEnabled=false;close.isEnabled=false;storyClosing=true;dialogue.stop();movieHost?.close();storyEffects?.close()
             worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
         }
     }

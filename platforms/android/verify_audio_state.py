@@ -33,8 +33,11 @@ def main():
         while time.monotonic() < deadline:
             result = private(name)
             if result.startswith(b'{'):
-                return json.loads(result)
-            for entry in adb('shell', 'run-as', package, 'ls', f'files/{run}').decode().splitlines():
+                page=re.fullmatch(r'page-(\d+)\.json',name)
+                text=private(f'text-{page[1]}.json') if page else b'{"complete":true}'
+                if text.startswith(b'{') and json.loads(text)['complete']:return json.loads(result)
+            paths=adb('shell','run-as',package,'sh','-c',f"'printf \"%s\\n\" files/{run}/movie-*-events.jsonl'")
+            for entry in [path.rsplit('/',1)[-1] for path in paths.decode().splitlines()]:
                 if re.fullmatch(r'movie-\d+-events.jsonl', entry) and entry not in skipped_movies:
                     events = [json.loads(line) for line in private(entry).splitlines()]
                     if any(e['event'] == 'progress' and e['head'] > 0 for e in events) and not any(e['event'] == 'closed' for e in events):

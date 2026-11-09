@@ -84,8 +84,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         for(kind in focusPaused) {
             val player=players.getValue(kind).first
             player.start()
+            val playbackStarted=SystemClock.elapsedRealtime()
             val prepared=pendingStart.remove(kind)
-            log(if(prepared!=null)"playing" else "resumed",kind,audioTokens.getValue(kind),player.duration.toLong())
+            log(if(prepared!=null)"playing" else "resumed",kind,audioTokens.getValue(kind),player.duration.toLong(),playbackStarted)
             prepared?.invoke()
         }
         focusPaused.clear();if(!timeline.paused)bgmAnimator?.resume()
@@ -110,8 +111,8 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             }
         }
     }
-    private fun log(event:String,kind:String,token:Long,extra:Long=0) {
-        File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",SystemClock.elapsedRealtime()).put("value",extra).toString()+"\n")
+    private fun log(event:String,kind:String,token:Long,extra:Long=0,observedAt:Long=SystemClock.elapsedRealtime()) {
+        File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",observedAt).put("value",extra).toString()+"\n")
     }
     internal fun lifecycleAudio(event:String){
         val channels=JSONObject()
@@ -152,6 +153,15 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             .put("gain",gains.getValue("bgm").output).put("suspended",focusSuspended).put("token",audioTokens.getValue("bgm"))
     }
     fun stopVoice(){ release("voice") }
+    fun finishDialogue(sequence:Long,stop:Boolean){
+        val player=players["voice"]?.first
+        val event=JSONObject().put("sequence",sequence).put("stop",stop).put("voice_token",audioTokens["voice"] ?: -1)
+            .put("player",player?.let{System.identityHashCode(it)} ?: 0).put("playing_before",player?.isPlaying ?: false)
+            .put("position_before",player?.currentPosition ?: -1)
+        if(stop)stopVoice()
+        event.put("retained",player!=null && players["voice"]?.first===player).put("playing_after",players["voice"]?.first?.isPlaying ?: false)
+        File(root,"voice-next-events.jsonl").appendText(event.toString()+"\n")
+    }
     private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
     fun close(){
         if(closed)return
@@ -272,12 +282,13 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                 }else {it.isLooping=false;gains[kind]=AudioGain(1f)}
                                 applyGain(kind)
                                 if(focusSuspended||timeline.paused){focusPaused.add(kind);pendingStart[kind]={done()};log("focus_pending",kind,token)}
-                                else {it.start();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong())}
+                                else {it.start();val playbackStarted=SystemClock.elapsedRealtime();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong(),playbackStarted)}
                                 if(kind=="env" || kind=="se"){
                                     log("looping",kind,token,if(it.isLooping)1 else 0)
                                     players["bgm"]?.first?.let{peer->if(peer.isPlaying)log("peer_playing","bgm",token,peer.currentPosition.toLong())}
                                 }
                                 if(!focusSuspended&&!timeline.paused)done()
+                                val sampleDelay=if(kind=="env" || (kind=="se"&&player.isLooping))200L else 50L
                                 val progress=object:Runnable {
                                     private var samples=0
                                     private var previousPosition=-1L
@@ -288,9 +299,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                         log("progress",kind,token,position)
                                         if((kind=="env" || kind=="se") && position<previousPosition)log("looped",kind,token,position)
                                         previousPosition=position
-                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples<25))timeline.post(200){run()}
+                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples*sampleDelay<5000))timeline.post(sampleDelay){run()}
                                     }
-                                };timeline.post(200){progress.run()}}
+                                };timeline.post(sampleDelay){progress.run()}}
                             catch(error:Throwable){failure(error)}
                         }
                     }

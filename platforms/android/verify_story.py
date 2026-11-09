@@ -41,6 +41,7 @@ def main():
  p.add_argument('--audio-reference',type=Path)
  p.add_argument('--until-boundary',action='store_true')
  p.add_argument('--allow-page-limit',action='store_true')
+ p.add_argument('--text-speed',type=int,choices=[0,100],help='Explicit UI setting for bounded diagnostics; normal regression keeps game defaults')
  p.add_argument('--reuse-continue-bounds',action='store_true')
  p.add_argument('--require-env-loop',action='store_true')
  p.add_argument('--require-se-loop',action='store_true')
@@ -55,10 +56,13 @@ def main():
  prefix=[str(a.adb),'-s',a.serial];package='org.nekopack.probe'
  def adb(*args):return subprocess.check_output(prefix+list(args),timeout=90)
  def private(run,name):return adb('exec-out','run-as',package,'cat',f'files/{run}/{name}')
+ def movie_names(run,suffix):
+  raw=adb('shell','run-as',package,'sh','-c',f"'printf \"%s\\n\" files/{run}/movie-*-{suffix}'")
+  return [name.rsplit('/',1)[-1] for name in raw.decode().splitlines()]
  skipped_movies=set()
  def skip_movie(run):
   if a.movie_completion!='secondary':return
-  names=adb('shell','run-as',package,'ls','-1',f'files/{run}').decode().splitlines()
+  names=movie_names(run,'events.jsonl')
   for name in names:
    if not re.fullmatch(r'movie-\d+-events.jsonl',name):continue
    key=(run,name)
@@ -69,8 +73,10 @@ def main():
   deadline=time.monotonic()+(700 if a.movie_completion else 45)
   while time.monotonic()<deadline:
    raw=private(run,f'page-{n}.json')
-   if raw.startswith(b'{'):return json.loads(raw)
-   skip_movie(run)
+   if raw.startswith(b'{'):
+    text=private(run,f'text-{n}.json')
+    if text.startswith(b'{') and json.loads(text)['complete']:return json.loads(raw)
+   else:skip_movie(run)
    error=private(run,'error.txt')
    if b'No such file' not in error:raise RuntimeError(error.decode())
    time.sleep(.3)
@@ -120,10 +126,21 @@ def main():
    if actual!=expected:raise RuntimeError('Android/desktop page metadata mismatch')
    # The file must be stable while the user has not acknowledged this page.
    assert private(run,f'page-{n}.json')==private(run,f'page-{n}.json')
-   png=private(run,f'page-{n}.png');assert png==(a.desktop/str(i)/f'{n-1}.png').read_bytes()
+   png_sha256=adb('shell','run-as',package,'sha256sum',f'files/{run}/page-{n}.png').decode().split()[0]
+   assert png_sha256==hashlib.sha256((a.desktop/str(i)/f'{n-1}.png').read_bytes()).hexdigest(), 'Android/desktop PNG bytes differ'
    source=next(f for f in (a.fixtures/str(i)/'script').iterdir() if f.name.lower()==(actual['source']+'.txt').lower())
    lines=source.read_bytes().split(b'\n');assert lines[actual['line']-1].strip().decode('utf8')==actual['text']
-   pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=hashlib.sha256(png).hexdigest(),metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
+   pages.append(dict(sequence=n,source=actual['source'],line=actual['line'],text_sha256=hashlib.sha256(actual['text'].encode()).hexdigest(),png_sha256=png_sha256,metadata_sha256=hashlib.sha256(json.dumps(actual,sort_keys=True,ensure_ascii=False).encode()).hexdigest(),effects=actual['effects']))
+   if n==1 and a.text_speed is not None:
+    tap('文字');adb('shell','uiautomator','dump','/sdcard/neko-story-speed.xml')
+    tree=ET.fromstring(adb('shell','cat','/sdcard/neko-story-speed.xml'))
+    slider=next(node for node in tree.iter('node') if node.get('content-desc')=='text_speed')
+    x,y,r,b=map(int,re.findall(r'\d+',slider.get('bounds')));y=(y+b)//2
+    adb('shell','input','swipe',str((x+r)//2),str(y),str(r-1 if a.text_speed==100 else x+1),str(y),'250')
+    deadline=time.monotonic()+15
+    while json.loads(private(run,'text-config-events.jsonl').splitlines()[-1])['speed']!=a.text_speed:
+     assert time.monotonic()<deadline,'text setting not applied';time.sleep(.1)
+    tap('返回剧情')
    if 'motion' in actual:
     assert a.motion_captures, 'motion pages require frame capture and verification'
     deadline=time.monotonic()+20
@@ -192,7 +209,7 @@ def main():
    assert b'No such file' in private(run,f'page-{count+1}.json')
   movies=[]
   if a.movie_completion:
-   names=adb('shell','run-as',package,'ls','-1',f'files/{run}').decode().splitlines()
+   names=movie_names(run,'info.json')
    for name in names:
     if not re.fullmatch(r'movie-\d+-info.json',name):continue
     token=int(name.split('-')[1]);meta=json.loads(private(run,f'effect-{token}.json'))
@@ -362,6 +379,6 @@ def main():
   print('PASS game',i,flush=True)
  device={k:adb('shell','getprop',k).decode().strip() for k in ['ro.product.cpu.abilist','ro.dalvik.vm.native.bridge','ro.build.version.sdk']}
  device['kernel_machine']=adb('shell','uname','-m').decode().strip()
- result=dict(scope=('bounded continuous pages; unsupported boundaries or explicit reference page limit' if a.until_boundary else 'two text pages per game; host-driven audio and timed fade') if a.audio_reference else 'host-driven story pages; audio resource and timing verification omitted',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,games=games)
+ result=dict(scope=('bounded continuous pages; unsupported boundaries or explicit reference page limit' if a.until_boundary else 'two text pages per game; host-driven audio and timed fade') if a.audio_reference else 'host-driven story pages; audio resource and timing verification omitted',execution='translated ARM64' if device['kernel_machine']=='x86_64' else ('native ARM64' if device['kernel_machine']=='aarch64' and device['ro.dalvik.vm.native.bridge'] in ('','0') else 'unclassified; inspect properties'),device=device,build=build,text_speed_override=a.text_speed,games=games)
  a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 if __name__=='__main__':main()

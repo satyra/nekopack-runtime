@@ -1,0 +1,129 @@
+{
+  "apk_sha256": "567a75e800fb3f6188ad2fed89411a9d65cbd26096c6c27ec2d99b3ffaf75a08",
+  "execution": "translated ARM64",
+  "continuous_regression_passed": false,
+  "planned_continuous_pages": 793,
+  "text_and_png_pages_verified": 542,
+  "continuous_audio_failure": {
+    "page": 542,
+    "reason": "audio did not advance within the observation window",
+    "events": [
+      {
+        "event": "begin",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308534,
+        "value": 0
+      },
+      {
+        "event": "gain",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308547,
+        "value": 100
+      },
+      {
+        "event": "playing",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308548,
+        "value": 372
+      },
+      {
+        "event": "looping",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308548,
+        "value": 0
+      },
+      {
+        "event": "peer_playing",
+        "kind": "bgm",
+        "token": 352,
+        "time_ms": 5308548,
+        "value": 19293
+      },
+      {
+        "event": "ack",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308548,
+        "value": 14
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308598,
+        "value": 0
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308650,
+        "value": 0
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308700,
+        "value": 0
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308751,
+        "value": 0
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308803,
+        "value": 0
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308853,
+        "value": 0
+      },
+      {
+        "event": "progress",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308905,
+        "value": 0
+      },
+      {
+        "event": "completed",
+        "kind": "se",
+        "token": 352,
+        "time_ms": 5308916,
+        "value": 0
+      }
+    ],
+    "duration_ms": 372,
+    "completion_elapsed_ms": 368,
+    "strict_audio_evidence_passed": false
+  },
+  "retained_playing_voices": 389,
+  "lifecycle_cycles": 5,
+  "keep_voice_cases": [
+    1,
+    0
+  ],
+  "vm_live_bytes": 0,
+  "reports": {
+    "original": "223b7e896dfb7615a47b71bc03de101a8a192a9b62d26cfe02eb48cb48af5b81",
+    "translated": "f0d34377d064bbb53c64ee3599b7eb971eaa7722ae9ce0f9e12c29e0d04e05d9",
+    "lifecycle": "8272c62ae7130cf2b4114c642a24237a64e28d73502bd834b09e0cb23880e4e1",
+    "audio-state": "318de80355680ccf40238b645be7e29a6cb1e94e729f9138665ce02e52c7155b",
+    "audio-config": "6501feff79673b5274cf21106250cc3f0151dc8bd0449b8dc371f64a31cd8338",
+    "state": "d7d2c41d2a66381fd7a6f2218c0098fb50e4ac1b0d195749b23cfc0fdd577943"
+  }
+}

@@ -182,6 +182,8 @@ pub struct StorySession<R: Read + Seek> {
     sequence: u64,
     failed: bool,
     host_mode: bool,
+    interactive_text: bool,
+    text_reveal: Option<crate::dialogue::Reveal>,
     pending_effect: Option<HostEffect>,
     host_sequence: u64,
     effects: Vec<String>,
@@ -264,6 +266,8 @@ impl<R: Read + Seek> StorySession<R> {
             sequence: 0,
             failed: false,
             host_mode: false,
+            interactive_text: false,
+            text_reveal: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
@@ -290,6 +294,10 @@ impl<R: Read + Seek> StorySession<R> {
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
             return Err("stale or missing dialogue acknowledgement".into());
         }
+        if self.interactive_text && !self.text_reveal.as_ref().is_some_and(|r| r.advance) {
+            return Err("dialogue advance was not granted".into());
+        }
+        self.text_reveal = None;
         self.machine.complete(None)?;
         self.page = None;
         self.motions.clear();
@@ -302,6 +310,77 @@ impl<R: Read + Seek> StorySession<R> {
     /// Enable once before polling; headless fixtures retain their explicit static profile.
     pub fn enable_host_effects(&mut self) {
         self.host_mode = true;
+    }
+    pub fn enable_interactive_text(&mut self) {
+        self.interactive_text = true;
+    }
+    pub fn text_config(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        let (speed, keep) = self.read_text_config()?;
+        Ok(format!("{{\"speed\":{speed},\"keep_voice\":{keep}}}").into_bytes())
+    }
+    fn read_text_config(&mut self) -> Result<(u64, u64), Box<dyn Error>> {
+        if self.failed {
+            return Err("story session stopped after error".into());
+        }
+        let mut values = Vec::new();
+        for field in ["TextSpeed", "KeepVoice"] {
+            self.system.eval("text-config",&format!("if(typeof Config.{field} != \"integer\")throw \"invalid text configuration type\"\nreturn Config.{field}.tostring()"))?;
+            values.push(self.system.result().parse::<u64>()?);
+        }
+        if values[0] > 100 || values[1] > 1 {
+            return Err(
+                "unsupported TextSpeed/KeepVoice; supported ranges are 0..100 and 0..1".into(),
+            );
+        }
+        Ok((values[0], values[1]))
+    }
+    pub fn set_text_config(&mut self, field: u64, value: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        let name = match field {
+            0 if value <= 100 => "TextSpeed",
+            1 if value <= 1 => "KeepVoice",
+            _ => return Err("invalid text configuration update".into()),
+        };
+        self.read_text_config()?;
+        self.system
+            .eval("set-text-config", &format!("Config.{name} = {value}"))?;
+        self.text_config()
+    }
+    /// Poll/click never advances the script. A completed-page click grants one ACK.
+    pub fn text_frame(
+        &mut self,
+        sequence: u64,
+        elapsed: u64,
+        click: bool,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || !self.interactive_text
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+        {
+            return Err("stale or missing interactive dialogue".into());
+        }
+        if self.text_reveal.is_none() {
+            if elapsed != 0 || click {
+                return Err("dialogue must begin with a zero-time frame".into());
+            }
+            let (speed, keep) = self.read_text_config()?;
+            self.text_reveal = Some(crate::dialogue::Reveal::new(
+                self.page.as_ref().unwrap().text.clone(),
+                speed,
+                keep,
+            )?);
+        }
+        // The original reads KeepVoice at NEXT, while TextSpeed is captured on entry.
+        let keep = if click {
+            Some(self.read_text_config()?.1 == 1)
+        } else {
+            None
+        };
+        let state = self.text_reveal.as_mut().unwrap();
+        if let Some(keep) = keep {
+            state.keep_voice = keep;
+        }
+        let advance = state.update(elapsed, click)?;
+        Ok(format!("{{\"sequence\":{sequence},\"elapsed_ms\":{elapsed},\"visible\":{},\"text\":{},\"complete\":{},\"advance\":{advance},\"stop_voice\":{}}}",state.count(),quote(state.visible().as_bytes())?,state.complete(),advance&&!state.keep_voice&&!self.page.as_ref().unwrap().voice.is_empty()).into_bytes())
     }
     pub fn poll_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed {
@@ -385,6 +464,10 @@ impl<R: Read + Seek> StorySession<R> {
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
             return Err("stale or missing dialogue acknowledgement".into());
         }
+        if self.interactive_text && !self.text_reveal.as_ref().is_some_and(|r| r.advance) {
+            return Err("dialogue advance was not granted".into());
+        }
+        self.text_reveal = None;
         self.machine.complete(None)?;
         self.page = None;
         self.motions.clear();
@@ -1128,10 +1211,46 @@ mod tests {
             sequence: 0,
             failed: false,
             host_mode: false,
+            interactive_text: false,
+            text_reveal: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
         }
+    }
+
+    #[test]
+    fn interactive_text_requires_two_phase_input_and_preserves_cached_page() {
+        let mut s = session("一二三四五六\nnext".as_bytes());
+        s.system
+            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1}")
+            .unwrap();
+        s.enable_interactive_text();
+        let packet = s.page().unwrap().packet().unwrap();
+        let n = s.page.as_ref().unwrap().sequence;
+        assert!(s.acknowledge_text(n).is_err());
+        assert!(s.next(n).is_err());
+        assert!(s.text_frame(n, 1, false).is_err());
+        assert!(s.text_frame(n + 1, 0, false).is_err());
+        s.text_frame(n, 0, false).unwrap();
+        let first = String::from_utf8(s.text_frame(n, 100, true).unwrap()).unwrap();
+        assert!(first.contains("\"complete\":true,\"advance\":false"));
+        assert!(first.contains("\"stop_voice\":false"));
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        assert!(s.acknowledge_text(n).is_err());
+        // KeepVoice is consulted at NEXT, unlike the page-entry TextSpeed.
+        s.page.as_mut().unwrap().voice = "voice".into();
+        s.set_text_config(1, 0).unwrap();
+        let second = String::from_utf8(s.text_frame(n, 100, true).unwrap()).unwrap();
+        assert!(second.contains("\"advance\":true,\"stop_voice\":true"));
+        assert!(s.text_frame(n, 100, true).is_err());
+        s.acknowledge_text(n).unwrap();
+        assert!(s.text_frame(n, 100, false).is_err());
+        assert!(s.acknowledge_text(n + 1).is_err());
+        s.text_frame(n + 1, 0, false).unwrap();
+        assert!(s.text_frame(n + 1, 1, false).is_ok());
+        assert!(s.text_frame(n + 1, 0, false).is_err());
+        assert!(s.set_text_config(1, 2).is_err());
     }
 
     #[test]

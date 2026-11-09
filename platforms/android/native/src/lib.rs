@@ -287,10 +287,21 @@ pub unsafe extern "C" fn neko_probe_story(
                         1,
                     )?);
                     state.as_mut().unwrap().enable_host_effects();
+                    state.as_mut().unwrap().enable_interactive_text();
                     state.as_mut().unwrap().poll_packet()
                 }
                 1 => state.as_mut().ok_or("no story session")?.poll_packet(),
                 9 => state.as_mut().ok_or("no story session")?.audio_config(),
+                11 | 12 => state.as_mut().ok_or("no story session")?.text_frame(
+                    sequence,
+                    elapsed_ms,
+                    operation == 12,
+                ),
+                13 => state.as_mut().ok_or("no story session")?.text_config(),
+                14 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .set_text_config(sequence, elapsed_ms),
                 10 => state
                     .as_mut()
                     .ok_or("no story session")?

@@ -43,6 +43,9 @@ def tap(label):
         else:raise AssertionError('visible control not ready: '+label)
     adb('shell','input','tap',*point_cache[label])
 def lifecycle():return events('lifecycle-events.jsonl')
+def text_complete(n):
+    raw=read(f'text-{n}.json')
+    return raw.startswith(b'{') and json.loads(raw)['complete']
 observations=[]
 def cycle(label,already_paused=False,extra=None):
     before=lifecycle();old_count=sum(e['event']=='paused' for e in before)
@@ -118,6 +121,7 @@ if a.destroy_paused:
         page=json.loads(raw)
         assert page==json.loads((Path(a.reference)/'0'/f'{n-1}.json').read_text(encoding='utf8'))
         pages.append(dict(sequence=n,source=page['source'],line=page['line']))
+        wait(lambda:text_complete(n))
         tap('继续')
     wait(lambda:any(e['event']=='progress' and e['head']>0 for e in events(movie_name)))
     adb('shell','input','keyevent','KEYCODE_HOME')
@@ -161,7 +165,8 @@ else:
             frames=[e for e in events('motion-events.jsonl') if e['sequence']==56 and e['event']=='frame']
             assert frames[-1]['finished'] and 250<=frames[-1]['elapsed_ms']<500
             assert frames[-1]['time_ms']-frames[0]['time_ms']>1500
-        if n<61:tap('继续')
+        if n<61:
+            wait(lambda:text_complete(n));tap('继续')
     tap('结束运行')
     wait(lambda:read('closed.txt')==b'closed; VM live bytes=0')
     assert b'.ogg' not in adb('shell','run-as',pkg,'ls',f'files/{run}')

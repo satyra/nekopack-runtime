@@ -47,9 +47,12 @@ movie_skipped=False
 def page_ready(n):
     global movie_skipped
     raw=read(f'page-{n}.json')
-    if raw.startswith(b'{'):return json.loads(raw)
+    if raw.startswith(b'{'):
+        text=read(f'text-{n}.json')
+        if text.startswith(b'{') and json.loads(text)['complete']:return json.loads(raw)
     if n==13 and not movie_skipped:
-        for name in adb('shell','run-as',pkg,'ls',f'files/{run}').decode().splitlines():
+        paths=adb('shell','run-as',pkg,'sh','-c',f"'printf \"%s\\n\" files/{run}/movie-*-events.jsonl'")
+        for name in [path.rsplit('/',1)[-1] for path in paths.decode().splitlines()]:
             if re.fullmatch(r'movie-\d+-events.jsonl',name) and any(e['event']=='progress' and e['head']>0 for e in rows(name)):
                 tap('返回剧情');movie_skipped=True
     return None
