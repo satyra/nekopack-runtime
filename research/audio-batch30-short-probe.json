@@ -1,0 +1,112 @@
+{
+  "scope": "Standalone Android framework adapter probe via app_process; no Rust VM, not ARM64 app validation or acoustic comparison",
+  "machine": "x86_64",
+  "resource": "sound/se/se_024.ogg",
+  "resource_sha256": "7477349264c19667eaf910c865d487edbd7bf8d30b1e958a5f8cebd7a1d4adee",
+  "source_sha256_lf_utf8": {
+    "platforms\\android\\src\\ShortAudio.kt": "e07a34f1ae1c22e8ae6a07a4fd7592d38216a2b4abc3c6804a96b79f862b3954",
+    "platforms\\android\\tests\\ShortAudioProbe.kt": "8990650463cb97a669e482b0aee88eb9ee222c565454fdfcfc28866f67cb6baf"
+  },
+  "evidence": {
+    "rate": 44100,
+    "channels": 2,
+    "frames": 16384,
+    "cases": [
+      {
+        "case": "complete",
+        "heads": [
+          0,
+          940,
+          940,
+          1881,
+          2822,
+          2822,
+          2822,
+          3763,
+          4704,
+          4704,
+          4704,
+          5644,
+          6585,
+          6585,
+          7526,
+          7526,
+          8467,
+          8467,
+          9408,
+          9408,
+          10348,
+          10348,
+          11289,
+          11289,
+          12230,
+          12230,
+          13171,
+          13171,
+          14112,
+          14112,
+          15052,
+          15052,
+          15993,
+          15993,
+          16384,
+          16384
+        ],
+        "completion_callbacks": 1
+      },
+      {
+        "case": "pause_resume",
+        "paused_head": 1881,
+        "heads": [
+          0,
+          940,
+          1881,
+          3762,
+          3762,
+          4703,
+          4703,
+          5644,
+          5644,
+          6585,
+          6585,
+          7525,
+          7525,
+          8466,
+          8466,
+          9407,
+          9407,
+          10348,
+          10348,
+          11289,
+          11289,
+          12229,
+          12229,
+          13170,
+          13170,
+          14111,
+          14111,
+          15052,
+          15052,
+          15052,
+          15993,
+          15993,
+          16384
+        ],
+        "completion_callbacks": 1
+      },
+      {
+        "case": "cancel_playing",
+        "heads": [
+          0,
+          940
+        ],
+        "completion_callbacks": 0
+      },
+      {
+        "case": "cancel_prepared",
+        "heads": [],
+        "completion_callbacks": 0
+      }
+    ]
+  }
+}

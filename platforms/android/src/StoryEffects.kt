@@ -1,7 +1,6 @@
 package org.nekopack.probe
 
 import android.content.Context
-import android.media.MediaPlayer
 import android.media.AudioManager
 import android.media.AudioAttributes
 import android.os.SystemClock
@@ -16,7 +15,7 @@ import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
 class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val timeline:SessionTimeline,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val failure:(Throwable)->Unit) {
-    private val players=mutableMapOf<String,Pair<MediaPlayer,File>>()
+    private val players=mutableMapOf<String,Pair<ChannelPlayer,File>>()
     private var animator:ValueAnimator?=null
     private var bgmAnimator:ValueAnimator?=null
     private val gains=mutableMapOf<String,AudioGain>()
@@ -173,7 +172,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         log("released","all",0,players.size.toLong())
         if(undeleted.isNotEmpty())failure(IllegalStateException("audio cache cleanup failed"))
     }
-    fun run(meta:JSONObject,bitmap:Bitmap?,file:File?,complete:()->Unit){
+    fun run(meta:JSONObject,bitmap:Bitmap?,file:File?,shortClip:ShortClip?=null,complete:()->Unit){
         if(closed){file?.delete();return}
         val kind=meta.getString("host_effect");val token=meta.getLong("token");val duration=meta.getLong("duration_ms")
         val started=timeline.now();log("begin",kind,token,duration)
@@ -267,13 +266,14 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     check(file!=null)
                     if(!focused&&!timeline.paused){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};regainFocus()}
                     release(kind)
-                    val player=MediaPlayer();players[kind]=player to file
+                    val player=ChannelPlayer(shortClip);players[kind]=player to file
                     player.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(if(kind=="voice")AudioAttributes.CONTENT_TYPE_SPEECH else AudioAttributes.CONTENT_TYPE_MUSIC).build())
                     player.setDataSource(file.absolutePath)
                     player.setOnPreparedListener{
                         if(!closed && players[kind]?.first===it){
                             try{
                                 audioTokens[kind]=token
+                                if(player.pcmFrames!=null){log("pcm_frames",kind,token,player.pcmFrames!!.toLong());log("pcm_rate",kind,token,player.pcmRate!!.toLong())}
                                 if(kind=="bgm" || kind=="env" || kind=="se"){
                                     it.isLooping=meta.getBoolean("loop")
                                     val percent=meta.getInt("volume_percent")
@@ -296,6 +296,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                         if(closed||players[kind]?.first!==player)return
                                         if(!player.isPlaying){if(focusPaused.contains(kind))timeline.post(200){run()};return}
                                         val position=player.currentPosition.toLong();samples++
+                                        player.playbackHead?.let{head->log("pcm_head",kind,token,head)}
                                         log("progress",kind,token,position)
                                         if((kind=="env" || kind=="se") && position<previousPosition)log("looped",kind,token,position)
                                         previousPosition=position
@@ -305,7 +306,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                             catch(error:Throwable){failure(error)}
                         }
                     }
-                    player.setOnCompletionListener{if(!closed&&players[kind]?.first===it){log("completed",kind,token,it.currentPosition.toLong());release(kind)}}
+                    player.setOnCompletionListener{if(!closed&&players[kind]?.first===it){it.playbackHead?.let{head->log("pcm_head",kind,token,head)};log("completed",kind,token,it.currentPosition.toLong());release(kind)}}
                     player.setOnErrorListener{failed,what,extra->if(!closed&&players[kind]?.first===failed)failure(IllegalStateException("audio error $what/$extra"));true}
                     player.prepareAsync()
                 }

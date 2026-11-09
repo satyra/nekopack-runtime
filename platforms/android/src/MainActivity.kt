@@ -240,6 +240,9 @@ class MainActivity : Activity() {
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
                         File(root,"audio-$token.json").writeText(JSONObject().put("kind",kind).put("name",metadata.getString("name")).put("sha256",digest).toString())
                     } else null
+                    val shortClip=try {
+                        if(file!=null && (kind=="voice" || (kind=="se" && !metadata.getBoolean("loop"))))ShortClip.read(file) else null
+                    }catch(error:Exception){file?.delete();throw error}
                     val movieUri=if(kind=="movie")selectedFiles.single{it.first.equals(metadata.getString("name"),true)}.second else null
                     runOnUiThread{timeline.post(cancel={file?.delete();bitmap?.recycle()}){
                         if(storyClosing){file?.delete()}else {
@@ -259,7 +262,7 @@ class MainActivity : Activity() {
                                 movieHost!!.start(movieUri!!,token,metadata.getBoolean("movie_left_skip"),{reason->
                                     timeline.post{if(!storyClosing)worker.execute{try{show(story(intArrayOf(),7,token,reason.toLong()))}catch(error:Throwable){fail(error)}}}
                                 },{error->worker.execute{fail(error)}})
-                            }else storyEffects!!.run(metadata,bitmap,file){
+                            }else storyEffects!!.run(metadata,bitmap,file,shortClip){
                             if(!storyClosing)worker.execute{try{show(story(intArrayOf(),4,token))}catch(error:Throwable){fail(error)}}
                             }
                         }

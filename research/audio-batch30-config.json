@@ -1,0 +1,369 @@
+{
+  "run_id": "audio_config_72d94005f82e4a51b56ff5dcbe6395e3",
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "78f93c21202e5e1066351583f21936bdd51838adba28c69bc27581165242e75c",
+  "pages": 14,
+  "defaults": {
+    "bgm": 50,
+    "voice": 75,
+    "se": 50,
+    "env": 50,
+    "system": 50
+  },
+  "changes": [
+    {
+      "channel": "bgm",
+      "percent": 0,
+      "config": {
+        "bgm": 0,
+        "voice": 75,
+        "se": 50,
+        "env": 50,
+        "system": 50
+      }
+    },
+    {
+      "channel": "bgm",
+      "percent": 100,
+      "config": {
+        "bgm": 100,
+        "voice": 75,
+        "se": 50,
+        "env": 50,
+        "system": 50
+      }
+    },
+    {
+      "channel": "voice",
+      "percent": 0,
+      "config": {
+        "bgm": 100,
+        "voice": 0,
+        "se": 50,
+        "env": 50,
+        "system": 50
+      }
+    },
+    {
+      "channel": "voice",
+      "percent": 100,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 50,
+        "env": 50,
+        "system": 50
+      }
+    },
+    {
+      "channel": "se",
+      "percent": 0,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 0,
+        "env": 50,
+        "system": 50
+      }
+    },
+    {
+      "channel": "se",
+      "percent": 100,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 100,
+        "env": 50,
+        "system": 50
+      }
+    },
+    {
+      "channel": "env",
+      "percent": 0,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 100,
+        "env": 0,
+        "system": 50
+      }
+    },
+    {
+      "channel": "env",
+      "percent": 100,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 100,
+        "env": 100,
+        "system": 50
+      }
+    },
+    {
+      "channel": "system",
+      "percent": 0,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 100,
+        "env": 100,
+        "system": 0
+      }
+    },
+    {
+      "channel": "system",
+      "percent": 100,
+      "config": {
+        "bgm": 100,
+        "voice": 100,
+        "se": 100,
+        "env": 100,
+        "system": 100
+      }
+    }
+  ],
+  "config_events": [
+    {
+      "bgm": 50,
+      "voice": 75,
+      "se": 50,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 0,
+      "voice": 75,
+      "se": 50,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 75,
+      "se": 50,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 0,
+      "se": 50,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 50,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 0,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 100,
+      "env": 50,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 100,
+      "env": 0,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 100,
+      "env": 100,
+      "system": 50
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 100,
+      "env": 100,
+      "system": 0
+    },
+    {
+      "bgm": 100,
+      "voice": 100,
+      "se": 100,
+      "env": 100,
+      "system": 100
+    }
+  ],
+  "gain_events": [
+    {
+      "kind": "voice",
+      "token": 2,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 245324115,
+      "time_ms": 23621832
+    },
+    {
+      "kind": "voice",
+      "token": 3,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 121573015,
+      "time_ms": 23629988
+    },
+    {
+      "kind": "voice",
+      "token": 4,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 230852848,
+      "time_ms": 23632456
+    },
+    {
+      "kind": "voice",
+      "token": 5,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 149692749,
+      "time_ms": 23650279
+    },
+    {
+      "kind": "se",
+      "token": 6,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 129576526,
+      "time_ms": 23652723
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23663558
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 0,
+      "output": 0,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23671568
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23673383
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23675202
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23677001
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23678835
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23680617
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23682452
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23684251
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23686085
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 100,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 124824151,
+      "time_ms": 23687901
+    }
+  ],
+  "vm_live_bytes": 0
+}
