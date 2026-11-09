@@ -18,7 +18,7 @@ fun probeAudioState(context:Context,effects:StoryEffects,root:File,failure:(Thro
     fun later(block:()->Unit){handler.postDelayed({try{block()}catch(error:Throwable){audio.abandonAudioFocus(other);failure(error)}},350)}
     try {
         val initial=sample("initial")
-        check(initial.getBoolean("playing")&&initial.getDouble("gain")==.5)
+        check(initial.getBoolean("playing")&&initial.getDouble("gain")==.25)
         check(audio.requestAudioFocus(other,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
         later {
             val paused=sample("transient_loss")
@@ -38,12 +38,12 @@ fun probeAudioState(context:Context,effects:StoryEffects,root:File,failure:(Thro
                     audio.abandonAudioFocus(other)
                     later {
                     val resumed=sample("regained")
-                    check(!resumed.getBoolean("suspended")&&resumed.getBoolean("playing")&&resumed.getDouble("gain")==.5&&acknowledged)
+                    check(!resumed.getBoolean("suspended")&&resumed.getBoolean("playing")&&resumed.getDouble("gain")==.25&&acknowledged)
                     fun fade(token:Long)=effects.run(JSONObject().put("host_effect","bgm_fade").put("token",token).put("duration_ms",2000),null,null){ }
                     fade(-1)
                     later {
                         val before=sample("first_fade")
-                        check(before.getDouble("gain") in .01.. .49)
+                        check(before.getDouble("gain") in .01.. .249)
                         fade(-2)
                         val after=sample("repeat_fade_start")
                         check(kotlin.math.abs(after.getDouble("gain")-before.getDouble("gain"))<.001)

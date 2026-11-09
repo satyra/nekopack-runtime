@@ -1,0 +1,467 @@
+{
+  "run_id": "audio_state_6dedee714c3c4a48a2998af6f51d85c0",
+  "serial": "emulator-5568",
+  "execution": "translated",
+  "machine": "x86_64",
+  "abi": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "9f3d5360e301d207a2166b2f1f307691f5e928719d2f36cea4c24e81be076977",
+  "pages": 13,
+  "evidence": {
+    "passed": true,
+    "samples": [
+      {
+        "playing": true,
+        "position": 4423,
+        "gain": 0.25,
+        "suspended": false,
+        "token": 9,
+        "label": "initial"
+      },
+      {
+        "playing": false,
+        "position": 4431,
+        "gain": 0.25,
+        "suspended": true,
+        "token": 9,
+        "label": "transient_loss"
+      },
+      {
+        "playing": false,
+        "position": 4431,
+        "gain": 0.25,
+        "suspended": true,
+        "token": 9,
+        "label": "paused_position"
+      },
+      {
+        "playing": false,
+        "position": 0,
+        "gain": 0.25,
+        "suspended": true,
+        "token": -3,
+        "label": "prepared_while_paused"
+      },
+      {
+        "playing": true,
+        "position": 296,
+        "gain": 0.25,
+        "suspended": false,
+        "token": -3,
+        "label": "regained"
+      },
+      {
+        "playing": true,
+        "position": 651,
+        "gain": 0.2105,
+        "suspended": false,
+        "token": -3,
+        "label": "first_fade"
+      },
+      {
+        "playing": true,
+        "position": 652,
+        "gain": 0.2105,
+        "suspended": false,
+        "token": -3,
+        "label": "repeat_fade_start"
+      },
+      {
+        "playing": true,
+        "position": 1006,
+        "gain": 0.17376775,
+        "suspended": false,
+        "token": -3,
+        "label": "repeat_fade_progress"
+      }
+    ]
+  },
+  "events": [
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 807959,
+      "value": 807907
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 810737,
+      "value": 3000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 811507,
+      "value": 251
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 813770,
+      "value": 3033
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 813790,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 813807,
+      "value": 3612
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 813808,
+      "value": 18
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 814009,
+      "value": 184
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 817413,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 817430,
+      "value": 5820
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 817430,
+      "value": 17
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 817631,
+      "value": 160
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 818224,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 818236,
+      "value": 6212
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 818236,
+      "value": 13
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 818438,
+      "value": 135
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 823777,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 823787,
+      "value": 1804
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 823788,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 823989,
+      "value": 161
+    },
+    {
+      "event": "begin",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 824593,
+      "value": 0
+    },
+    {
+      "event": "gain",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 824603,
+      "value": 100
+    },
+    {
+      "event": "playing",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 824604,
+      "value": 7140
+    },
+    {
+      "event": "looping",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 824604,
+      "value": 0
+    },
+    {
+      "event": "ack",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 824604,
+      "value": 11
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 824678,
+      "value": 3000
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 824805,
+      "value": 148
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 825441,
+      "value": 250
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 827699,
+      "value": 3022
+    },
+    {
+      "event": "stopped_all",
+      "kind": "movie",
+      "token": 8,
+      "time_ms": 827712,
+      "value": 0
+    },
+    {
+      "event": "begin",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 835467,
+      "value": 0
+    },
+    {
+      "event": "gain",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 835482,
+      "value": 50
+    },
+    {
+      "event": "playing",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 835484,
+      "value": 230497
+    },
+    {
+      "event": "ack",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 835484,
+      "value": 17
+    },
+    {
+      "event": "progress",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 835685,
+      "value": 161
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 836190,
+      "value": 3000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 836972,
+      "value": 254
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 839218,
+      "value": 3028
+    },
+    {
+      "event": "focus",
+      "kind": "audio",
+      "token": 0,
+      "time_ms": 839939,
+      "value": -2
+    },
+    {
+      "event": "paused",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 839940,
+      "value": 4431
+    },
+    {
+      "event": "begin",
+      "kind": "bgm",
+      "token": -3,
+      "time_ms": 840658,
+      "value": 0
+    },
+    {
+      "event": "gain",
+      "kind": "bgm",
+      "token": -3,
+      "time_ms": 840684,
+      "value": 50
+    },
+    {
+      "event": "focus_pending",
+      "kind": "bgm",
+      "token": -3,
+      "time_ms": 840685,
+      "value": 0
+    },
+    {
+      "event": "focus",
+      "kind": "audio",
+      "token": 0,
+      "time_ms": 841029,
+      "value": 1
+    },
+    {
+      "event": "playing",
+      "kind": "bgm",
+      "token": -3,
+      "time_ms": 841031,
+      "value": 230497
+    },
+    {
+      "event": "ack",
+      "kind": "bgm",
+      "token": -3,
+      "time_ms": 841032,
+      "value": 374
+    },
+    {
+      "event": "progress",
+      "kind": "bgm",
+      "token": -3,
+      "time_ms": 841087,
+      "value": 30
+    },
+    {
+      "event": "begin",
+      "kind": "bgm_fade",
+      "token": -1,
+      "time_ms": 841381,
+      "value": 2000
+    },
+    {
+      "event": "fade_start_gain",
+      "kind": "bgm",
+      "token": -1,
+      "time_ms": 841381,
+      "value": 250
+    },
+    {
+      "event": "ack",
+      "kind": "bgm_fade",
+      "token": -1,
+      "time_ms": 841382,
+      "value": 1
+    },
+    {
+      "event": "begin",
+      "kind": "bgm_fade",
+      "token": -2,
+      "time_ms": 841733,
+      "value": 2000
+    },
+    {
+      "event": "cancelled",
+      "kind": "bgm_fade",
+      "token": -1,
+      "time_ms": 841733,
+      "value": 0
+    },
+    {
+      "event": "fade_start_gain",
+      "kind": "bgm",
+      "token": -2,
+      "time_ms": 841733,
+      "value": 210
+    },
+    {
+      "event": "ack",
+      "kind": "bgm_fade",
+      "token": -2,
+      "time_ms": 841734,
+      "value": 2
+    },
+    {
+      "event": "frame",
+      "kind": "bgm_fade",
+      "token": -2,
+      "time_ms": 841966,
+      "value": 743
+    }
+  ],
+  "closed_vm_live_bytes": 0
+}

@@ -1,4 +1,4 @@
-"""Independent raw DAT/Pillow composition at every captured native actor-motion frame."""
+"""Independent raw DAT/Pillow composition at every captured actor-motion frame."""
 import argparse,hashlib,io,json,math,sys
 from pathlib import Path
 from PIL import Image
@@ -12,13 +12,19 @@ p.add_argument('--include-queue',action='store_true')
 p.add_argument('--include-env-chapter',action='store_true')
 p.add_argument('--include-leftward',action='store_true')
 p.add_argument('--include-se-chapter',action='store_true')
+p.add_argument('--execution',choices=['native','translated'],default='native')
 a=p.parse_args();sys.path.insert(0,str(a.reference_root));from portkit.neko import Archive
 manifest=json.loads(Path('research/metadata-verification.json').read_text(encoding='utf8'))['games'][0]
 packs=[(s['priority'],Archive(a.games/s['file'])) for s in manifest['sources'] if any(x in s['file'] for x in ['image.dat','system.dat','script.dat','patch'])]
 def read(name):
  choices=[(p,pack) for p,pack in packs if name.lower() in pack.entries];best=max(p for p,_ in choices);selected=[pack for p,pack in choices if p==best];assert len(selected)==1
  return selected[0].read(name)
-report=json.loads(a.device_report.read_text(encoding='utf8'));assert report['execution']=='native ARM64';assert len(report['games'])==1 and report['games'][0]['index']==0
+report=json.loads(a.device_report.read_text(encoding='utf8'))
+assert report['execution']==('native ARM64' if a.execution=='native' else 'translated ARM64')
+device=report['device']
+assert device['kernel_machine']==('aarch64' if a.execution=='native' else 'x86_64')
+assert (device['ro.dalvik.vm.native.bridge'] in ('','0'))==(a.execution=='native')
+assert len(report['games'])==1 and report['games'][0]['index']==0
 game=report['games'][0];expected_pages=[56,57,60,159,176,270,501,521,605,640,685] if a.include_se_chapter else [56,57,60,159,176,270,501,521,605] if a.include_leftward else [56,57,60,159,176,270,501,521] if a.include_env_chapter else [56,57,60,159,176,270,501] if a.include_queue else [56,57,60,159,176,270] if a.include_left_excursion else [56,57,60,159,176] if a.include_bgm_interleave else [56,57,60,159] if a.include_stationary else [56,57] if a.include_dip else [56];assert [m['sequence'] for m in game['motions']]==expected_pages and game['closed_vm_live_bytes']==0
 assert sorted(int(d.name) for d in (a.captures/'0').iterdir() if d.is_dir())==expected_pages
 rows=[];interleave=[]
@@ -111,5 +117,5 @@ for sequence in expected_pages:
   assert all(r['actor1_y']==360 and 920<=r['actor1_x']<=1120 for r in group)
   assert any(r['actor1_x']<1120 for r in group)
  else:assert group[0]['actor6_x']==640 and group[-1]['actor6_x']==990
-a.output.write_text(json.dumps(dict(scope='BLESS native ARM64; every captured motion frame compared with independent raw DAT/Pillow and pinned original curve, not original screen parity',device_report_sha256=hashlib.sha256(a.device_report.read_bytes()).hexdigest(),build=report['build'],voice_started_before_motion_pages=[n for n in expected_pages if n not in [159,605,640]],bgm_interleave=interleave,frames=rows),indent=2)+'\n')
+a.output.write_text(json.dumps(dict(scope=f"BLESS {report['execution']}; every captured motion frame compared with independent raw DAT/Pillow and pinned original curve, not original screen parity",execution=report['execution'],device_report_sha256=hashlib.sha256(a.device_report.read_bytes()).hexdigest(),build=report['build'],voice_started_before_motion_pages=[n for n in expected_pages if n not in [159,605,640]],bgm_interleave=interleave,frames=rows),indent=2)+'\n')
 print('PASS independent motion frames',len(rows))

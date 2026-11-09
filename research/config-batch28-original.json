@@ -1,0 +1,17 @@
+{
+  "scope": "BLESS original config.nut from priority-selected raw DAT, static defaults; no acoustic parity claim",
+  "source_sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+  "defaults": {
+    "bgm": 50,
+    "voice": 75,
+    "se": 50,
+    "env": 50,
+    "system": 50
+  },
+  "volume_mapping_evidence": "research/env-batch23-original.json",
+  "limits": [
+    "MuteBGM and KeepVoice not implemented in this batch",
+    "Original config.sav persistence not implemented",
+    "System sound playback is not wired; VolSYS currently updates Config only"
+  ]
+}

@@ -1,0 +1,4952 @@
+{
+  "run_id": "story_d7e10b09f90f436eaaef794a1bab77e7",
+  "apk_sha256": "9f3d5360e301d207a2166b2f1f307691f5e928719d2f36cea4c24e81be076977",
+  "execution": "translated ARM64 on x86_64",
+  "config_events": [
+    {
+      "bgm": 50,
+      "voice": 75,
+      "se": 50,
+      "env": 50,
+      "system": 50
+    }
+  ],
+  "gain_events": [
+    {
+      "kind": "voice",
+      "token": 2,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 198378500,
+      "time_ms": 966388
+    },
+    {
+      "kind": "voice",
+      "token": 3,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 47516443,
+      "time_ms": 970321
+    },
+    {
+      "kind": "voice",
+      "token": 4,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 176739428,
+      "time_ms": 971160
+    },
+    {
+      "kind": "voice",
+      "token": 5,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 249560433,
+      "time_ms": 976980
+    },
+    {
+      "kind": "se",
+      "token": 6,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 123912930,
+      "time_ms": 977826
+    },
+    {
+      "kind": "bgm",
+      "token": 9,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 261671643,
+      "time_ms": 988514
+    },
+    {
+      "kind": "voice",
+      "token": 11,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 116592021,
+      "time_ms": 1013552
+    },
+    {
+      "kind": "voice",
+      "token": 12,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 52149110,
+      "time_ms": 1014927
+    },
+    {
+      "kind": "voice",
+      "token": 13,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 255160851,
+      "time_ms": 1016261
+    },
+    {
+      "kind": "voice",
+      "token": 14,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 74390908,
+      "time_ms": 1017612
+    },
+    {
+      "kind": "voice",
+      "token": 15,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 191593857,
+      "time_ms": 1018972
+    },
+    {
+      "kind": "voice",
+      "token": 16,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 179619506,
+      "time_ms": 1020335
+    },
+    {
+      "kind": "voice",
+      "token": 17,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 23493463,
+      "time_ms": 1024511
+    },
+    {
+      "kind": "voice",
+      "token": 18,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 247400924,
+      "time_ms": 1027295
+    },
+    {
+      "kind": "voice",
+      "token": 20,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 3460662,
+      "time_ms": 1036191
+    },
+    {
+      "kind": "voice",
+      "token": 21,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 104131027,
+      "time_ms": 1037225
+    },
+    {
+      "kind": "voice",
+      "token": 22,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 146581052,
+      "time_ms": 1038578
+    },
+    {
+      "kind": "voice",
+      "token": 23,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 18551617,
+      "time_ms": 1039943
+    },
+    {
+      "kind": "voice",
+      "token": 24,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 90797426,
+      "time_ms": 1041262
+    },
+    {
+      "kind": "voice",
+      "token": 25,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 173097003,
+      "time_ms": 1049305
+    },
+    {
+      "kind": "voice",
+      "token": 26,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 121336992,
+      "time_ms": 1052001
+    },
+    {
+      "kind": "voice",
+      "token": 27,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 138567957,
+      "time_ms": 1053369
+    },
+    {
+      "kind": "voice",
+      "token": 28,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 100573430,
+      "time_ms": 1055657
+    },
+    {
+      "kind": "voice",
+      "token": 29,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 49497071,
+      "time_ms": 1059277
+    },
+    {
+      "kind": "voice",
+      "token": 30,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 185335528,
+      "time_ms": 1060674
+    },
+    {
+      "kind": "voice",
+      "token": 31,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 100273653,
+      "time_ms": 1065597
+    },
+    {
+      "kind": "voice",
+      "token": 32,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 2145762,
+      "time_ms": 1068302
+    },
+    {
+      "kind": "voice",
+      "token": 33,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 148410347,
+      "time_ms": 1071044
+    },
+    {
+      "kind": "voice",
+      "token": 34,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 54968672,
+      "time_ms": 1073680
+    },
+    {
+      "kind": "bgm",
+      "token": 36,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 54080438,
+      "time_ms": 1078590
+    },
+    {
+      "kind": "voice",
+      "token": 38,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 3307224,
+      "time_ms": 1090927
+    },
+    {
+      "kind": "voice",
+      "token": 39,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 16099437,
+      "time_ms": 1092322
+    },
+    {
+      "kind": "voice",
+      "token": 40,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 237280762,
+      "time_ms": 1095046
+    },
+    {
+      "kind": "voice",
+      "token": 41,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 144464163,
+      "time_ms": 1097678
+    },
+    {
+      "kind": "voice",
+      "token": 42,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 67152972,
+      "time_ms": 1099020
+    },
+    {
+      "kind": "voice",
+      "token": 44,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 267011401,
+      "time_ms": 1103064
+    },
+    {
+      "kind": "voice",
+      "token": 45,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 31629658,
+      "time_ms": 1104396
+    },
+    {
+      "kind": "bgm",
+      "token": 46,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 114045307,
+      "time_ms": 1109654
+    },
+    {
+      "kind": "voice",
+      "token": 47,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 203864984,
+      "time_ms": 1109689
+    },
+    {
+      "kind": "voice",
+      "token": 48,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 213916713,
+      "time_ms": 1112423
+    },
+    {
+      "kind": "voice",
+      "token": 49,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 231506566,
+      "time_ms": 1115146
+    },
+    {
+      "kind": "voice",
+      "token": 50,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 34081115,
+      "time_ms": 1119296
+    },
+    {
+      "kind": "voice",
+      "token": 51,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 170753040,
+      "time_ms": 1122011
+    },
+    {
+      "kind": "voice",
+      "token": 52,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 93252161,
+      "time_ms": 1124747
+    },
+    {
+      "kind": "voice",
+      "token": 53,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 8106098,
+      "time_ms": 1126111
+    },
+    {
+      "kind": "voice",
+      "token": 54,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41267743,
+      "time_ms": 1127482
+    },
+    {
+      "kind": "voice",
+      "token": 55,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 139313240,
+      "time_ms": 1128858
+    },
+    {
+      "kind": "voice",
+      "token": 56,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 237673761,
+      "time_ms": 1134343
+    },
+    {
+      "kind": "voice",
+      "token": 57,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 71173930,
+      "time_ms": 1138398
+    },
+    {
+      "kind": "voice",
+      "token": 58,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 31464439,
+      "time_ms": 1139745
+    },
+    {
+      "kind": "voice",
+      "token": 59,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 26579452,
+      "time_ms": 1142494
+    },
+    {
+      "kind": "voice",
+      "token": 60,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 47792129,
+      "time_ms": 1143865
+    },
+    {
+      "kind": "voice",
+      "token": 61,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 17833778,
+      "time_ms": 1145224
+    },
+    {
+      "kind": "voice",
+      "token": 62,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 196744671,
+      "time_ms": 1146569
+    },
+    {
+      "kind": "voice",
+      "token": 63,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 164461812,
+      "time_ms": 1154579
+    },
+    {
+      "kind": "voice",
+      "token": 64,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 3800345,
+      "time_ms": 1155952
+    },
+    {
+      "kind": "voice",
+      "token": 65,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 155209794,
+      "time_ms": 1160018
+    },
+    {
+      "kind": "voice",
+      "token": 66,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 180788939,
+      "time_ms": 1162716
+    },
+    {
+      "kind": "voice",
+      "token": 67,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 38962516,
+      "time_ms": 1164113
+    },
+    {
+      "kind": "voice",
+      "token": 68,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 171454769,
+      "time_ms": 1168144
+    },
+    {
+      "kind": "voice",
+      "token": 69,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 95754146,
+      "time_ms": 1169496
+    },
+    {
+      "kind": "voice",
+      "token": 70,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 136535723,
+      "time_ms": 1172226
+    },
+    {
+      "kind": "voice",
+      "token": 71,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 61899040,
+      "time_ms": 1174893
+    },
+    {
+      "kind": "bgm",
+      "token": 72,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 136993685,
+      "time_ms": 1176289
+    },
+    {
+      "kind": "voice",
+      "token": 76,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 94041841,
+      "time_ms": 1194162
+    },
+    {
+      "kind": "voice",
+      "token": 77,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 51074734,
+      "time_ms": 1196828
+    },
+    {
+      "kind": "voice",
+      "token": 78,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 86847083,
+      "time_ms": 1198180
+    },
+    {
+      "kind": "bgm",
+      "token": 82,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 148399158,
+      "time_ms": 1210689
+    },
+    {
+      "kind": "voice",
+      "token": 83,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 175066935,
+      "time_ms": 1210710
+    },
+    {
+      "kind": "voice",
+      "token": 84,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 118419216,
+      "time_ms": 1211919
+    },
+    {
+      "kind": "voice",
+      "token": 85,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 143003077,
+      "time_ms": 1213275
+    },
+    {
+      "kind": "voice",
+      "token": 86,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 248990910,
+      "time_ms": 1218261
+    },
+    {
+      "kind": "voice",
+      "token": 87,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 22328599,
+      "time_ms": 1221009
+    },
+    {
+      "kind": "voice",
+      "token": 88,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 37696880,
+      "time_ms": 1222449
+    },
+    {
+      "kind": "voice",
+      "token": 89,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 154260133,
+      "time_ms": 1223805
+    },
+    {
+      "kind": "voice",
+      "token": 90,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 42807366,
+      "time_ms": 1225193
+    },
+    {
+      "kind": "voice",
+      "token": 91,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 216582051,
+      "time_ms": 1226562
+    },
+    {
+      "kind": "voice",
+      "token": 92,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 130744524,
+      "time_ms": 1227940
+    },
+    {
+      "kind": "voice",
+      "token": 93,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 93267857,
+      "time_ms": 1229320
+    },
+    {
+      "kind": "voice",
+      "token": 94,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 18402434,
+      "time_ms": 1230680
+    },
+    {
+      "kind": "voice",
+      "token": 95,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 240525287,
+      "time_ms": 1234771
+    },
+    {
+      "kind": "voice",
+      "token": 96,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 242231552,
+      "time_ms": 1236132
+    },
+    {
+      "kind": "bgm",
+      "token": 97,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 125026929,
+      "time_ms": 1238889
+    },
+    {
+      "kind": "voice",
+      "token": 98,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 99510358,
+      "time_ms": 1238906
+    },
+    {
+      "kind": "voice",
+      "token": 99,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 82289523,
+      "time_ms": 1241114
+    },
+    {
+      "kind": "voice",
+      "token": 100,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 218085192,
+      "time_ms": 1243861
+    },
+    {
+      "kind": "voice",
+      "token": 101,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 140784665,
+      "time_ms": 1246582
+    },
+    {
+      "kind": "voice",
+      "token": 102,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 48957674,
+      "time_ms": 1247980
+    },
+    {
+      "kind": "voice",
+      "token": 103,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 22100803,
+      "time_ms": 1256112
+    },
+    {
+      "kind": "voice",
+      "token": 104,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 258055384,
+      "time_ms": 1258841
+    },
+    {
+      "kind": "voice",
+      "token": 105,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 40914025,
+      "time_ms": 1261552
+    },
+    {
+      "kind": "voice",
+      "token": 106,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 150164474,
+      "time_ms": 1262912
+    },
+    {
+      "kind": "voice",
+      "token": 107,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 226355591,
+      "time_ms": 1264269
+    },
+    {
+      "kind": "bgm",
+      "token": 109,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 146801301,
+      "time_ms": 1269087
+    },
+    {
+      "kind": "voice",
+      "token": 111,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 64655123,
+      "time_ms": 1274228
+    },
+    {
+      "kind": "voice",
+      "token": 112,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 216991356,
+      "time_ms": 1275668
+    },
+    {
+      "kind": "voice",
+      "token": 113,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 32982461,
+      "time_ms": 1278347
+    },
+    {
+      "kind": "voice",
+      "token": 114,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 59853578,
+      "time_ms": 1281143
+    },
+    {
+      "kind": "voice",
+      "token": 115,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 249893619,
+      "time_ms": 1283832
+    },
+    {
+      "kind": "voice",
+      "token": 116,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 191291592,
+      "time_ms": 1286662
+    },
+    {
+      "kind": "voice",
+      "token": 117,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 17091669,
+      "time_ms": 1290813
+    },
+    {
+      "kind": "voice",
+      "token": 118,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 230436662,
+      "time_ms": 1292236
+    },
+    {
+      "kind": "voice",
+      "token": 119,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 225000751,
+      "time_ms": 1294952
+    },
+    {
+      "kind": "voice",
+      "token": 120,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 198471488,
+      "time_ms": 1299044
+    },
+    {
+      "kind": "voice",
+      "token": 121,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 97720629,
+      "time_ms": 1300521
+    },
+    {
+      "kind": "voice",
+      "token": 122,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 23298198,
+      "time_ms": 1301863
+    },
+    {
+      "kind": "voice",
+      "token": 123,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 249588403,
+      "time_ms": 1303262
+    },
+    {
+      "kind": "voice",
+      "token": 124,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 45702044,
+      "time_ms": 1304646
+    },
+    {
+      "kind": "voice",
+      "token": 125,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 112544545,
+      "time_ms": 1306036
+    },
+    {
+      "kind": "voice",
+      "token": 126,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 247449042,
+      "time_ms": 1307486
+    },
+    {
+      "kind": "voice",
+      "token": 127,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 146999067,
+      "time_ms": 1310264
+    },
+    {
+      "kind": "voice",
+      "token": 128,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 253616228,
+      "time_ms": 1311645
+    },
+    {
+      "kind": "voice",
+      "token": 129,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 164179657,
+      "time_ms": 1313090
+    },
+    {
+      "kind": "voice",
+      "token": 130,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 261739686,
+      "time_ms": 1315843
+    },
+    {
+      "kind": "voice",
+      "token": 131,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 126284419,
+      "time_ms": 1317212
+    },
+    {
+      "kind": "voice",
+      "token": 132,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 40515628,
+      "time_ms": 1318581
+    },
+    {
+      "kind": "voice",
+      "token": 133,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 141711729,
+      "time_ms": 1319951
+    },
+    {
+      "kind": "voice",
+      "token": 134,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 86159074,
+      "time_ms": 1321304
+    },
+    {
+      "kind": "voice",
+      "token": 135,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 95243463,
+      "time_ms": 1325366
+    },
+    {
+      "kind": "voice",
+      "token": 136,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 196401760,
+      "time_ms": 1326789
+    },
+    {
+      "kind": "voice",
+      "token": 137,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 193830869,
+      "time_ms": 1328174
+    },
+    {
+      "kind": "voice",
+      "token": 138,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 257070262,
+      "time_ms": 1329561
+    },
+    {
+      "kind": "voice",
+      "token": 139,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 104355743,
+      "time_ms": 1337761
+    },
+    {
+      "kind": "voice",
+      "token": 140,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 262107524,
+      "time_ms": 1340562
+    },
+    {
+      "kind": "voice",
+      "token": 141,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 244958057,
+      "time_ms": 1341946
+    },
+    {
+      "kind": "voice",
+      "token": 142,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 256683770,
+      "time_ms": 1343343
+    },
+    {
+      "kind": "voice",
+      "token": 143,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 224434311,
+      "time_ms": 1344711
+    },
+    {
+      "kind": "voice",
+      "token": 144,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41674528,
+      "time_ms": 1346180
+    },
+    {
+      "kind": "voice",
+      "token": 145,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 124799505,
+      "time_ms": 1348854
+    },
+    {
+      "kind": "voice",
+      "token": 146,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 134180686,
+      "time_ms": 1351561
+    },
+    {
+      "kind": "voice",
+      "token": 147,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 115608715,
+      "time_ms": 1352889
+    },
+    {
+      "kind": "voice",
+      "token": 148,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 162556332,
+      "time_ms": 1356914
+    },
+    {
+      "kind": "voice",
+      "token": 149,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 158932781,
+      "time_ms": 1359544
+    },
+    {
+      "kind": "voice",
+      "token": 150,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 138864058,
+      "time_ms": 1362195
+    },
+    {
+      "kind": "voice",
+      "token": 151,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 933347,
+      "time_ms": 1364372
+    },
+    {
+      "kind": "voice",
+      "token": 152,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 39984888,
+      "time_ms": 1367015
+    },
+    {
+      "kind": "voice",
+      "token": 153,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 163166221,
+      "time_ms": 1368362
+    },
+    {
+      "kind": "voice",
+      "token": 154,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 165419534,
+      "time_ms": 1369715
+    },
+    {
+      "kind": "voice",
+      "token": 155,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 146461223,
+      "time_ms": 1372378
+    },
+    {
+      "kind": "voice",
+      "token": 156,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 80781888,
+      "time_ms": 1374714
+    },
+    {
+      "kind": "voice",
+      "token": 157,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 188956725,
+      "time_ms": 1376039
+    },
+    {
+      "kind": "voice",
+      "token": 158,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 253021078,
+      "time_ms": 1377369
+    },
+    {
+      "kind": "voice",
+      "token": 159,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 171395507,
+      "time_ms": 1378705
+    },
+    {
+      "kind": "voice",
+      "token": 160,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 69500572,
+      "time_ms": 1380040
+    },
+    {
+      "kind": "voice",
+      "token": 161,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 34906657,
+      "time_ms": 1381360
+    },
+    {
+      "kind": "voice",
+      "token": 162,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 200245458,
+      "time_ms": 1382740
+    },
+    {
+      "kind": "voice",
+      "token": 163,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 201939199,
+      "time_ms": 1384089
+    },
+    {
+      "kind": "voice",
+      "token": 164,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 172721080,
+      "time_ms": 1385438
+    },
+    {
+      "kind": "voice",
+      "token": 165,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 225229261,
+      "time_ms": 1386777
+    },
+    {
+      "kind": "bgm",
+      "token": 168,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 110039427,
+      "time_ms": 1393868
+    },
+    {
+      "kind": "voice",
+      "token": 169,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 9604864,
+      "time_ms": 1393881
+    },
+    {
+      "kind": "voice",
+      "token": 171,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 53276785,
+      "time_ms": 1397654
+    },
+    {
+      "kind": "voice",
+      "token": 172,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 135496238,
+      "time_ms": 1400341
+    },
+    {
+      "kind": "voice",
+      "token": 173,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 266046443,
+      "time_ms": 1401710
+    },
+    {
+      "kind": "voice",
+      "token": 174,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 203425268,
+      "time_ms": 1403107
+    },
+    {
+      "kind": "voice",
+      "token": 175,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 225223193,
+      "time_ms": 1404480
+    },
+    {
+      "kind": "voice",
+      "token": 176,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 48053994,
+      "time_ms": 1405844
+    },
+    {
+      "kind": "voice",
+      "token": 177,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 87975095,
+      "time_ms": 1407211
+    },
+    {
+      "kind": "voice",
+      "token": 178,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 234032784,
+      "time_ms": 1408589
+    },
+    {
+      "kind": "voice",
+      "token": 179,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 57369085,
+      "time_ms": 1412699
+    },
+    {
+      "kind": "voice",
+      "token": 180,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 15538238,
+      "time_ms": 1413620
+    },
+    {
+      "kind": "voice",
+      "token": 181,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 81082675,
+      "time_ms": 1416812
+    },
+    {
+      "kind": "voice",
+      "token": 182,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 89559560,
+      "time_ms": 1419570
+    },
+    {
+      "kind": "voice",
+      "token": 183,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 191210205,
+      "time_ms": 1420932
+    },
+    {
+      "kind": "bgm",
+      "token": 185,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 255313307,
+      "time_ms": 1425752
+    },
+    {
+      "kind": "voice",
+      "token": 187,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 37101897,
+      "time_ms": 1431260
+    },
+    {
+      "kind": "voice",
+      "token": 188,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 219427582,
+      "time_ms": 1436745
+    },
+    {
+      "kind": "voice",
+      "token": 189,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 75550963,
+      "time_ms": 1440377
+    },
+    {
+      "kind": "voice",
+      "token": 190,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 83081436,
+      "time_ms": 1441756
+    },
+    {
+      "kind": "voice",
+      "token": 191,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 40367261,
+      "time_ms": 1444494
+    },
+    {
+      "kind": "voice",
+      "token": 192,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 172575850,
+      "time_ms": 1447196
+    },
+    {
+      "kind": "voice",
+      "token": 193,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 86629167,
+      "time_ms": 1450847
+    },
+    {
+      "kind": "voice",
+      "token": 194,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 58250560,
+      "time_ms": 1454534
+    },
+    {
+      "kind": "voice",
+      "token": 195,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 24920497,
+      "time_ms": 1457246
+    },
+    {
+      "kind": "voice",
+      "token": 196,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 101778978,
+      "time_ms": 1458644
+    },
+    {
+      "kind": "voice",
+      "token": 197,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 181705999,
+      "time_ms": 1460064
+    },
+    {
+      "kind": "voice",
+      "token": 198,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 166673288,
+      "time_ms": 1461450
+    },
+    {
+      "kind": "voice",
+      "token": 199,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 217187933,
+      "time_ms": 1462836
+    },
+    {
+      "kind": "voice",
+      "token": 200,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 77415198,
+      "time_ms": 1464204
+    },
+    {
+      "kind": "voice",
+      "token": 201,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 31589659,
+      "time_ms": 1465589
+    },
+    {
+      "kind": "voice",
+      "token": 202,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 15754852,
+      "time_ms": 1466969
+    },
+    {
+      "kind": "voice",
+      "token": 203,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 77798601,
+      "time_ms": 1468340
+    },
+    {
+      "kind": "voice",
+      "token": 204,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 228387494,
+      "time_ms": 1471093
+    },
+    {
+      "kind": "voice",
+      "token": 205,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41103491,
+      "time_ms": 1472509
+    },
+    {
+      "kind": "voice",
+      "token": 206,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 203750956,
+      "time_ms": 1473903
+    },
+    {
+      "kind": "voice",
+      "token": 207,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 128157553,
+      "time_ms": 1475298
+    },
+    {
+      "kind": "voice",
+      "token": 208,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 113943778,
+      "time_ms": 1476661
+    },
+    {
+      "kind": "voice",
+      "token": 209,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41251023,
+      "time_ms": 1478030
+    },
+    {
+      "kind": "voice",
+      "token": 210,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 39469152,
+      "time_ms": 1482126
+    },
+    {
+      "kind": "voice",
+      "token": 211,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 91591249,
+      "time_ms": 1484901
+    },
+    {
+      "kind": "voice",
+      "token": 212,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 197540930,
+      "time_ms": 1486477
+    },
+    {
+      "kind": "voice",
+      "token": 213,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 140214959,
+      "time_ms": 1487884
+    },
+    {
+      "kind": "voice",
+      "token": 214,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 222884520,
+      "time_ms": 1489250
+    },
+    {
+      "kind": "voice",
+      "token": 215,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 267626749,
+      "time_ms": 1490650
+    },
+    {
+      "kind": "voice",
+      "token": 216,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 140378942,
+      "time_ms": 1492032
+    },
+    {
+      "kind": "voice",
+      "token": 217,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 16305339,
+      "time_ms": 1493422
+    },
+    {
+      "kind": "voice",
+      "token": 218,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 220395396,
+      "time_ms": 1494771
+    },
+    {
+      "kind": "voice",
+      "token": 219,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 178303337,
+      "time_ms": 1496150
+    },
+    {
+      "kind": "voice",
+      "token": 220,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 233006330,
+      "time_ms": 1497532
+    },
+    {
+      "kind": "voice",
+      "token": 221,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 150303779,
+      "time_ms": 1500314
+    },
+    {
+      "kind": "voice",
+      "token": 222,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 64232268,
+      "time_ms": 1501730
+    },
+    {
+      "kind": "voice",
+      "token": 223,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 229537809,
+      "time_ms": 1503104
+    },
+    {
+      "kind": "voice",
+      "token": 224,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 263387906,
+      "time_ms": 1504483
+    },
+    {
+      "kind": "voice",
+      "token": 225,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 102402699,
+      "time_ms": 1507227
+    },
+    {
+      "kind": "voice",
+      "token": 226,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 56603156,
+      "time_ms": 1508611
+    },
+    {
+      "kind": "voice",
+      "token": 227,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 170779765,
+      "time_ms": 1511329
+    },
+    {
+      "kind": "voice",
+      "token": 228,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 124776150,
+      "time_ms": 1512723
+    },
+    {
+      "kind": "voice",
+      "token": 229,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 85503987,
+      "time_ms": 1514110
+    },
+    {
+      "kind": "voice",
+      "token": 230,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 70834632,
+      "time_ms": 1516878
+    },
+    {
+      "kind": "voice",
+      "token": 231,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 5272729,
+      "time_ms": 1519649
+    },
+    {
+      "kind": "voice",
+      "token": 232,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 148531050,
+      "time_ms": 1521026
+    },
+    {
+      "kind": "voice",
+      "token": 233,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 242551607,
+      "time_ms": 1522424
+    },
+    {
+      "kind": "voice",
+      "token": 234,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 88914704,
+      "time_ms": 1523796
+    },
+    {
+      "kind": "bgm",
+      "token": 236,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 156922598,
+      "time_ms": 1528677
+    },
+    {
+      "kind": "voice",
+      "token": 238,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 77566676,
+      "time_ms": 1531388
+    },
+    {
+      "kind": "voice",
+      "token": 239,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 206582649,
+      "time_ms": 1532458
+    },
+    {
+      "kind": "voice",
+      "token": 240,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 223994570,
+      "time_ms": 1533878
+    },
+    {
+      "kind": "voice",
+      "token": 241,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 48787735,
+      "time_ms": 1535259
+    },
+    {
+      "kind": "voice",
+      "token": 242,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 189989232,
+      "time_ms": 1536665
+    },
+    {
+      "kind": "voice",
+      "token": 243,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 117919777,
+      "time_ms": 1539399
+    },
+    {
+      "kind": "voice",
+      "token": 244,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 235627254,
+      "time_ms": 1544945
+    },
+    {
+      "kind": "voice",
+      "token": 245,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 37857803,
+      "time_ms": 1549045
+    },
+    {
+      "kind": "voice",
+      "token": 246,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 151925652,
+      "time_ms": 1550411
+    },
+    {
+      "kind": "voice",
+      "token": 247,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 10649913,
+      "time_ms": 1551801
+    },
+    {
+      "kind": "voice",
+      "token": 248,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 9726346,
+      "time_ms": 1553162
+    },
+    {
+      "kind": "voice",
+      "token": 249,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 49954767,
+      "time_ms": 1557261
+    },
+    {
+      "kind": "voice",
+      "token": 250,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 154071904,
+      "time_ms": 1561381
+    },
+    {
+      "kind": "voice",
+      "token": 251,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 28153045,
+      "time_ms": 1562760
+    },
+    {
+      "kind": "voice",
+      "token": 252,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 65386306,
+      "time_ms": 1565510
+    },
+    {
+      "kind": "voice",
+      "token": 253,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 225694127,
+      "time_ms": 1566884
+    },
+    {
+      "kind": "voice",
+      "token": 254,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 155960744,
+      "time_ms": 1568284
+    },
+    {
+      "kind": "bgm",
+      "token": 257,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 159017111,
+      "time_ms": 1580583
+    },
+    {
+      "kind": "voice",
+      "token": 258,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 20380400,
+      "time_ms": 1581917
+    },
+    {
+      "kind": "voice",
+      "token": 259,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 256369189,
+      "time_ms": 1583335
+    },
+    {
+      "kind": "voice",
+      "token": 260,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 258167890,
+      "time_ms": 1586077
+    },
+    {
+      "kind": "voice",
+      "token": 261,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 94289535,
+      "time_ms": 1587483
+    },
+    {
+      "kind": "voice",
+      "token": 262,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 244959972,
+      "time_ms": 1590242
+    },
+    {
+      "kind": "voice",
+      "token": 263,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 246765317,
+      "time_ms": 1593010
+    },
+    {
+      "kind": "voice",
+      "token": 264,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 76243890,
+      "time_ms": 1595760
+    },
+    {
+      "kind": "voice",
+      "token": 265,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 26608727,
+      "time_ms": 1599893
+    },
+    {
+      "kind": "voice",
+      "token": 266,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 70254300,
+      "time_ms": 1602664
+    },
+    {
+      "kind": "voice",
+      "token": 267,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 153366881,
+      "time_ms": 1604064
+    },
+    {
+      "kind": "voice",
+      "token": 268,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 36610834,
+      "time_ms": 1605497
+    },
+    {
+      "kind": "voice",
+      "token": 269,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 83264063,
+      "time_ms": 1606896
+    },
+    {
+      "kind": "voice",
+      "token": 270,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 262690808,
+      "time_ms": 1608352
+    },
+    {
+      "kind": "voice",
+      "token": 271,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 110891205,
+      "time_ms": 1612584
+    },
+    {
+      "kind": "voice",
+      "token": 272,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 142015974,
+      "time_ms": 1614056
+    },
+    {
+      "kind": "voice",
+      "token": 273,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 152291011,
+      "time_ms": 1615429
+    },
+    {
+      "kind": "bgm",
+      "token": 275,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 11163117,
+      "time_ms": 1621670
+    },
+    {
+      "kind": "se",
+      "token": 277,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 191096499,
+      "time_ms": 1624351
+    },
+    {
+      "kind": "voice",
+      "token": 278,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 96461192,
+      "time_ms": 1626776
+    },
+    {
+      "kind": "voice",
+      "token": 279,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 170914325,
+      "time_ms": 1630845
+    },
+    {
+      "kind": "voice",
+      "token": 280,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 258703666,
+      "time_ms": 1639144
+    },
+    {
+      "kind": "voice",
+      "token": 281,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 221653755,
+      "time_ms": 1641899
+    },
+    {
+      "kind": "voice",
+      "token": 282,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 8678596,
+      "time_ms": 1643244
+    },
+    {
+      "kind": "voice",
+      "token": 283,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 252944809,
+      "time_ms": 1644592
+    },
+    {
+      "kind": "voice",
+      "token": 284,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 152609850,
+      "time_ms": 1645982
+    },
+    {
+      "kind": "voice",
+      "token": 285,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 232680035,
+      "time_ms": 1648728
+    },
+    {
+      "kind": "voice",
+      "token": 286,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 47761548,
+      "time_ms": 1650083
+    },
+    {
+      "kind": "se",
+      "token": 287,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 130400337,
+      "time_ms": 1651415
+    },
+    {
+      "kind": "voice",
+      "token": 288,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 259113142,
+      "time_ms": 1651445
+    },
+    {
+      "kind": "voice",
+      "token": 289,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 237510831,
+      "time_ms": 1654210
+    },
+    {
+      "kind": "voice",
+      "token": 292,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 37736982,
+      "time_ms": 1665495
+    },
+    {
+      "kind": "voice",
+      "token": 293,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 197908019,
+      "time_ms": 1666869
+    },
+    {
+      "kind": "voice",
+      "token": 294,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 143522076,
+      "time_ms": 1668231
+    },
+    {
+      "kind": "voice",
+      "token": 295,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 135935193,
+      "time_ms": 1672261
+    },
+    {
+      "kind": "voice",
+      "token": 296,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 78779254,
+      "time_ms": 1674948
+    },
+    {
+      "kind": "voice",
+      "token": 297,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 13134355,
+      "time_ms": 1676291
+    },
+    {
+      "kind": "voice",
+      "token": 298,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 36975996,
+      "time_ms": 1677643
+    },
+    {
+      "kind": "voice",
+      "token": 299,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 170014081,
+      "time_ms": 1678990
+    },
+    {
+      "kind": "voice",
+      "token": 300,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 53736446,
+      "time_ms": 1681661
+    },
+    {
+      "kind": "voice",
+      "token": 301,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 174664315,
+      "time_ms": 1682913
+    },
+    {
+      "kind": "voice",
+      "token": 302,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 218582596,
+      "time_ms": 1683773
+    },
+    {
+      "kind": "voice",
+      "token": 303,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 187653417,
+      "time_ms": 1685144
+    },
+    {
+      "kind": "voice",
+      "token": 304,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 66081210,
+      "time_ms": 1686498
+    },
+    {
+      "kind": "voice",
+      "token": 305,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 217889251,
+      "time_ms": 1689244
+    },
+    {
+      "kind": "voice",
+      "token": 306,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 197290744,
+      "time_ms": 1692060
+    },
+    {
+      "kind": "voice",
+      "token": 307,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 179217417,
+      "time_ms": 1694823
+    },
+    {
+      "kind": "voice",
+      "token": 308,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 68367642,
+      "time_ms": 1696204
+    },
+    {
+      "kind": "voice",
+      "token": 309,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 8883751,
+      "time_ms": 1697565
+    },
+    {
+      "kind": "voice",
+      "token": 310,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 24735296,
+      "time_ms": 1698955
+    },
+    {
+      "kind": "voice",
+      "token": 311,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 81517621,
+      "time_ms": 1700391
+    },
+    {
+      "kind": "voice",
+      "token": 312,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 5371798,
+      "time_ms": 1701898
+    },
+    {
+      "kind": "voice",
+      "token": 313,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 103466419,
+      "time_ms": 1703378
+    },
+    {
+      "kind": "voice",
+      "token": 314,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 67701404,
+      "time_ms": 1704769
+    },
+    {
+      "kind": "voice",
+      "token": 315,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 250215969,
+      "time_ms": 1706028
+    },
+    {
+      "kind": "voice",
+      "token": 316,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 39486494,
+      "time_ms": 1708833
+    },
+    {
+      "kind": "voice",
+      "token": 317,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 54690331,
+      "time_ms": 1710219
+    },
+    {
+      "kind": "voice",
+      "token": 318,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 85340004,
+      "time_ms": 1711582
+    },
+    {
+      "kind": "voice",
+      "token": 319,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 187433417,
+      "time_ms": 1712957
+    },
+    {
+      "kind": "voice",
+      "token": 320,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 168856538,
+      "time_ms": 1714307
+    },
+    {
+      "kind": "voice",
+      "token": 321,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 218839527,
+      "time_ms": 1715661
+    },
+    {
+      "kind": "voice",
+      "token": 322,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 99034924,
+      "time_ms": 1720095
+    },
+    {
+      "kind": "voice",
+      "token": 323,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 258952305,
+      "time_ms": 1721432
+    },
+    {
+      "kind": "voice",
+      "token": 324,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 113284578,
+      "time_ms": 1722808
+    },
+    {
+      "kind": "voice",
+      "token": 325,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 215473615,
+      "time_ms": 1724207
+    },
+    {
+      "kind": "voice",
+      "token": 326,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 128690504,
+      "time_ms": 1725582
+    },
+    {
+      "kind": "voice",
+      "token": 327,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 125185309,
+      "time_ms": 1726996
+    },
+    {
+      "kind": "voice",
+      "token": 328,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 264273630,
+      "time_ms": 1728367
+    },
+    {
+      "kind": "voice",
+      "token": 329,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 97862107,
+      "time_ms": 1729641
+    },
+    {
+      "kind": "voice",
+      "token": 330,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 250141328,
+      "time_ms": 1732347
+    },
+    {
+      "kind": "voice",
+      "token": 331,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 221195077,
+      "time_ms": 1733715
+    },
+    {
+      "kind": "voice",
+      "token": 332,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 58216038,
+      "time_ms": 1735101
+    },
+    {
+      "kind": "voice",
+      "token": 333,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 44737183,
+      "time_ms": 1737944
+    },
+    {
+      "kind": "voice",
+      "token": 334,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 30556292,
+      "time_ms": 1740662
+    },
+    {
+      "kind": "voice",
+      "token": 335,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 233641577,
+      "time_ms": 1742024
+    },
+    {
+      "kind": "voice",
+      "token": 336,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 37681094,
+      "time_ms": 1745085
+    },
+    {
+      "kind": "voice",
+      "token": 337,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 31543587,
+      "time_ms": 1747460
+    },
+    {
+      "kind": "voice",
+      "token": 338,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 120570956,
+      "time_ms": 1748923
+    },
+    {
+      "kind": "voice",
+      "token": 339,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 185449745,
+      "time_ms": 1750327
+    },
+    {
+      "kind": "voice",
+      "token": 340,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 265186306,
+      "time_ms": 1751790
+    },
+    {
+      "kind": "voice",
+      "token": 341,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 58516335,
+      "time_ms": 1753202
+    },
+    {
+      "kind": "voice",
+      "token": 342,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 3342440,
+      "time_ms": 1754598
+    },
+    {
+      "kind": "voice",
+      "token": 343,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 190246845,
+      "time_ms": 1756005
+    },
+    {
+      "kind": "voice",
+      "token": 344,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 162258686,
+      "time_ms": 1757428
+    },
+    {
+      "kind": "bgm",
+      "token": 346,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 18629852,
+      "time_ms": 1765169
+    },
+    {
+      "kind": "voice",
+      "token": 348,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 39172202,
+      "time_ms": 1773492
+    },
+    {
+      "kind": "voice",
+      "token": 349,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 17252563,
+      "time_ms": 1776266
+    },
+    {
+      "kind": "voice",
+      "token": 350,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 206790972,
+      "time_ms": 1777676
+    },
+    {
+      "kind": "voice",
+      "token": 351,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 194880065,
+      "time_ms": 1779068
+    },
+    {
+      "kind": "se",
+      "token": 352,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 230525042,
+      "time_ms": 1779880
+    },
+    {
+      "kind": "voice",
+      "token": 353,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 172837179,
+      "time_ms": 1782646
+    },
+    {
+      "kind": "voice",
+      "token": 354,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 97034756,
+      "time_ms": 1784110
+    },
+    {
+      "kind": "voice",
+      "token": 355,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 210653673,
+      "time_ms": 1785575
+    },
+    {
+      "kind": "voice",
+      "token": 356,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 153527162,
+      "time_ms": 1787022
+    },
+    {
+      "kind": "voice",
+      "token": 357,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 7340315,
+      "time_ms": 1792548
+    },
+    {
+      "kind": "voice",
+      "token": 358,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 61174372,
+      "time_ms": 1793968
+    },
+    {
+      "kind": "voice",
+      "token": 359,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 207791673,
+      "time_ms": 1800669
+    },
+    {
+      "kind": "voice",
+      "token": 360,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 46429526,
+      "time_ms": 1803629
+    },
+    {
+      "kind": "voice",
+      "token": 361,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 76594291,
+      "time_ms": 1805010
+    },
+    {
+      "kind": "voice",
+      "token": 362,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 242931292,
+      "time_ms": 1806475
+    },
+    {
+      "kind": "bgm",
+      "token": 365,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 234645439,
+      "time_ms": 1816437
+    },
+    {
+      "kind": "env",
+      "token": 366,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 147754636,
+      "time_ms": 1816449
+    },
+    {
+      "kind": "voice",
+      "token": 368,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 164189878,
+      "time_ms": 1821665
+    },
+    {
+      "kind": "voice",
+      "token": 369,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 40156847,
+      "time_ms": 1824082
+    },
+    {
+      "kind": "bgm",
+      "token": 370,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 227188052,
+      "time_ms": 1827050
+    },
+    {
+      "kind": "voice",
+      "token": 371,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 49071357,
+      "time_ms": 1827087
+    },
+    {
+      "kind": "voice",
+      "token": 372,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 161066814,
+      "time_ms": 1828394
+    },
+    {
+      "kind": "voice",
+      "token": 373,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 33109399,
+      "time_ms": 1831178
+    },
+    {
+      "kind": "voice",
+      "token": 374,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 236311536,
+      "time_ms": 1832560
+    },
+    {
+      "kind": "voice",
+      "token": 375,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 107583269,
+      "time_ms": 1833955
+    },
+    {
+      "kind": "voice",
+      "token": 376,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 129271122,
+      "time_ms": 1836662
+    },
+    {
+      "kind": "voice",
+      "token": 377,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 124338331,
+      "time_ms": 1839449
+    },
+    {
+      "kind": "voice",
+      "token": 378,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 107320292,
+      "time_ms": 1840898
+    },
+    {
+      "kind": "voice",
+      "token": 379,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 64681033,
+      "time_ms": 1842293
+    },
+    {
+      "kind": "voice",
+      "token": 380,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41178202,
+      "time_ms": 1843712
+    },
+    {
+      "kind": "voice",
+      "token": 381,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 95813735,
+      "time_ms": 1845062
+    },
+    {
+      "kind": "voice",
+      "token": 382,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 20233132,
+      "time_ms": 1847861
+    },
+    {
+      "kind": "voice",
+      "token": 383,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 120565489,
+      "time_ms": 1849256
+    },
+    {
+      "kind": "voice",
+      "token": 384,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 231476834,
+      "time_ms": 1850663
+    },
+    {
+      "kind": "voice",
+      "token": 385,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 208387655,
+      "time_ms": 1854831
+    },
+    {
+      "kind": "voice",
+      "token": 388,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 209274309,
+      "time_ms": 1864911
+    },
+    {
+      "kind": "voice",
+      "token": 389,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 169123558,
+      "time_ms": 1866331
+    },
+    {
+      "kind": "voice",
+      "token": 390,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 32187331,
+      "time_ms": 1867719
+    },
+    {
+      "kind": "bgm",
+      "token": 392,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 147975000,
+      "time_ms": 1870531
+    },
+    {
+      "kind": "voice",
+      "token": 393,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 86389937,
+      "time_ms": 1870554
+    },
+    {
+      "kind": "voice",
+      "token": 394,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 82308386,
+      "time_ms": 1871892
+    },
+    {
+      "kind": "voice",
+      "token": 395,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 201435151,
+      "time_ms": 1873283
+    },
+    {
+      "kind": "se",
+      "token": 397,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 237368760,
+      "time_ms": 1881827
+    },
+    {
+      "kind": "voice",
+      "token": 398,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 190308241,
+      "time_ms": 1881840
+    },
+    {
+      "kind": "voice",
+      "token": 399,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 193234638,
+      "time_ms": 1884294
+    },
+    {
+      "kind": "voice",
+      "token": 400,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 62301707,
+      "time_ms": 1885693
+    },
+    {
+      "kind": "voice",
+      "token": 401,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 193900568,
+      "time_ms": 1891298
+    },
+    {
+      "kind": "voice",
+      "token": 402,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 22742697,
+      "time_ms": 1894061
+    },
+    {
+      "kind": "voice",
+      "token": 403,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 226735418,
+      "time_ms": 1895476
+    },
+    {
+      "kind": "voice",
+      "token": 404,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 142546375,
+      "time_ms": 1896936
+    },
+    {
+      "kind": "voice",
+      "token": 405,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 20561760,
+      "time_ms": 1898331
+    },
+    {
+      "kind": "voice",
+      "token": 406,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 88081745,
+      "time_ms": 1901143
+    },
+    {
+      "kind": "voice",
+      "token": 407,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 39560002,
+      "time_ms": 1902555
+    },
+    {
+      "kind": "voice",
+      "token": 408,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 99421615,
+      "time_ms": 1903986
+    },
+    {
+      "kind": "voice",
+      "token": 409,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 236429396,
+      "time_ms": 1906745
+    },
+    {
+      "kind": "voice",
+      "token": 410,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 255290105,
+      "time_ms": 1908147
+    },
+    {
+      "kind": "voice",
+      "token": 411,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 43627286,
+      "time_ms": 1910901
+    },
+    {
+      "kind": "voice",
+      "token": 412,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 159281971,
+      "time_ms": 1912303
+    },
+    {
+      "kind": "voice",
+      "token": 413,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 5538824,
+      "time_ms": 1915045
+    },
+    {
+      "kind": "voice",
+      "token": 414,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 133713117,
+      "time_ms": 1916431
+    },
+    {
+      "kind": "voice",
+      "token": 415,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 259002270,
+      "time_ms": 1917811
+    },
+    {
+      "kind": "voice",
+      "token": 416,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 203472795,
+      "time_ms": 1919209
+    },
+    {
+      "kind": "voice",
+      "token": 417,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 14079716,
+      "time_ms": 1920572
+    },
+    {
+      "kind": "voice",
+      "token": 418,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 246410057,
+      "time_ms": 1922030
+    },
+    {
+      "kind": "voice",
+      "token": 419,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 157083430,
+      "time_ms": 1924927
+    },
+    {
+      "kind": "voice",
+      "token": 420,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 179723011,
+      "time_ms": 1926322
+    },
+    {
+      "kind": "voice",
+      "token": 421,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 43654828,
+      "time_ms": 1927715
+    },
+    {
+      "kind": "voice",
+      "token": 422,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 15880237,
+      "time_ms": 1931526
+    },
+    {
+      "kind": "voice",
+      "token": 423,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 155277742,
+      "time_ms": 1932909
+    },
+    {
+      "kind": "voice",
+      "token": 424,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 79009507,
+      "time_ms": 1937094
+    },
+    {
+      "kind": "voice",
+      "token": 425,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 119055352,
+      "time_ms": 1939843
+    },
+    {
+      "kind": "voice",
+      "token": 426,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 60778765,
+      "time_ms": 1941226
+    },
+    {
+      "kind": "voice",
+      "token": 427,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 256689690,
+      "time_ms": 1943977
+    },
+    {
+      "kind": "voice",
+      "token": 428,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 252123943,
+      "time_ms": 1945412
+    },
+    {
+      "kind": "voice",
+      "token": 429,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 42338112,
+      "time_ms": 1946849
+    },
+    {
+      "kind": "voice",
+      "token": 430,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 149180725,
+      "time_ms": 1948244
+    },
+    {
+      "kind": "voice",
+      "token": 431,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 205379734,
+      "time_ms": 1949548
+    },
+    {
+      "kind": "bgm",
+      "token": 433,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 29999216,
+      "time_ms": 1953076
+    },
+    {
+      "kind": "voice",
+      "token": 435,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 71263342,
+      "time_ms": 1955868
+    },
+    {
+      "kind": "voice",
+      "token": 436,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 137524523,
+      "time_ms": 1957354
+    },
+    {
+      "kind": "voice",
+      "token": 437,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 196057652,
+      "time_ms": 1958767
+    },
+    {
+      "kind": "voice",
+      "token": 438,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 9762137,
+      "time_ms": 1960159
+    },
+    {
+      "kind": "voice",
+      "token": 439,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 20273654,
+      "time_ms": 1963013
+    },
+    {
+      "kind": "voice",
+      "token": 440,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 241448595,
+      "time_ms": 1964478
+    },
+    {
+      "kind": "voice",
+      "token": 441,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 240644092,
+      "time_ms": 1965896
+    },
+    {
+      "kind": "voice",
+      "token": 442,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 93955585,
+      "time_ms": 1967333
+    },
+    {
+      "kind": "voice",
+      "token": 443,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 194538802,
+      "time_ms": 1968761
+    },
+    {
+      "kind": "voice",
+      "token": 444,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 35957727,
+      "time_ms": 1970194
+    },
+    {
+      "kind": "voice",
+      "token": 447,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 122227542,
+      "time_ms": 1976341
+    },
+    {
+      "kind": "voice",
+      "token": 450,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 211123625,
+      "time_ms": 1982255
+    },
+    {
+      "kind": "voice",
+      "token": 451,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 48894010,
+      "time_ms": 1983363
+    },
+    {
+      "kind": "voice",
+      "token": 452,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 108709063,
+      "time_ms": 1984800
+    },
+    {
+      "kind": "voice",
+      "token": 453,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 141841548,
+      "time_ms": 1987607
+    },
+    {
+      "kind": "voice",
+      "token": 454,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 154541137,
+      "time_ms": 1989087
+    },
+    {
+      "kind": "voice",
+      "token": 455,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 24583746,
+      "time_ms": 1990499
+    },
+    {
+      "kind": "voice",
+      "token": 456,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 85023919,
+      "time_ms": 1991934
+    },
+    {
+      "kind": "voice",
+      "token": 457,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 65922216,
+      "time_ms": 1993406
+    },
+    {
+      "kind": "voice",
+      "token": 458,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 189879037,
+      "time_ms": 1994742
+    },
+    {
+      "kind": "voice",
+      "token": 459,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 260015422,
+      "time_ms": 1996120
+    },
+    {
+      "kind": "voice",
+      "token": 460,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 42256059,
+      "time_ms": 1997576
+    },
+    {
+      "kind": "voice",
+      "token": 461,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 257669616,
+      "time_ms": 2000526
+    },
+    {
+      "kind": "voice",
+      "token": 462,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 46228773,
+      "time_ms": 2002026
+    },
+    {
+      "kind": "voice",
+      "token": 463,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 225908934,
+      "time_ms": 2003496
+    },
+    {
+      "kind": "voice",
+      "token": 464,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 143207971,
+      "time_ms": 2004940
+    },
+    {
+      "kind": "voice",
+      "token": 465,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 5729612,
+      "time_ms": 2006360
+    },
+    {
+      "kind": "voice",
+      "token": 466,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 168362513,
+      "time_ms": 2007777
+    },
+    {
+      "kind": "voice",
+      "token": 467,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 210290510,
+      "time_ms": 2011766
+    },
+    {
+      "kind": "voice",
+      "token": 468,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 73270411,
+      "time_ms": 2013316
+    },
+    {
+      "kind": "voice",
+      "token": 469,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 253955456,
+      "time_ms": 2016060
+    },
+    {
+      "kind": "voice",
+      "token": 470,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 38850165,
+      "time_ms": 2017643
+    },
+    {
+      "kind": "bgm",
+      "token": 472,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 74297175,
+      "time_ms": 2022194
+    },
+    {
+      "kind": "voice",
+      "token": 474,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 187250985,
+      "time_ms": 2027581
+    },
+    {
+      "kind": "voice",
+      "token": 475,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 72990138,
+      "time_ms": 2029147
+    },
+    {
+      "kind": "voice",
+      "token": 476,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 128660963,
+      "time_ms": 2032156
+    },
+    {
+      "kind": "voice",
+      "token": 477,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 224478732,
+      "time_ms": 2033634
+    },
+    {
+      "kind": "voice",
+      "token": 478,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 186099665,
+      "time_ms": 2035108
+    },
+    {
+      "kind": "voice",
+      "token": 479,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 58552846,
+      "time_ms": 2037963
+    },
+    {
+      "kind": "voice",
+      "token": 480,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 24207811,
+      "time_ms": 2042177
+    },
+    {
+      "kind": "voice",
+      "token": 481,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 97565292,
+      "time_ms": 2043573
+    },
+    {
+      "kind": "voice",
+      "token": 482,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 123238637,
+      "time_ms": 2046364
+    },
+    {
+      "kind": "voice",
+      "token": 483,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 140555386,
+      "time_ms": 2049093
+    },
+    {
+      "kind": "voice",
+      "token": 484,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 238151687,
+      "time_ms": 2050509
+    },
+    {
+      "kind": "voice",
+      "token": 485,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 37214368,
+      "time_ms": 2051905
+    },
+    {
+      "kind": "voice",
+      "token": 486,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 109458709,
+      "time_ms": 2053316
+    },
+    {
+      "kind": "voice",
+      "token": 487,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 63448310,
+      "time_ms": 2054704
+    },
+    {
+      "kind": "voice",
+      "token": 488,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 259429779,
+      "time_ms": 2056068
+    },
+    {
+      "kind": "voice",
+      "token": 489,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 204883348,
+      "time_ms": 2060195
+    },
+    {
+      "kind": "voice",
+      "token": 490,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 138332985,
+      "time_ms": 2061568
+    },
+    {
+      "kind": "voice",
+      "token": 491,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 262278026,
+      "time_ms": 2062970
+    },
+    {
+      "kind": "voice",
+      "token": 492,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 173024983,
+      "time_ms": 2064348
+    },
+    {
+      "kind": "voice",
+      "token": 493,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 132599856,
+      "time_ms": 2065739
+    },
+    {
+      "kind": "voice",
+      "token": 494,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 210121317,
+      "time_ms": 2067159
+    },
+    {
+      "kind": "voice",
+      "token": 495,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 243668714,
+      "time_ms": 2072142
+    },
+    {
+      "kind": "voice",
+      "token": 496,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 20569271,
+      "time_ms": 2073571
+    },
+    {
+      "kind": "voice",
+      "token": 497,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 150517672,
+      "time_ms": 2077735
+    },
+    {
+      "kind": "voice",
+      "token": 498,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 222140925,
+      "time_ms": 2079169
+    },
+    {
+      "kind": "voice",
+      "token": 499,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 264532030,
+      "time_ms": 2080611
+    },
+    {
+      "kind": "voice",
+      "token": 500,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 574907,
+      "time_ms": 2082104
+    },
+    {
+      "kind": "voice",
+      "token": 501,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 184110212,
+      "time_ms": 2083582
+    },
+    {
+      "kind": "voice",
+      "token": 502,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 60486249,
+      "time_ms": 2084971
+    },
+    {
+      "kind": "voice",
+      "token": 503,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 80536058,
+      "time_ms": 2086417
+    },
+    {
+      "kind": "voice",
+      "token": 504,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 239386503,
+      "time_ms": 2087865
+    },
+    {
+      "kind": "voice",
+      "token": 505,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 181482016,
+      "time_ms": 2089301
+    },
+    {
+      "kind": "voice",
+      "token": 506,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 230459541,
+      "time_ms": 2090737
+    },
+    {
+      "kind": "voice",
+      "token": 507,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 175134722,
+      "time_ms": 2093569
+    },
+    {
+      "kind": "voice",
+      "token": 508,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41033583,
+      "time_ms": 2094972
+    },
+    {
+      "kind": "voice",
+      "token": 509,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 40093460,
+      "time_ms": 2097766
+    },
+    {
+      "kind": "voice",
+      "token": 510,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 211678581,
+      "time_ms": 2100585
+    },
+    {
+      "kind": "voice",
+      "token": 511,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 32242646,
+      "time_ms": 2102012
+    },
+    {
+      "kind": "voice",
+      "token": 512,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 89114867,
+      "time_ms": 2103412
+    },
+    {
+      "kind": "voice",
+      "token": 513,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 192683720,
+      "time_ms": 2106197
+    },
+    {
+      "kind": "voice",
+      "token": 514,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 112077981,
+      "time_ms": 2107610
+    },
+    {
+      "kind": "voice",
+      "token": 515,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 259285086,
+      "time_ms": 2109020
+    },
+    {
+      "kind": "voice",
+      "token": 516,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 211680603,
+      "time_ms": 2110435
+    },
+    {
+      "kind": "voice",
+      "token": 517,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 231509412,
+      "time_ms": 2111837
+    },
+    {
+      "kind": "voice",
+      "token": 518,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 258111241,
+      "time_ms": 2113236
+    },
+    {
+      "kind": "voice",
+      "token": 519,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 155483162,
+      "time_ms": 2114636
+    },
+    {
+      "kind": "voice",
+      "token": 520,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 20866591,
+      "time_ms": 2118844
+    },
+    {
+      "kind": "voice",
+      "token": 521,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 79733848,
+      "time_ms": 2120270
+    },
+    {
+      "kind": "voice",
+      "token": 522,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 19038189,
+      "time_ms": 2121647
+    },
+    {
+      "kind": "voice",
+      "token": 523,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 67899258,
+      "time_ms": 2124426
+    },
+    {
+      "kind": "voice",
+      "token": 524,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 43947783,
+      "time_ms": 2125821
+    },
+    {
+      "kind": "voice",
+      "token": 525,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 5606304,
+      "time_ms": 2127273
+    },
+    {
+      "kind": "voice",
+      "token": 526,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 15850517,
+      "time_ms": 2128707
+    },
+    {
+      "kind": "voice",
+      "token": 527,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 224849910,
+      "time_ms": 2130150
+    },
+    {
+      "kind": "voice",
+      "token": 528,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 241497235,
+      "time_ms": 2131568
+    },
+    {
+      "kind": "voice",
+      "token": 529,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 32847356,
+      "time_ms": 2133003
+    },
+    {
+      "kind": "voice",
+      "token": 530,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 63132673,
+      "time_ms": 2134417
+    },
+    {
+      "kind": "voice",
+      "token": 531,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 41345842,
+      "time_ms": 2135825
+    },
+    {
+      "kind": "voice",
+      "token": 532,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 207014367,
+      "time_ms": 2137236
+    },
+    {
+      "kind": "voice",
+      "token": 533,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 22964504,
+      "time_ms": 2138651
+    },
+    {
+      "kind": "voice",
+      "token": 534,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 46033833,
+      "time_ms": 2141476
+    },
+    {
+      "kind": "voice",
+      "token": 535,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 194692666,
+      "time_ms": 2142932
+    },
+    {
+      "kind": "bgm",
+      "token": 537,
+      "category_percent": 50,
+      "output": 0.25,
+      "fade": 1,
+      "duck": 1,
+      "player": 265279584,
+      "time_ms": 2147864
+    },
+    {
+      "kind": "se",
+      "token": 539,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 18154854,
+      "time_ms": 2158709
+    },
+    {
+      "kind": "se",
+      "token": 540,
+      "category_percent": 50,
+      "output": 0.5,
+      "fade": 1,
+      "duck": 1,
+      "player": 99140795,
+      "time_ms": 2162928
+    },
+    {
+      "kind": "voice",
+      "token": 542,
+      "category_percent": 75,
+      "output": 0.75,
+      "fade": 1,
+      "duck": 1,
+      "player": 132330316,
+      "time_ms": 2173160
+    }
+  ],
+  "play_counts": {
+    "bgm": 19,
+    "env": 1,
+    "se": 7,
+    "voice": 466
+  }
+}

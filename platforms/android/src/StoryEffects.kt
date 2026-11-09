@@ -20,6 +20,14 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private var animator:ValueAnimator?=null
     private var bgmAnimator:ValueAnimator?=null
     private val gains=mutableMapOf<String,AudioGain>()
+    private val categoryVolumes=mutableMapOf<String,Int>()
+    fun configureAudio(config:JSONObject) {
+        for(kind in listOf("bgm","voice","se","env","system")){
+            val percent=config.getInt(kind);check(percent in 0..100)
+            categoryVolumes[kind]=percent
+        }
+        for(kind in gains.keys)applyGain(kind)
+    }
     private val focusPaused=mutableSetOf<String>()
     private val pendingStart=mutableMapOf<String,()->Unit>()
     private val audioTokens=mutableMapOf<String,Long>()
@@ -64,8 +72,10 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private var focused=false
     private fun applyGain(kind:String) {
         val gain=gains.getValue(kind)
+        gain.category=categoryVolumes.getValue(kind)/100f
         gain.duck=if(ducked).2f else 1f
         players.getValue(kind).first.setVolume(gain.output,gain.output)
+        File(root,"audio-gain-events.jsonl").appendText(JSONObject().put("kind",kind).put("token",audioTokens.getValue(kind)).put("category_percent",categoryVolumes.getValue(kind)).put("output",gain.output).put("fade",gain.fade).put("duck",gain.duck).put("player",System.identityHashCode(players.getValue(kind).first)).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
     }
     private fun regainFocus() {
         if(timeline.paused){focused=false;return}

@@ -1,0 +1,26 @@
+{
+  "scope": "BLESS translated ARM64; category gain/device state, not acoustic parity or complete Config/message support",
+  "apk_sha256": "9f3d5360e301d207a2166b2f1f307691f5e928719d2f36cea4c24e81be076977",
+  "pages": 793,
+  "audio_requests": 493,
+  "play_counts": {
+    "bgm": 19,
+    "env": 1,
+    "se": 7,
+    "voice": 466
+  },
+  "motion_frames": 65,
+  "lifecycle_cycles": 5,
+  "slider_changes": 10,
+  "vm_live_bytes": 0,
+  "reports": {
+    "original": "fb9dd86bc5e646e792c93609e02b75b091dfed0cbc82149481782a596e8df2a6",
+    "translated": "aa46eabec15e2099f853b4d28647e291530ef84a491a5205b8e9509eb475a8d0",
+    "audio-state": "4243f22a9c5220c245570aa6d3823024a7fbfda11f09296779e3e40bc17c5682",
+    "lifecycle": "887be8148ea3eb87ab3a4e91a6050966a0f97759b9d2db1d40799f8a8e033e64",
+    "story": "66f8162a4cd5f2c43c95f8868ac99afebace13340bc02cff90ab3e61e4856e90",
+    "gains": "0aa447fa6a1523d8fd826a5c6e12c5b1d31825083a445e3c98e7d8e55670da52",
+    "frames": "f127f7c9365f9af9bf1e4621500f9b833c0fdd970a0c99a4e74d0a08368b558b",
+    "audio-evidence": "f547297ce206c09d0a237f72b88c5d809ff1a9a0434324757ca634afdbd0dde7"
+  }
+}

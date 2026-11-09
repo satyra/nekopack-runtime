@@ -17,6 +17,13 @@ use std::{
     io::{Read, Seek},
 };
 const PIXELS: usize = 64 * 1024 * 1024;
+const AUDIO_CONFIG_FIELDS: [(&str, &str); 5] = [
+    ("bgm", "VolBGM"),
+    ("voice", "VolVO"),
+    ("se", "VolSE"),
+    ("env", "VolENV"),
+    ("system", "VolSYS"),
+];
 /// Save-list labels owned by the original system script, not scenario variables.
 /// Metadata only: this is not a resumable VM/scene save file.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
@@ -180,6 +187,44 @@ pub struct StorySession<R: Read + Seek> {
     effects: Vec<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
+    /// Read the original system Config; the VM remains the single source of truth.
+    pub fn audio_config(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed {
+            return Err("story session stopped after error".into());
+        }
+        let mut fields = Vec::new();
+        for (key, field) in AUDIO_CONFIG_FIELDS {
+            self.system
+                .eval("audio-config", &format!("if(typeof Config.{field} != \"integer\")throw \"invalid audio configuration type\"\nreturn Config.{field}.tostring()"))?;
+            let value: u8 = self.system.result().parse()?;
+            if value > 100 {
+                return Err(format!("invalid Config.{field}: {value}").into());
+            }
+            fields.push(format!("\"{key}\":{value}"));
+        }
+        Ok(format!("{{{}}}", fields.join(",")).into_bytes())
+    }
+
+    /// Session-local settings; this does not implement the original config.sav format.
+    pub fn set_audio_config(
+        &mut self,
+        channel: u64,
+        percent: u64,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        let (_, field) = AUDIO_CONFIG_FIELDS
+            .get(usize::try_from(channel)?)
+            .ok_or("unknown audio configuration channel")?;
+        if percent > 100 {
+            return Err("audio configuration percent exceeds 100".into());
+        }
+        self.audio_config()?;
+        self.system.eval(
+            "set-audio-config",
+            &format!("Config.{field} = {percent}\nRestoreVolume()"),
+        )?;
+        self.audio_config()
+    }
+
     pub fn open(mut store: DatGame<R>, choice: i32) -> Result<Self, Box<dyn Error>> {
         let (mut machine, mut system) = bootstrap(&mut store, choice, &mut std::io::sink())?;
         machine.enable_dialogue();
@@ -1087,6 +1132,36 @@ mod tests {
             host_sequence: 0,
             effects: Vec::new(),
         }
+    }
+
+    #[test]
+    fn audio_config_uses_vm_state_and_rejects_invalid_updates_without_advancing() {
+        let mut s = session(b"first\nsecond");
+        s.system.eval("config", "Config <- {VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50}\nfunction RestoreVolume(){HostVolume <- Config.VolBGM\n}").unwrap();
+        let page = s.page().unwrap().packet().unwrap();
+        assert_eq!(
+            String::from_utf8(s.audio_config().unwrap()).unwrap(),
+            "{\"bgm\":50,\"voice\":75,\"se\":50,\"env\":50,\"system\":50}"
+        );
+        s.set_audio_config(0, 23).unwrap();
+        s.system
+            .eval("check", "return HostVolume.tostring()")
+            .unwrap();
+        assert_eq!(s.system.result(), "23");
+        let before = s.audio_config().unwrap();
+        assert!(s.set_audio_config(5, 50).is_err());
+        assert!(s.set_audio_config(0, 101).is_err());
+        assert!(s.set_audio_config(u64::MAX, 50).is_err());
+        assert_eq!(s.audio_config().unwrap(), before);
+        assert_eq!(s.page().unwrap().packet().unwrap(), page);
+        s.set_audio_config(0, 0).unwrap();
+        s.set_audio_config(0, 100).unwrap();
+        s.system.eval("bad", "Config.VolVO = -1").unwrap();
+        assert!(s.audio_config().is_err());
+        s.system.eval("bad", "Config.VolVO = 50.0").unwrap();
+        assert!(s.audio_config().is_err());
+        s.system.eval("bad", "Config.VolVO = 101").unwrap();
+        assert!(s.audio_config().is_err());
     }
 
     #[test]

@@ -161,6 +161,7 @@ class MainActivity : Activity() {
         val text=TextView(this);text.text="正在读取剧情…";text.textSize=16f;text.maxLines=3;layout.addView(text)
         val next=Button(this);next.text="继续";next.isEnabled=false;val controls=LinearLayout(this);controls.addView(next,LinearLayout.LayoutParams(0,-2,1f))
         val close=Button(this);close.text="结束运行";controls.addView(close,LinearLayout.LayoutParams(0,-2,1f));layout.addView(controls)
+        val settings=Button(this);settings.text="音量";settings.isEnabled=false;controls.addView(settings,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -168,6 +169,14 @@ class MainActivity : Activity() {
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
         lateinit var show:(ByteArray)->Unit
+        var audioConfig:JSONObject?=null
+        fun applyAudioConfig(bytes:ByteArray) {
+            val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
+            runOnUiThread{timeline.post{if(!storyClosing){
+                storyEffects!!.configureAudio(config);audioConfig=config;settings.isEnabled=true
+                File(root,"audio-config-events.jsonl").appendText(config.toString()+"\n")
+            }}}
+        }
         fun fail(error:Throwable) {
             storyClosing=true
             File(root,"error.txt").writeText("${error.javaClass.name}: ${error.message}")
@@ -269,12 +278,31 @@ class MainActivity : Activity() {
                     for((_,uri) in selected.filter{it.first.endsWith(".dat",true)})opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
                     story(opened.map{it.fd}.toIntArray(),0,0)
                 }finally{opened.forEach{it.close()}}
+                applyAudioConfig(story(intArrayOf(),9,0))
                 show(packet)
             }catch(error:Throwable){fail(error)}
         }
         next.setOnClickListener {
             next.isEnabled=false;storyEffects?.stopMotion();storyEffects?.stopVoice();val token=sequence
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
+        }
+        settings.setOnClickListener {
+            val config=audioConfig!!
+            val panel=LinearLayout(this);panel.orientation=LinearLayout.VERTICAL
+            val names=listOf("BGM","语音","音效","环境音","系统音")
+            for((index,kind) in listOf("bgm","voice","se","env","system").withIndex()){
+                val label=TextView(this);label.text="${names[index]} ${config.getInt(kind)}%";panel.addView(label)
+                val slider=android.widget.SeekBar(this);slider.max=100;slider.progress=config.getInt(kind);slider.contentDescription="volume_$kind";panel.addView(slider)
+                slider.setOnSeekBarChangeListener(object:android.widget.SeekBar.OnSeekBarChangeListener {
+                    override fun onStartTrackingTouch(bar:android.widget.SeekBar){}
+                    override fun onProgressChanged(bar:android.widget.SeekBar,value:Int,fromUser:Boolean){label.text="${names[index]} $value%"}
+                    override fun onStopTrackingTouch(bar:android.widget.SeekBar){
+                        val value=bar.progress
+                        worker.execute{try{if(!storyClosing)applyAudioConfig(story(intArrayOf(),10,index.toLong(),value.toLong()))}catch(error:Throwable){fail(error)}}
+                    }
+                })
+            }
+            android.app.AlertDialog.Builder(this).setTitle("音量（当前会话）").setView(panel).setPositiveButton("返回剧情",null).show()
         }
         close.setOnClickListener {
             next.isEnabled=false;close.isEnabled=false;storyClosing=true;movieHost?.close();storyEffects?.close()

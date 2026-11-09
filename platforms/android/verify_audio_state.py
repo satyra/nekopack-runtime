@@ -15,6 +15,7 @@ def main():
     parser.add_argument('--serial', required=True)
     parser.add_argument('--reference', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--execution', choices=('native','translated'), default='native')
     args = parser.parse_args()
     package = 'org.nekopack.probe'
     run = 'audio_state_' + uuid.uuid4().hex
@@ -57,7 +58,11 @@ def main():
     assert apk_hash == build['sha256']['nekopack-arm64-probe.apk']
     abi = adb('shell', 'getprop', 'ro.product.cpu.abi').decode().strip()
     bridge = adb('shell', 'getprop', 'ro.dalvik.vm.native.bridge').decode().strip()
-    assert abi == 'arm64-v8a' and bridge in ('', '0'), (abi, bridge)
+    machine = adb('shell', 'uname', '-m').decode().strip()
+    if args.execution == 'native':
+        assert machine == 'aarch64' and abi == 'arm64-v8a' and bridge in ('', '0'), (machine, abi, bridge)
+    else:
+        assert machine == 'x86_64' and bridge not in ('', '0'), (machine, bridge)
     adb('shell', 'am', 'start', '-W', '-S', '-n', package+'/.MainActivity', '--ei', 'story_game', '0', '--es', 'run_id', run, '--ez', 'audio_state_probe', 'true')
     next_point = None
     for sequence in range(1, 14):
@@ -78,7 +83,7 @@ def main():
     while private('closed.txt') != b'closed; VM live bytes=0':
         assert time.monotonic() < deadline, 'VM close timeout'
         time.sleep(.2)
-    args.output.write_text(json.dumps(dict(run_id=run, serial=args.serial, abi=abi, native_bridge=bridge, apk_sha256=apk_hash, pages=13, evidence=evidence, events=events, closed_vm_live_bytes=0), ensure_ascii=False, indent=2)+'\n', encoding='utf8')
+    args.output.write_text(json.dumps(dict(run_id=run, serial=args.serial, execution=args.execution, machine=machine, abi=abi, native_bridge=bridge, apk_sha256=apk_hash, pages=13, evidence=evidence, events=events, closed_vm_live_bytes=0), ensure_ascii=False, indent=2)+'\n', encoding='utf8')
     print(f'PASS: {run}, 13 BLESS pages, focus/repeated fade, VM live bytes=0')
 
 
