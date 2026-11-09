@@ -1,0 +1,60 @@
+{
+  "execution": "native ARM64",
+  "serial": "SST89X85TC8TGUQO",
+  "machine": "aarch64",
+  "native_bridge": "0",
+  "apk_sha256": "d38ee4774cef069f27830eec07d6f66a7a5a43a158d48f4f93b44383c829d1c0",
+  "title_mng_sha256": "3226eb296c1a920c4bbb5ee586847cb5beb6e9dd0e40d38d5d8072dc6a438a68",
+  "original_png_composition_equal": true,
+  "display": {
+    "mean": 0.19096952605712064,
+    "p99": 0.5310826888708661,
+    "maximum": 1.115853658533382
+  },
+  "title_run": "title_437de3d659f44c17bcc862752aae83e0",
+  "title_close_run": "title_dfe2dcee47da4ab985ee5843195f29aa",
+  "checks": [
+    "pending map stable",
+    "blank no activation",
+    "original hover shown",
+    "drag out/back cancelled",
+    "Home cancels press",
+    "unsupported Load stays title",
+    "Start enters same runtime",
+    "close title VM bytes zero",
+    "close story VM bytes zero"
+  ],
+  "pages": [
+    {
+      "sequence": 1,
+      "source": "P01",
+      "line": 15,
+      "scene_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f"
+    },
+    {
+      "sequence": 2,
+      "source": "P01",
+      "line": 18,
+      "scene_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f"
+    },
+    {
+      "sequence": 3,
+      "source": "P01",
+      "line": 21,
+      "scene_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f"
+    },
+    {
+      "sequence": 4,
+      "source": "P01",
+      "line": 26,
+      "scene_sha256": "9d7c717b31f75edbe48051785e9832940ede89c13d717cde5def12731a5c8526"
+    },
+    {
+      "sequence": 5,
+      "source": "P01",
+      "line": 32,
+      "scene_sha256": "ec2d1ea0d86a689da5874e6e675448ebb97b527567b49f2e7b5654fffc450561"
+    }
+  ],
+  "scope": "BLESS initial title and first five story pages; no CG/recollection content; no claim of full original UI compatibility"
+}

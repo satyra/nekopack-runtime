@@ -1,0 +1,23 @@
+{
+  "rust_top_level_tests": 134,
+  "isolated_native_probes": 7,
+  "clippy": "workspace all-targets -D warnings passed",
+  "python_tests": 17,
+  "android_build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "016640dc59f3234f29a841dad8efc2a40c40be6dfc1d9493944cc6cb7b6b09fa",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "d38ee4774cef069f27830eec07d6f66a7a5a43a158d48f4f93b44383c829d1c0"
+    }
+  },
+  "log_sha256": {
+    "batch35-tests.log": "d674657953f76e8568109fe674349f7bbf40b6670ad9f53b11f1751192a5c381",
+    "batch35-clippy.log": "68434e4a60ab6141784b8fed8ff76d49dd073bc5a3aa036b4636132d1cbd974c",
+    "batch35-python.log": "2139d6e2f5450992743a404d144d266d59655c8a7781b740ba0dd15be584d894",
+    "batch35-build.log": "fef02817a1484ef628abeda97a082dee0420faec4ce9228890759605903be648"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "execution": "native ARM64",
+  "apk_sha256": "d38ee4774cef069f27830eec07d6f66a7a5a43a158d48f4f93b44383c829d1c0",
+  "serial": "SST89X85TC8TGUQO",
+  "runs": [
+    "settings_14673e1f6b164ac29706bebb0503dc0a",
+    "settings_d5ac4345c43e4ed5aafe08b836df76c7",
+    "settings_f4544cefbd03436abb780330dfa8bc6b"
+  ],
+  "original_sound_page_pixels_equal": true,
+  "changed": {
+    "TextSpeed": 0,
+    "KeepVoice": 0,
+    "VolBGM": 23,
+    "VolVO": 61,
+    "VolSE": 17,
+    "VolENV": 33,
+    "VolSYS": 44
+  },
+  "defaults": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50
+  },
+  "persisted_restart": true,
+  "defaults_persisted": true,
+  "story_audio": {
+    "bgm": 23,
+    "voice": 61,
+    "se": 17,
+    "env": 33,
+    "system": 44
+  },
+  "story_text": {
+    "speed": 0,
+    "keep_voice": 0
+  },
+  "voice_gain_verified": true,
+  "voice_stop_verified": true,
+  "pages": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "vm_live_bytes": 0,
+  "scope": "original settings assets; seven supported preferences; other controls and sample text not implemented; no original config.sav compatibility"
+}

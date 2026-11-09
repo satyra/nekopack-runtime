@@ -34,6 +34,7 @@ pub struct TitleSession<R: Read + Seek> {
     buttons: Vec<Button>,
     pressed: Option<i32>,
     input_sequence: u64,
+    settings: Option<crate::settings::Settings>,
 }
 impl<R: Read + Seek> TitleSession<R> {
     pub fn open(mut store: DatGame<R>) -> Result<Self> {
@@ -131,6 +132,7 @@ impl<R: Read + Seek> TitleSession<R> {
             buttons,
             pressed: None,
             input_sequence: 0,
+            settings: None,
         })
     }
     fn hit(&self, x: i32, y: i32) -> Option<i32> {
@@ -150,10 +152,24 @@ impl<R: Read + Seek> TitleSession<R> {
     /// Pointer events: 0 down, 1 move, 2 up, 3 cancel. Dragging out cancels activation.
     pub fn pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Option<i32>> {
         self.input_sequence += 1;
+        if let Some(settings) = self.settings.as_mut() {
+            if let Some(page) = settings.pointer(&mut self.system, kind, x, y)? {
+                self.settings = Some(crate::settings::Settings::open(&mut self.store, page)?)
+            }
+            return Ok(None);
+        }
         let hit = self.hit(x, y);
-        update_pointer(&mut self.pressed, kind, hit)
+        let action = update_pointer(&mut self.pressed, kind, hit)?;
+        if action == Some(3) {
+            self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
+            return Ok(None);
+        }
+        Ok(action)
     }
-    pub fn packet(&self, action: Option<i32>) -> Result<Vec<u8>> {
+    pub fn packet(&mut self, action: Option<i32>) -> Result<Vec<u8>> {
+        if let Some(settings) = &self.settings {
+            return settings.packet(&mut self.system, self.input_sequence);
+        }
         let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
         for &i in &self.bases {
             let image = &self.images[&i];
@@ -195,6 +211,24 @@ impl<R: Read + Seek> TitleSession<R> {
         canvas.write_png(&mut result)?;
         Ok(result)
     }
+    pub fn settings_command(&mut self, command: u64) -> Result<Vec<u8>> {
+        if self.settings.is_none() {
+            return Err("settings are not open".into());
+        }
+        match command {
+            0 => self.settings = None,
+            1 => crate::preferences::reset(&mut self.system)?,
+            _ => return Err("unknown settings command".into()),
+        }
+        self.input_sequence += 1;
+        self.packet(None)
+    }
+    pub fn export_preferences(&mut self) -> Result<Vec<u8>> {
+        crate::preferences::export(&mut self.system)
+    }
+    pub fn import_preferences(&mut self, bytes: &[u8]) -> Result<()> {
+        crate::preferences::import(&mut self.system, bytes)
+    }
     pub fn start(mut self) -> Result<StorySession<R>> {
         // Dispatch the real .map handler with ID 1; no manual PC/branch manipulation.
         self.system.eval("title-choice", "InputChoice = 1")?;
@@ -222,7 +256,7 @@ fn update_pointer(pressed: &mut Option<i32>, kind: i32, hit: Option<i32>) -> Res
     }
     Ok(None)
 }
-fn contains(position: [i32; 2], size: [u32; 2], point: [i32; 2]) -> bool {
+pub(crate) fn contains(position: [i32; 2], size: [u32; 2], point: [i32; 2]) -> bool {
     (0..2).all(|i| {
         let d = i64::from(point[i]) - i64::from(position[i]);
         d >= 0 && d < i64::from(size[i])

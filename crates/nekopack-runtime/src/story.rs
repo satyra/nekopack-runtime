@@ -190,6 +190,9 @@ pub struct StorySession<R: Read + Seek> {
     effects: Vec<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
+    pub fn export_preferences(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        crate::preferences::export(&mut self.system)
+    }
     /// Read the original system Config; the VM remains the single source of truth.
     pub fn audio_config(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed {

@@ -174,6 +174,13 @@ class MainActivity : Activity() {
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
+        val preferenceKey="runtime_config_v1_${tree}_$game"
+        fun persistConfig(){
+            if(!titleFirst)return
+            val bytes=story(intArrayOf(),20,0)
+            check(bytes.size==12 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,1))){String(bytes,Charsets.UTF_8)}
+            check(getPreferences(MODE_PRIVATE).edit().putString(preferenceKey,android.util.Base64.encodeToString(bytes,android.util.Base64.NO_WRAP)).commit()){"configuration save failed"}
+        }
         var sequence=0L
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
@@ -181,11 +188,13 @@ class MainActivity : Activity() {
         lateinit var dialogue:DialoguePresentation
         var textConfig:JSONObject?=null
         fun applyTextConfig(bytes:ByteArray){
+            persistConfig()
             val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
             runOnUiThread{timeline.post{if(!storyClosing){textConfig=config;textSettings.isEnabled=true;File(root,"text-config-events.jsonl").appendText(config.toString()+"\n")}}}
         }
         var audioConfig:JSONObject?=null
         fun applyAudioConfig(bytes:ByteArray) {
+            persistConfig()
             val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
             runOnUiThread{timeline.post{if(!storyClosing){
                 storyEffects!!.configureAudio(config);audioConfig=config;settings.isEnabled=true
@@ -308,29 +317,42 @@ class MainActivity : Activity() {
                 }
                 show(packet)
         }
+        val configControls=LinearLayout(this);configControls.orientation=LinearLayout.VERTICAL;configControls.visibility=android.view.View.GONE
+        val configNotice=TextView(this);configNotice.text="已接通：文字速度、五路音量、语音保留。其他选项及示例文字预览尚未接入。";configControls.addView(configNotice)
+        val configButtons=LinearLayout(this);val configBack=Button(this);configBack.text="返回标题";val configReset=Button(this);configReset.text="恢复已接通选项默认值"
+        configButtons.addView(configBack,LinearLayout.LayoutParams(0,-2,1f));configButtons.addView(configReset,LinearLayout.LayoutParams(0,-2,1f));configControls.addView(configButtons);layout.addView(configControls)
         lateinit var titleView:TitleView
         fun showTitle(packet:ByteArray,unlock:Boolean){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!metadata.has("error")){metadata.optString("error")}
-            if(metadata.optString("kind")!="title"){
+            val isSettings=metadata.optString("kind")=="settings"
+            if(metadata.optString("kind")!="title" && !isSettings){
                 File(root,"title-started.json").writeText(metadata.toString())
                 runOnUiThread{timeline.post{stage.removeView(titleView);dialogueView.visibility=android.view.View.VISIBLE;controls.visibility=android.view.View.VISIBLE;text.visibility=android.view.View.VISIBLE;text.text="正在读取剧情…"}}
                 enterStory(packet);return
             }
-            val png=packet.copyOfRange(split+1,packet.size);File(root,"title.png").writeBytes(png)
-            File(root,"title.json").writeText(metadata.toString())
+            if(isSettings)persistConfig()
+            val prefix=if(isSettings)"settings" else "title"
+            val png=packet.copyOfRange(split+1,packet.size);File(root,"$prefix.png").writeBytes(png)
+            File(root,"$prefix.json").writeText(metadata.toString())
             val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid title PNG")
             runOnUiThread{timeline.post(cancel={bitmap.recycle()}){
                 if(!isDestroyed&&!storyClosing){
+                    configBack.isEnabled=true;configReset.isEnabled=true
+                    configControls.visibility=if(isSettings)android.view.View.VISIBLE else android.view.View.GONE
+                    titleView.contentDescription=if(isSettings)"原版设置页" else "游戏标题菜单"
                     titleView.present(bitmap);if(unlock)titleView.accepting=true
-                    File(root,"title-presented.json").writeText(metadata.toString())
+                    File(root,"$prefix-presented.json").writeText(metadata.toString())
                     text.text="标题主页 · 点击开始游戏"
-                    val action=metadata.getInt("action")
+                    if(isSettings && metadata.getBoolean("unsupported"))android.widget.Toast.makeText(this,"此选项尚未接入",android.widget.Toast.LENGTH_SHORT).show()
+                    val action=metadata.optInt("action",0)
                     if(action==4)close.performClick()
                     else if(action!=0)android.widget.Toast.makeText(this,"此入口尚未接入；当前支持开始游戏",android.widget.Toast.LENGTH_SHORT).show()
                 }else bitmap.recycle()
             }}
         }
+        configBack.setOnClickListener{configBack.isEnabled=false;configReset.isEnabled=false;titleView.cancel();titleView.accepting=false;worker.execute{try{showTitle(story(intArrayOf(),22,0),true)}catch(error:Throwable){fail(error)}}}
+        configReset.setOnClickListener{configBack.isEnabled=false;configReset.isEnabled=false;titleView.cancel();titleView.accepting=false;worker.execute{try{showTitle(story(intArrayOf(),22,1),true)}catch(error:Throwable){fail(error)}}}
         titleView=TitleView(this){kind,x,y->
             if(!storyClosing)worker.execute{try{if(!storyClosing)showTitle(story(intArrayOf(kind,x,y),18,0),kind==2)}catch(error:Throwable){fail(error)}}
         }
@@ -345,11 +367,15 @@ class MainActivity : Activity() {
                 }
                 selectedFiles=selected
                 val opened=mutableListOf<ParcelFileDescriptor>()
-                val packet=try {
+                var packet=try {
                     for((_,uri) in selected.filter{it.first.endsWith(".dat",true)})opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
                     story(opened.map{it.fd}.toIntArray(),if(titleFirst)17 else 0,0)
                 }finally{opened.forEach{it.close()}}
-                if(titleFirst)showTitle(packet,true) else enterStory(packet)
+                if(titleFirst){
+                    val saved=getPreferences(MODE_PRIVATE).getString(preferenceKey,null)
+                    if(saved!=null){val bytes=android.util.Base64.decode(saved,android.util.Base64.NO_WRAP);packet=story(bytes.map{it.toInt() and 255}.toIntArray(),19,0)}
+                    showTitle(packet,true)
+                }else enterStory(packet)
             }catch(error:Throwable){fail(error)}
         }
         next.setOnClickListener {dialogue.click()}

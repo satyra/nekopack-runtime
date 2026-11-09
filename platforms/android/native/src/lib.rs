@@ -274,6 +274,35 @@ pub unsafe extern "C" fn neko_probe_story(
         STORY.with(|cell| -> Result<Vec<u8>, Box<dyn Error>> {
             let mut state = cell.borrow_mut();
             match operation {
+                19 => TITLE.with(|title| {
+                    let values = unsafe { std::slice::from_raw_parts(fds, count) };
+                    let bytes = values
+                        .iter()
+                        .map(|v| u8::try_from(*v))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    let mut title = title.borrow_mut();
+                    let title = title.as_mut().ok_or("no title session")?;
+                    title.import_preferences(&bytes)?;
+                    title.packet(None)
+                }),
+                20 => {
+                    if let Some(story) = state.as_mut() {
+                        story.export_preferences()
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .export_preferences()
+                        })
+                    }
+                }
+                22 => TITLE.with(|t| {
+                    t.borrow_mut()
+                        .as_mut()
+                        .ok_or("no title session")?
+                        .settings_command(sequence)
+                }),
                 18 => TITLE.with(|title| {
                     let mut title = title.borrow_mut();
                     if count != 3 {
@@ -308,7 +337,7 @@ pub unsafe extern "C" fn neko_probe_story(
                             *title = Some(nekopack_runtime::title::TitleSession::open(
                                 nekopack_runtime::dat::DatGame::mount(files)?,
                             )?);
-                            title.as_ref().unwrap().packet(None)
+                            title.as_mut().unwrap().packet(None)
                         });
                     }
                     *state = Some(nekopack_runtime::story::StorySession::open(

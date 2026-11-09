@@ -15,7 +15,7 @@ pub struct DatGame<R: Read + Seek> {
     archives: Vec<Archive<R>>,
     catalog: Catalog,
 }
-fn decode(bytes: &[u8]) -> Result<String, String> {
+pub(crate) fn decode(bytes: &[u8]) -> Result<String, String> {
     let (text, errors) = encoding_rs::SHIFT_JIS.decode_without_bom_handling(bytes);
     if errors {
         Err("invalid CP932-compatible input".into())
