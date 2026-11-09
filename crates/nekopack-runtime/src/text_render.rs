@@ -1,5 +1,5 @@
 //! Ordinary Unicode dialogue overlay. Resource geometry and font bytes are host-independent.
-//! This is not the original GDI rasterizer, rich-text parser or Japanese kinsoku layout.
+//! Includes the evidenced NekoPack punctuation wrapping rules, not a general kinsoku engine.
 use ab_glyph::{point, Font, FontVec};
 use nekopack_image::{Mng, RgbaImage};
 use std::error::Error;
@@ -35,6 +35,10 @@ struct Glyph {
     edge: RgbaImage,
     position: [i32; 2],
 }
+struct Layout {
+    glyphs: Vec<Option<Glyph>>,
+    origins: Vec<[i32; 2]>,
+}
 pub struct DialogueRenderer {
     font: FontVec,
     size: [u32; 2],
@@ -52,23 +56,52 @@ struct Prepared {
     png: Vec<u8>,
     lines: usize,
     clipped: bool,
+    origins: Vec<[i32; 2]>,
 }
 
-/// Advance-based wrapping; explicit line breaks do not render a glyph.
-fn positions(advances: &[Option<i32>], width: i32, line_height: i32) -> Result<Vec<[i32; 2]>> {
+/// BLESS Glyph wrapping: hanging commas/stops, one-character carry and
+/// positive-gap justification on automatic breaks. Explicit/final lines stay left-aligned.
+fn positions(
+    chars: &[char],
+    advances: &[Option<i32>],
+    width: i32,
+    line_height: i32,
+) -> Result<Vec<[i32; 2]>> {
     if width <= 0 || line_height <= 0 {
         return Err("invalid text layout extent".into());
     }
     let (mut x, mut y) = (0, 0);
-    let mut out = Vec::with_capacity(advances.len());
-    for advance in advances {
+    let mut out: Vec<[i32; 2]> = Vec::with_capacity(advances.len());
+    let mut start = 0;
+    for (i, advance) in advances.iter().enumerate() {
         if let Some(advance) = advance {
             if *advance < 0 || *advance > width {
                 return Err("glyph exceeds text width".into());
             }
-            if x + advance > width {
+            if !"、。，．".contains(chars[i]) && x + advance > width {
+                let carry = x <= width
+                    && i > start
+                    && ("（〔［｛〈《「『【‘“".contains(chars[i - 1])
+                        || "）〕］｝〉》」』】’”ゝゞヽヾ々？！：；♪".contains(chars[i])
+                        || ("…‥―".contains(chars[i]) && chars[i - 1] == chars[i]));
+                let end = i - usize::from(carry);
+                if end == start {
+                    return Err("text width cannot fit punctuation carry".into());
+                }
+                let count = end - start;
+                let gap = width - (out[end - 1][0] + advances[end - 1].unwrap());
+                if count > 1 && gap > 0 {
+                    for (j, origin) in out[start..end].iter_mut().enumerate() {
+                        origin[0] += (i64::from(gap) * j as i64 / (count - 1) as i64) as i32;
+                    }
+                }
                 x = 0;
                 y += line_height;
+                start = end;
+                if carry {
+                    out[i - 1] = [0, y];
+                    x = advances[i - 1].unwrap();
+                }
             }
             out.push([x, y]);
             x += advance;
@@ -76,6 +109,7 @@ fn positions(advances: &[Option<i32>], width: i32, line_height: i32) -> Result<V
             out.push([x, y]);
             x = 0;
             y += line_height;
+            start = i + 1;
         }
     }
     Ok(out)
@@ -165,7 +199,7 @@ impl DialogueRenderer {
         })
     }
 
-    fn layout(&self, text: &str, width: i32) -> Result<Vec<Option<Glyph>>> {
+    fn layout(&self, text: &str, width: i32) -> Result<Layout> {
         if text.chars().count() > 4096 {
             return Err("dialogue exceeds 4096 scalar budget".into());
         }
@@ -194,10 +228,11 @@ impl DialogueRenderer {
                 (self.font.h_advance_unscaled(id) * factor).round() as i32
             ));
         }
-        let locations = positions(&advances, width, 30)?;
+        let locations = positions(&text.chars().collect::<Vec<_>>(), &advances, width, 30)?;
         let mut used = 0usize;
-        text.chars()
-            .zip(locations)
+        let glyphs = text
+            .chars()
+            .zip(locations.iter().copied())
             .map(|(ch, [x, y])| {
                 if ch == '\n' {
                     return Ok(None);
@@ -255,7 +290,11 @@ impl DialogueRenderer {
                     position: [bounds.min.x as i32 - 1, bounds.min.y as i32 - 1],
                 }))
             })
-            .collect()
+            .collect::<Result<Vec<_>>>()?;
+        Ok(Layout {
+            glyphs,
+            origins: locations,
+        })
     }
 
     fn draw_glyphs(
@@ -299,21 +338,24 @@ impl DialogueRenderer {
             )?;
             Self::draw_glyphs(
                 &mut image,
-                &glyphs,
+                &glyphs.glyphs,
                 [self.name.origin[0] + x, self.name.origin[1]],
                 self.border,
             );
             Some(image)
         };
-        let glyphs = self.layout(text, self.text.width)?;
+        let layout = self.layout(text, self.text.width)?;
+        let glyphs = layout.glyphs;
         let clipped = glyphs.iter().flatten().any(|g| {
             g.position[1] + self.text.origin[1] + g.fill.height() as i32
                 > self.text.image.height() as i32
+                || g.position[0] + self.text.origin[0] + g.fill.width() as i32
+                    > self.text.image.width() as i32
         });
-        let lines = glyphs
+        let lines = layout
+            .origins
             .iter()
-            .flatten()
-            .map(|g| (g.position[1].max(0) / 30 + 1) as usize)
+            .map(|origin| (origin[1] / 30 + 1) as usize)
             .max()
             .unwrap_or(0);
         self.page = Some(Prepared {
@@ -324,6 +366,7 @@ impl DialogueRenderer {
             png: Vec::new(),
             lines,
             clipped,
+            origins: layout.origins,
         });
         Ok(())
     }
@@ -371,17 +414,59 @@ impl DialogueRenderer {
     }
     pub fn metadata(&self) -> Result<String> {
         let p = self.page.as_ref().ok_or("no prepared dialogue image")?;
-        Ok(format!("{{\"sequence\":{},\"size\":[{},{}],\"bounds\":[{},{},{},{}],\"font_size\":22,\"line_span\":8,\"lines\":{},\"clipped\":{},\"text_rect\":[{},{},{},{}],\"name_rect\":[{},{},{},{}]}}",p.sequence,self.size[0],self.size[1],self.bounds[0],self.bounds[1],self.bounds[2],self.bounds[3],p.lines,p.clipped,self.text.position[0],self.text.position[1],self.text.image.width(),self.text.image.height(),self.name.position[0],self.name.position[1],self.name.image.width(),self.name.image.height()))
+        Ok(format!("{{\"sequence\":{},\"size\":[{},{}],\"bounds\":[{},{},{},{}],\"font_size\":22,\"line_span\":8,\"lines\":{},\"clipped\":{},\"origins\":{:?},\"text_rect\":[{},{},{},{}],\"name_rect\":[{},{},{},{}]}}",p.sequence,self.size[0],self.size[1],self.bounds[0],self.bounds[1],self.bounds[2],self.bounds[3],p.lines,p.clipped,p.origins,self.text.position[0],self.text.position[1],self.text.image.width(),self.text.image.height(),self.name.position[0],self.name.position[1],self.name.image.width(),self.name.image.height()))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn layout_for(text: &str, width: i32) -> Vec<[i32; 2]> {
+        let chars: Vec<_> = text.chars().collect();
+        let advances: Vec<_> = chars
+            .iter()
+            .map(|c| if *c == '\n' { None } else { Some(22) })
+            .collect();
+        positions(&chars, &advances, width, 30).unwrap()
+    }
+    #[test]
+    fn native_hanging_stops_and_post_hanging_wrap() {
+        assert_eq!(
+            layout_for("甲乙丙。丁", 66),
+            vec![[0, 0], [22, 0], [44, 0], [66, 0], [0, 30]]
+        );
+        // Once already past the limit, the original takes an ordinary break,
+        // even for a closing mark. Do not substitute a general kinsoku policy.
+        assert_eq!(layout_for("甲乙丙。）」", 66)[4], [0, 30]);
+    }
+    #[test]
+    fn native_single_character_carry_and_positive_gap_justification() {
+        let expected = vec![[0, 0], [44, 0], [0, 30], [22, 30]];
+        for text in ["甲乙「丙", "甲乙丙」", "甲乙……", "甲乙――"] {
+            assert_eq!(layout_for(text, 66), expected, "{text}");
+        }
+        assert_eq!(
+            layout_for("甲乙丙丁", 70),
+            vec![[0, 0], [24, 0], [48, 0], [0, 30]]
+        );
+        assert_eq!(
+            layout_for("甲乙\n丙丁", 70),
+            vec![[0, 0], [22, 0], [44, 0], [0, 30], [22, 30]]
+        );
+        assert_eq!(
+            layout_for("甲乙丙っ", 66),
+            vec![[0, 0], [22, 0], [44, 0], [0, 30]]
+        );
+    }
+    #[test]
+    fn impossible_carry_has_an_explicit_boundary() {
+        assert!(positions(&['甲', '」'], &[Some(22), Some(22)], 22, 30).is_err());
+    }
     #[test]
     fn wraps_at_boundary_and_retains_explicit_breaks() {
         assert_eq!(
             positions(
+                &['A', 'B', 'C', 'D', '\n', 'E'],
                 &[Some(22), Some(11), Some(11), Some(22), None, Some(11)],
                 44,
                 30
@@ -389,7 +474,7 @@ mod tests {
             .unwrap(),
             vec![[0, 0], [22, 0], [33, 0], [0, 30], [22, 30], [0, 60]]
         );
-        assert!(positions(&[Some(45)], 44, 30).is_err());
+        assert!(positions(&['A'], &[Some(45)], 44, 30).is_err());
     }
     #[test]
     fn rejects_invalid_font_and_input_budget() {

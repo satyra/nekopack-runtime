@@ -40,7 +40,9 @@ def main():
         p.add_argument('--'+key, required=True)
     p.add_argument('--original-capture')
     p.add_argument('--execution',choices=('native','translated'),default='translated')
+    p.add_argument('--pages',type=int,nargs='+',default=[1,2,3],help='Capture these pages after sequentially executing all preceding pages')
     a=p.parse_args(); work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
+    assert min(a.pages)==1 and max(a.pages)<=1000
     sys.path.insert(0,a.portkit)
     from portkit.neko import Archive
     from portkit.mng import frames
@@ -74,15 +76,32 @@ def main():
             error=read('error.txt');assert b'No such file' in error,error.decode()
             state=read(f'text-{n}.json')
             if state.startswith(b'{') and json.loads(state)['complete']:return
+            if not state.startswith(b'{'):skip_movie()
             time.sleep(.1)
         raise AssertionError('dialogue timeout')
     def nodes():
         adb('shell','uiautomator','dump','/sdcard/neko-render.xml')
         return list(ET.fromstring(adb('shell','cat','/sdcard/neko-render.xml')).iter('node'))
     def bounds(node):return list(map(int,re.findall(r'\d+',node.get('bounds'))))
+    continue_bounds=None
     def tap(label):
-        x,y,r,b=bounds(next(n for n in nodes() if n.get('text')==label and n.get('enabled')=='true'))
+        nonlocal continue_bounds
+        if label=='继续' and continue_bounds is not None:x,y,r,b=continue_bounds
+        else:
+            x,y,r,b=bounds(next(n for n in nodes() if n.get('text')==label and n.get('enabled')=='true'))
+            if label=='继续':continue_bounds=(x,y,r,b)
         adb('shell','input','tap',str((x+r)//2),str((y+b)//2))
+    skipped=set()
+    def skip_movie():
+        nonlocal continue_bounds
+        names=adb('shell','run-as',package,'sh','-c',f"'printf \"%s\\n\" files/{run}/movie-*-events.jsonl'")
+        for path in names.decode().splitlines():
+            name=path.rsplit('/',1)[-1]
+            if re.fullmatch(r'movie-\d+-events.jsonl',name) and name not in skipped:
+                events=[json.loads(line) for line in read(name).splitlines()]
+                if any(e['event']=='closed' for e in events):skipped.add(name)
+                elif any(e['event']=='progress' and e['head']>0 for e in events):
+                    tap('返回剧情');continue_bounds=None;skipped.add(name)
     build=json.loads(Path('.local/android-probe/build.json').read_text())
     apk=adb('shell','pm','path',package).decode().strip().removeprefix('package:')
     apk_sha=adb('shell','sha256sum',apk).decode().split()[0]
@@ -94,11 +113,21 @@ def main():
     font=adb('exec-out','cat','/system/fonts/NotoSansCJK-Regular.ttc');(work/'font.ttc').write_bytes(font)
     (work/'msgbox.mng').write_bytes(raw['msgbox.mng'])
     adb('shell','am','start','-W','-S','-n',package+'/.MainActivity','--ei','story_game','0','--es','run_id',run)
-    pages=[];invalid_resources=[]
-    for n in (1,2,3):
+    pages=[];invalid_resources=[];executed=[]
+    for n in range(1,max(a.pages)+1):
         wait_page(n)
         page=json.loads(read(f'page-{n}.json'))
         assert page==json.loads((Path(a.reference)/f'{n-1}.json').read_text(encoding='utf8'))
+        device_sha=adb('shell','run-as',package,'sha256sum',f'files/{run}/page-{n}.png').decode().split()[0]
+        assert device_sha==sha((Path(a.reference)/f'{n-1}.png').read_bytes())
+        if 'motion' in page:
+            deadline=time.monotonic()+60
+            while not any(e['event']=='finished' and e['sequence']==n for e in [json.loads(line) for line in read('motion-events.jsonl').splitlines()]):
+                assert time.monotonic()<deadline,'motion did not finish';time.sleep(.1)
+        executed.append(dict(sequence=n,source=page['source'],line=page['line'],scene_sha256=device_sha))
+        if n not in a.pages:
+            tap('继续');continue
+        assert 'motion' not in page,'snapshot oracle requires a stationary capture page'
         for key in ('speaker','text'):(work/(key+'.txt')).write_text(page[key],encoding='utf8')
         prefix=work/f'desktop-{n}'
         subprocess.run([a.desktop,str(work/'font.ttc'),str(work/'msgbox.mng'),str(work/'speaker.txt'),str(work/'text.txt'),str(prefix)],check=True)
@@ -135,13 +164,13 @@ def main():
         diff,transform=displayed_difference(scene,full_image,shot,(x,y,r,b),layout)
         assert diff.mean()<5 and np.percentile(diff,95)<20,(diff.mean(),np.percentile(diff,95))
         pages.append(dict(sequence=n,named=bool(page['speaker']),layout=layout,overlay_sha256=sha(full),empty_sha256=sha(empty),changed_pixels=int(delta.sum()),desktop_pixels_equal=True,display_transform=transform,display_roi_mae=float(diff.mean()),display_roi_p95=float(np.percentile(diff,95)),screenshot_sha256=sha((work/f'device-{n}.png').read_bytes())))
-        if n<3:tap('继续')
+        if n<max(a.pages):tap('继续')
     font_info=json.loads(read('dialogue-font.json'))
     assert font_info['opacity']==191 and font_info['border']==1
     tap('结束运行');end=time.monotonic()+30
     while read('closed.txt')!=b'closed; VM live bytes=0':
         assert time.monotonic()<end;time.sleep(.1)
-    report=dict(scope='BLESS first three ordinary dialogue pages; actual Android rendering',execution=execution,run_id=run,machine=machine,native_bridge=bridge,apk_sha256=apk_sha,font_sha256=sha(font),font=font_info,resource_sha256={k:sha(v) for k,v in raw.items()},geometry=geometry,exe_sha256=sha(exe),native_blt_facts=facts,pages=pages,invalid_resources=invalid_resources,vm_live_bytes=0,limits=['Noto CJK host substitute, not MS Gothic/GDI parity','Native Blt scalar edge rounding and scene draw rounding not bit-exact','No ruby, kinsoku, bold or alternate-size support'])
+    report=dict(scope='BLESS sequential dialogue with selected real Android screen captures',execution=execution,run_id=run,machine=machine,native_bridge=bridge,apk_sha256=apk_sha,font_sha256=sha(font),font=font_info,resource_sha256={k:sha(v) for k,v in raw.items()},geometry=geometry,exe_sha256=sha(exe),native_blt_facts=facts,pages=pages,executed_pages=executed,invalid_resources=invalid_resources,vm_live_bytes=0,limits=['Noto CJK host substitute, not MS Gothic/GDI parity','Native Blt scalar edge rounding and scene draw rounding not bit-exact','No ruby, general Japanese kinsoku, bold or alternate-size support'])
     if a.original_capture:
         saved=(exe_path.parent/'save/config.sav').read_bytes()
         offset=saved.index(b'BoxOpacity')+len(b'BoxOpacity')

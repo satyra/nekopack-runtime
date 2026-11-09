@@ -1,0 +1,451 @@
+{
+  "scope": "BLESS native static line-break evidence plus independent phone-font layout oracle",
+  "execution": "native ARM64",
+  "apk_sha256": "2e79f43f94a4389f4bb04f3b9a01265cdfe6c54452f43b0808639c0160f715d6",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "font_sha256": "3e7e5afaac2c6d872592d76abedac03a51c6f0fc42d11e311ff2816a6c368afe",
+  "classes": [
+    {
+      "va": "0x55ca1d",
+      "characters": "、。，．"
+    },
+    {
+      "va": "0x55ca26",
+      "characters": "（〔［｛〈《「『【‘“"
+    },
+    {
+      "va": "0x55ca3d",
+      "characters": "）〕］｝〉》」』】’”ゝゞヽヾ々？！：；♪"
+    },
+    {
+      "va": "0x55ca68",
+      "characters": "…‥―"
+    }
+  ],
+  "facts": [
+    {
+      "va": "0x4a2430",
+      "instruction": "push 0x55ca1d"
+    },
+    {
+      "va": "0x4a24c8",
+      "instruction": "push 0x55ca26"
+    },
+    {
+      "va": "0x4a2560",
+      "instruction": "push 0x55ca3d"
+    },
+    {
+      "va": "0x4a25f8",
+      "instruction": "push 0x55ca68"
+    },
+    {
+      "va": "0x4a33c5",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x4a33c7",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x4a33ca",
+      "instruction": "call 0x4a3f08"
+    },
+    {
+      "va": "0x4a3424",
+      "instruction": "call 0x4a2410"
+    },
+    {
+      "va": "0x4a342c",
+      "instruction": "jne 0x4a34bf"
+    },
+    {
+      "va": "0x4a343b",
+      "instruction": "cmp edx, ecx"
+    },
+    {
+      "va": "0x4a343d",
+      "instruction": "jge 0x4a344e"
+    },
+    {
+      "va": "0x4a343f",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x4a3441",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4a3444",
+      "instruction": "call 0x4a3f08"
+    },
+    {
+      "va": "0x4a3454",
+      "instruction": "add eax, edx"
+    },
+    {
+      "va": "0x4a345e",
+      "instruction": "jle 0x4a34bf"
+    },
+    {
+      "va": "0x4a3461",
+      "instruction": "call 0x4a24a8"
+    },
+    {
+      "va": "0x4a346e",
+      "instruction": "call 0x4a2540"
+    },
+    {
+      "va": "0x4a347b",
+      "instruction": "call 0x4a25d8"
+    },
+    {
+      "va": "0x4a3485",
+      "instruction": "cmp esi, edi"
+    },
+    {
+      "va": "0x4a34b3",
+      "instruction": "push eax"
+    },
+    {
+      "va": "0x4a34b4",
+      "instruction": "push 1"
+    },
+    {
+      "va": "0x4a34b7",
+      "instruction": "call 0x4a3f08"
+    },
+    {
+      "va": "0x4a3693",
+      "instruction": "add dword ptr [ebx + 0x70], ecx"
+    },
+    {
+      "va": "0x4a3696",
+      "instruction": "mov esi, edi"
+    },
+    {
+      "va": "0x4a3f6d",
+      "instruction": "mov al, byte ptr [ebp + 0x10]"
+    },
+    {
+      "va": "0x4a3f74",
+      "instruction": "dec esi"
+    },
+    {
+      "va": "0x4a40e4",
+      "instruction": "sub ecx, edx"
+    },
+    {
+      "va": "0x4a40ee",
+      "instruction": "jle 0x4a419b"
+    },
+    {
+      "va": "0x4a4184",
+      "instruction": "imul edi"
+    },
+    {
+      "va": "0x4a4188",
+      "instruction": "div dword ptr [ebp - 0x10]"
+    },
+    {
+      "va": "0x4a418b",
+      "instruction": "add ecx, eax"
+    },
+    {
+      "va": "0x4a32ec",
+      "instruction": "mov dword ptr [eax + 0x70], edx"
+    },
+    {
+      "va": "0x4a32f2",
+      "instruction": "add dword ptr [eax + 0x74], ecx"
+    },
+    {
+      "va": "0x4a4616",
+      "instruction": "mov dword ptr [eax + 0x20], edx"
+    },
+    {
+      "va": "0x4a4622",
+      "instruction": "add dword ptr [ebx + 0x70], eax"
+    }
+  ],
+  "pages": [
+    {
+      "sequence": 1,
+      "source": "P01",
+      "line": 15,
+      "script_sha256": "67e8a6871793c496e7f637b73c6d8553d1c83d2e8c8d8cad4d977980a8897a48",
+      "scalar_count": 17,
+      "changed_origins": [],
+      "lines": 1,
+      "clipped": false
+    },
+    {
+      "sequence": 3,
+      "source": "P01",
+      "line": 21,
+      "script_sha256": "67e8a6871793c496e7f637b73c6d8553d1c83d2e8c8d8cad4d977980a8897a48",
+      "scalar_count": 71,
+      "changed_origins": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "lines": 2,
+      "clipped": false
+    },
+    {
+      "sequence": 23,
+      "source": "012401",
+      "line": 41,
+      "script_sha256": "0297c4db65f436a60f6ed97f364b48f0fd67f06aae4747c1a6f810e685da6de9",
+      "scalar_count": 46,
+      "changed_origins": [
+        45
+      ],
+      "lines": 1,
+      "clipped": false
+    },
+    {
+      "sequence": 63,
+      "source": "012402",
+      "line": 110,
+      "script_sha256": "a517f37630d20a4f38b7f36b9d17e3337726f7bd5b9bf6eba06561dbb7c1c3fd",
+      "scalar_count": 68,
+      "changed_origins": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ],
+      "lines": 2,
+      "clipped": false
+    },
+    {
+      "sequence": 81,
+      "source": "012403",
+      "line": 45,
+      "script_sha256": "242303269cd5dc7d68543a15c876983525c3c9683749290e27bd5db0c3f6281f",
+      "scalar_count": 57,
+      "changed_origins": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "lines": 2,
+      "clipped": false
+    },
+    {
+      "sequence": 156,
+      "source": "012501",
+      "line": 15,
+      "script_sha256": "fb0723a98c42e9810d7bcf9b73d062df4706cad2724256881e35d7d471fc7e5b",
+      "scalar_count": 47,
+      "changed_origins": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "lines": 2,
+      "clipped": false
+    },
+    {
+      "sequence": 217,
+      "source": "012501",
+      "line": 329,
+      "script_sha256": "fb0723a98c42e9810d7bcf9b73d062df4706cad2724256881e35d7d471fc7e5b",
+      "scalar_count": 46,
+      "changed_origins": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "lines": 2,
+      "clipped": false
+    }
+  ],
+  "limits": [
+    "Not a live original-GDI pixel comparison",
+    "Font advances use the explicitly selected Noto substitute",
+    "One-character carry, not a recursive general Japanese kinsoku algorithm"
+  ]
+}
