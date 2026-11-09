@@ -254,6 +254,8 @@ pub unsafe extern "C" fn neko_probe_dat(
 
 #[cfg(target_os = "android")]
 thread_local! {static STORY:std::cell::RefCell<Option<nekopack_runtime::story::StorySession<std::fs::File>>>=const {std::cell::RefCell::new(None)};}
+#[cfg(target_os = "android")]
+thread_local! {static TITLE:std::cell::RefCell<Option<nekopack_runtime::title::TitleSession<std::fs::File>>>=const {std::cell::RefCell::new(None)};}
 /// All operations must execute on the same dedicated host worker.
 /// # Safety
 /// fds is readable for count valid borrowed descriptors; out_len is writable.
@@ -272,8 +274,26 @@ pub unsafe extern "C" fn neko_probe_story(
         STORY.with(|cell| -> Result<Vec<u8>, Box<dyn Error>> {
             let mut state = cell.borrow_mut();
             match operation {
-                0 => {
-                    if state.is_some() {
+                18 => TITLE.with(|title| {
+                    let mut title = title.borrow_mut();
+                    if count != 3 {
+                        return Err("title pointer requires kind/x/y".into());
+                    }
+                    let values = unsafe { std::slice::from_raw_parts(fds, count) };
+                    let session = title.as_mut().ok_or("no title session")?;
+                    let action = session.pointer(values[0], values[1], values[2])?;
+                    if action == Some(1) {
+                        let mut session = title.take().unwrap().start()?;
+                        session.enable_host_effects();
+                        session.enable_interactive_text();
+                        *state = Some(session);
+                        state.as_mut().unwrap().poll_packet()
+                    } else {
+                        session.packet(action)
+                    }
+                }),
+                0 | 17 => {
+                    if state.is_some() || TITLE.with(|t| t.borrow().is_some()) {
                         return Err("story session already open".into());
                     }
                     let mut files = Vec::new();
@@ -281,6 +301,15 @@ pub unsafe extern "C" fn neko_probe_story(
                         files.push(std::fs::File::from(
                             unsafe { BorrowedFd::borrow_raw(fd) }.try_clone_to_owned()?,
                         ));
+                    }
+                    if operation == 17 {
+                        return TITLE.with(|title| {
+                            let mut title = title.borrow_mut();
+                            *title = Some(nekopack_runtime::title::TitleSession::open(
+                                nekopack_runtime::dat::DatGame::mount(files)?,
+                            )?);
+                            title.as_ref().unwrap().packet(None)
+                        });
                     }
                     *state = Some(nekopack_runtime::story::StorySession::open(
                         nekopack_runtime::dat::DatGame::mount(files)?,
@@ -352,6 +381,7 @@ pub unsafe extern "C" fn neko_probe_story(
                     .ok_or("no story session")?
                     .effect_frame(sequence, elapsed_ms),
                 3 => {
+                    TITLE.with(|t| *t.borrow_mut() = None);
                     *state = None;
                     check(
                         SystemVm::validation_live_bytes() == 0,
@@ -366,6 +396,7 @@ pub unsafe extern "C" fn neko_probe_story(
     let bytes = match result {
         Ok(Ok(bytes)) => bytes,
         other => {
+            TITLE.with(|t| *t.borrow_mut() = None);
             let checkpoint = STORY.with(|cell| {
                 let mut state = cell.borrow_mut();
                 let checkpoint = state.as_ref().map(|s| s.checkpoint()).transpose();

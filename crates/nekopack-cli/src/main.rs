@@ -136,13 +136,23 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
-        ("preview-story", n) if n >= 4 => {
+        ("preview-story" | "preview-title-story", n) if n >= 4 => {
             let files = args[3..]
                 .iter()
                 .map(File::open)
                 .collect::<Result<Vec<_>, _>>()?;
             let store = nekopack_runtime::dat::DatGame::mount(files)?;
-            let mut session = nekopack_runtime::story::StorySession::open(store, 1)?;
+            let mut session = if command == "preview-title-story" {
+                let mut title = nekopack_runtime::title::TitleSession::open(store)?;
+                std::fs::create_dir_all(&args[1])?;
+                let packet = title.packet(None)?;
+                std::fs::write(Path::new(&args[1]).join("title.packet"), &packet)?;
+                assert_eq!(title.packet(None)?, packet, "polling changed title");
+                assert_eq!(title.pointer(2, -1, -1)?, None, "up without down activated");
+                title.start()?
+            } else {
+                nekopack_runtime::story::StorySession::open(store, 1)?
+            };
             let count: usize = args[2].to_str().ok_or("invalid count")?.parse()?;
             std::fs::create_dir_all(&args[1])?;
             for i in 0..count {

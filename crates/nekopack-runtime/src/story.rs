@@ -229,7 +229,14 @@ impl<R: Read + Seek> StorySession<R> {
     }
 
     pub fn open(mut store: DatGame<R>, choice: i32) -> Result<Self, Box<dyn Error>> {
-        let (mut machine, mut system) = bootstrap(&mut store, choice, &mut std::io::sink())?;
+        let (machine, system) = bootstrap(&mut store, choice, &mut std::io::sink())?;
+        Self::from_bootstrap(store, machine, system)
+    }
+    pub(crate) fn from_bootstrap(
+        mut store: DatGame<R>,
+        mut machine: Machine,
+        mut system: SystemVm,
+    ) -> Result<Self, Box<dyn Error>> {
         machine.enable_dialogue();
         let labels = StoryLabels::capture(&mut system)?;
         let title = store.read("system", "title.mng")?;

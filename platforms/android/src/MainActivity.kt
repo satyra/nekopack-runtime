@@ -52,9 +52,9 @@ class MainActivity : Activity() {
             movieHost!!.start(uri,1,intent.getBooleanExtra("movie_left_skip",false),{reason->File(root,"movie-complete.json").writeText(JSONObject().put("reason",reason).toString());val text=TextView(this);text.text="视频验证完成";setContentView(text)},{error->File(root,"error.txt").writeText(error.toString())})
             return
         }
-        if(intent.hasExtra("story_game")) {
+        if(intent.hasExtra("story_game") || intent.hasExtra("title_game")) {
             val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null) ?: error("select DAT tree through SAF first")
-            startStory(Uri.parse(saved),intent.getIntExtra("story_game",0))
+            startStory(Uri.parse(saved),intent.getIntExtra("title_game",intent.getIntExtra("story_game",0)),intent.hasExtra("title_game"))
             return
         }
         if (intent.getBooleanExtra("saf", false)) {
@@ -71,6 +71,13 @@ class MainActivity : Activity() {
             }
             setContentView(button)
             return
+        }
+        if(!intent.hasExtra("run_id")){
+            val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null)
+            if(saved!=null){startStory(Uri.parse(saved),0,true);return}
+            val button=Button(this);button.text="选择原始 DAT 文件夹"
+            button.setOnClickListener{startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION),42)}
+            setContentView(button);return
         }
         val view = TextView(this)
         view.text = "NekoPack ARM64 validation running…"
@@ -109,7 +116,7 @@ class MainActivity : Activity() {
         val tree=data?.data ?: error("missing directory URI")
         contentResolver.takePersistableUriPermission(tree,Intent.FLAG_GRANT_READ_URI_PERMISSION)
         getPreferences(MODE_PRIVATE).edit().putString("dat_tree",tree.toString()).apply()
-        runTree(tree)
+        if(intent.getBooleanExtra("saf",false))runTree(tree) else startStory(tree,0,true)
     }
     private fun runTree(tree:Uri) {
         val view=TextView(this);view.text="Reading original DAT through SAF…";setContentView(view)
@@ -147,7 +154,7 @@ class MainActivity : Activity() {
         },"NekoPackSAF").start()
     }
 
-    private fun startStory(tree:Uri,game:Int) {
+    private fun startStory(tree:Uri,game:Int,titleFirst:Boolean=false) {
         require(game in 0..3)
         val runId=intent.getStringExtra("run_id") ?: "story-manual"
         require(Regex("[a-zA-Z0-9_-]{1,64}").matches(runId))
@@ -290,6 +297,44 @@ class MainActivity : Activity() {
                 }
             }
         }
+        fun enterStory(packet:ByteArray){
+                applyAudioConfig(story(intArrayOf(),9,0))
+                applyTextConfig(story(intArrayOf(),13,0))
+                val font=File("/system/fonts/NotoSansCJK-Regular.ttc")
+                ParcelFileDescriptor.open(font,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->
+                    val result=JSONObject(String(story(intArrayOf(fd.fd),15,0),Charsets.UTF_8));check(!result.has("error")){result.optString("error")}
+                    result.put("host_font_source",font.absolutePath).put("font_collection_index",0)
+                    File(root,"dialogue-font.json").writeText(result.toString())
+                }
+                show(packet)
+        }
+        lateinit var titleView:TitleView
+        fun showTitle(packet:ByteArray,unlock:Boolean){
+            val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+            val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!metadata.has("error")){metadata.optString("error")}
+            if(metadata.optString("kind")!="title"){
+                File(root,"title-started.json").writeText(metadata.toString())
+                runOnUiThread{timeline.post{stage.removeView(titleView);dialogueView.visibility=android.view.View.VISIBLE;controls.visibility=android.view.View.VISIBLE;text.visibility=android.view.View.VISIBLE;text.text="正在读取剧情…"}}
+                enterStory(packet);return
+            }
+            val png=packet.copyOfRange(split+1,packet.size);File(root,"title.png").writeBytes(png)
+            File(root,"title.json").writeText(metadata.toString())
+            val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid title PNG")
+            runOnUiThread{timeline.post(cancel={bitmap.recycle()}){
+                if(!isDestroyed&&!storyClosing){
+                    titleView.present(bitmap);if(unlock)titleView.accepting=true
+                    File(root,"title-presented.json").writeText(metadata.toString())
+                    text.text="标题主页 · 点击开始游戏"
+                    val action=metadata.getInt("action")
+                    if(action==4)close.performClick()
+                    else if(action!=0)android.widget.Toast.makeText(this,"此入口尚未接入；当前支持开始游戏",android.widget.Toast.LENGTH_SHORT).show()
+                }else bitmap.recycle()
+            }}
+        }
+        titleView=TitleView(this){kind,x,y->
+            if(!storyClosing)worker.execute{try{if(!storyClosing)showTitle(story(intArrayOf(kind,x,y),18,0),kind==2)}catch(error:Throwable){fail(error)}}
+        }
+        if(titleFirst){dialogueView.visibility=android.view.View.GONE;controls.visibility=android.view.View.GONE;text.visibility=android.view.View.GONE;stage.addView(titleView,FrameLayout.LayoutParams(-1,-1))}
         worker.execute {
             try {
                 System.loadLibrary("nekopack_host");storyLoaded=true
@@ -302,17 +347,9 @@ class MainActivity : Activity() {
                 val opened=mutableListOf<ParcelFileDescriptor>()
                 val packet=try {
                     for((_,uri) in selected.filter{it.first.endsWith(".dat",true)})opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
-                    story(opened.map{it.fd}.toIntArray(),0,0)
+                    story(opened.map{it.fd}.toIntArray(),if(titleFirst)17 else 0,0)
                 }finally{opened.forEach{it.close()}}
-                applyAudioConfig(story(intArrayOf(),9,0))
-                applyTextConfig(story(intArrayOf(),13,0))
-                val font=File("/system/fonts/NotoSansCJK-Regular.ttc")
-                ParcelFileDescriptor.open(font,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->
-                    val result=JSONObject(String(story(intArrayOf(fd.fd),15,0),Charsets.UTF_8));check(!result.has("error")){result.optString("error")}
-                    result.put("host_font_source",font.absolutePath).put("font_collection_index",0)
-                    File(root,"dialogue-font.json").writeText(result.toString())
-                }
-                show(packet)
+                if(titleFirst)showTitle(packet,true) else enterStory(packet)
             }catch(error:Throwable){fail(error)}
         }
         next.setOnClickListener {dialogue.click()}

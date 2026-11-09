@@ -8,6 +8,7 @@ mod scene;
 pub mod shake;
 pub mod story;
 pub mod text_render;
+pub mod title;
 pub mod transition;
 use nekopack_script::{
     runtime::{Machine, Request, Scripts, Step},
@@ -51,7 +52,15 @@ fn bootstrap(
     choice: i32,
     output: &mut impl Write,
 ) -> Result<(Machine, SystemVm), Box<dyn Error>> {
-    let mut machine = Machine::new(store.load(b"start")?, 10000, 64);
+    bootstrap_begin(store, choice, output, false)
+}
+fn bootstrap_begin(
+    store: &mut impl GameResources,
+    choice: i32,
+    output: &mut impl Write,
+    stop_at_menu: bool,
+) -> Result<(Machine, SystemVm), Box<dyn Error>> {
+    let machine = Machine::new(store.load(b"start")?, 10000, 64);
     let mut system = SystemVm::try_new()?;
     let metadata = store.setup()?;
     system.eval("assets", &metadata)?;
@@ -60,6 +69,15 @@ fn bootstrap(
         "host",
         include_str!("../../nekopack-script/host/headless.nut"),
     )?;
+    bootstrap_continue(store, machine, system, output, stop_at_menu)
+}
+fn bootstrap_continue(
+    store: &mut impl GameResources,
+    mut machine: Machine,
+    mut system: SystemVm,
+    output: &mut impl Write,
+    stop_at_menu: bool,
+) -> Result<(Machine, SystemVm), Box<dyn Error>> {
     let mut modules = 0;
     let mut menus = 0;
     let mut entered = false;
@@ -120,6 +138,9 @@ fn bootstrap(
                         machine.complete(None)?;
                     }
                     Request::Command { name, args, rows } => {
+                        if stop_at_menu && name == b"map" {
+                            return Ok((machine, system));
+                        }
                         writeln!(
                             output,
                             "command\t{}\t{}\t{}",
@@ -184,4 +205,57 @@ fn bootstrap(
         writeln!(output, "slot\t{}\t{index}\t{value}", char::from(*bank))?;
     }
     Ok((machine, system))
+}
+
+#[cfg(test)]
+mod bootstrap_tests {
+    use super::*;
+    use nekopack_script::runtime::Source;
+    struct Store;
+    impl Scripts for Store {
+        fn load(&mut self, name: &[u8]) -> Result<Source, String> {
+            let bytes = match name {
+                b"start" => b".var L1 counter\n? counter = 7\n.system menu.nut\n.map title\n Start\n.case 1\n.load story\n.end\n".as_slice(),
+                b"story" => b".img bg\n",
+                _ => return Err("unexpected script".into()),
+            };
+            Ok(Source {
+                name: name.to_vec(),
+                bytes: bytes.to_vec(),
+            })
+        }
+    }
+    impl ResourceProvider for Store {
+        fn resource(&mut self, _: &str, _: &str) -> Result<String, String> {
+            Err("unexpected resource".into())
+        }
+    }
+    impl GameResources for Store {
+        fn setup(&self) -> Result<String, String> {
+            Ok(String::new())
+        }
+        fn system(&mut self, _: &[u8]) -> Result<Vec<u8>, String> {
+            Ok(b"MenuCalls <- 0\ncom[\"map\"] = function(args,rows){MenuCalls++;return InputChoice}".to_vec())
+        }
+    }
+    #[test]
+    fn title_pause_retains_variables_vm_and_pending_map_until_dispatch() {
+        let mut store = Store;
+        let (mut machine, mut system) =
+            bootstrap_begin(&mut store, 1, &mut std::io::sink(), true).unwrap();
+        let steps = machine.steps();
+        let request = machine.advance(&mut store).unwrap();
+        assert_eq!(machine.advance(&mut store).unwrap(), request);
+        assert_eq!(machine.steps(), steps);
+        assert_eq!(machine.variables.get(b"counter").unwrap(), 7);
+        system.eval("calls", "return MenuCalls.tostring()").unwrap();
+        assert_eq!(system.result(), "0");
+        machine.variables.set(b"counter", 9).unwrap();
+        let (machine, mut system) =
+            bootstrap_continue(&mut store, machine, system, &mut std::io::sink(), false).unwrap();
+        assert_eq!(machine.location().unwrap().0, b"story");
+        assert_eq!(machine.variables.get(b"counter").unwrap(), 9);
+        system.eval("calls", "return MenuCalls.tostring()").unwrap();
+        assert_eq!(system.result(), "1");
+    }
 }
