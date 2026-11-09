@@ -1,0 +1,2091 @@
+{
+  "run_id": "lifecycle_754708f00d3e4a3abc87fa9c41f2ff41",
+  "execution": "translated ARM64 on x86_64",
+  "serial": "emulator-5568",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "f206f9a87c9a5ddac2746d91a0205dcde9c597bdd0bdf3eb683f089877dc4655",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "c1f10241d8fef4607e5af2a9f9fc6d14e0d9bc2062d2ccdceb8916e00d6634f2"
+    },
+    "elf": {
+      "libnekopack_probe.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1936464 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         10\n  Size of section headers:           64 (bytes)\n  Number of section headers:         28\n  Section header string table index: 26\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 10 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x06fab8 0x06fab8 R   0x4000\n  LOAD           0x06fab8 0x0000000000073ab8 0x0000000000073ab8 0x0eb4b8 0x0eb4b8 R E 0x4000\n  LOAD           0x15af70 0x0000000000162f70 0x0000000000162f70 0x007bd8 0x008090 RW  0x4000\n  LOAD           0x162b48 0x000000000016eb48 0x000000000016eb48 0x001470 0x001df8 RW  0x4000\n  DYNAMIC        0x162440 0x000000000016a440 0x000000000016a440 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x15af70 0x0000000000162f70 0x0000000000162f70 0x007bd8 0x008090 R   0x1\n  GNU_EH_FRAME   0x04e890 0x000000000004e890 0x000000000004e890 0x004784 0x004784 R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000270 0x0000000000000270 0x0000000000000270 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x162440 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x11a8\n  0x0000000000000008 (RELASZ)       44016 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    1820\n  0x0000000000000017 (JMPREL)       0xbd98\n  0x0000000000000002 (PLTRELSZ)     1968 (bytes)\n  0x0000000000000003 (PLTGOT)       0x16a8a0\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x308\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0xd40\n  0x000000000000000a (STRSZ)        1127 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0xd10\n  0x0000000000000019 (INIT_ARRAY)   0x16a438\n  0x000000000000001b (INIT_ARRAYSZ) 8 (bytes)\n  0x000000000000001a (FINI_ARRAY)   0x16a428\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0xbf0\n  0x000000006ffffffe (VERNEED)      0xcb0\n  0x000000006fffffff (VERNEEDNUM)   3\n  0x0000000000000000 (NULL)         0x0\n",
+      "libnekopack_host.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          6648 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         9\n  Size of section headers:           64 (bytes)\n  Number of section headers:         23\n  Section header string table index: 21\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 9 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0001f8 0x0001f8 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x000988 0x000988 R   0x4000\n  LOAD           0x000988 0x0000000000004988 0x0000000000004988 0x0005a8 0x0005a8 R E 0x4000\n  LOAD           0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 RW  0x4000\n  DYNAMIC        0x000f48 0x0000000000008f48 0x0000000000008f48 0x0001b0 0x0001b0 RW  0x8\n  GNU_RELRO      0x000f30 0x0000000000008f30 0x0000000000008f30 0x000220 0x0010d0 R   0x1\n  GNU_EH_FRAME   0x000784 0x0000000000000784 0x0000000000000784 0x00005c 0x00005c R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  NOTE           0x000238 0x0000000000000238 0x0000000000000238 0x000098 0x000098 R   0x4\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .dynsym .gnu.version .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   04     .dynamic \n   05     .data.rel.ro .fini_array .dynamic .got.plt .relro_padding \n   06     .eh_frame_hdr \n   07     \n   08     .note.android.ident \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0xf48 contains 27 entries:\n  Tag                Type           Name/Value\n  0x0000000000000001 (NEEDED)       Shared library: [libnekopack_probe.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc++_shared.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libdl.so]\n  0x0000000000000001 (NEEDED)       Shared library: [libc.so]\n  0x000000000000000e (SONAME)       Library soname: [libnekopack_host.so]\n  0x000000000000001e (FLAGS)        BIND_NOW \n  0x000000006ffffffb (FLAGS_1)      NOW \n  0x0000000000000007 (RELA)         0x600\n  0x0000000000000008 (RELASZ)       72 (bytes)\n  0x0000000000000009 (RELAENT)      24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)    3\n  0x0000000000000017 (JMPREL)       0x648\n  0x0000000000000002 (PLTRELSZ)     192 (bytes)\n  0x0000000000000003 (PLTGOT)       0x90f8\n  0x0000000000000014 (PLTREL)       RELA\n  0x0000000000000006 (SYMTAB)       0x2d0\n  0x000000000000000b (SYMENT)       24 (bytes)\n  0x0000000000000005 (STRTAB)       0x474\n  0x000000000000000a (STRSZ)        395 (bytes)\n  0x000000006ffffef5 (GNU_HASH)     0x448\n  0x000000000000001a (FINI_ARRAY)   0x8f38\n  0x000000000000001c (FINI_ARRAYSZ) 16 (bytes)\n  0x000000006ffffff0 (VERSYM)       0x408\n  0x000000006ffffffe (VERNEED)      0x424\n  0x000000006fffffff (VERNEEDNUM)   1\n  0x0000000000000000 (NULL)         0x0\n",
+      "libc++_shared.so": "ELF Header:\n  Magic:   7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00\n  Class:                             ELF64\n  Data:                              2's complement, little endian\n  Version:                           1 (current)\n  OS/ABI:                            UNIX - System V\n  ABI Version:                       0\n  Type:                              DYN (Shared object file)\n  Machine:                           AArch64\n  Version:                           0x1\n  Entry point address:               0x0\n  Start of program headers:          64 (bytes into file)\n  Start of section headers:          1792792 (bytes into file)\n  Flags:                             0x0\n  Size of this header:               64 (bytes)\n  Size of program headers:           56 (bytes)\n  Number of program headers:         12\n  Size of section headers:           64 (bytes)\n  Number of section headers:         31\n  Section header string table index: 29\n\nElf file type is DYN (Shared object file)\nEntry point 0x0\nThere are 12 program headers, starting at offset 64\n\nProgram Headers:\n  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align\n  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x0002a0 0x0002a0 R   0x8\n  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x09aca8 0x09aca8 R   0x4000\n  LOAD           0x09acb0 0x000000000009ecb0 0x000000000009ecb0 0x096640 0x096640 R E 0x4000\n  LOAD           0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 RW  0x4000\n  LOAD           0x13ae40 0x0000000000146e40 0x0000000000146e40 0x000238 0x007d10 RW  0x4000\n  DYNAMIC        0x1397c0 0x00000000001417c0 0x00000000001417c0 0x0001d0 0x0001d0 RW  0x8\n  GNU_RELRO      0x1312f0 0x00000000001392f0 0x00000000001392f0 0x009b50 0x009d10 R   0x1\n  GNU_EH_FRAME   0x078e8c 0x0000000000078e8c 0x0000000000078e8c 0x004bec 0x004bec R   0x4\n  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x0\n  GNU_PROPERTY   0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n  NOTE           0x0002e0 0x00000000000002e0 0x00000000000002e0 0x0000bc 0x0000bc R   0x4\n  NOTE           0x0003a0 0x00000000000003a0 0x00000000000003a0 0x000020 0x000020 R   0x8\n\n Section to Segment mapping:\n  Segment Sections...\n   00     \n   01     .note.android.ident .note.gnu.build-id .note.gnu.property .dynsym .gnu.version .gnu.version_r .gnu.hash .hash .dynstr .rela.dyn .rela.plt .gcc_except_table .rodata .eh_frame_hdr .eh_frame \n   02     .text .plt \n   03     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   04     .data .bss \n   05     .dynamic \n   06     .data.rel.ro .fini_array .init_array .dynamic .got .got.plt .relro_padding \n   07     .eh_frame_hdr \n   08     \n   09     .note.gnu.property \n   10     .note.android.ident .note.gnu.build-id \n   11     .note.gnu.property \n   None   .comment .symtab .shstrtab .strtab \nDynamic section at offset 0x1397c0 contains 29 entries:\n  Tag                Type              Name/Value\n  0x0000000000000001 (NEEDED)          Shared library: [libc.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libm.so]\n  0x0000000000000001 (NEEDED)          Shared library: [libdl.so]\n  0x000000000000000e (SONAME)          Library soname: [libc++_shared.so]\n  0x000000000000001e (FLAGS)           BIND_NOW \n  0x000000006ffffffb (FLAGS_1)         NOW \n  0x0000000000000007 (RELA)            0x35dd8\n  0x0000000000000008 (RELASZ)          90912 (bytes)\n  0x0000000000000009 (RELAENT)         24 (bytes)\n  0x000000006ffffff9 (RELACOUNT)       1587\n  0x0000000000000017 (JMPREL)          0x4c0f8\n  0x0000000000000002 (PLTRELSZ)        11280 (bytes)\n  0x0000000000000003 (PLTGOT)          0x141f78\n  0x0000000000000014 (PLTREL)          RELA\n  0x0000000070000001 (AARCH64_BTI_PLT) 0\n  0x0000000000000006 (SYMTAB)          0x3c0\n  0x000000000000000b (SYMENT)          24 (bytes)\n  0x0000000000000005 (STRTAB)          0x18d80\n  0x000000000000000a (STRSZ)           118870 (bytes)\n  0x000000006ffffef5 (GNU_HASH)        0x101b8\n  0x0000000000000004 (HASH)            0x13f68\n  0x0000000000000019 (INIT_ARRAY)      0x1417a8\n  0x000000000000001b (INIT_ARRAYSZ)    24 (bytes)\n  0x000000000000001a (FINI_ARRAY)      0x141798\n  0x000000000000001c (FINI_ARRAYSZ)    16 (bytes)\n  0x000000006ffffff0 (VERSYM)          0xedf0\n  0x000000006ffffffe (VERNEED)         0x10174\n  0x000000006fffffff (VERNEEDNUM)      2\n  0x0000000000000000 (NULL)            0x0\n"
+    }
+  },
+  "cycles": [
+    {
+      "label": "fade",
+      "paused": {
+        "event": "paused",
+        "time_ms": 67259,
+        "active_ms": 67185,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "resumed": {
+        "event": "resumed",
+        "time_ms": 69622,
+        "active_ms": 67186,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "pid": "2734",
+      "stable_files": {
+        "host-events.jsonl": "e35a1fd2f381a36359674c36adabb068b1802fd76068f6857b6634650d559856",
+        "motion-events.jsonl": "b644adbbd1ee0cd0c607f89007b2cc9f422c93fdb24a25daa03d65f812ad69ce"
+      }
+    },
+    {
+      "label": "movie",
+      "paused": {
+        "event": "paused",
+        "time_ms": 93557,
+        "active_ms": 91091,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "resumed": {
+        "event": "resumed",
+        "time_ms": 95717,
+        "active_ms": 91094,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "pid": "2734",
+      "stable_files": {
+        "host-events.jsonl": "85933f0fda79a11e4fb1c563b5ef88fda218a1c8f9810dd4763d69749fcd0e0a",
+        "motion-events.jsonl": "b644adbbd1ee0cd0c607f89007b2cc9f422c93fdb24a25daa03d65f812ad69ce",
+        "movie-8-events.jsonl": "e02c9cc7ece4450433bb97c4259fd12cb5d90b79b75e2aa844ac635d80aa3cc1"
+      },
+      "before": {
+        "frames": 120,
+        "samples": 221184,
+        "head": 219821,
+        "event": "progress",
+        "time_ms": 93074
+      },
+      "after": {
+        "frames": 240,
+        "samples": 441216,
+        "head": 437530,
+        "event": "progress",
+        "time_ms": 100811
+      }
+    },
+    {
+      "label": "dialogue_bgm",
+      "paused": {
+        "event": "paused",
+        "time_ms": 108902,
+        "active_ms": 104276,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "resumed": {
+        "event": "resumed",
+        "time_ms": 111012,
+        "active_ms": 104279,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "pid": "2734",
+      "stable_files": {
+        "host-events.jsonl": "ce13e07212a9aeef85bfce2a7fea6dcd8814f8cb76e4b6d5d74f151d5e88fe59",
+        "motion-events.jsonl": "b644adbbd1ee0cd0c607f89007b2cc9f422c93fdb24a25daa03d65f812ad69ce"
+      }
+    },
+    {
+      "label": "dialogue_bgm_repeat",
+      "paused": {
+        "event": "paused",
+        "time_ms": 111405,
+        "active_ms": 104670,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "resumed": {
+        "event": "resumed",
+        "time_ms": 113516,
+        "active_ms": 104675,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "pid": "2734",
+      "stable_files": {
+        "host-events.jsonl": "31e24d74b669b3f22f95eb9ae97892fac9de98e7bf47df27125be7886ef0969a",
+        "motion-events.jsonl": "b644adbbd1ee0cd0c607f89007b2cc9f422c93fdb24a25daa03d65f812ad69ce"
+      }
+    },
+    {
+      "label": "motion",
+      "paused": {
+        "event": "paused",
+        "time_ms": 162035,
+        "active_ms": 153189,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "resumed": {
+        "event": "resumed",
+        "time_ms": 164525,
+        "active_ms": 153195,
+        "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+      },
+      "pid": "2734",
+      "stable_files": {
+        "host-events.jsonl": "3bee4389e9361a2603b6307a784a72df89277aee678bff926f7fbe48c132d1b1",
+        "motion-events.jsonl": "923b695a0fdb6cccc66193a3d5f1f615534f769b845ce2de7fbbea9910cd1a67"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "sequence": 1,
+      "source": "P01",
+      "line": 15,
+      "metadata_sha256": "9c2faa5abfe236f88eaf1ec0af4f889c8d79428694d81032363af8adb67c5f1c"
+    },
+    {
+      "sequence": 2,
+      "source": "P01",
+      "line": 18,
+      "metadata_sha256": "f9d0d0115110e5e58fdf7d64ba08b88befaf4798ac24e0831e4d99e8a66e548d"
+    },
+    {
+      "sequence": 3,
+      "source": "P01",
+      "line": 21,
+      "metadata_sha256": "ba00ca5904c490829afd24d7edeff78fca3c98dc606639a5abebd4793caa66a3"
+    },
+    {
+      "sequence": 4,
+      "source": "P01",
+      "line": 26,
+      "metadata_sha256": "423f56127a82415e3007ae85a67829277f05352e909c8f10d304cfb9b4637620"
+    },
+    {
+      "sequence": 5,
+      "source": "P01",
+      "line": 32,
+      "metadata_sha256": "b54abe973a8799d42e8e3a8bfa259a806d33fe0997233b75b3a236c06a0374ec"
+    },
+    {
+      "sequence": 6,
+      "source": "P01",
+      "line": 36,
+      "metadata_sha256": "2a522949230514e89ec456f0576a936b9299e5c8f0d3da5d947db3c62a865032"
+    },
+    {
+      "sequence": 7,
+      "source": "P01",
+      "line": 39,
+      "metadata_sha256": "441c5969352492dc13bc3bfa72a8d2339fef136ba0ece51a6ec78e0fb8ec94fb"
+    },
+    {
+      "sequence": 8,
+      "source": "P01",
+      "line": 43,
+      "metadata_sha256": "13b7c67e92cb6321e1f9c389ff64901d647888e8b4427353e154a652a987da26"
+    },
+    {
+      "sequence": 9,
+      "source": "P01",
+      "line": 46,
+      "metadata_sha256": "120caf4761adf8c03a48ce7c954c5d272b0487e85ee8874fbce0b54a45f90f4f"
+    },
+    {
+      "sequence": 10,
+      "source": "P01",
+      "line": 49,
+      "metadata_sha256": "a808dc3f8675eabad09209ed2cc45086db786f28fc90eca4bbbb7314f6f7c064"
+    },
+    {
+      "sequence": 11,
+      "source": "P01",
+      "line": 52,
+      "metadata_sha256": "c22d3a5fef3ad3f0f79a2cedb1049d01f4ce8fdbbefc159f40b7f956693f092b"
+    },
+    {
+      "sequence": 12,
+      "source": "P01",
+      "line": 57,
+      "metadata_sha256": "4b6a99a25dc20f3ca3ca926787ca9e3abbbfa0d7c426f944c2100cff506a3536"
+    },
+    {
+      "sequence": 13,
+      "source": "012401",
+      "line": 11,
+      "metadata_sha256": "6dd66e682c2c6706746c8b7e9c5f0169c56f8516cf0ad4b5cd2448ccb5245b07"
+    },
+    {
+      "sequence": 14,
+      "source": "012401",
+      "line": 14,
+      "metadata_sha256": "9135e60fa59f56e981857dc1662af8e4d3dc839570531beab43f499e59b2d2c5"
+    },
+    {
+      "sequence": 15,
+      "source": "012401",
+      "line": 17,
+      "metadata_sha256": "cc14181800bb58a0302772fe904c8c445eaa4b2dc6b98a397e2efcc51fe87b2d"
+    },
+    {
+      "sequence": 16,
+      "source": "012401",
+      "line": 20,
+      "metadata_sha256": "16c097958b81cdef4ff0653b15349ad224a43318ea23b3ed2f178b98b5355357"
+    },
+    {
+      "sequence": 17,
+      "source": "012401",
+      "line": 23,
+      "metadata_sha256": "d1516f8acfb2359cb73fe56051927e379761f5976e03e602c2321cd316f92c54"
+    },
+    {
+      "sequence": 18,
+      "source": "012401",
+      "line": 26,
+      "metadata_sha256": "abfbbacc467ffe04f42e669326070a181feedc81f175f5c580face986e3bdeee"
+    },
+    {
+      "sequence": 19,
+      "source": "012401",
+      "line": 29,
+      "metadata_sha256": "a750eb49e4a0c167e8ccc1221c8c433ecca87dd4cead36ca07515c97b2752e0e"
+    },
+    {
+      "sequence": 20,
+      "source": "012401",
+      "line": 32,
+      "metadata_sha256": "f966db813b7fee517c2cb3c48e78de09d7ee522051fcc1b786bdcd08994312d2"
+    },
+    {
+      "sequence": 21,
+      "source": "012401",
+      "line": 35,
+      "metadata_sha256": "7230abb7fa9a3334e098c2d314ae00219dcabb2d5a122f5952f78522f3649485"
+    },
+    {
+      "sequence": 22,
+      "source": "012401",
+      "line": 38,
+      "metadata_sha256": "8f2219f539fa8893111b820d17efb2e8b78febd6b6aabcae1463602248113ee3"
+    },
+    {
+      "sequence": 23,
+      "source": "012401",
+      "line": 41,
+      "metadata_sha256": "a9f1dc60b2af795f80a2ef7e309fa746216f6611d122cb64a81350bd08f0ed2c"
+    },
+    {
+      "sequence": 24,
+      "source": "012401",
+      "line": 44,
+      "metadata_sha256": "dcd3ddf765e1b60bf96c0bfaec89a8f42233c1e9682a52329009733157fa3607"
+    },
+    {
+      "sequence": 25,
+      "source": "012401",
+      "line": 48,
+      "metadata_sha256": "aefa5bffc731dc2a388a5519d2355b4790e4aeb1abc0066030dcbc45804a0838"
+    },
+    {
+      "sequence": 26,
+      "source": "012401",
+      "line": 51,
+      "metadata_sha256": "a1019db9ef7125f8cae997e009c6dd695527d4cf775ae9e6cf618e96e0233080"
+    },
+    {
+      "sequence": 27,
+      "source": "012401",
+      "line": 54,
+      "metadata_sha256": "24bce180dec84441d38b55bb3f765552d46801c99e6c289d2227e98580fafaa9"
+    },
+    {
+      "sequence": 28,
+      "source": "012401",
+      "line": 61,
+      "metadata_sha256": "9918c5b27da6df1d1f026fc6a77f0d31cb2df4622e0a0602ddb9133c87670b48"
+    },
+    {
+      "sequence": 29,
+      "source": "012401",
+      "line": 67,
+      "metadata_sha256": "404c9c334e0ad298ead04bddf41541b34cf9fc424f3fbe66ea7d43a5af16f66e"
+    },
+    {
+      "sequence": 30,
+      "source": "012401",
+      "line": 74,
+      "metadata_sha256": "fd3531ae33c0ac5db6c9022a00dd0d93cf3cc517b02783307a54a9d0b4fff3db"
+    },
+    {
+      "sequence": 31,
+      "source": "012401",
+      "line": 80,
+      "metadata_sha256": "fef494afa41c5d01abf15bf77e600267c09c64d09d2db47f13bc5365d266bf4c"
+    },
+    {
+      "sequence": 32,
+      "source": "012401",
+      "line": 87,
+      "metadata_sha256": "a77248bc827f91fa32e02f834fecfd86658fab88f56b27d4803e5ec8dde20dec"
+    },
+    {
+      "sequence": 33,
+      "source": "012401",
+      "line": 93,
+      "metadata_sha256": "943e26dea6fc4e016afe93fc5fa8070f61004e4f10cd4200ede57ae5dfbebbf5"
+    },
+    {
+      "sequence": 34,
+      "source": "012401",
+      "line": 97,
+      "metadata_sha256": "3dcac1a4b5e1ca18956162f86afe6c25043c29db4e3dbbb36fbf500e2f32d493"
+    },
+    {
+      "sequence": 35,
+      "source": "012401",
+      "line": 100,
+      "metadata_sha256": "db8eb5d1b3f51cde1fe6125bea95ff02067796a90924ed73bc4b870c6f42d761"
+    },
+    {
+      "sequence": 36,
+      "source": "012401",
+      "line": 107,
+      "metadata_sha256": "1a1d28844bdf919b1177cde147582d19e897e4ee28d669d59d625f0ac8536bd1"
+    },
+    {
+      "sequence": 37,
+      "source": "012401",
+      "line": 111,
+      "metadata_sha256": "126d3cbb21ec296d4163b421b31cbdb8d3ff189927190f0ecb1612f299b80705"
+    },
+    {
+      "sequence": 38,
+      "source": "012401",
+      "line": 115,
+      "metadata_sha256": "7ade0fe26d87fdeb5c1fb2eb1b470bbffab1e2fd7f7a72b264da9616031d059a"
+    },
+    {
+      "sequence": 39,
+      "source": "012401",
+      "line": 119,
+      "metadata_sha256": "1a5b6b6dedc5d90002293f7ac4c6b4b9fa4db71072e4c2fe538f466b821ed076"
+    },
+    {
+      "sequence": 40,
+      "source": "012401",
+      "line": 123,
+      "metadata_sha256": "f0b25bf923ddc2dc09acfd514f7c3490a417a029edffcc8e348e9fb5e0d36002"
+    },
+    {
+      "sequence": 41,
+      "source": "012401",
+      "line": 126,
+      "metadata_sha256": "678c04c21c9878d6c5128b8cca26b00636e70e4f8410844bc6b71a1c86ad6428"
+    },
+    {
+      "sequence": 42,
+      "source": "012401",
+      "line": 129,
+      "metadata_sha256": "1d244df98233430bd5ca0679304773cc22ab2241765a28e9e3203b44e0035f0d"
+    },
+    {
+      "sequence": 43,
+      "source": "012402",
+      "line": 10,
+      "metadata_sha256": "706968a43dc3f7ab8d13875764008c99e898fbdb08c10e62f531d2426021a2ae"
+    },
+    {
+      "sequence": 44,
+      "source": "012402",
+      "line": 15,
+      "metadata_sha256": "51c2aa60058a3bd9d3a269ae1a25c05c7145d35187fce73027c32d34010c01f4"
+    },
+    {
+      "sequence": 45,
+      "source": "012402",
+      "line": 23,
+      "metadata_sha256": "2a2b6c2d60c8452fa46bf9e9672f0a89885468450972b556de19ce207e3ab8c2"
+    },
+    {
+      "sequence": 46,
+      "source": "012402",
+      "line": 31,
+      "metadata_sha256": "945b4456843dcf23211087135733dade9a054c795b0ad0b611418d9a34b84d7a"
+    },
+    {
+      "sequence": 47,
+      "source": "012402",
+      "line": 35,
+      "metadata_sha256": "daed50aef3867423a75611e64f3f2a5ba8c9d9c97a9bb25efb44ad5412421de0"
+    },
+    {
+      "sequence": 48,
+      "source": "012402",
+      "line": 39,
+      "metadata_sha256": "e193e17bf831a1f4feeb3e05596529b36cd7d4259e36408635bdc95a56c67beb"
+    },
+    {
+      "sequence": 49,
+      "source": "012402",
+      "line": 46,
+      "metadata_sha256": "9373e7c2935b8e785609671f6cbf2bf2a3edf8527cec061137950bd81f575720"
+    },
+    {
+      "sequence": 50,
+      "source": "012402",
+      "line": 49,
+      "metadata_sha256": "91d50a86fdb7c92000e192c58a2e2bc2b039de43a512c07915afc2f4c9fc87aa"
+    },
+    {
+      "sequence": 51,
+      "source": "012402",
+      "line": 54,
+      "metadata_sha256": "feb462b69d6550b6afb320b2e666b4c3b1b294b37c7cff8e0debaaeaf9800351"
+    },
+    {
+      "sequence": 52,
+      "source": "012402",
+      "line": 57,
+      "metadata_sha256": "6fbeffc826e4aa42e7cf958c890c5374a20a84ca0a943fd7b481cfaf02d08556"
+    },
+    {
+      "sequence": 53,
+      "source": "012402",
+      "line": 62,
+      "metadata_sha256": "d8020511f2171e23a091514bf789f2fe738fdaeb8ac6753916f6a01cf21e3712"
+    },
+    {
+      "sequence": 54,
+      "source": "012402",
+      "line": 65,
+      "metadata_sha256": "f9f7b9e1acd7f06560afdfb1da388edcab4127699c50202df58f8961534edbee"
+    },
+    {
+      "sequence": 55,
+      "source": "012402",
+      "line": 70,
+      "metadata_sha256": "f4cfd0a36dd472ac6b131621924dc97a748ac6e3f8e2d0528ff1ea31358005a2"
+    },
+    {
+      "sequence": 56,
+      "source": "012402",
+      "line": 76,
+      "metadata_sha256": "7f15103dc5ee39dbc5ea36b9b5950ffc906d60b43d09ab9a4f1619ec4c62338f"
+    },
+    {
+      "sequence": 57,
+      "source": "012402",
+      "line": 84,
+      "metadata_sha256": "d03e4be19f357f388744b56b3d7724cbbf4fc5f87dd4dabfc43730d59766d260"
+    },
+    {
+      "sequence": 58,
+      "source": "012402",
+      "line": 87,
+      "metadata_sha256": "97c9fe630d277deeee51fc1fd6cf4cbb76eb218fa040707bb0822085d1c75fdf"
+    },
+    {
+      "sequence": 59,
+      "source": "012402",
+      "line": 92,
+      "metadata_sha256": "a2f5e4320cce00a57c47056336a5b1116a9102157aed0f6797f568a99b6b2f29"
+    },
+    {
+      "sequence": 60,
+      "source": "012402",
+      "line": 97,
+      "metadata_sha256": "4afbfaf6a0a91433e08171c523478d159d8cb9a8d0c5db9c7c86929d4226332c"
+    },
+    {
+      "sequence": 61,
+      "source": "012402",
+      "line": 100,
+      "metadata_sha256": "6bd339e1f3b43f2e5c0c6e9b78bc8301a3736fc1428419db907f57ceee85bbcd"
+    }
+  ],
+  "movie_events": [
+    {
+      "head": 0,
+      "active_ms": 86938,
+      "event": "resumed",
+      "time_ms": 86943
+    },
+    {
+      "event": "surface_created",
+      "time_ms": 86975
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "fps": 24,
+      "sample_rate": 44100,
+      "duration": 103.91666666666666,
+      "source_sha256": "8245121e358e37a745608bedf3eb02cbb366d3f87c165b1bd14eebf6d46d793b",
+      "source_bytes": 106680900,
+      "left_skip": false,
+      "event": "started",
+      "time_ms": 87677
+    },
+    {
+      "frames": 120,
+      "samples": 220032,
+      "head": 218880,
+      "event": "progress",
+      "time_ms": 93072
+    },
+    {
+      "frames": 120,
+      "samples": 220032,
+      "head": 219821,
+      "event": "progress",
+      "time_ms": 93073
+    },
+    {
+      "frames": 120,
+      "samples": 221184,
+      "head": 219821,
+      "event": "progress",
+      "time_ms": 93074
+    },
+    {
+      "head": 236160,
+      "active_ms": 93518,
+      "event": "paused",
+      "time_ms": 93557
+    },
+    {
+      "event": "surface_destroyed",
+      "time_ms": 93795
+    },
+    {
+      "head": 236160,
+      "active_ms": 93518,
+      "event": "resumed",
+      "time_ms": 95717
+    },
+    {
+      "event": "surface_created",
+      "time_ms": 95742
+    },
+    {
+      "frames": 240,
+      "samples": 440064,
+      "head": 436589,
+      "event": "progress",
+      "time_ms": 100810
+    },
+    {
+      "frames": 240,
+      "samples": 441216,
+      "head": 437530,
+      "event": "progress",
+      "time_ms": 100811
+    },
+    {
+      "reason": 2,
+      "frames": 312,
+      "samples": 573696,
+      "head": 573370,
+      "peak_bytes": 8523472,
+      "elapsed_ms": 16954,
+      "error": null,
+      "event": "closed",
+      "time_ms": 103931
+    }
+  ],
+  "host_events": [
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 60952,
+      "value": 60884
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 67137,
+      "value": 3000
+    },
+    {
+      "event": "lifecycle_paused",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 67258,
+      "value": 67185
+    },
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 69622,
+      "value": 67186
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 70253,
+      "value": 250
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 1,
+      "time_ms": 72507,
+      "value": 3002
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 72533,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 72567,
+      "value": 3612
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 72568,
+      "value": 35
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 2,
+      "time_ms": 72768,
+      "value": 23
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 76770,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 76782,
+      "value": 5820
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 76783,
+      "value": 13
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 3,
+      "time_ms": 76984,
+      "value": 154
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 77563,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 77574,
+      "value": 6212
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 77574,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 4,
+      "time_ms": 77775,
+      "value": 152
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 83045,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 83057,
+      "value": 1804
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 83057,
+      "value": 12
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 5,
+      "time_ms": 83257,
+      "value": 152
+    },
+    {
+      "event": "begin",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 83823,
+      "value": 0
+    },
+    {
+      "event": "gain",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 83833,
+      "value": 100
+    },
+    {
+      "event": "playing",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 83834,
+      "value": 7140
+    },
+    {
+      "event": "looping",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 83835,
+      "value": 0
+    },
+    {
+      "event": "ack",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 83835,
+      "value": 12
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 83904,
+      "value": 3000
+    },
+    {
+      "event": "progress",
+      "kind": "se",
+      "token": 6,
+      "time_ms": 84038,
+      "value": 144
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 84669,
+      "value": 250
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 7,
+      "time_ms": 86922,
+      "value": 3018
+    },
+    {
+      "event": "stopped_all",
+      "kind": "movie",
+      "token": 8,
+      "time_ms": 86936,
+      "value": 0
+    },
+    {
+      "event": "lifecycle_paused",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 93535,
+      "value": 91091
+    },
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 95715,
+      "value": 91092
+    },
+    {
+      "event": "begin",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 104043,
+      "value": 0
+    },
+    {
+      "event": "gain",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 104056,
+      "value": 50
+    },
+    {
+      "event": "playing",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 104058,
+      "value": 230497
+    },
+    {
+      "event": "ack",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 104058,
+      "value": 15
+    },
+    {
+      "event": "progress",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 104259,
+      "value": 161
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 104753,
+      "value": 3000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 105517,
+      "value": 250
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 10,
+      "time_ms": 107784,
+      "value": 3031
+    },
+    {
+      "event": "paused",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 108900,
+      "value": 4813
+    },
+    {
+      "event": "lifecycle_paused",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 108901,
+      "value": 104276
+    },
+    {
+      "event": "resumed",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 111011,
+      "value": 230497
+    },
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 111011,
+      "value": 104278
+    },
+    {
+      "event": "paused",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 111404,
+      "value": 5239
+    },
+    {
+      "event": "lifecycle_paused",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 111404,
+      "value": 104670
+    },
+    {
+      "event": "resumed",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 113514,
+      "value": 230497
+    },
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 113515,
+      "value": 104674
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 129544,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 129559,
+      "value": 1801
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 129560,
+      "value": 16
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 11,
+      "time_ms": 129760,
+      "value": 154
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 130609,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 130619,
+      "value": 2830
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 130620,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 12,
+      "time_ms": 130821,
+      "value": 136
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 131646,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 131658,
+      "value": 2342
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 131659,
+      "value": 13
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 13,
+      "time_ms": 131860,
+      "value": 157
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 132689,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 132700,
+      "value": 3746
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 132700,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 14,
+      "time_ms": 132901,
+      "value": 201
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 133712,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 133724,
+      "value": 2127
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 133724,
+      "value": 12
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 15,
+      "time_ms": 133924,
+      "value": 134
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 135012,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 135025,
+      "value": 5716
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 135025,
+      "value": 13
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 16,
+      "time_ms": 135225,
+      "value": 156
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 138085,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 138099,
+      "value": 617
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 138099,
+      "value": 14
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 138299,
+      "value": 135
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 17,
+      "time_ms": 138803,
+      "value": 617
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 140166,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 140185,
+      "value": 887
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 140186,
+      "value": 20
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 140387,
+      "value": 155
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 18,
+      "time_ms": 141117,
+      "value": 887
+    },
+    {
+      "event": "begin",
+      "kind": "fade",
+      "token": 19,
+      "time_ms": 145584,
+      "value": 2000
+    },
+    {
+      "event": "frame",
+      "kind": "fade",
+      "token": 19,
+      "time_ms": 146098,
+      "value": 250
+    },
+    {
+      "event": "ack",
+      "kind": "fade",
+      "token": 19,
+      "time_ms": 147603,
+      "value": 2019
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 147665,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 147674,
+      "value": 2055
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 147674,
+      "value": 9
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 20,
+      "time_ms": 147875,
+      "value": 155
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 148583,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 148594,
+      "value": 5350
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 148594,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 21,
+      "time_ms": 148795,
+      "value": 136
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 149628,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 149638,
+      "value": 4543
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 149639,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 22,
+      "time_ms": 149840,
+      "value": 135
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 150645,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 150658,
+      "value": 3861
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 150659,
+      "value": 14
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 23,
+      "time_ms": 150859,
+      "value": 139
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 151654,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 151665,
+      "value": 5760
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 151666,
+      "value": 12
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 24,
+      "time_ms": 151867,
+      "value": 199
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 158154,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 158163,
+      "value": 3268
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 158164,
+      "value": 10
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 25,
+      "time_ms": 158365,
+      "value": 138
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 160275,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 160286,
+      "value": 4598
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 160287,
+      "value": 12
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 26,
+      "time_ms": 160487,
+      "value": 161
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 161295,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 161306,
+      "value": 2483
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 161306,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 161508,
+      "value": 135
+    },
+    {
+      "event": "paused",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 162031,
+      "value": 53804
+    },
+    {
+      "event": "paused",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 162033,
+      "value": 662
+    },
+    {
+      "event": "lifecycle_paused",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 162033,
+      "value": 153189
+    },
+    {
+      "event": "resumed",
+      "kind": "bgm",
+      "token": 9,
+      "time_ms": 164522,
+      "value": 230497
+    },
+    {
+      "event": "resumed",
+      "kind": "voice",
+      "token": 27,
+      "time_ms": 164523,
+      "value": 2483
+    },
+    {
+      "event": "lifecycle_resumed",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 164523,
+      "value": 153193
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 28,
+      "time_ms": 166312,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 28,
+      "time_ms": 166324,
+      "value": 705
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 28,
+      "time_ms": 166324,
+      "value": 12
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 28,
+      "time_ms": 166524,
+      "value": 139
+    },
+    {
+      "event": "completed",
+      "kind": "voice",
+      "token": 28,
+      "time_ms": 167123,
+      "value": 705
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 29,
+      "time_ms": 168688,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 29,
+      "time_ms": 168699,
+      "value": 7425
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 29,
+      "time_ms": 168700,
+      "value": 12
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 29,
+      "time_ms": 168901,
+      "value": 136
+    },
+    {
+      "event": "begin",
+      "kind": "voice",
+      "token": 30,
+      "time_ms": 169736,
+      "value": 0
+    },
+    {
+      "event": "playing",
+      "kind": "voice",
+      "token": 30,
+      "time_ms": 169747,
+      "value": 4575
+    },
+    {
+      "event": "ack",
+      "kind": "voice",
+      "token": 30,
+      "time_ms": 169747,
+      "value": 11
+    },
+    {
+      "event": "progress",
+      "kind": "voice",
+      "token": 30,
+      "time_ms": 169948,
+      "value": 145
+    },
+    {
+      "event": "released",
+      "kind": "all",
+      "token": 0,
+      "time_ms": 173256,
+      "value": 0
+    }
+  ],
+  "audio_lifecycle": [
+    {
+      "event": "resuming",
+      "time_ms": 60950,
+      "channels": {}
+    },
+    {
+      "event": "resumed",
+      "time_ms": 60952,
+      "channels": {}
+    },
+    {
+      "event": "paused",
+      "time_ms": 67258,
+      "channels": {}
+    },
+    {
+      "event": "paused_stable_1",
+      "time_ms": 67760,
+      "channels": {}
+    },
+    {
+      "event": "paused_stable_2",
+      "time_ms": 68760,
+      "channels": {}
+    },
+    {
+      "event": "resuming",
+      "time_ms": 69622,
+      "channels": {}
+    },
+    {
+      "event": "resumed",
+      "time_ms": 69622,
+      "channels": {}
+    },
+    {
+      "event": "paused",
+      "time_ms": 93535,
+      "channels": {}
+    },
+    {
+      "event": "paused_stable_1",
+      "time_ms": 94057,
+      "channels": {}
+    },
+    {
+      "event": "paused_stable_2",
+      "time_ms": 95059,
+      "channels": {}
+    },
+    {
+      "event": "resuming",
+      "time_ms": 95714,
+      "channels": {}
+    },
+    {
+      "event": "resumed",
+      "time_ms": 95715,
+      "channels": {}
+    },
+    {
+      "event": "paused",
+      "time_ms": 108902,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 4813,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "paused_stable_1",
+      "time_ms": 109403,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 4813,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "paused_stable_2",
+      "time_ms": 110409,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 4813,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "resuming",
+      "time_ms": 111009,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 4813,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "resumed",
+      "time_ms": 111011,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": true,
+          "position": 4864,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "paused",
+      "time_ms": 111404,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 5239,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "paused_stable_1",
+      "time_ms": 111906,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 5239,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "paused_stable_2",
+      "time_ms": 112907,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 5239,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "resuming",
+      "time_ms": 113512,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 5239,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "resumed",
+      "time_ms": 113515,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": true,
+          "position": 5292,
+          "gain": 0.5
+        }
+      }
+    },
+    {
+      "event": "paused",
+      "time_ms": 162034,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 53804,
+          "gain": 0.5
+        },
+        "voice": {
+          "token": 27,
+          "player_id": 242106570,
+          "playing": false,
+          "position": 662,
+          "gain": 1
+        }
+      }
+    },
+    {
+      "event": "paused_stable_1",
+      "time_ms": 162536,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 53804,
+          "gain": 0.5
+        },
+        "voice": {
+          "token": 27,
+          "player_id": 242106570,
+          "playing": false,
+          "position": 662,
+          "gain": 1
+        }
+      }
+    },
+    {
+      "event": "paused_stable_2",
+      "time_ms": 163537,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 53804,
+          "gain": 0.5
+        },
+        "voice": {
+          "token": 27,
+          "player_id": 242106570,
+          "playing": false,
+          "position": 662,
+          "gain": 1
+        }
+      }
+    },
+    {
+      "event": "resuming",
+      "time_ms": 164519,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": false,
+          "position": 53804,
+          "gain": 0.5
+        },
+        "voice": {
+          "token": 27,
+          "player_id": 242106570,
+          "playing": false,
+          "position": 662,
+          "gain": 1
+        }
+      }
+    },
+    {
+      "event": "resumed",
+      "time_ms": 164524,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 117161544,
+          "playing": true,
+          "position": 53844,
+          "gain": 0.5
+        },
+        "voice": {
+          "token": 27,
+          "player_id": 242106570,
+          "playing": true,
+          "position": 715,
+          "gain": 1
+        }
+      }
+    }
+  ],
+  "motion_events": [
+    {
+      "event": "begin",
+      "sequence": 56,
+      "elapsed_ms": 0,
+      "finished": false,
+      "time_ms": 161930
+    },
+    {
+      "event": "frame",
+      "sequence": 56,
+      "elapsed_ms": 0,
+      "finished": false,
+      "time_ms": 161930
+    },
+    {
+      "event": "frame",
+      "sequence": 56,
+      "elapsed_ms": 33,
+      "finished": false,
+      "time_ms": 162002
+    },
+    {
+      "event": "frame",
+      "sequence": 56,
+      "elapsed_ms": 155,
+      "finished": false,
+      "time_ms": 164648
+    },
+    {
+      "event": "frame",
+      "sequence": 56,
+      "elapsed_ms": 272,
+      "finished": true,
+      "time_ms": 164744
+    },
+    {
+      "event": "finished",
+      "sequence": 56,
+      "elapsed_ms": 272,
+      "finished": true,
+      "time_ms": 164744
+    },
+    {
+      "event": "begin",
+      "sequence": 57,
+      "elapsed_ms": 0,
+      "finished": false,
+      "time_ms": 166958
+    },
+    {
+      "event": "frame",
+      "sequence": 57,
+      "elapsed_ms": 0,
+      "finished": false,
+      "time_ms": 166958
+    },
+    {
+      "event": "frame",
+      "sequence": 57,
+      "elapsed_ms": 31,
+      "finished": false,
+      "time_ms": 167028
+    },
+    {
+      "event": "frame",
+      "sequence": 57,
+      "elapsed_ms": 97,
+      "finished": false,
+      "time_ms": 167095
+    },
+    {
+      "event": "frame",
+      "sequence": 57,
+      "elapsed_ms": 182,
+      "finished": false,
+      "time_ms": 167183
+    },
+    {
+      "event": "frame",
+      "sequence": 57,
+      "elapsed_ms": 265,
+      "finished": true,
+      "time_ms": 167266
+    },
+    {
+      "event": "finished",
+      "sequence": 57,
+      "elapsed_ms": 265,
+      "finished": true,
+      "time_ms": 167267
+    },
+    {
+      "event": "begin",
+      "sequence": 60,
+      "elapsed_ms": 0,
+      "finished": false,
+      "time_ms": 170369
+    },
+    {
+      "event": "frame",
+      "sequence": 60,
+      "elapsed_ms": 0,
+      "finished": false,
+      "time_ms": 170369
+    },
+    {
+      "event": "frame",
+      "sequence": 60,
+      "elapsed_ms": 23,
+      "finished": false,
+      "time_ms": 170425
+    },
+    {
+      "event": "frame",
+      "sequence": 60,
+      "elapsed_ms": 90,
+      "finished": false,
+      "time_ms": 170503
+    },
+    {
+      "event": "frame",
+      "sequence": 60,
+      "elapsed_ms": 168,
+      "finished": false,
+      "time_ms": 170576
+    },
+    {
+      "event": "frame",
+      "sequence": 60,
+      "elapsed_ms": 241,
+      "finished": false,
+      "time_ms": 170651
+    },
+    {
+      "event": "frame",
+      "sequence": 60,
+      "elapsed_ms": 307,
+      "finished": true,
+      "time_ms": 170708
+    },
+    {
+      "event": "finished",
+      "sequence": 60,
+      "elapsed_ms": 307,
+      "finished": true,
+      "time_ms": 170708
+    }
+  ],
+  "lifecycle": [
+    {
+      "event": "resumed",
+      "time_ms": 60953,
+      "active_ms": 60885,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "paused",
+      "time_ms": 67259,
+      "active_ms": 67185,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "resumed",
+      "time_ms": 69622,
+      "active_ms": 67186,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "paused",
+      "time_ms": 93557,
+      "active_ms": 91091,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "resumed",
+      "time_ms": 95717,
+      "active_ms": 91094,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "paused",
+      "time_ms": 108902,
+      "active_ms": 104276,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "resumed",
+      "time_ms": 111012,
+      "active_ms": 104279,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "paused",
+      "time_ms": 111405,
+      "active_ms": 104670,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "resumed",
+      "time_ms": 113516,
+      "active_ms": 104675,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "paused",
+      "time_ms": 162035,
+      "active_ms": 153189,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "resumed",
+      "time_ms": 164525,
+      "active_ms": 153195,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    },
+    {
+      "event": "paused",
+      "time_ms": 173268,
+      "active_ms": 161938,
+      "instance": "20359e9c-eae4-4301-a8f1-6597d211dc5d"
+    }
+  ],
+  "movie_natural_completion": false,
+  "destroyed_while_paused": false,
+  "vm_live_bytes": 0
+}

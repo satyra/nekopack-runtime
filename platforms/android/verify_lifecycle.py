@@ -1,4 +1,4 @@
-"""BLESS native-device pause/resume through actual Home and existing-activity foregrounding."""
+"""BLESS pause/resume through actual Home; execution mode must match the device."""
 import argparse
 import hashlib
 import json
@@ -13,6 +13,7 @@ p=argparse.ArgumentParser()
 for key in ('adb','serial','reference','output'):p.add_argument('--'+key,required=True)
 p.add_argument('--movie-only',action='store_true')
 p.add_argument('--destroy-paused',action='store_true')
+p.add_argument('--execution',choices=('native','translated'),default='native')
 a=p.parse_args();pkg='org.nekopack.probe';run='lifecycle_'+uuid.uuid4().hex
 def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
 def read(name):return adb('exec-out','run-as',pkg,'cat',f'files/{run}/{name}')
@@ -82,8 +83,13 @@ def cycle(label,already_paused=False,extra=None):
 build=json.loads(Path('.local/android-probe/build.json').read_text())
 apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:')
 assert adb('shell','sha256sum',apk).decode().split()[0]==build['sha256']['nekopack-arm64-probe.apk']
-assert adb('shell','uname','-m').strip()==b'aarch64'
-assert adb('shell','getprop','ro.dalvik.vm.native.bridge').strip() in (b'',b'0')
+machine=adb('shell','uname','-m').decode().strip()
+bridge=adb('shell','getprop','ro.dalvik.vm.native.bridge').decode().strip()
+if a.execution=='native':
+    assert machine=='aarch64' and bridge in ('','0'),(machine,bridge)
+else:
+    assert machine=='x86_64' and bridge not in ('','0'),(machine,bridge)
+execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64'
 args=['shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--es','run_id',run,'--ez','lifecycle_probe','true']
 if a.destroy_paused:args+=['--ei','story_game','0','--ez','finish_while_paused','true']
 elif a.movie_only:args+=['--ei','movie_probe_game','0']
@@ -161,6 +167,6 @@ else:
     assert b'.ogg' not in adb('shell','run-as',pkg,'ls',f'files/{run}')
     end=events(movie_name)[-1]
     assert end['event']=='closed' and end['reason']==2 and end['error'] is None
-result=dict(run_id=run,execution='native ARM64',build=build,cycles=observations,pages=pages,movie_events=events(movie_name),host_events=events('host-events.jsonl'),audio_lifecycle=events('audio-lifecycle.jsonl'),motion_events=events('motion-events.jsonl'),lifecycle=lifecycle(),movie_natural_completion=a.movie_only,destroyed_while_paused=a.destroy_paused,vm_live_bytes=None if a.movie_only else 0)
+result=dict(run_id=run,execution=execution,serial=a.serial,machine=machine,native_bridge=bridge,build=build,cycles=observations,pages=pages,movie_events=events(movie_name),host_events=events('host-events.jsonl'),audio_lifecycle=events('audio-lifecycle.jsonl'),motion_events=events('motion-events.jsonl'),lifecycle=lifecycle(),movie_natural_completion=a.movie_only,destroyed_while_paused=a.destroy_paused,vm_live_bytes=None if a.movie_only else 0)
 Path(a.output).write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 print('PASS lifecycle',run,'cycles',len(observations),'pages',len(pages),'natural movie',a.movie_only)
