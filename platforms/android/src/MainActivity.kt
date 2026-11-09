@@ -157,6 +157,7 @@ class MainActivity : Activity() {
         val stage=FrameLayout(this);stage.setBackgroundColor(android.graphics.Color.BLACK)
         val overlay=ImageView(this);overlay.scaleType=ImageView.ScaleType.FIT_CENTER;overlay.alpha=0f
         stage.addView(image,FrameLayout.LayoutParams(-1,-1));stage.addView(overlay,FrameLayout.LayoutParams(-1,-1))
+        val dialogueView=DialogueView(this);stage.addView(dialogueView,FrameLayout.LayoutParams(-1,-1))
         layout.addView(stage,LinearLayout.LayoutParams(-1,0,1f))
         val text=TextView(this);text.text="正在读取剧情…";text.textSize=16f;text.maxLines=3;layout.addView(text)
         val next=Button(this);next.text="继续";next.isEnabled=false;val controls=LinearLayout(this);controls.addView(next,LinearLayout.LayoutParams(0,-2,1f))
@@ -188,13 +189,19 @@ class MainActivity : Activity() {
             storyClosing=true
             File(root,"error.txt").writeText("${error.javaClass.name}: ${error.message}")
             if(storyLoaded)story(intArrayOf(),3,0)
-            runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.text="无法继续：${error.message}";next.isEnabled=false}}
+            runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.visibility=android.view.View.VISIBLE;text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
         lifecycleFailure={error->worker.execute{fail(error)}}
-        dialogue=DialoguePresentation(text,timeline,root,{op,token,elapsed,done->
+        dialogue=DialoguePresentation(dialogueView,timeline,root,{op,token,elapsed,done->
             worker.execute{try{if(!storyClosing){
                 val state=JSONObject(String(story(intArrayOf(),op,token,elapsed),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
-                runOnUiThread{timeline.post{if(!storyClosing)done(state)}}
+                val frame=story(intArrayOf(),16,token);val split=frame.indexOf(10.toByte());check(split>=0){String(frame,Charsets.UTF_8)}
+                val geometry=JSONObject(String(frame,0,split,Charsets.UTF_8));val png=frame.copyOfRange(split+1,frame.size)
+                val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid dialogue overlay")
+                File(root,"dialogue-$token.json").writeText(geometry.toString())
+                if(state.getLong("visible")==0L)File(root,"dialogue-$token-empty.png").writeBytes(png)
+                if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
+                runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
         },{enabled->next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false))},{stopVoice->
             storyEffects?.stopMotion();storyEffects?.finishDialogue(sequence,stopVoice);val token=sequence
@@ -299,6 +306,12 @@ class MainActivity : Activity() {
                 }finally{opened.forEach{it.close()}}
                 applyAudioConfig(story(intArrayOf(),9,0))
                 applyTextConfig(story(intArrayOf(),13,0))
+                val font=File("/system/fonts/NotoSansCJK-Regular.ttc")
+                ParcelFileDescriptor.open(font,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->
+                    val result=JSONObject(String(story(intArrayOf(fd.fd),15,0),Charsets.UTF_8));check(!result.has("error")){result.optString("error")}
+                    result.put("host_font_source",font.absolutePath).put("font_collection_index",0)
+                    File(root,"dialogue-font.json").writeText(result.toString())
+                }
                 show(packet)
             }catch(error:Throwable){fail(error)}
         }

@@ -1,0 +1,247 @@
+{
+  "scope": "BLESS first three ordinary dialogue pages; actual translated Android rendering",
+  "execution": "translated ARM64 on x86_64",
+  "run_id": "render_09e9fa6c59d442cb9cca32f290122cc2",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "149097252e2163b0b84ee2ce5c38686f9f57f1ac012584e350d8b60b4b747d39",
+  "font_sha256": "aea63eb09eb66980e12511d9502bd9a3fc030ab8ae319afb9d43d2cc4bfbe494",
+  "font": {
+    "requested_font": "ＭＳ ゴシック",
+    "host_font_override": true,
+    "opacity": 191,
+    "border": 1,
+    "font_size": 22,
+    "line_span": 8,
+    "host_font_source": "/system/fonts/NotoSansCJK-Regular.ttc",
+    "font_collection_index": 0
+  },
+  "resource_sha256": {
+    "message.nut": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+    "config.nut": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+    "msgbox.mng": "42829ede9966843e9b7be50fb3425e93109922b2b797451ef77a4b7dc265c966"
+  },
+  "geometry": {
+    "TEXT": {
+      "x": 100,
+      "y": 605,
+      "width": 1080,
+      "height": 107
+    },
+    "NAME": {
+      "x": 15,
+      "y": 573,
+      "width": 344,
+      "height": 37
+    },
+    "*TEXT": {
+      "x": 136,
+      "y": 638,
+      "width": 1005,
+      "height": 82
+    },
+    "*NAME": {
+      "x": 81,
+      "y": 578,
+      "width": 217,
+      "height": 33
+    }
+  },
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "native_blt_facts": [
+    {
+      "va": "0x40d691",
+      "instruction": "call 0x4bd8ac"
+    },
+    {
+      "va": "0x4bd8d8",
+      "instruction": "call 0x4bdaf4"
+    },
+    {
+      "va": "0x4bdb7c",
+      "instruction": "call 0x4be0b0"
+    },
+    {
+      "va": "0x4be177",
+      "instruction": "psrld mm2, 0x18"
+    },
+    {
+      "va": "0x4be17f",
+      "instruction": "pmullw mm2, mm6"
+    },
+    {
+      "va": "0x4be185",
+      "instruction": "psrld mm2, 8"
+    },
+    {
+      "va": "0x4be19b",
+      "instruction": "psubw mm5, mm7"
+    },
+    {
+      "va": "0x4be1ad",
+      "instruction": "pmullw mm5, mm4"
+    },
+    {
+      "va": "0x4be1b6",
+      "instruction": "psrlw mm5, 8"
+    }
+  ],
+  "pages": [
+    {
+      "sequence": 1,
+      "named": true,
+      "layout": {
+        "sequence": 1,
+        "size": [
+          1280,
+          720
+        ],
+        "bounds": [
+          15,
+          573,
+          1165,
+          139
+        ],
+        "font_size": 22,
+        "line_span": 8,
+        "lines": 1,
+        "clipped": false,
+        "text_rect": [
+          100,
+          605,
+          1080,
+          107
+        ],
+        "name_rect": [
+          15,
+          573,
+          344,
+          37
+        ]
+      },
+      "overlay_sha256": "32bd6f115b2e53918726633819ead2ba78df30de2167debaf2f7812c81248e96",
+      "empty_sha256": "785d63fd8ecfdb8472df3a9a6ebe4576bcc22e4a63c5dab76ce1362378161332",
+      "changed_pixels": 3729,
+      "desktop_pixels_equal": true,
+      "display_roi_mae": 0.8947724727053408,
+      "display_roi_p95": 4.0,
+      "screenshot_sha256": "01b4dfc6c7fd5afbcb8380559a3f12281a035d8d7cd0e27091dbb146dad5b58c"
+    },
+    {
+      "sequence": 2,
+      "named": false,
+      "layout": {
+        "sequence": 2,
+        "size": [
+          1280,
+          720
+        ],
+        "bounds": [
+          15,
+          573,
+          1165,
+          139
+        ],
+        "font_size": 22,
+        "line_span": 8,
+        "lines": 1,
+        "clipped": false,
+        "text_rect": [
+          100,
+          605,
+          1080,
+          107
+        ],
+        "name_rect": [
+          15,
+          573,
+          344,
+          37
+        ]
+      },
+      "overlay_sha256": "8586e1ee8da5b718dca121e36850cb1c810e78b77adeac647aa3c227d6168284",
+      "empty_sha256": "1a114c52f0da7e6a3f27e935be714e85f85f31737d2ca3e02bfea510f84c55a2",
+      "changed_pixels": 5261,
+      "desktop_pixels_equal": true,
+      "display_roi_mae": 0.833508733060079,
+      "display_roi_p95": 3.0,
+      "screenshot_sha256": "b1a78ca47681806a88c81eecf1c5ed9329ff8b1473b4158e665306e72c9d7832"
+    },
+    {
+      "sequence": 3,
+      "named": false,
+      "layout": {
+        "sequence": 3,
+        "size": [
+          1280,
+          720
+        ],
+        "bounds": [
+          15,
+          573,
+          1165,
+          139
+        ],
+        "font_size": 22,
+        "line_span": 8,
+        "lines": 2,
+        "clipped": false,
+        "text_rect": [
+          100,
+          605,
+          1080,
+          107
+        ],
+        "name_rect": [
+          15,
+          573,
+          344,
+          37
+        ]
+      },
+      "overlay_sha256": "790122c2321a8018117ef7f2f10bd4fb13dd02320aac62e8435cc8dcd933b31c",
+      "empty_sha256": "1a114c52f0da7e6a3f27e935be714e85f85f31737d2ca3e02bfea510f84c55a2",
+      "changed_pixels": 19145,
+      "desktop_pixels_equal": true,
+      "display_roi_mae": 1.5519983260096255,
+      "display_roi_p95": 9.0,
+      "screenshot_sha256": "ab717055bbf04b9cfa9aec88934517cabdc6fd7b2427b0b6e3738fd14268a578"
+    }
+  ],
+  "invalid_resources": [
+    {
+      "case": "anchor_overflow",
+      "error": "dialogue anchor x overflow",
+      "exit_code": 1
+    },
+    {
+      "case": "panel_edge_overflow",
+      "error": "dialogue panel edge overflow",
+      "exit_code": 1
+    }
+  ],
+  "vm_live_bytes": 0,
+  "limits": [
+    "Noto CJK host substitute, not MS Gothic/GDI parity",
+    "Native Blt scalar edge rounding and scene draw rounding not bit-exact",
+    "No ruby, kinsoku, bold or alternate-size support"
+  ],
+  "original_capture": {
+    "sha256": "fe7a372f56a71677c971b4f4977bf1648ac4c9d099c9fa003d05bac21f400d97",
+    "format": "JPEG",
+    "original_saved_box_opacity": 191,
+    "original_config_sha256": "4ec4f14cb06b59c7dd44994c7fffae76e110580fff9873c18e559b122c870193",
+    "roi": "TEXT local y>=70, alpha>0; excludes garbled original text",
+    "metrics": {
+      "alpha_only": {
+        "mae": 30.850222512213076,
+        "p95": 51.0
+      },
+      "native_blt": {
+        "mae": 2.449332463360771,
+        "p95": 6.0
+      }
+    },
+    "limitation": "ANSI locale garbles original glyphs; JPEG is not exact-pixel evidence"
+  }
+}

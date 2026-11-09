@@ -149,7 +149,8 @@ else:
         page=json.loads(wait(lambda:read(f'page-{n}.json') if read(f'page-{n}.json').startswith(b'{') else None))
         ref=Path(a.reference)/'0'/f'{n-1}.json'
         assert page==json.loads(ref.read_text(encoding='utf8'))
-        assert read(f'page-{n}.png')==ref.with_suffix('.png').read_bytes()
+        device_sha=adb('shell','run-as',pkg,'sha256sum',f'files/{run}/page-{n}.png').decode().split()[0]
+        assert device_sha==hashlib.sha256(ref.with_suffix('.png').read_bytes()).hexdigest()
         pages.append(dict(sequence=n,source=page['source'],line=page['line'],metadata_sha256=hashlib.sha256(json.dumps(page,sort_keys=True,ensure_ascii=False).encode()).hexdigest()))
         if n==13:
             cycle('dialogue_bgm');cycle('dialogue_bgm_repeat')

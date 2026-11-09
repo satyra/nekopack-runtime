@@ -8,3 +8,4 @@ nekopack-resource = { path = "../nekopack-resource" }
 nekopack-image = { path = "../nekopack-image" }
 nekopack-script = { path = "../nekopack-script" }
 encoding_rs = "=0.8.35"
+ab_glyph = "=0.2.32"

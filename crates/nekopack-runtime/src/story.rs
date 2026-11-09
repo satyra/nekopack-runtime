@@ -184,6 +184,7 @@ pub struct StorySession<R: Read + Seek> {
     host_mode: bool,
     interactive_text: bool,
     text_reveal: Option<crate::dialogue::Reveal>,
+    text_renderer: Option<crate::text_render::DialogueRenderer>,
     pending_effect: Option<HostEffect>,
     host_sequence: u64,
     effects: Vec<String>,
@@ -268,6 +269,7 @@ impl<R: Read + Seek> StorySession<R> {
             host_mode: false,
             interactive_text: false,
             text_reveal: None,
+            text_renderer: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
@@ -313,6 +315,55 @@ impl<R: Read + Seek> StorySession<R> {
     }
     pub fn enable_interactive_text(&mut self) {
         self.interactive_text = true;
+    }
+    pub fn install_dialogue_font(
+        &mut self,
+        bytes: Vec<u8>,
+        index: u32,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed || self.text_reveal.is_some() {
+            return Err("font must be installed before interactive dialogue begins".into());
+        }
+        self.system
+            .eval("dialogue-style", "return Config.BoxOpacity.tostring()")?;
+        let opacity = self.system.result().parse::<u8>()?;
+        self.system
+            .eval("dialogue-style", "return Config.Border.tostring()")?;
+        let border = self.system.result().parse::<u8>()?;
+        self.system
+            .eval("dialogue-style", "return Config.Bold.tostring()")?;
+        if border > 1 || self.system.result() != "0" {
+            return Err("unsupported dialogue border/bold configuration".into());
+        }
+        self.system.eval("dialogue-style", "return Config.Font")?;
+        let requested = quote(self.system.result().as_bytes())?;
+        let mng = self.store.read("system", "msgbox.mng")?;
+        self.text_renderer = Some(crate::text_render::DialogueRenderer::new(
+            bytes,
+            index,
+            &mng,
+            opacity,
+            border == 1,
+        )?);
+        Ok(format!("{{\"requested_font\":{requested},\"host_font_override\":true,\"opacity\":{opacity},\"border\":{border},\"font_size\":22,\"line_span\":8}}").into_bytes())
+    }
+    pub fn dialogue_image(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed || self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
+            return Err("stale dialogue image request".into());
+        }
+        let count = self
+            .text_reveal
+            .as_ref()
+            .ok_or("dialogue frame not initialized")?
+            .count();
+        let renderer = self
+            .text_renderer
+            .as_mut()
+            .ok_or("dialogue font not installed")?;
+        let mut packet = renderer.metadata()?.into_bytes();
+        packet.push(b'\n');
+        packet.extend(renderer.frame(sequence, count)?);
+        Ok(packet)
     }
     pub fn text_config(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         let (speed, keep) = self.read_text_config()?;
@@ -363,6 +414,10 @@ impl<R: Read + Seek> StorySession<R> {
                 return Err("dialogue must begin with a zero-time frame".into());
             }
             let (speed, keep) = self.read_text_config()?;
+            if let Some(renderer) = &mut self.text_renderer {
+                let page = self.page.as_ref().unwrap();
+                renderer.prepare(sequence, &page.speaker, &page.text)?;
+            }
             self.text_reveal = Some(crate::dialogue::Reveal::new(
                 self.page.as_ref().unwrap().text.clone(),
                 speed,
@@ -1213,6 +1268,7 @@ mod tests {
             host_mode: false,
             interactive_text: false,
             text_reveal: None,
+            text_renderer: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),

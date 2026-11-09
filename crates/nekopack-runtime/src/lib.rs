@@ -7,6 +7,7 @@ mod motion;
 mod scene;
 pub mod shake;
 pub mod story;
+pub mod text_render;
 pub mod transition;
 use nekopack_script::{
     runtime::{Machine, Request, Scripts, Step},

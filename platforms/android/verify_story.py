@@ -184,7 +184,7 @@ def main():
     while time.monotonic()<deadline:
      adb('shell','uiautomator','dump','/sdcard/neko-story-screen.xml')
      xml=adb('shell','cat','/sdcard/neko-story-screen.xml')
-     if any(node.get('text','').strip()==wanted for node in ET.fromstring(xml).iter('node')):break
+     if any(node.get('content-desc','').strip()==wanted for node in ET.fromstring(xml).iter('node')):break
      time.sleep(.2)
     else:raise RuntimeError('story dialogue not visible on screen')
     capture=adb('exec-out','screencap','-p');screen=Image.open(io.BytesIO(capture));assert screen.width>screen.height

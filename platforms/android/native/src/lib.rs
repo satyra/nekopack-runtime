@@ -298,6 +298,26 @@ pub unsafe extern "C" fn neko_probe_story(
                     operation == 12,
                 ),
                 13 => state.as_mut().ok_or("no story session")?.text_config(),
+                15 => {
+                    use std::io::Read;
+                    if count != 1 {
+                        return Err("font installation requires one descriptor".into());
+                    }
+                    let fd = unsafe { *fds };
+                    let file = std::fs::File::from(
+                        unsafe { BorrowedFd::borrow_raw(fd) }.try_clone_to_owned()?,
+                    );
+                    let mut bytes = Vec::new();
+                    file.take(24 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
+                    state
+                        .as_mut()
+                        .ok_or("no story session")?
+                        .install_dialogue_font(bytes, u32::try_from(sequence)?)
+                }
+                16 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .dialogue_image(sequence),
                 14 => state
                     .as_mut()
                     .ok_or("no story session")?

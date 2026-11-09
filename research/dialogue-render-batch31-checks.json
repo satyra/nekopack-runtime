@@ -1,0 +1,26 @@
+{
+  "rust_workspace_tests": 131,
+  "python_research_tests": 15,
+  "clippy": "--workspace --all-targets -- -D warnings: passed",
+  "apk_sha256": "149097252e2163b0b84ee2ce5c38686f9f57f1ac012584e350d8b60b4b747d39",
+  "font_files_bundled": 0,
+  "new_font_library_licenses": [
+    "assets/licenses/ab_glyph-APACHE.txt",
+    "assets/licenses/ab_glyph_rasterizer-APACHE.txt",
+    "assets/licenses/owned_ttf_parser-APACHE.txt",
+    "assets/licenses/ttf-parser-APACHE.txt"
+  ],
+  "logs_sha256": {
+    "workspace-tests.log": "03bdd94e053b7fbf2516d528e7730693ce8686e3870acf14a2b8c6eb0fd8be7c",
+    "clippy.log": "a0428a8dc6c735015a7ab1c1318cd929a20cb22e8c49e93735740204a0f6e194",
+    "python-tests.log": "0295d2f57c3a4c859364738df44c3c7e251326204fd7283b8e74aa75164089a0",
+    "build.log": "038b42d51c1eebe160d05baba2e61f247f9eb51234fd8bfd6ca9adc39d4ddb54"
+  },
+  "failed_lifecycle_attempt": {
+    "run_id": "lifecycle_630a1ccfc65040cfa22423074526b664",
+    "reason": "ADB exec-out cat page-32.png timed out at 45 seconds",
+    "counted_as_pass": false,
+    "page_32_device_and_reference_sha256": "a06b509e36823fe4f5e83f4223731d4d3611284fb0c71f2225235d62cabc64c4",
+    "change": "Compute full PNG SHA-256 on device instead of transferring PNG for equality check"
+  }
+}
