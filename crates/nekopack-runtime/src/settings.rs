@@ -118,7 +118,9 @@ impl Settings {
         }
         self.images
             .iter()
-            .any(|(k, _)| (k.starts_with("* ") || k.starts_with("= ")) && self.hit_image(k, x, y))
+            .any(|(k, _)| {
+                (k.starts_with("* ") || visible_normal(self.page, k)) && self.hit_image(k, x, y)
+            })
             .then_some(Control::Unsupported)
     }
     fn slide(&self, vm: &mut SystemVm, i: usize, x: i32) -> Result<()> {
@@ -184,7 +186,7 @@ impl Settings {
         };
         draw(&mut canvas, "BASE0", [0, 0]);
         draw(&mut canvas, "BASE1", [0, 0]);
-        for key in self.images.keys().filter(|k| k.starts_with("= ")) {
+        for key in self.images.keys().filter(|k| visible_normal(self.page, k)) {
             let selected = key[2..].split_once('#').is_some_and(|(name, value)| {
                 let name = match name {
                     "BOLD" => "Bold",
@@ -205,6 +207,45 @@ impl Settings {
                 },
                 [0, 0],
             );
+        }
+        let mut shortcuts = Vec::new();
+        if self.page == 5 {
+            vm.eval(
+                "settings-shortcuts",
+                "local s=\"\";for(local i=2;i<12;++i)s+=Config.ShortCuts[i]+\"\\n\";return s",
+            )?;
+            let result = vm.result();
+            let names: Vec<_> = result.lines().collect();
+            if names.len() != 10 {
+                return Err("invalid shortcut caption count".into());
+            }
+            let origin = self
+                .images
+                .get("* F3")
+                .ok_or("missing F3 shortcut anchor")?
+                .position;
+            for (i, name) in names.iter().enumerate() {
+                let key = format!("F{}", i + 3);
+                let anchor = self
+                    .images
+                    .get(&format!("* {key}"))
+                    .ok_or("missing shortcut anchor")?
+                    .position;
+                let offset = shortcut_offset(origin, anchor)?;
+                if !name.is_empty() {
+                    if !self.images.contains_key(*name) {
+                        return Err("missing shortcut caption sprite".into());
+                    }
+                    draw(&mut canvas, name, offset);
+                }
+                shortcuts.push(format!(
+                    "{{\"key\":{},\"action\":{},\"offset\":[{},{}]}}",
+                    quote(key.as_bytes())?,
+                    quote(name.as_bytes())?,
+                    offset[0],
+                    offset[1]
+                ));
+            }
         }
         for (name, v) in &values {
             let mask = format!("* {name}");
@@ -249,7 +290,7 @@ impl Settings {
         let areas = self
             .images
             .iter()
-            .filter(|(k, _)| k.starts_with("* ") || k.starts_with("= "))
+            .filter(|(k, _)| k.starts_with("* ") || visible_normal(self.page, k))
             .map(|(k, i)| {
                 Ok(format!(
                     "{}:[{},{},{},{}]",
@@ -262,10 +303,32 @@ impl Settings {
             })
             .collect::<Result<Vec<_>>>()?
             .join(",");
-        let mut packet=format!("{{\"kind\":\"settings\",\"page\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"areas\":{{{areas}}}}}\n",self.page,self.unsupported).into_bytes();
+        let shortcuts = shortcuts.join(",");
+        let mut packet=format!("{{\"kind\":\"settings\",\"page\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}}}}\n",self.page,self.unsupported).into_bytes();
         canvas.write_png(&mut packet)?;
         Ok(packet)
     }
+}
+// A shared sprite sheet also contains ShortCutsWindow's modal choices. Only
+// controls bound by ViewConfigPage/its GUI belong to the normal fifth page.
+fn visible_normal(page: u32, key: &str) -> bool {
+    if !key.starts_with("= ") {
+        return false;
+    }
+    page != 5
+        || matches!(&key[2..], "PAGE++" | "PAGE--" | "CLOSE" | "DEFAULT")
+        || key.starts_with("= CenterKey#")
+        || key.starts_with("= SpaceKey#")
+}
+fn shortcut_offset(origin: [i32; 2], anchor: [i32; 2]) -> Result<[i32; 2]> {
+    Ok([
+        anchor[0]
+            .checked_sub(origin[0])
+            .ok_or("shortcut x offset overflow")?,
+        anchor[1]
+            .checked_sub(origin[1])
+            .ok_or("shortcut y offset overflow")?,
+    ])
 }
 fn normalize(raw: &str) -> String {
     if raw.starts_with(['*', '@', '=', '+']) {
@@ -280,6 +343,26 @@ fn slider_value(x: i32, left: i32, width: u32) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn shortcut_popup_choices_are_not_page_controls() {
+        for key in [
+            "= SAVE", "= LOAD", "= RESET", "= DELETE", "= AUTO", "= QUIT", "= QUIT_",
+        ] {
+            assert!(!visible_normal(5, key), "{key}")
+        }
+        for key in [
+            "= CLOSE",
+            "= DEFAULT",
+            "= CenterKey#1",
+            "= SpaceKey#0",
+            "= PAGE++",
+        ] {
+            assert!(visible_normal(5, key), "{key}")
+        }
+        assert!(visible_normal(4, "= KeepVoice#0"));
+        assert_eq!(shortcut_offset([304, 148], [811, 344]).unwrap(), [507, 196]);
+        assert!(shortcut_offset([i32::MIN, 0], [i32::MAX, 0]).is_err());
+    }
     #[test]
     fn original_slider_range_and_clamping() {
         assert_eq!(slider_value(640, 215, 850), 50);

@@ -1,0 +1,32 @@
+{
+  "execution": "native ARM64",
+  "run_id": "shortcuts_9558b34060544d289dbfe391b2b3a1e5",
+  "apk_sha256": "360fb929cb57dd26dd300314855b0666376455955d0faf759f7c2061cc6640dd",
+  "config5_sha256": "5456e476b269c076ccdb382fecf9961cc2c648914f57ceb3c2e6349b24991486",
+  "original_page5_pixels_equal": true,
+  "shortcut_actions": [
+    "RESET",
+    "QUIT",
+    "SAVE",
+    "LOAD",
+    "QSAVE",
+    "QLOAD",
+    "LOG",
+    "HIDE",
+    "AUTO",
+    "SKIP"
+  ],
+  "modal_choices_absent": true,
+  "repeat_navigation_pixels_equal": true,
+  "preferences_unchanged": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 55,
+    "VolSYS": 50
+  },
+  "unsupported_shortcut_read_only": true,
+  "home_restore": true
+}
