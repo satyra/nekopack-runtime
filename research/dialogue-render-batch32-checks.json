@@ -1,0 +1,49 @@
+{
+  "device": {
+    "serial": "SST89X85TC8TGUQO",
+    "model": "PGKM10",
+    "android": "15",
+    "sdk": "35",
+    "machine": "aarch64",
+    "native_bridge": "0"
+  },
+  "execution": "native ARM64",
+  "apk_sha256": "ab9b6374721a12a64f0bc23624c9dbac5155e3e4c356121b2cd3a4856872b318",
+  "font_bytes": 32355424,
+  "font_sha256": "3e7e5afaac2c6d872592d76abedac03a51c6f0fc42d11e311ff2816a6c368afe",
+  "old_font_budget_bytes": 25165824,
+  "new_font_budget_bytes": 41943040,
+  "baseline_error": "java.lang.IllegalStateException: font exceeds 24 MiB input budget",
+  "baseline_apk_sha256": "149097252e2163b0b84ee2ce5c38686f9f57f1ac012584e350d8b60b4b747d39",
+  "rust_top_level_tests": 124,
+  "rust_subprocess_probes": 7,
+  "python_tests": 17,
+  "clippy": "passed --workspace --all-targets -- -D warnings",
+  "audibility": {
+    "source": "user feedback during this phone test",
+    "response": "声音正常"
+  },
+  "failed_verifier_attempts": [
+    {
+      "log": "render-attempt1.log",
+      "sha256": "3a0b1e18fb3a57c9b0c853cba4166ff16af399e96c5e24c2978a002c108a4bb9",
+      "counted_as_pass": false
+    },
+    {
+      "log": "controls-attempt1.log",
+      "sha256": "1812575691fd88042a183e9f12cf1b0dcc5c2ca24fb5ecf3137327c64bb01a78",
+      "counted_as_pass": false
+    },
+    {
+      "log": "controls-attempt2.log",
+      "sha256": "20592f14be9f6c6a83e977fb671c8bb5914220cd96bb8245a75664123bd63056",
+      "counted_as_pass": false
+    }
+  ],
+  "log_sha256": {
+    "tests.log": "2017e2d009141d044c2c410df90e37d226734e434ea6789a3e3a1c06a75eb295",
+    "clippy.log": "01a68e947a601783fe0d44f1fc665faaf79065b123b40f8f5bc0ed7f0b0fa4ab",
+    "python-tests.log": "123eabac1343512373662f105f3ce92677447e0478b9faf9213268b5b9d88c66",
+    "build.log": "d426c9ec94938c0500c29e6173acbede1d90bfdcd24e80bd82ff0b88c076194d"
+  }
+}

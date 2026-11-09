@@ -1,0 +1,268 @@
+{
+  "scope": "BLESS first three ordinary dialogue pages; actual Android rendering",
+  "execution": "native ARM64",
+  "run_id": "render_907fa6688b4244319549ae1d3d033570",
+  "machine": "aarch64",
+  "native_bridge": "0",
+  "apk_sha256": "ab9b6374721a12a64f0bc23624c9dbac5155e3e4c356121b2cd3a4856872b318",
+  "font_sha256": "3e7e5afaac2c6d872592d76abedac03a51c6f0fc42d11e311ff2816a6c368afe",
+  "font": {
+    "requested_font": "ＭＳ ゴシック",
+    "host_font_override": true,
+    "opacity": 191,
+    "border": 1,
+    "font_size": 22,
+    "line_span": 8,
+    "host_font_source": "/system/fonts/NotoSansCJK-Regular.ttc",
+    "font_collection_index": 0
+  },
+  "resource_sha256": {
+    "message.nut": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+    "config.nut": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+    "msgbox.mng": "42829ede9966843e9b7be50fb3425e93109922b2b797451ef77a4b7dc265c966"
+  },
+  "geometry": {
+    "TEXT": {
+      "x": 100,
+      "y": 605,
+      "width": 1080,
+      "height": 107
+    },
+    "NAME": {
+      "x": 15,
+      "y": 573,
+      "width": 344,
+      "height": 37
+    },
+    "*TEXT": {
+      "x": 136,
+      "y": 638,
+      "width": 1005,
+      "height": 82
+    },
+    "*NAME": {
+      "x": 81,
+      "y": 578,
+      "width": 217,
+      "height": 33
+    }
+  },
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "native_blt_facts": [
+    {
+      "va": "0x40d691",
+      "instruction": "call 0x4bd8ac"
+    },
+    {
+      "va": "0x4bd8d8",
+      "instruction": "call 0x4bdaf4"
+    },
+    {
+      "va": "0x4bdb7c",
+      "instruction": "call 0x4be0b0"
+    },
+    {
+      "va": "0x4be177",
+      "instruction": "psrld mm2, 0x18"
+    },
+    {
+      "va": "0x4be17f",
+      "instruction": "pmullw mm2, mm6"
+    },
+    {
+      "va": "0x4be185",
+      "instruction": "psrld mm2, 8"
+    },
+    {
+      "va": "0x4be19b",
+      "instruction": "psubw mm5, mm7"
+    },
+    {
+      "va": "0x4be1ad",
+      "instruction": "pmullw mm5, mm4"
+    },
+    {
+      "va": "0x4be1b6",
+      "instruction": "psrlw mm5, 8"
+    }
+  ],
+  "pages": [
+    {
+      "sequence": 1,
+      "named": true,
+      "layout": {
+        "sequence": 1,
+        "size": [
+          1280,
+          720
+        ],
+        "bounds": [
+          15,
+          573,
+          1165,
+          139
+        ],
+        "font_size": 22,
+        "line_span": 8,
+        "lines": 1,
+        "clipped": false,
+        "text_rect": [
+          100,
+          605,
+          1080,
+          107
+        ],
+        "name_rect": [
+          15,
+          573,
+          344,
+          37
+        ]
+      },
+      "overlay_sha256": "65df674cfb080ba2d2988d1e1cdd41bbf38d0901c7750af55366d94886c893ca",
+      "empty_sha256": "e2902221b130f7ea301e3a353973750739ed0bf3a4f411689af681a82e0f8547",
+      "changed_pixels": 3735,
+      "desktop_pixels_equal": true,
+      "display_transform": {
+        "scale": 1.1666666666666667,
+        "origin": [
+          507.33333333333326,
+          96.0
+        ],
+        "roi": [
+          624,
+          764,
+          1884,
+          927
+        ]
+      },
+      "display_roi_mae": 0.2431613988826112,
+      "display_roi_p95": 0.5051020408164215,
+      "screenshot_sha256": "f3eb0d1bc4b33325e53370384d7c3608c4b55dd4efe474f17ac3462833ca51ff"
+    },
+    {
+      "sequence": 2,
+      "named": false,
+      "layout": {
+        "sequence": 2,
+        "size": [
+          1280,
+          720
+        ],
+        "bounds": [
+          15,
+          573,
+          1165,
+          139
+        ],
+        "font_size": 22,
+        "line_span": 8,
+        "lines": 1,
+        "clipped": false,
+        "text_rect": [
+          100,
+          605,
+          1080,
+          107
+        ],
+        "name_rect": [
+          15,
+          573,
+          344,
+          37
+        ]
+      },
+      "overlay_sha256": "2061a6df6d2aa55e88582585475886ac5edf171cb0d4391b665cf45a0f4f1bb1",
+      "empty_sha256": "1a114c52f0da7e6a3f27e935be714e85f85f31737d2ca3e02bfea510f84c55a2",
+      "changed_pixels": 5313,
+      "desktop_pixels_equal": true,
+      "display_transform": {
+        "scale": 1.1666666666666667,
+        "origin": [
+          507.33333333333326,
+          96.0
+        ],
+        "roi": [
+          624,
+          764,
+          1884,
+          927
+        ]
+      },
+      "display_roi_mae": 0.24221317242835924,
+      "display_roi_p95": 0.5000000000000853,
+      "screenshot_sha256": "9b43e53ba621cc0161a3de0d5dd07de859f16ec74a5cab0266da2c04629dfa52"
+    },
+    {
+      "sequence": 3,
+      "named": false,
+      "layout": {
+        "sequence": 3,
+        "size": [
+          1280,
+          720
+        ],
+        "bounds": [
+          15,
+          573,
+          1165,
+          139
+        ],
+        "font_size": 22,
+        "line_span": 8,
+        "lines": 2,
+        "clipped": false,
+        "text_rect": [
+          100,
+          605,
+          1080,
+          107
+        ],
+        "name_rect": [
+          15,
+          573,
+          344,
+          37
+        ]
+      },
+      "overlay_sha256": "839e8dd9282c6210dd220daef7a6dabfd0424d8ad4afad0b7d505eacc06d0175",
+      "empty_sha256": "1a114c52f0da7e6a3f27e935be714e85f85f31737d2ca3e02bfea510f84c55a2",
+      "changed_pixels": 19339,
+      "desktop_pixels_equal": true,
+      "display_transform": {
+        "scale": 1.1666666666666667,
+        "origin": [
+          507.33333333333326,
+          96.0
+        ],
+        "roi": [
+          624,
+          764,
+          1884,
+          927
+        ]
+      },
+      "display_roi_mae": 0.24487622414737348,
+      "display_roi_p95": 0.5085834333727519,
+      "screenshot_sha256": "6b972e30922c30f3303ff715394e58db624ad5f5576201d9de869cd797a2acf3"
+    }
+  ],
+  "invalid_resources": [
+    {
+      "case": "anchor_overflow",
+      "error": "dialogue anchor x overflow",
+      "exit_code": 1
+    },
+    {
+      "case": "panel_edge_overflow",
+      "error": "dialogue panel edge overflow",
+      "exit_code": 1
+    }
+  ],
+  "vm_live_bytes": 0,
+  "limits": [
+    "Noto CJK host substitute, not MS Gothic/GDI parity",
+    "Native Blt scalar edge rounding and scene draw rounding not bit-exact",
+    "No ruby, kinsoku, bold or alternate-size support"
+  ]
+}

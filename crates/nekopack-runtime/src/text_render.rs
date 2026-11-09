@@ -4,6 +4,8 @@ use ab_glyph::{point, Font, FontVec};
 use nekopack_image::{Mng, RgbaImage};
 use std::error::Error;
 const BUDGET: usize = 16 * 1024 * 1024;
+/// Bounded host font input; Android 15's CJK collection exceeds 30 MiB.
+pub const MAX_FONT_BYTES: usize = 40 * 1024 * 1024;
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 // BLESS Sprite.Clear(); Sprite.Blt(source, 0, 0, opacity): the native
@@ -87,8 +89,8 @@ impl DialogueRenderer {
         opacity: u8,
         border: bool,
     ) -> Result<Self> {
-        if font.len() > 24 * 1024 * 1024 {
-            return Err("font exceeds 24 MiB input budget".into());
+        if font.len() > MAX_FONT_BYTES {
+            return Err("font exceeds 40 MiB input budget".into());
         }
         let font = FontVec::try_from_vec_and_index(font, collection_index)?;
         let parsed = Mng::parse(mng, 4096)?;
@@ -392,7 +394,13 @@ mod tests {
     #[test]
     fn rejects_invalid_font_and_input_budget() {
         assert!(DialogueRenderer::new(vec![0; 12], 0, b"", 191, true).is_err());
-        assert!(DialogueRenderer::new(vec![0; 24 * 1024 * 1024 + 1], 0, b"", 191, true).is_err());
+        assert_eq!(
+            DialogueRenderer::new(vec![0; MAX_FONT_BYTES + 1], 0, b"", 191, true)
+                .err()
+                .unwrap()
+                .to_string(),
+            "font exceeds 40 MiB input budget"
+        );
     }
     #[test]
     fn native_message_box_blt_scales_rgb_and_alpha() {

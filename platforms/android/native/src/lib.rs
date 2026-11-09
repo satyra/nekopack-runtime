@@ -308,7 +308,8 @@ pub unsafe extern "C" fn neko_probe_story(
                         unsafe { BorrowedFd::borrow_raw(fd) }.try_clone_to_owned()?,
                     );
                     let mut bytes = Vec::new();
-                    file.take(24 * 1024 * 1024 + 1).read_to_end(&mut bytes)?;
+                    file.take(nekopack_runtime::text_render::MAX_FONT_BYTES as u64 + 1)
+                        .read_to_end(&mut bytes)?;
                     state
                         .as_mut()
                         .ok_or("no story session")?

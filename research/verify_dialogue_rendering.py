@@ -10,11 +10,36 @@ import numpy as np
 from PIL import Image
 import pefile, capstone
 
+def displayed_difference(scene, overlay, shot, viewport, layout):
+    """Independent bilinear/premultiplied oracle, retaining fractional view transforms.
+
+    Android samples scene and overlay separately, then composites. Resizing a
+    precomposited image at an integer-rounded origin is not equivalent.
+    """
+    x,y,r,b=viewport;scale=min((r-x)/scene.width,(b-y)/scene.height)
+    ox=x+(r-x-scene.width*scale)/2;oy=y+(b-y-scene.height*scale)/2
+    left,top,right,bottom=round(ox+100*scale),round(oy+573*scale),round(ox+1180*scale),round(oy+712*scale)
+    yy,xx=np.mgrid[top:bottom,left:right];sx=(xx+.5-ox)/scale-.5;sy=(yy+.5-oy)/scale-.5
+    def sample(src,xx,yy):
+        h,w=src.shape[:2];xx=np.clip(xx,0,w-1);yy=np.clip(yy,0,h-1)
+        ix=np.floor(xx).astype(int);iy=np.floor(yy).astype(int);fx=(xx-ix)[...,None];fy=(yy-iy)[...,None]
+        return ((src[iy,ix]*(1-fx)+src[iy,np.minimum(ix+1,w-1)]*fx)*(1-fy)
+                +(src[np.minimum(iy+1,h-1),ix]*(1-fx)+src[np.minimum(iy+1,h-1),np.minimum(ix+1,w-1)]*fx)*fy)
+    bg=sample(np.array(scene,dtype=float),sx,sy)
+    pixels=np.array(overlay,dtype=float)
+    pixels[:,:,:3]=np.floor(pixels[:,:,:3]*pixels[:,:,3:4]/255+.5)
+    px,py,pw,ph=layout['bounds'];fg=sample(pixels,sx-px,sy-py)
+    fg[(sx<px-.5)|(sy<py-.5)|(sx>=px+pw-.5)|(sy>=py+ph-.5)]=0
+    predicted=fg[:,:,:3]+bg[:,:,:3]*(1-fg[:,:,3:4]/255)
+    actual=np.array(shot,dtype=float)[top:bottom,left:right]
+    return np.abs(actual-predicted),dict(scale=scale,origin=[ox,oy],roi=[left,top,right,bottom])
+
 def main():
     p = argparse.ArgumentParser()
     for key in ('adb','serial','games','portkit','reference','desktop','work','output'):
         p.add_argument('--'+key, required=True)
     p.add_argument('--original-capture')
+    p.add_argument('--execution',choices=('native','translated'),default='translated')
     a=p.parse_args(); work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     sys.path.insert(0,a.portkit)
     from portkit.neko import Archive
@@ -63,7 +88,9 @@ def main():
     apk_sha=adb('shell','sha256sum',apk).decode().split()[0]
     assert apk_sha==build['sha256']['nekopack-arm64-probe.apk']
     machine=adb('shell','uname','-m').decode().strip();bridge=adb('shell','getprop','ro.dalvik.vm.native.bridge').decode().strip()
-    assert machine=='x86_64' and bridge not in ('','0')
+    if a.execution=='native':assert machine=='aarch64' and bridge in ('','0'),(machine,bridge)
+    else:assert machine=='x86_64' and bridge not in ('','0'),(machine,bridge)
+    execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64'
     font=adb('exec-out','cat','/system/fonts/NotoSansCJK-Regular.ttc');(work/'font.ttc').write_bytes(font)
     (work/'msgbox.mng').write_bytes(raw['msgbox.mng'])
     adb('shell','am','start','-W','-S','-n',package+'/.MainActivity','--ei','story_game','0','--es','run_id',run)
@@ -104,23 +131,17 @@ def main():
         x,y,r,b=bounds(node);shot=Image.open(io.BytesIO(adb('exec-out','screencap','-p'))).convert('RGB')
         shot.save(work/f'device-{n}.png')
         scene=Image.open(io.BytesIO(read(f'page-{n}.png'))).convert('RGBA')
-        scene.alpha_composite(full_image,tuple(layout['bounds'][:2]))
-        scale=min((r-x)/scene.width,(b-y)/scene.height);w=round(scene.width*scale);h=round(scene.height*scale)
-        left=x+round((r-x-w)/2);top=y+round((b-y-h)/2)
-        predicted=scene.convert('RGB').resize((w,h),Image.Resampling.BILINEAR)
         # The actual screenshot is checked, not only the accessibility text or exported PNG.
-        roi=(round(100*scale),round(573*scale),round(1180*scale),round(712*scale))
-        displayed=shot.crop((left,top,left+w,top+h))
-        diff=np.abs(np.array(displayed.crop(roi)).astype(int)-np.array(predicted.crop(roi)).astype(int))
+        diff,transform=displayed_difference(scene,full_image,shot,(x,y,r,b),layout)
         assert diff.mean()<5 and np.percentile(diff,95)<20,(diff.mean(),np.percentile(diff,95))
-        pages.append(dict(sequence=n,named=bool(page['speaker']),layout=layout,overlay_sha256=sha(full),empty_sha256=sha(empty),changed_pixels=int(delta.sum()),desktop_pixels_equal=True,display_roi_mae=float(diff.mean()),display_roi_p95=float(np.percentile(diff,95)),screenshot_sha256=sha((work/f'device-{n}.png').read_bytes())))
+        pages.append(dict(sequence=n,named=bool(page['speaker']),layout=layout,overlay_sha256=sha(full),empty_sha256=sha(empty),changed_pixels=int(delta.sum()),desktop_pixels_equal=True,display_transform=transform,display_roi_mae=float(diff.mean()),display_roi_p95=float(np.percentile(diff,95)),screenshot_sha256=sha((work/f'device-{n}.png').read_bytes())))
         if n<3:tap('继续')
     font_info=json.loads(read('dialogue-font.json'))
     assert font_info['opacity']==191 and font_info['border']==1
     tap('结束运行');end=time.monotonic()+30
     while read('closed.txt')!=b'closed; VM live bytes=0':
         assert time.monotonic()<end;time.sleep(.1)
-    report=dict(scope='BLESS first three ordinary dialogue pages; actual translated Android rendering',execution='translated ARM64 on x86_64',run_id=run,machine=machine,native_bridge=bridge,apk_sha256=apk_sha,font_sha256=sha(font),font=font_info,resource_sha256={k:sha(v) for k,v in raw.items()},geometry=geometry,exe_sha256=sha(exe),native_blt_facts=facts,pages=pages,invalid_resources=invalid_resources,vm_live_bytes=0,limits=['Noto CJK host substitute, not MS Gothic/GDI parity','Native Blt scalar edge rounding and scene draw rounding not bit-exact','No ruby, kinsoku, bold or alternate-size support'])
+    report=dict(scope='BLESS first three ordinary dialogue pages; actual Android rendering',execution=execution,run_id=run,machine=machine,native_bridge=bridge,apk_sha256=apk_sha,font_sha256=sha(font),font=font_info,resource_sha256={k:sha(v) for k,v in raw.items()},geometry=geometry,exe_sha256=sha(exe),native_blt_facts=facts,pages=pages,invalid_resources=invalid_resources,vm_live_bytes=0,limits=['Noto CJK host substitute, not MS Gothic/GDI parity','Native Blt scalar edge rounding and scene draw rounding not bit-exact','No ruby, kinsoku, bold or alternate-size support'])
     if a.original_capture:
         saved=(exe_path.parent/'save/config.sav').read_bytes()
         offset=saved.index(b'BoxOpacity')+len(b'BoxOpacity')

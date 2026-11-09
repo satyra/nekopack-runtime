@@ -4,6 +4,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 p=argparse.ArgumentParser()
 for key in ('adb','serial','reference','output'):p.add_argument('--'+key,required=True)
+p.add_argument('--execution',choices=('native','translated'),default='translated')
 a=p.parse_args();pkg='org.nekopack.probe'
 def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
 def read(name):return adb('exec-out','run-as',pkg,'cat',f'files/{run}/{name}')
@@ -38,7 +39,9 @@ build=json.loads(Path('.local/android-probe/build.json').read_text())
 apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:')
 sha=adb('shell','sha256sum',apk).decode().split()[0];assert sha==build['sha256']['nekopack-arm64-probe.apk']
 machine=adb('shell','uname','-m').decode().strip();bridge=adb('shell','getprop','ro.dalvik.vm.native.bridge').decode().strip()
-assert machine=='x86_64' and bridge not in ('','0')
+if a.execution=='native':assert machine=='aarch64' and bridge in ('','0'),(machine,bridge)
+else:assert machine=='x86_64' and bridge not in ('','0'),(machine,bridge)
+execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64'
 cases=[]
 for keep in (1,0):
     run='dialogue_'+uuid.uuid4().hex
@@ -51,34 +54,47 @@ for keep in (1,0):
     tap('返回剧情');x,y,r,b=bounds('继续');point=(str((x+r)//2),str((y+b)//2))
     x,y,r,b=bounds('结束运行');close_point=(str((x+r)//2),str((y+b)//2))
     def click():adb('shell','input','tap',*point)
+    def reveal(n):
+        click()
+        clicks=wait(lambda:[e for e in rows('text-events.jsonl') if e['sequence']==n and e['click']])
+        assert len(clicks)==1 and not clicks[0]['advance'] and not clicks[0]['stop_voice']
+        wait(lambda:state(n)['complete'])
     click();page=ready(2)
     before=wait(lambda:state(2) if state(2)['visible']>0 else None)
     assert not before['complete']
+    reveal(2);assert b'No such file' in read('page-3.json')
+    click();ready(3)
+    # Page 3 independently checks freeze/resume and natural completion. Android
+    # UIAutomator waits for accessibility idle, which can last until text is
+    # complete; partial-click semantics are checked on pages 2 and 4 instead.
+    wait(lambda:state(3)['visible']>0)
     adb('shell','input','keyevent','KEYCODE_HOME')
     wait(lambda:rows('lifecycle-events.jsonl')[-1]['event']=='paused')
-    time.sleep(.2);paused=state(2);time.sleep(1.8);assert state(2)==paused
+    time.sleep(.2);paused=state(3);time.sleep(1.8);assert state(3)==paused
     adb('shell','am','start','-W','--activity-reorder-to-front','-n',pkg+'/.MainActivity')
-    after=wait(lambda:state(2) if state(2)['elapsed_ms']>paused['elapsed_ms'] else None)
+    after=wait(lambda:state(3) if state(3)['elapsed_ms']>paused['elapsed_ms'] else None)
     assert after['elapsed_ms']-paused['elapsed_ms']<500
     assert not after['complete']
-    click();wait(lambda:state(2)['complete'])
-    first=[e for e in rows('text-events.jsonl') if e['sequence']==2 and e['click']]
-    assert len(first)==1 and not first[0]['advance'] and not first[0]['stop_voice']
-    assert b'No such file' in read('page-3.json')
-    click();ready(3);click();wait(lambda:state(3)['complete']);click();ready(4)
-    click();wait(lambda:state(4)['complete']);click();ready(5)
+    wait(lambda:state(3)['complete'])
+    x,y,r,b=bounds('继续');point=(str((x+r)//2),str((y+b)//2))
+    assert b'No such file' in read('page-4.json')
+    # Refresh the close control after the foreground transition as well.
+    x,y,r,b=bounds('结束运行');close_point=(str((x+r)//2),str((y+b)//2))
+    click();ready(4);reveal(4);click();ready(5)
     transitions=rows('voice-next-events.jsonl');voice=next(e for e in transitions if e['sequence']==4)
     assert voice['playing_before'] and voice['player']!=0
     assert voice['stop']==(keep==0) and voice['retained']==(keep==1) and voice['playing_after']==(keep==1)
     events=rows('text-events.jsonl')
-    for n in (2,3,4):
+    for n in (2,4):
         clicks=[e for e in events if e['sequence']==n and e['click']]
         assert len(clicks)==2 and not clicks[0]['advance'] and clicks[1]['advance']
+    resumed_clicks=[e for e in events if e['sequence']==3 and e['click']]
+    assert len(resumed_clicks)==1 and resumed_clicks[0]['advance']
     assert not state(5)['complete']
     adb('shell','input','tap',*close_point);wait(lambda:read('closed.txt')==b'closed; VM live bytes=0')
     stable=read('text-events.jsonl');time.sleep(.5);assert read('text-events.jsonl')==stable
     events=[json.loads(line) for line in stable.splitlines()]
     assert all(not e['complete'] for e in events if e['sequence']==5), 'close did not interrupt revealing'
     cases.append(dict(run_id=run,keep_voice=keep,pages=5,paused=safe(paused),resumed=safe(after),text_events=events,voice_events=transitions,config_events=rows('text-config-events.jsonl'),closed_while_revealing=True,vm_live_bytes=0))
-Path(a.output).write_text(json.dumps(dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,cases=cases),ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+Path(a.output).write_text(json.dumps(dict(execution=execution,machine=machine,native_bridge=bridge,apk_sha256=sha,cases=cases),ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 print('PASS partial text, background freeze, two-phase NEXT, KeepVoice 0/1, VM cleanup')
