@@ -363,6 +363,24 @@ pub unsafe extern "C" fn neko_probe_story(
                 }
                 1 => state.as_mut().ok_or("no story session")?.poll_packet(),
                 9 => state.as_mut().ok_or("no story session")?.audio_config(),
+                36 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .open_menu(sequence),
+                37 => {
+                    if count != 3 {
+                        return Err("menu pointer needs kind/x/y".into());
+                    }
+                    let input = unsafe { std::slice::from_raw_parts(fds, count) };
+                    state
+                        .as_mut()
+                        .ok_or("no story session")?
+                        .menu_pointer(sequence, input[0], input[1], input[2])
+                }
+                38 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .cancel_menu(sequence),
                 34 | 35 => state
                     .as_mut()
                     .ok_or("no story session")?

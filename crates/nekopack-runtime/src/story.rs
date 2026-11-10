@@ -185,6 +185,7 @@ pub struct StorySession<R: Read + Seek> {
     interactive_text: bool,
     auto_mode: bool,
     dialogue_hidden: bool,
+    menu: Option<crate::menu::Menu>,
     skip_mode: bool,
     page_read: bool,
     history: crate::read_history::History,
@@ -199,9 +200,94 @@ pub struct StorySession<R: Read + Seek> {
     effects: Vec<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
+    pub fn open_menu(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self.menu.is_some()
+            || self.dialogue_hidden
+            || self.settings.is_some()
+            || self.pending_effect.is_some()
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+            || self.text_reveal.as_ref().is_none_or(|r| r.advance)
+        {
+            return Err("menu requires a live unadvanced dialogue".into());
+        }
+        self.system.eval_with_resources(
+            "story-menu",
+            include_str!("../host/menu.nut"),
+            &mut self.machine.variables,
+            &mut self.store,
+        )?;
+        let plan = self.system.result().to_owned();
+        let mut motions = self.motions.clone();
+        let positions = motions
+            .iter_mut()
+            .map(|m| (m.slot, m.position(self.motion_elapsed)))
+            .collect::<Vec<_>>();
+        let background = self.scene.render_pixels(&positions)?;
+        self.menu = Some(crate::menu::Menu::open(&mut self.store, &plan, background)?);
+        self.menu_packet(None)
+    }
+    fn menu_packet(&self, unsupported: Option<&str>) -> Result<Vec<u8>, Box<dyn Error>> {
+        self.menu
+            .as_ref()
+            .ok_or("story menu is not open")?
+            .packet(&self.menu_checkpoint()?, unsupported)
+    }
+    fn menu_checkpoint(&self) -> Result<String, Box<dyn Error>> {
+        let page = self.page.as_ref().ok_or("no dialogue")?;
+        let reveal = self.text_reveal.as_ref().ok_or("no text state")?;
+        Ok(format!(
+            "{{\"sequence\":{},\"steps\":{},\"visible\":{},\"elapsed_ms\":{}}}",
+            page.sequence,
+            self.machine.steps(),
+            reveal.count(),
+            reveal.elapsed()
+        ))
+    }
+    pub fn menu_pointer(
+        &mut self,
+        sequence: u64,
+        kind: i32,
+        x: i32,
+        y: i32,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed || self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
+            return Err("stale menu input".into());
+        }
+        let action = self
+            .menu
+            .as_mut()
+            .ok_or("story menu is not open")?
+            .pointer(kind, x, y)?;
+        if let Some(action) = action {
+            if crate::menu::supported(&action) {
+                return self.close_menu(sequence, &action);
+            }
+            return self.menu_packet(Some(&action));
+        }
+        self.menu_packet(None)
+    }
+    pub fn cancel_menu(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        self.close_menu(sequence, "")
+    }
+    fn close_menu(&mut self, sequence: u64, action: &str) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self.menu.is_none()
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+        {
+            return Err("stale menu close".into());
+        }
+        let checkpoint = self.menu_checkpoint()?;
+        self.menu = None;
+        self.auto_mode = false;
+        self.skip_mode = false;
+        // Outer InvokeCommand(ID_MENU) cancels modes after returning.
+        Ok(format!("{{\"kind\":\"story_menu_closed\",\"checkpoint\":{checkpoint},\"action\":{},\"auto\":{},\"skip\":{}}}\n",quote(action.as_bytes())?,self.auto_mode,self.skip_mode).into_bytes())
+    }
     /// A modal over the current acknowledged presentation, never a new VM.
     pub fn open_settings(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.dialogue_hidden
+        if self.menu.is_some()
+            || self.dialogue_hidden
             || self.failed
             || self.settings.is_some()
             || self.pending_effect.is_some()
@@ -369,6 +455,7 @@ impl<R: Read + Seek> StorySession<R> {
             interactive_text: false,
             auto_mode: false,
             dialogue_hidden: false,
+            menu: None,
             skip_mode: false,
             page_read: false,
             history: crate::read_history::History::default(),
@@ -544,7 +631,7 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.dialogue_hidden || self.failed || self.settings.is_some() {
+        if self.menu.is_some() || self.dialogue_hidden || self.failed || self.settings.is_some() {
             return Err("skip unavailable while stopped or in a modal".into());
         }
         if enabled {
@@ -570,7 +657,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         hidden: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed
+        if self.menu.is_some()
+            || self.failed
             || self.settings.is_some()
             || self.pending_effect.is_some()
             || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
@@ -590,7 +678,8 @@ impl<R: Read + Seek> StorySession<R> {
     /// Platform-neutral function-key input. Cancellation can cross an already granted page ACK.
     pub fn shortcut(&mut self, slot: u64, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         let action = crate::preferences::shortcut_action(&mut self.system, slot)?;
-        let live = !self.failed && self.settings.is_none() && !self.dialogue_hidden;
+        let live =
+            !self.failed && self.settings.is_none() && !self.dialogue_hidden && self.menu.is_none();
         let page = live
             && self.page.as_ref().map(|p| p.sequence) == Some(sequence)
             && self.text_reveal.as_ref().is_some_and(|r| !r.advance);
@@ -616,8 +705,8 @@ impl<R: Read + Seek> StorySession<R> {
                     "applied"
                 }
                 "AUTO" | "SKIP" => "busy",
-                "CONFIG" | "HIDE" if page => "request",
-                "CONFIG" | "HIDE" => "busy",
+                "CONFIG" | "HIDE" | "MENU" if page => "request",
+                "CONFIG" | "HIDE" | "MENU" => "busy",
                 "QUIT" => "request",
                 _ => "unsupported",
             }
@@ -636,7 +725,7 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.dialogue_hidden || self.settings.is_some() || self.failed {
+        if self.menu.is_some() || self.dialogue_hidden || self.settings.is_some() || self.failed {
             return Err("auto unavailable while stopped or in a modal".into());
         }
         if enabled
@@ -659,7 +748,8 @@ impl<R: Read + Seek> StorySession<R> {
         click: bool,
         voice_finished: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.dialogue_hidden
+        if self.menu.is_some()
+            || self.dialogue_hidden
             || self.settings.is_some()
             || self.failed
             || !self.interactive_text
@@ -806,7 +896,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.poll_packet()
     }
     pub fn acknowledge_text(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.dialogue_hidden || self.settings.is_some() || self.failed {
+        if self.menu.is_some() || self.dialogue_hidden || self.settings.is_some() || self.failed {
             return Err("story session stopped after error".into());
         }
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
@@ -1565,6 +1655,7 @@ mod tests {
             interactive_text: false,
             auto_mode: false,
             dialogue_hidden: false,
+            menu: None,
             skip_mode: false,
             page_read: false,
             history: crate::read_history::History::default(),
@@ -1577,6 +1668,57 @@ mod tests {
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn menu_is_modal_and_unsupported_actions_preserve_dialogue() {
+        let mut s = session(b"one\ntwo");
+        s.system.eval("config","Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"CONFIG\",\"MENU\"]}").unwrap();
+        s.enable_interactive_text();
+        let packet = s.poll_packet().unwrap();
+        s.text_frame(1, 0, false).unwrap();
+        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
+            .unwrap()
+            .contains("request"));
+        s.set_auto_mode(1, true).unwrap();
+        s.menu = Some(crate::menu::Menu::fixture());
+        assert!(s.text_frame(1, 50, true).is_err());
+        assert!(s.acknowledge_text(1).is_err());
+        assert!(s.open_settings(1).is_err());
+        assert!(s.hide_dialogue(1, true).is_err());
+        assert!(s.open_menu(1).is_err());
+        assert!(s.set_auto_mode(1, false).is_err());
+        assert!(s.set_skip_mode(1, true).is_err());
+        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
+            .unwrap()
+            .contains("busy"));
+        assert!(s.menu_pointer(2, 0, 0, 0).is_err());
+        assert!(s.cancel_menu(2).is_err());
+        s.menu_pointer(1, 0, 0, 0).unwrap();
+        let unsupported = s.menu_pointer(1, 2, 0, 0).unwrap();
+        assert!(
+            std::str::from_utf8(unsupported.split(|b| *b == 10).next().unwrap())
+                .unwrap()
+                .contains("\"unsupported\":\"SAVE\"")
+        );
+        assert!(s.menu.is_some());
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        assert_eq!(s.export_read_history(), b"NKRD\x01");
+        s.cancel_menu(1).unwrap();
+        assert!(!s.auto_mode && !s.skip_mode);
+        assert!(s.cancel_menu(1).is_err());
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        assert!(!String::from_utf8(s.text_frame(1, 10000, false).unwrap())
+            .unwrap()
+            .contains("\"advance\":true"));
+        for (x, action) in [(1, "CONFIG"), (2, "QUIT")] {
+            s.menu = Some(crate::menu::Menu::fixture());
+            s.menu_pointer(1, 0, x, 0).unwrap();
+            let closed = String::from_utf8(s.menu_pointer(1, 2, x, 0).unwrap()).unwrap();
+            assert!(closed.contains(&format!("\"action\":\"{action}\"")));
+            assert!(s.menu.is_none());
+            assert!(!s.auto_mode);
         }
     }
 

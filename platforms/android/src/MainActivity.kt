@@ -26,6 +26,7 @@ class MainActivity : Activity() {
     private val menuTimeline=SessionTimeline()
     @Volatile private var storyConfigOpen=false
     private var shortcutKey:((Int)->Unit)?=null
+    private var storyMenuBack:(()->Boolean)?=null
     private var hiddenBack:(()->Boolean)?=null
     private var settingsBack:(()->Boolean)?=null
     private var lifecycleGeneration=0L
@@ -180,6 +181,7 @@ class MainActivity : Activity() {
         val auto=Button(this);auto.text="自动：关";auto.isEnabled=false;controls.addView(auto,LinearLayout.LayoutParams(0,-2,1f))
         val skip=Button(this);skip.text="快进：关";skip.isEnabled=false;controls.addView(skip,LinearLayout.LayoutParams(0,-2,1f))
         val hide=Button(this);hide.text="隐藏对白";hide.isEnabled=false;controls.addView(hide,LinearLayout.LayoutParams(0,-2,1f))
+        val menu=Button(this);menu.text="剧情菜单";menu.isEnabled=false;controls.addView(menu,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -195,6 +197,8 @@ class MainActivity : Activity() {
         var autoEnabled=false
         var dialogueHidden=false
         var hideBusy=false
+        var menuOpen=false
+        var menuBusy=false
         var sequence=0L
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
@@ -239,9 +243,12 @@ class MainActivity : Activity() {
                 if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
                 runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
-        },{enabled->hide.isEnabled=enabled&&!storyConfigOpen&&!hideBusy&&!dialogueHidden;skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=(enabled||autoEnabled)&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
+        },{enabled->menu.isEnabled=enabled&&!storyConfigOpen&&!hideBusy&&!dialogueHidden&&!menuOpen;hide.isEnabled=enabled&&!storyConfigOpen&&!hideBusy&&!dialogueHidden;skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=(enabled||autoEnabled)&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
             if(originalSettings.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("settings_probe_sequence",-1)&&!intent.getBooleanExtra("settings_probe_used",false)){
                 intent.putExtra("settings_probe_used",true);originalSettings.performClick()
+            }
+            if(menu.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("menu_probe_sequence",-1)&&!intent.getBooleanExtra("menu_probe_used",false)){
+                intent.putExtra("menu_probe_used",true);menu.performClick()
             }
             if(hide.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("hide_probe_sequence",-1)&&!intent.getBooleanExtra("hide_probe_used",false)){
                 intent.putExtra("hide_probe_used",true);hide.performClick()
@@ -309,22 +316,67 @@ class MainActivity : Activity() {
         }
         hiddenView.setOnClickListener{restoreDialogue()}
         hiddenBack={if(!storyClosing&&(dialogueHidden||hideBusy)){restoreDialogue();true}else false}
+        lateinit var storyMenuView:TitleView
+        fun presentStoryMenu(packet:ByteArray,unlock:Boolean,inputKind:Int=-1){
+            val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.optString("error")}
+            meta.put("pointer_kind",inputKind)
+            val closed=meta.getString("kind")=="story_menu_closed"
+            if(closed)check(story(intArrayOf(),1,0).contentEquals(File(root,"menu-checkpoint.bin").readBytes())){"menu advanced dialogue"}
+            val bitmap=if(closed)null else BitmapFactory.decodeByteArray(packet,split+1,packet.size-split-1) ?: error("invalid menu bitmap")
+            if(!closed)File(root,"story-menu.png").writeBytes(packet.copyOfRange(split+1,packet.size))
+            runOnUiThread{timeline.post(cancel={bitmap?.recycle()}){if(!storyClosing){
+                if(closed){
+                    stage.removeView(storyMenuView);menuOpen=false;menuBusy=false
+                    controls.visibility=android.view.View.VISIBLE;dialogueView.visibility=android.view.View.VISIBLE
+                    autoEnabled=false;skipEnabled=false;auto.text="自动：关";skip.text="快进：关"
+                    when(meta.getString("action")){
+                        "CONFIG"->originalSettings.performClick()
+                        "HIDE"->hide.performClick()
+                        "QUIT"->close.performClick()
+                        else->dialogue.resume()
+                    }
+                }else{
+                    storyMenuView.present(bitmap!!);if(unlock){storyMenuView.accepting=true;menuBusy=false}
+                    if(meta.getString("unsupported").isNotEmpty())android.widget.Toast.makeText(this,"此菜单动作尚未接通："+meta.getString("unsupported"),android.widget.Toast.LENGTH_SHORT).show()
+                }
+                meta.put("accepting",storyMenuView.accepting)
+                val tmp=File(root,"story-menu-presented.tmp");tmp.writeText(meta.toString());check(tmp.renameTo(File(root,"story-menu-presented.json")))
+                File(root,"story-menu-events.jsonl").appendText(meta.toString()+"\n")
+            }else bitmap?.recycle()}}
+        }
+        storyMenuView=TitleView(this){kind,x,y->
+            if(!storyClosing){if(kind==2)menuBusy=true;val token=sequence;worker.execute{try{presentStoryMenu(story(intArrayOf(kind,x,y),37,token),kind==2,kind)}catch(error:Throwable){fail(error)}}}
+        }
+        storyMenuView.contentDescription="原版剧情菜单"
+        menu.setOnClickListener{
+            menuOpen=true;menuBusy=true;dialogue.suspend();controls.visibility=android.view.View.INVISIBLE;dialogueView.visibility=android.view.View.INVISIBLE
+            storyMenuView.accepting=false;stage.addView(storyMenuView,FrameLayout.LayoutParams(-1,-1));val token=sequence
+            worker.execute{try{File(root,"menu-checkpoint.bin").writeBytes(story(intArrayOf(),1,0));presentStoryMenu(story(intArrayOf(),36,token),true)}catch(error:Throwable){fail(error)}}
+        }
+        storyMenuBack={
+            if(menuOpen&&!storyClosing){
+                if(!menuBusy){menuBusy=true;storyMenuView.cancel();storyMenuView.accepting=false;val token=sequence;worker.execute{try{presentStoryMenu(story(intArrayOf(),38,token),true)}catch(error:Throwable){fail(error)}}}
+                true
+            }else false
+        }
         var shortcutBusy=false
         shortcutKey={slot->
-            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!timeline.paused&&sequence>0){
+            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!menuOpen&&!timeline.paused&&sequence>0){
                 shortcutBusy=true;val token=sequence
                 worker.execute{try{
                     val result=JSONObject(String(story(intArrayOf(),33,token,slot.toLong()),Charsets.UTF_8))
                     check(!result.has("error")){result.optString("error")}
                     runOnUiThread{timeline.post{shortcutBusy=false;if(!storyClosing){
                         val status=result.getString("status");val action=result.getString("action")
-                        if(storyConfigOpen)result.put("delivery","modal")
+                        if(storyConfigOpen||menuOpen||dialogueHidden||hideBusy)result.put("delivery","modal")
                         else if(status=="applied"){
                             autoEnabled=result.getBoolean("auto");skipEnabled=result.getBoolean("skip")
                             auto.text=if(autoEnabled)"自动：开" else "自动：关";skip.text=if(skipEnabled)"快进：开" else "快进：关"
                             dialogue.refresh();result.put("delivery","applied")
                         }else if(status=="request"){
                             if(action=="CONFIG"&&sequence==token&&originalSettings.isEnabled){originalSettings.performClick();result.put("delivery","settings")}
+                            else if(action=="MENU"&&sequence==token&&menu.isEnabled){menu.performClick();result.put("delivery","menu")}
                             else if(action=="HIDE"&&sequence==token&&hide.isEnabled){hide.performClick();result.put("delivery","hidden")}
                             else if(action=="QUIT"){close.performClick();result.put("delivery","quit")}
                             else result.put("delivery","busy")
@@ -438,7 +490,7 @@ class MainActivity : Activity() {
                 show(packet)
         }
         val configControls=LinearLayout(this);configControls.orientation=LinearLayout.VERTICAL;configControls.visibility=android.view.View.GONE
-        val configNotice=TextView(this);configNotice.text="已接通：文字/自动速度、跳过未读、粗体/边框、动态示例、透明度、音量、语音保留、快捷键编辑；快捷执行支持设置、自动、快进、退出。";configControls.addView(configNotice)
+        val configNotice=TextView(this);configNotice.text="已接通：文字/自动速度、跳过未读、粗体/边框、动态示例、透明度、音量、语音保留、快捷键编辑；快捷执行支持剧情菜单、设置、隐藏、自动、快进、退出。";configControls.addView(configNotice)
         val configButtons=LinearLayout(this);val configBack=Button(this);configBack.text="返回标题";val configReset=Button(this);configReset.text="恢复已接通选项默认值"
         configButtons.addView(configBack,LinearLayout.LayoutParams(0,-2,1f));configButtons.addView(configReset,LinearLayout.LayoutParams(0,-2,1f));configControls.addView(configButtons);layout.addView(configControls)
         lateinit var titleView:TitleView
@@ -583,7 +635,7 @@ class MainActivity : Activity() {
     }
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if(hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
+        if(storyMenuBack?.invoke()!=true && hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
     }
     override fun onPause() {
         lifecycleGeneration++
@@ -605,7 +657,7 @@ class MainActivity : Activity() {
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        settingsBack=null;shortcutKey=null;hiddenBack=null
+        settingsBack=null;shortcutKey=null;hiddenBack=null;storyMenuBack=null
         storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()

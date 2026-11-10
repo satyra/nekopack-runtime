@@ -1,0 +1,39 @@
+{
+  "rust_top_level_tests": 149,
+  "isolated_host_native_probes": 7,
+  "python_tests": 17,
+  "verifier_py_compile": "passed",
+  "cargo_fmt": "passed",
+  "clippy_workspace_all_targets_deny_warnings": "passed",
+  "target": "aarch64-linux-android",
+  "ndk": "r27d",
+  "api": 23,
+  "sha256": {
+    "libnekopack_probe.so": "ea20673d230209ee367a384060e9bff6191ad7b140cc3c4f1ffedb8f3d58bb2d",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "687b7c5681a79380f48713a6f38783f4a26a80e7e2b9d8a0d7d5b21b8a1de5f7"
+  },
+  "device_report": "story-menu-batch46-emulator.json",
+  "execution": "translated ARM64 on x86_64",
+  "independent_binding_readback": [
+    "RESET",
+    "QUIT",
+    "SAVE",
+    "LOAD",
+    "QSAVE",
+    "QLOAD",
+    "LOG",
+    "HIDE",
+    "AUTO",
+    "SKIP"
+  ],
+  "initial_device_failure": "Drag was followed by another tap while move/up rendering remained queued. Added pointer_kind and accepting to diagnostics, waited for final release, then reran all checks.",
+  "log_sha256": {
+    "batch46-tests.log": "89108375ecb0e9b5f4a37b7178d3cdad7713278c371f2361f4c6609988a165d8",
+    "batch46-clippy.log": "7a953d73ed40d76139825806f1ffe24c66584f4cde2349d9dc37482a6b5e432a",
+    "batch46-python.log": "f7422c803b6f207793c1f1d41a23f5e2499059acd8e159227fbc0babaa4242eb",
+    "batch46-build.log": "12b7b3b5553490805f45790aba064ac428f03967e9e63f40eb2616b4112bdb4b",
+    "batch46-emulator.log": "7e4ad9d2bba0f4729ee0f4bcbf880b61fbb010091583876077f47a78b3b4c421"
+  }
+}

@@ -1,0 +1,261 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "687b7c5681a79380f48713a6f38783f4a26a80e7e2b9d8a0d7d5b21b8a1de5f7",
+  "runs": [
+    "story_settings_3da4efa2a4ab489bb927ecd3601a413c",
+    "story_settings_ebc60c9c1e8f4e279c6761c264425c6d",
+    "story_settings_19cac7e12417487680a86de4affcdf39",
+    "story_settings_4cfa44b9d78d4a998e95be98dc1510ca",
+    "story_settings_59a082ac8ebd4f6cb7ce71a4e38df264",
+    "story_settings_87c6e713091e4f659a211e73499a38e1",
+    "story_settings_6b247595fe474456b5935e42c68792bc",
+    "story_settings_19f18e3465344686b7bacf062c3bbfa4",
+    "story_settings_9c7b7fe9ef1e4fffb6e3d2a0071c0807",
+    "story_settings_2e5e3f1b9bb344d58459bac56b3dfba7",
+    "story_settings_a0a49e1af65946bfbca2b1f3f0aae5c0",
+    "story_settings_1efbb9200a3f424d969274eaf453ff1b",
+    "story_settings_682530cedc3e465fbf9ac440c668cf19"
+  ],
+  "partial_dialogue": {
+    "story_sequence": 1,
+    "story_visible": 7,
+    "story_elapsed_ms": 117,
+    "motion_elapsed_ms": 0,
+    "story_steps": 142
+  },
+  "resumed_dialogue": {
+    "sequence": 1,
+    "skip": false,
+    "read": true,
+    "auto": false,
+    "voice_finished": false,
+    "elapsed_ms": 198,
+    "visible": 11,
+    "complete": false,
+    "advance": false,
+    "stop_voice": false,
+    "click": false
+  },
+  "settings_time_excluded": true,
+  "opacity_applies_to_current_page": true,
+  "text_speed_applies_next_page": true,
+  "other_settings_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191,
+    "Bold": 0,
+    "Border": 1,
+    "AutoSpeed": 50,
+    "SkipNoRead": 0
+  },
+  "background_keeps_modal_paused": true,
+  "bgm_pause_resume": true,
+  "motion_checkpoint": {
+    "story_sequence": 56,
+    "story_visible": 6,
+    "story_elapsed_ms": 103,
+    "motion_elapsed_ms": 32,
+    "story_steps": 412
+  },
+  "motion_finishes_after_return": true,
+  "story_pages_verified": 57,
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [
+    "ERROR: null root node returned by UiTestAutomationBridge.\r\n"
+  ],
+  "read_transport_retries": [],
+  "back_keeps_activity_alive": true,
+  "back_cancels_popup_before_leaving_settings": true,
+  "back_returns_to_same_dialogue": true,
+  "bgm_same_player_resumed": true,
+  "new_gain_applied_before_resume": true,
+  "intro_return_button_used": true,
+  "text_styles": {},
+  "auto_playback": {
+    "auto_only_advances": 55,
+    "voice_completion_callbacks": 19,
+    "voiced_pages": 19,
+    "unvoiced_pages": 36,
+    "unvoiced_delay_min_ms": 502,
+    "background_freezes": true,
+    "settings_freezes": true,
+    "auto_speed_saved_and_restored": true,
+    "manual_cancel_stops_progress": true,
+    "motion_checkpoint": {
+      "story_sequence": 56,
+      "story_visible": 6,
+      "story_elapsed_ms": 104,
+      "motion_elapsed_ms": 43,
+      "story_steps": 412
+    }
+  },
+  "skip_playback": {
+    "profile": "86e1e5af64d34ff1a73af83089f8d111",
+    "current_unread_toggle_advances_once": true,
+    "read_pages_after_restart": 5,
+    "stops_on_unread_page": 6,
+    "skipped_voice_pages": [
+      4,
+      5
+    ],
+    "voice_starts_during_read_run": 1,
+    "force_unread_page": 7,
+    "manual_cancel": true,
+    "skip_preference_restart": true,
+    "original_skip_preference": 0
+  },
+  "shortcut_execution": {
+    "original_bindings": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ],
+    "restored_bindings": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ],
+    "current_binding_auto": true,
+    "current_binding_skip": true,
+    "cancel_skip_while_running": true,
+    "f1_opens_settings": true,
+    "modal_blocks_quit": true,
+    "unsupported_save_no_advance": true,
+    "unbound_no_advance": true,
+    "quit_vm_live_bytes": 0,
+    "bindings_survive_restart": true,
+    "original_bindings_restored": true
+  },
+  "hide_dialogue": {
+    "partial_text": {
+      "hidden": true,
+      "sequence": 1,
+      "visible": 7,
+      "elapsed_ms": 121,
+      "steps": 142,
+      "auto": false,
+      "skip": false
+    },
+    "restored_text": {
+      "sequence": 1,
+      "skip": false,
+      "read": true,
+      "auto": false,
+      "voice_finished": true,
+      "elapsed_ms": 6723,
+      "visible": 17,
+      "complete": true,
+      "advance": false,
+      "stop_voice": false,
+      "click": false
+    },
+    "frozen_viewport_sha256": "b6860f66608d1bd226c0fbba081be82aed58759c06cbd11d05ff8319fcc295ea",
+    "back_space_touch_enter_restore": true,
+    "hide_binding_executes": true,
+    "function_keys_blocked_while_hidden": true,
+    "original_binding_restored": true,
+    "bgm_continues_hidden": true,
+    "bgm_same_player": true,
+    "background_preserves_hidden": true,
+    "background_pauses_audio": true,
+    "motion_continues_behind_frozen_snapshot": true
+  },
+  "story_menu": {
+    "partial_checkpoint": {
+      "sequence": 1,
+      "steps": 142,
+      "visible": 8,
+      "elapsed_ms": 135
+    },
+    "original_buttons": [
+      {
+        "action": "CONFIG",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          487,
+          275,
+          307,
+          38
+        ]
+      },
+      {
+        "action": "LOAD",
+        "enabled": true,
+        "supported": false,
+        "bounds": [
+          517,
+          193,
+          247,
+          34
+        ]
+      },
+      {
+        "action": "QUIT",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          487,
+          454,
+          307,
+          37
+        ]
+      },
+      {
+        "action": "RESET",
+        "enabled": true,
+        "supported": false,
+        "bounds": [
+          467,
+          365,
+          347,
+          37
+        ]
+      },
+      {
+        "action": "SAVE",
+        "enabled": true,
+        "supported": false,
+        "bounds": [
+          517,
+          113,
+          247,
+          33
+        ]
+      }
+    ],
+    "drag_cancel": true,
+    "unsupported_save_load_reset_preserve_page": true,
+    "function_keys_blocked": true,
+    "background_preserves_menu": true,
+    "back_consumed": true,
+    "f2_opens": true,
+    "config_returns_same_page": true,
+    "next_after_close": true,
+    "menu_quit_closes_vm": true,
+    "closed_vm_live_bytes": 0,
+    "bgm_background_pauses": true,
+    "bgm_same_player_resumes": true
+  }
+}

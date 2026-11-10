@@ -259,7 +259,11 @@ impl<R: Read + Seek> TitleSession<R> {
         StorySession::from_bootstrap(self.store, machine, system)
     }
 }
-fn update_pointer(pressed: &mut Option<i32>, kind: i32, hit: Option<i32>) -> Result<Option<i32>> {
+pub(crate) fn update_pointer(
+    pressed: &mut Option<i32>,
+    kind: i32,
+    hit: Option<i32>,
+) -> Result<Option<i32>> {
     match kind {
         0 => *pressed = hit,
         1 => {

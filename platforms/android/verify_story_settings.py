@@ -13,6 +13,7 @@ def main():
     p.add_argument('--skip-check',action='store_true')
     p.add_argument('--shortcut-check',action='store_true')
     p.add_argument('--hide-check',action='store_true')
+    p.add_argument('--menu-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[];history_profile=''
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -63,10 +64,10 @@ def main():
             adb('shell','input','tap',*point(x+w*(value+.5)/maximum,y+h/2))
             wait(lambda:state()['input_sequence']>=s['input_sequence']+2)
         assert state()['config'][name]==value,(name,state()['config'])
-    def launch(probe,title_settings=False,hide_probe=-1):
+    def launch(probe,title_settings=False,hide_probe=-1,menu_probe=-1):
         nonlocal run
         run='story_settings_'+uuid.uuid4().hex;runs.append(run)
-        adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--el','hide_probe_sequence',str(hide_probe),'--ez','lifecycle_probe','true','--es','run_id',run,*(['--es','read_history_probe',history_profile] if history_profile else []))
+        adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--el','hide_probe_sequence',str(hide_probe),'--el','menu_probe_sequence',str(menu_probe),'--ez','lifecycle_probe','true','--es','run_id',run,*(['--es','read_history_probe',history_profile] if history_profile else []))
         title=wait(lambda:obj('title-presented.json'));x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==(3 if title_settings else 1))
         adb('shell','input','tap',*point(x+w/2,y+h/2,'游戏标题菜单'))
     def open_menu():
@@ -95,6 +96,48 @@ def main():
     assert machine=='x86_64' and bridge not in ('','0')
     apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:');sha=adb('shell','sha256sum',apk).decode().split()[0]
     assert sha==json.loads(Path('.local/android-probe/build.json').read_text())['sha256']['nekopack-arm64-probe.apk']
+    menu_results={}
+    def menu_state():return obj('story-menu-presented.json')
+    def menu_action(name):
+        old=menu_state();button=next(b for b in old['buttons'] if b['action']==name);assert button['enabled']
+        x,y,w,h=button['bounds'];adb('shell','input','tap',*point(x+w/2,y+h/2,'原版剧情菜单'))
+        return wait(lambda:menu_state() if menu_state()['kind']=='story_menu_closed' or (menu_state()['input_sequence']>old['input_sequence']+1 and menu_state()['pointer_kind']==2 and menu_state()['accepting']) else None)
+    def menu_cancel():
+        before=menu_state()['checkpoint'];count=len(lines('text-events.jsonl'))
+        adb('shell','input','keyevent','KEYCODE_BACK');wait(lambda:menu_state()['kind']=='story_menu_closed')
+        assert menu_state()['checkpoint']==before
+        wait(lambda:len(lines('text-events.jsonl'))>count)
+        resumed=lines('text-events.jsonl')[count];assert resumed['sequence']==before['sequence'] and not resumed['advance']
+        assert b'No such file' in read('lifecycle-closed.json')
+    if a.menu_check:
+        launch(-1,menu_probe=1);wait(lambda:menu_state() and menu_state()['kind']=='story_menu')
+        first=menu_state();assert first['checkpoint']['visible']>0 and not obj('text-1.json')['complete']
+        route=obj('page-1.json')['labels']['in_route']
+        assert all(b['enabled']==route for b in first['buttons'] if b['action'] in ('LOG','SAVE','QSAVE'))
+        count=len(lines('text-events.jsonl'));checkpoint=first['checkpoint'];time.sleep(1)
+        assert len(lines('text-events.jsonl'))==count
+        # A drag leaving a button must not activate it after returning.
+        b=next(b for b in first['buttons'] if b['action']=='CONFIG');x,y,w,h=b['bounds']
+        start=point(x+w/2,y+h/2,'原版剧情菜单');end=point(0,0,'原版剧情菜单')
+        adb('shell','input','swipe',*start,*end,'400');wait(lambda:menu_state()['input_sequence']>=2 and menu_state()['pointer_kind']==2 and menu_state()['accepting'])
+        assert menu_state()['kind']=='story_menu' and menu_state()['checkpoint']==checkpoint
+        for action in ('SAVE','LOAD','RESET'):
+            unsupported=menu_action(action);assert unsupported['unsupported']==action and unsupported['checkpoint']==checkpoint
+        adb('shell','input','keyevent','KEYCODE_F1');time.sleep(.3);assert menu_state()['kind']=='story_menu' and state() is None
+        adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2)
+        adb('shell','am','start','-W','--activity-reorder-to-front','-n',pkg+'/.MainActivity');bounds('原版剧情菜单','content-desc')
+        assert menu_state()['checkpoint']==checkpoint and len(lines('text-events.jsonl'))==count
+        menu_cancel();baseline(1);assert obj('text-2.json') is None
+        old=len(lines('story-menu-events.jsonl'));adb('shell','input','keyevent','KEYCODE_F2')
+        wait(lambda:len(lines('story-menu-events.jsonl'))>old and menu_state()['kind']=='story_menu')
+        menu_action('CONFIG');wait(state);assert state()['story_sequence']==1
+        saved=state()['config'];page(2);set_value('TextSpeed',100);set_value('TextSpeed',saved['TextSpeed']);close_menu()
+        assert obj('text-2.json') is None
+        control('继续');wait(lambda:obj('text-2.json'));baseline(2)
+        control('剧情菜单');wait(lambda:menu_state()['kind']=='story_menu');menu_action('QUIT')
+        wait(lambda:b'VM live bytes=0' in read('closed.txt'))
+        menu_results=dict(partial_checkpoint=checkpoint,original_buttons=first['buttons'],drag_cancel=True,unsupported_save_load_reset_preserve_page=True,function_keys_blocked=True,background_preserves_menu=True,back_consumed=True,f2_opens=True,config_returns_same_page=True,next_after_close=True,menu_quit_closes_vm=True,closed_vm_live_bytes=0)
+        print('original story menu, F2, unsupported action, nested config and Back passed',flush=True)
     hide_results={}
     hidden_label='隐藏对话框；点击恢复'
     def hide_state():return obj('hide-state.json')
@@ -308,6 +351,18 @@ def main():
             assert after_bgm['playing'] and before_bgm['player_id']==after_bgm['player_id'] and before_bgm['token']==after_bgm['token']
             assert abs(after_bgm['position']-before_bgm['position'])<200
             print('BGM modal pause/resume passed',flush=True)
+            if a.menu_check:
+                control('剧情菜单');wait(lambda:menu_state() and menu_state()['kind']=='story_menu')
+                checkpoint=menu_state()['checkpoint'];events=len(lines('text-events.jsonl'))
+                time.sleep(.5);assert len(lines('text-events.jsonl'))==events
+                adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2)
+                paused=[x for x in lines('audio-lifecycle.jsonl') if x['event'].startswith('paused_stable_')][-2:]
+                a0,a1=[x['channels']['bgm'] for x in paused];assert not a0['playing'] and not a1['playing'] and abs(a0['position']-a1['position'])<=30
+                adb('shell','am','start','-W','--activity-reorder-to-front','-n',pkg+'/.MainActivity');bounds('原版剧情菜单','content-desc')
+                assert menu_state()['checkpoint']==checkpoint
+                resumed_audio=[x for x in lines('audio-lifecycle.jsonl') if x['event']=='resumed'][-1]['channels']['bgm']
+                assert resumed_audio['playing'] and resumed_audio['player_id']==a0['player_id']
+                menu_cancel();menu_results.update(bgm_background_pauses=True,bgm_same_player_resumes=True)
             if a.hide_check:
                 control('隐藏对白');wait(lambda:hide_state() and hide_state()['hidden'])
                 hidden_before=hide_state();before_audio=[x for x in lines('audio-lifecycle.jsonl') if x['event']=='dialogue_hidden'][-1]['channels']['bgm']
@@ -391,6 +446,6 @@ def main():
         launch(1);wait(state);assert state()['config']==auto_original;close_menu();finish()
         auto_results=dict(auto_only_advances=55,voice_completion_callbacks=len(completions),voiced_pages=voiced,unvoiced_pages=unvoiced,unvoiced_delay_min_ms=502,background_freezes=True,settings_freezes=True,auto_speed_saved_and_restored=True,manual_cancel_stops_progress=True,motion_checkpoint=auto_frozen)
         print('auto playback, voice completion, settings and cancellation passed',flush=True)
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results,hide_dialogue=hide_results)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results,hide_dialogue=hide_results,story_menu=menu_results)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

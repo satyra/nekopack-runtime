@@ -3,6 +3,7 @@ pub mod dat;
 mod dialogue;
 mod filter;
 pub mod flash;
+mod menu;
 mod motion;
 mod preferences;
 mod read_history;
