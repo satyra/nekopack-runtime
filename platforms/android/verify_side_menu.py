@@ -72,11 +72,14 @@ def main():
     wait(lambda:obj('settings-presented.json'))
     adb('shell','input','keyevent','KEYCODE_BACK')
     wait(lambda:any(json.loads(line).get('event')=='closed' for line in raw('story-settings-events.jsonl').splitlines()));same_page(2)
+    before_log_audio=len([x for x in raw('ui-audio-events.jsonl').splitlines() if x.startswith(b'{')])
     state=open_side();action(state,'LOG');wait(lambda:obj('message-log-presented.json'))
     assert obj('message-log-presented.json')['count']==1
     (work/'message-log.png').write_bytes(adb('exec-out','screencap','-p'))
     click('返回剧情');wait(lambda:b'log_closed' in raw('log-events.jsonl'));same_page(2)
+    log_audio=wait(lambda:len([x for x in raw('ui-audio-events.jsonl').splitlines() if x.startswith(b'{')])>=before_log_audio+2 and [json.loads(x) for x in raw('ui-audio-events.jsonl').splitlines() if x.startswith(b'{')][before_log_audio:])
+    assert [e['name'] for e in log_audio]==['se_PAGE','se_PAGE']
     click('结束运行');wait(lambda:b'VM live bytes=0' in raw('closed.txt'))
-    report=dict(run=run,execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,original_sprite_order=True,empty_quick_load_disabled=True,touch_quick_save_load=True,normal_save_load_cancel=True,config_returns_same_dialogue=True,log_returns_same_dialogue=True,log_return_button=True,restored_scene_sha256=hashlib.sha256(original_png).hexdigest(),closed_vm_live_bytes=0,screenshots=[str(work/n) for n in ('side-empty.png','side-ready.png','message-log.png')])
+    report=dict(run=run,execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,original_sprite_order=True,empty_quick_load_disabled=True,touch_quick_save_load=True,normal_save_load_cancel=True,config_returns_same_dialogue=True,log_returns_same_dialogue=True,log_return_button=True,log_system_audio=log_audio,restored_scene_sha256=hashlib.sha256(original_png).hexdigest(),closed_vm_live_bytes=0,screenshots=[str(work/n) for n in ('side-empty.png','side-ready.png','message-log.png')])
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

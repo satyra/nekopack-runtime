@@ -346,6 +346,7 @@ class MainActivity : Activity() {
             val back=Button(this);back.text="返回剧情";layout.addView(back)
             fun closeLog(){if(!busy){busy=true;view.accepting=false;worker.execute{try{
                 val result=JSONObject(String(story(intArrayOf(),53,token),Charsets.UTF_8));check(result.optString("kind")=="log_closed"){result.toString()}
+                playUiAudio(story(intArrayOf(),56,result.getLong("system_sound")))
                 check(story(intArrayOf(),1,0).contentEquals(File(root,"log-checkpoint.bin").readBytes())){"log advanced story"}
                 runOnUiThread{menuTimeline.post{if(!storyClosing){
                     stage.removeView(view);layout.removeView(back);storyLogOpen=false;storyLogBack=null
@@ -356,6 +357,7 @@ class MainActivity : Activity() {
             fun present(packet:ByteArray,unlock:Boolean){
                 val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
                 val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));val png=packet.copyOfRange(split+1,packet.size)
+                val sound=meta.getLong("system_sound");if(sound!=0L)playUiAudio(story(intArrayOf(),56,sound))
                 val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid message log bitmap")
                 File(root,"message-log.png").writeBytes(png)
                 runOnUiThread{menuTimeline.post(cancel={bitmap.recycle()}){if(!storyClosing){

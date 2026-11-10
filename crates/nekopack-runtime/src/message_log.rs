@@ -189,7 +189,13 @@ impl LogUi {
         }
         Ok(0)
     }
-    pub fn packet(&self, h: &History, font: &SharedFont, voice: usize) -> Result<Vec<u8>> {
+    pub fn packet(
+        &self,
+        h: &History,
+        font: &SharedFont,
+        voice: usize,
+        sound: u8,
+    ) -> Result<Vec<u8>> {
         let mut image = RgbaImage::transparent(self.base.width(), self.base.height(), PIXELS)?;
         image.draw(&self.base, [0, 0]);
         let mut entries = Vec::new();
@@ -234,20 +240,27 @@ impl LogUi {
             .unwrap_or(0) as i32;
         image.draw(&thumb.image, [b[0], b[1] + offset]);
         let rect = |b: [i32; 4]| format!("[{},{},{},{}]", b[0], b[1], b[2], b[3]);
-        let mut packet=format!("{{\"kind\":\"message_log\",\"page\":{},\"count\":{},\"max_page\":{max},\"input_sequence\":{},\"replay\":{voice},\"previous\":{},\"next\":{},\"scroll\":{},\"entries\":[{}]}}\n",self.page,h.entries.len(),self.sequence,rect(self.bounds("= SCROLL--")),rect(self.bounds("= SCROLL++")),rect(b),entries.join(",")).into_bytes();
+        let mut packet=format!("{{\"kind\":\"message_log\",\"page\":{},\"count\":{},\"max_page\":{max},\"input_sequence\":{},\"replay\":{voice},\"system_sound\":{sound},\"previous\":{},\"next\":{},\"scroll\":{},\"entries\":[{}]}}\n",self.page,h.entries.len(),self.sequence,rect(self.bounds("= SCROLL--")),rect(self.bounds("= SCROLL++")),rect(b),entries.join(",")).into_bytes();
         image.write_png(&mut packet)?;
         Ok(packet)
     }
 }
+pub(crate) enum Audio<'a> {
+    Voice(&'a str),
+    Star,
+    Page,
+    Click,
+}
 pub(crate) fn audio<R: Read + Seek>(
     store: &mut DatGame<R>,
     system: &mut SystemVm,
-    voice: Option<&str>,
+    audio: Audio<'_>,
 ) -> Result<Vec<u8>> {
-    let (kind, folder, name, volume) = if let Some(name) = voice {
-        ("voice", "voice", name, "VolVO")
-    } else {
-        ("system", "sound/se", "se_STAR", "VolSYS")
+    let (kind, folder, name, volume) = match audio {
+        Audio::Voice(name) => ("voice", "voice", name, "VolVO"),
+        Audio::Star => ("system", "sound/se", "se_STAR", "VolSYS"),
+        Audio::Page => ("system", "sound/se", "se_PAGE", "VolSYS"),
+        Audio::Click => ("system", "sound/se", "se_CLICK", "VolSYS"),
     };
     let percent = audio_volume(system, volume)?;
     let bytes = store.read(folder, &format!("{name}.ogg"))?;

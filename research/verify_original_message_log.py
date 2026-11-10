@@ -17,9 +17,9 @@ def main():
         i=next(md.disasm(pe.get_data(va-base,16),va));assert (i.mnemonic,i.op_str)==(mn,op)
         facts.append(dict(va=hex(va),instruction=(mn+' '+op).strip()))
     for va,s in [(0x550af0,b'se_%s'),(0x550ae7,b'sound/se'),(0x550af6,b'VolSYS')]:assert pe.get_data(va-base,len(s)+1)==s+b'\0'
-    checks={'message.nut':['function ViewLog()','for(local i=0; i<4; ++i)','local pagemax = MessageLog.len() - 4','if(m.voice)PlayVoice(m.voice)','if(!rest)MessageLog.append(m);','case ID_CANCEL:','g.Size = 22','g.LineWidth = text.width - 10'],
+    checks={'message.nut':['function ViewLog()','for(local i=0; i<4; ++i)','local pagemax = MessageLog.len() - 4','if(m.voice)PlayVoice(m.voice)','if(!rest)MessageLog.append(m);','case ID_CANCEL:','g.Size = 22','g.LineWidth = text.width - 10','sound("PAGE")','sound("CLICK")','if(p != page)'],
             'saveload.nut':['::Save(f,MessageLog)','MessageLog = ::Load(f)','function QuickSave()','function QuickLoad(id=1)','function NormalSave(id)','function NormalLoad(id)'],
-            'system.nut':['MessageLog <- []']}
+            'system.nut':['MessageLog <- []','case ID_LOG:  ViewLog(); return true']}
     def lookup_name(folder,name,archive):
         lines=subprocess.check_output([str(a.cli),'lookup-name',folder.encode().hex(),name.encode().hex(),str(archive)]).decode('utf8').splitlines()
         fields=lines[0].split('\t');assert fields[:2]==['selected','0'],lines
@@ -30,6 +30,10 @@ def main():
         data=(a.scripts/name).read_bytes();text=data.decode('utf8').replace('\r\r\n','\n').replace('\r\n','\n');lines=text.splitlines()
         locations={n:[i for i,s in enumerate(lines,1) if n in s] for n in needles}
         assert all(locations.values()),(name,locations)
+        if name=='message.nut':
+            assert [n for n in locations['sound("PAGE")'] if 65<=n<=146]==[66,135]
+            assert locations['sound("CLICK")']==[123,346]
+            assert locations['if(p != page)']==[122]
         if name=='saveload.nut':
             assert text.count('sound("STAR")')==4
             locations['sound("STAR")']=[i for i,s in enumerate(lines,1) if 'sound("STAR")' in s]
@@ -45,13 +49,18 @@ def main():
     while at<len(audio):
         assert audio[at:at+4]==b'OggS';granule=struct.unpack_from('<Q',audio,at+6)[0];n=audio[at+26];at+=27+n+sum(audio[at+27:at+27+n])
     assert at==len(audio)
+    log_sounds={}
+    for name in ['se_PAGE','se_CLICK']:
+        ordinal,_=lookup_name('sound/se',name+'.ogg',sound);data=entry(sound,ordinal)
+        assert data.startswith(b'OggS')
+        log_sounds[name]=dict(ordinal=ordinal,sha256=digest(data),bytes=len(data),category='VolSYS')
     log_ordinal,_=lookup_name('system','log.mng',exe.parent/'system.dat');sprites=[]
     for line in subprocess.check_output([str(a.cli),'inspect-sprites',str(exe.parent/'system.dat'),str(log_ordinal)]).decode().splitlines():
         n,x,y,name=line.split('\t');sprites.append(dict(ordinal=int(n),x=int(x),y=int(y),name=bytes.fromhex(name).decode('ascii')))
     assert len(sprites)==27 and not any('FACE' in s['name'] for s in sprites)
-    result=dict(scope='BLESS static evidence; no Windows live timing or acoustic parity claim',exe_sha256=digest(raw),facts=facts,scripts=scripts,lookup=lookup,log=dict(ordinal=log_ordinal,sha256=digest(entry(exe.parent/'system.dat',log_ordinal)),sprites=sprites),
+    result=dict(scope='BLESS static evidence; no Windows live timing or acoustic parity claim',exe_sha256=digest(raw),facts=facts,scripts=scripts,lookup=lookup,log_sounds=log_sounds,log=dict(ordinal=log_ordinal,sha256=digest(entry(exe.parent/'system.dat',log_ordinal)),sprites=sprites),
         star=dict(resource='sound/se/se_STAR.ogg',archive='sound.dat',ordinal=79,sha256=digest(audio),bytes=len(audio),sample_rate=rate,channels=channels,frames=granule,duration_seconds=granule/rate,category='VolSYS'),
         semantics=dict(log_rows=4,initial_page='max(0, count - 4)',voice='PlayVoice replaces the current voice channel; closing log does not explicitly stop voice',bgm='ViewLog contains no BGM stop/pause',save='MessageLog is saved/restored; InRestore skips append',star_trigger='QuickSave/NormalSave after InRoute check; QuickLoad/NormalLoad before file load'),
-        limits=['Static target build evidence only','Runtime log font uses installed host font, not MS Gothic pixel parity','PAGE/CLICK UI sounds are outside this STAR batch'])
+        limits=['Static target build evidence only','Runtime log font uses installed host font, not MS Gothic pixel parity','ID_BACK has an extra CLICK before ViewLog; that separate back-history input is not mapped by this batch'])
     a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print('PASS original message-log and STAR static evidence')
 if __name__=='__main__':main()

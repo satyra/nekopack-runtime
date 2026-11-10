@@ -41,7 +41,11 @@ pub struct TitleSession<R: Read + Seek> {
 }
 impl<R: Read + Seek> TitleSession<R> {
     pub fn star_sound(&mut self) -> Result<Vec<u8>> {
-        crate::message_log::audio(&mut self.store, &mut self.system, None)
+        crate::message_log::audio(
+            &mut self.store,
+            &mut self.system,
+            crate::message_log::Audio::Star,
+        )
     }
     pub fn open_save_ui(&mut self) -> Result<Vec<u8>> {
         if self.settings.is_some() {

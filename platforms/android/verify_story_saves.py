@@ -8,6 +8,7 @@ def main():
     for key in ('adb','serial','reference','output'):p.add_argument('--'+key,required=True)
     p.add_argument('--quick-check',action='store_true')
     p.add_argument('--log-check',action='store_true')
+    p.add_argument('--log-sound-check',action='store_true')
     p.add_argument('--legacy-report')
     p.add_argument('--restore-system-volume',type=int,choices=range(101),help='Restore a known pre-test value after an interrupted previous run')
     a=p.parse_args();pkg='org.nekopack.probe';run='';runs=[];profile='save_'+uuid.uuid4().hex;results=[]
@@ -99,8 +100,17 @@ def main():
     log_results=[]
     def check_log(token,count,baseline_index,replay=False,background=False):
         before=read(f'page-{token}.json');picture=read(f'page-{token}.png');text_state=read(f'text-{token}.json');old=len(lines('log-events.jsonl'))
+        audio_start=len(lines('ui-audio-events.jsonl'));expected_sounds=[]
+        def sounds():return [e for e in lines('ui-audio-events.jsonl')[audio_start:] if e['host_effect']=='system']
+        def sound_check(name=None):
+            if not a.log_sound_check:return
+            if name:
+                expected_sounds.append(name);wait(lambda:len(sounds())>=len(expected_sounds))
+            else:time.sleep(.25)
+            assert [e['name'] for e in sounds()]==expected_sounds
         adb('shell','input','keyevent','KEYCODE_F9')
         state=wait(lambda:obj('message-log-presented.json') and obj('message-log-presented.json')['story_sequence']==token and obj('message-log-presented.json'))
+        sound_check('se_PAGE')
         frozen_text=read(f'text-{token}.json')
         assert state['count']==count and state['page']==max(0,count-4),state
         def verify(state):
@@ -110,12 +120,18 @@ def main():
                 assert (e['name'],e['voice'],e['text'])==(expected['speaker'],expected['voice'],expected['text'])
         verify(state)
         def pointer(rect):
-            previous=obj('message-log-presented.json')['input_sequence'];point('原版消息日志',rect)
-            return wait(lambda:obj('message-log-presented.json')['input_sequence']>=previous+2 and obj('message-log-presented.json')['accepting'] and obj('message-log-presented.json'))
+            before=obj('message-log-presented.json');previous=before['input_sequence'];point('原版消息日志',rect)
+            result=wait(lambda:obj('message-log-presented.json')['input_sequence']>=previous+2 and obj('message-log-presented.json')['accepting'] and obj('message-log-presented.json'))
+            sound_check('se_CLICK' if result['page']!=before['page'] else None)
+            return result
         if count>4:
             state=pointer(state['previous']);assert state['page']==count-5;verify(state)
             x,y,w,h=state['scroll'];state=pointer([x,y,w,1]);assert state['page']==0;verify(state)
+            if a.log_sound_check:state=pointer(state['previous']);assert state['page']==0
             state=pointer([x,y+h-1,w,1]);assert state['page']==count-4;verify(state)
+        if a.log_sound_check:
+            state=pointer(state['next']);assert state['page']==max(0,count-4)
+            x,y,w,h=state['scroll'];state=pointer([x,y+h-1,w,1]);assert state['page']==max(0,count-4)
         if background:
             events=read('text-events.jsonl');adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(1)
             assert read('text-events.jsonl')==events
@@ -130,6 +146,7 @@ def main():
         Path('.local/batch51-log.png').write_bytes(read('message-log.png'))
         assert read(f'text-{token}.json')==frozen_text
         adb('shell','input','keyevent','KEYCODE_BACK');wait(lambda:len(lines('log-events.jsonl'))>old)
+        sound_check('se_PAGE')
         assert read(f'page-{token}.json')==before and read(f'page-{token}.png')==picture
         after_text=obj(f'text-{token}.json');before_text=json.loads(text_state)
         assert all(after_text[k]==before_text[k] for k in ('sequence','visible','text','complete','advance'))
@@ -137,7 +154,7 @@ def main():
         if 'bgm' in opened['channels']:
             assert opened['channels']['bgm']['player_id']==closed['channels']['bgm']['player_id']
             assert closed['channels']['bgm']['playing']
-        log_results.append(dict(run=run,token=token,count=count,page=baseline_index,voice_token=played,background=background,same_scene_and_dialogue=True,bgm_same_player=True))
+        log_results.append(dict(run=run,token=token,count=count,page=baseline_index,voice_token=played,system_audio=sounds() if a.log_sound_check else [],background=background,same_scene_and_dialogue=True,bgm_same_player=True))
     def system_volume(value=None):
         old=len(lines('story-settings-events.jsonl'));click('原版设置')
         wait(lambda:len(lines('story-settings-events.jsonl'))>old);state=wait(lambda:obj('settings-presented.json'));original=state['config']['VolSYS'];se=state['config']['VolSE']
@@ -194,7 +211,10 @@ def main():
             hashes=quick_hashes();quick_history.insert(0,hashes[0])
             assert hashes==quick_history[:10]
             baseline(n,n);assert obj(f'page-{n+1}.json') is None
-        if a.log_check and n==13:check_log(n,n,n)
+        if a.log_check and n==13:
+            if a.log_sound_check:system_volume(0)
+            check_log(n,n,n)
+            if a.log_sound_check:system_volume(restored_sys)
         if n==13:
             menu('SAVE');slot(2,'saved');cancel();page(13)
         click('继续')
@@ -206,7 +226,10 @@ def main():
     frozen=menu('SAVE',already=True);slot(3,'saved');cancel();page(56);baseline(56,56)
     if a.quick_check:
         quick('QSAVE','saved');hashes=quick_hashes();quick_history.insert(0,hashes[0]);assert hashes==quick_history[:10]
-    if a.log_check:check_log(56,56,56,replay=True,background=True)
+    if a.log_check:
+        if a.log_sound_check:system_volume(37)
+        check_log(56,56,56,replay=True,background=True)
+        if a.log_sound_check:system_volume(restored_sys)
     next_page(56,56)
     menu('LOAD');old_audio=len(lines('host-events.jsonl'));slot(3,'loaded');page(58);baseline(58,56)
     wait(lambda:any(x['event']=='finished' and x['sequence']==58 for x in lines('motion-events.jsonl')))

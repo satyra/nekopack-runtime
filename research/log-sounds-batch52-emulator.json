@@ -1,0 +1,524 @@
+{
+  "log_checks": [
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "token": 1,
+      "count": 1,
+      "page": 1,
+      "voice_token": null,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 17,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1001,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 17,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1002,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "token": 13,
+      "count": 13,
+      "page": 13,
+      "voice_token": null,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 0,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1012,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 0,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1013,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 0,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1014,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 0,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1015,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 0,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1016,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "token": 56,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1024,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 37,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1020,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 37,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1021,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 37,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1022,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 37,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1023,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 37,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1025,
+          "ui_audio": true
+        }
+      ],
+      "background": true,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "token": 58,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1031,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1027,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1028,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1029,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1030,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1032,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "token": 1,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1006,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1002,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1003,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1004,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1005,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1007,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "token": 3,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1007,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1003,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1004,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1005,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1006,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1008,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "token": 4,
+      "count": 57,
+      "page": 57,
+      "voice_token": null,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1009,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1010,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1011,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1012,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1013,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "token": 1,
+      "count": 1,
+      "page": 56,
+      "voice_token": null,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1002,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1003,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "token": 2,
+      "count": 2,
+      "page": 57,
+      "voice_token": null,
+      "system_audio": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1004,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1005,
+          "ui_audio": true
+        }
+      ],
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    }
+  ],
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "c5c6a83d7cf7a9a1bae49522c0036c14234a50b28ff9613db25759e099680d11",
+  "profile": "save_acb8b6bd27ff46f3b1e870ecb5353e92",
+  "runs": [
+    "story_saves_643c7a1585a84d4db909afc95528add6",
+    "story_saves_ff5b3611e6da46458ac1981c74bb7b4e",
+    "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+    "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+    "story_saves_662e873c96cb4fa78161b716db1f084a",
+    "story_saves_b0023644690d4d5f9b85f62939063c10",
+    "story_saves_6cbbe2f938da4c3b89805f452481efae"
+  ],
+  "story_run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+  "results": [
+    {
+      "case": "system_volume",
+      "initial": 50,
+      "tested": 17,
+      "restored": 50,
+      "se_unchanged": true
+    },
+    {
+      "case": "first_page",
+      "new_sequence": 3,
+      "next_sequence": 4,
+      "background_modal": true,
+      "empty_slot_disabled": true,
+      "overwrite_exact_bytes": true,
+      "page_navigation_and_mode_switch": true
+    },
+    {
+      "case": "process_restart",
+      "durable": true
+    },
+    {
+      "case": "actor_queue_page",
+      "menu_checkpoint": {
+        "sequence": 56,
+        "steps": 412,
+        "visible": 6,
+        "elapsed_ms": 107
+      },
+      "restored_sequence": 58,
+      "next_sequence": 59,
+      "audio_released": true,
+      "bgm_and_voice_started": true
+    },
+    {
+      "case": "corrupt_slot",
+      "rejected_before_release": true,
+      "current_page_preserved": true,
+      "next_page_verified": true
+    },
+    {
+      "case": "title_load",
+      "cancel_preserves_title": true,
+      "no_start_story_execution": true,
+      "saved_page": 56,
+      "next_page": 57,
+      "corrupt_slot_disabled": true
+    },
+    {
+      "case": "quick_history",
+      "writes": 12,
+      "retained": 10,
+      "newest_page": 56,
+      "oldest_page": 3,
+      "hash_order_verified": true,
+      "normal_slot_unchanged": true,
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "title_run": "story_saves_b0023644690d4d5f9b85f62939063c10",
+      "function_keys": true,
+      "original_side_menu": true,
+      "title_q_page": true,
+      "corruption_preserves_current_state": true
+    },
+    {
+      "case": "legacy_v1",
+      "loaded": true,
+      "only_restored_current_entry": true,
+      "next_page_verified": true
+    }
+  ],
+  "baseline_pages": 57,
+  "closed_vm_live_bytes": 0,
+  "scope": "Runtime NKSV slots; no original .sav interoperability. Audio resource/loop/channel restart, not sample-position equivalence."
+}

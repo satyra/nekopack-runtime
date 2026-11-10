@@ -1,0 +1,60 @@
+{
+  "base_commit": "3c0a4644ed238e8e8388a55eac5a6f696083df49",
+  "rust_top_level_tests": 161,
+  "isolated_native_probes": 7,
+  "python_tests": 17,
+  "cargo_fmt": "check passed",
+  "clippy": "workspace all-targets deny warnings passed",
+  "verifier_py_compile": "passed",
+  "ndk": "r27d",
+  "api": 23,
+  "target": "aarch64-linux-android",
+  "execution": "translated ARM64 on x86_64",
+  "sha256": {
+    "libnekopack_probe.so": "537970ac2ebdf539603d3804a0765e13136c994dce555442ca1d00299c0c2218",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "c5c6a83d7cf7a9a1bae49522c0036c14234a50b28ff9613db25759e099680d11"
+  },
+  "baseline_pages": 57,
+  "log_return_cases": 9,
+  "system_sound_counts": {
+    "se_PAGE": 18,
+    "se_CLICK": 18
+  },
+  "log_sound_pcm_head_progress": 36,
+  "system_volumes": [
+    0,
+    17,
+    37,
+    50
+  ],
+  "star_operations": 29,
+  "side_menu_page_sounds": 2,
+  "report_sha256": {
+    "log-sounds-batch52-original.json": "1c94879566eccf7ad7aa4f84f63187b420d92452cc56f093ee2db88044ccab46",
+    "log-sounds-batch52-emulator.json": "77ae9dca3256d8fac4e2cea922aa88073e090d53f26d71fd9a2b7345cfaee71c",
+    "log-sounds-batch52-audio.json": "255917127eadb977f30d0e5f003af25b1a8ad4104d5b485ed93c369c3308ec1c",
+    "log-sounds-batch52-independent.json": "2645cf61002b1d2287cd40d5a73f4b1edcf9084972f99472a6855e3f6961eaad",
+    "log-sounds-batch52-side-menu.json": "4243c784db7b0586067c584e67622fb976520b588542023314d605e8d9f2a5ff"
+  },
+  "log_sha256": {
+    "batch52-tests.log": "4be84930b5fe3bcaa44f5c6fe4e5a23a7d34ff8df6ef36e4a5880231246830bd",
+    "batch52-clippy.log": "82bffe70402381a674220511c80fce0289bb13c9429cb2efa250b5ead92431ce",
+    "batch52-python.log": "b90563684525a199401d847fd8d4a266c7bf467b16361e0c52c37031bc772ae3",
+    "batch52-build.log": "636cfadf5c83b619dced4023eb6eb25533d46107ca04e735beb6497fbfb52cf9",
+    "batch52-original.log": "6bdf137971f6d2986a45ef14f3e112bc803925fd572fc8734bdf0d88e9b763eb",
+    "batch52-emulator.log": "ed8130d98939639fd53d8a013c58bc112e2b82ada449e6ba19d3b363466dce8a",
+    "batch52-audio.log": "06f1fe2c27743db5e2ca8e774fd95c13401d5af7cc1f0b0564fc86e53081a27b",
+    "batch52-independent.log": "9d98b4cc2ae35b8d3a402dd67120085b09788337f7405b8635076e0747f7c99b",
+    "batch52-side-menu.log": "70385ed8fa2ce36e1d3802a888b83b6d3f113f37770573c4e7a09087f74d4a15"
+  },
+  "ui_automation_null_hierarchy_retries": 4,
+  "limitations": [
+    "Translated ARM64, no physical device",
+    "Static original evidence, no live Windows acoustic parity",
+    "No manual listening confirmation",
+    "No new ID_BACK input mapping or other system-page sound integration",
+    "Full settings/auto/skip suites not rerun"
+  ]
+}

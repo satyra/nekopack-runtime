@@ -1,0 +1,781 @@
+{
+  "ui_report_sha256": "77ae9dca3256d8fac4e2cea922aa88073e090d53f26d71fd9a2b7345cfaee71c",
+  "original_report_sha256": "1c94879566eccf7ad7aa4f84f63187b420d92452cc56f093ee2db88044ccab46",
+  "apk_sha256": "c5c6a83d7cf7a9a1bae49522c0036c14234a50b28ff9613db25759e099680d11",
+  "execution": "translated ARM64 on x86_64",
+  "star_count": 29,
+  "star_with_playback_progress": 29,
+  "log_sound_count": 36,
+  "ui_audio": [
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 17,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "kind": "system",
+      "token": -1002,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 17,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "kind": "system",
+      "token": -1003,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 17,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "kind": "system",
+      "token": -1004,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 17,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "kind": "system",
+      "token": -1005,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 17,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "kind": "system",
+      "token": -1006,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 17,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_ff5b3611e6da46458ac1981c74bb7b4e",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1002,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1003,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1004,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1005,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1006,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1007,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1008,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1009,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1010,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1011,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1012,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 0,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1013,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 0,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1014,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 0,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1015,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 0,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1016,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 0,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1017,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1018,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1019,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1020,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 37,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1021,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 37,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1022,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 37,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1023,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 37,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "voice",
+      "token": -1024,
+      "name": "VE_012402_0000",
+      "sha256": "c735704a7da9b598bf962dd8843e7445e4b9aae545f1db239389473241afa25a",
+      "category_percent": 75,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1025,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 37,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1026,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1027,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1028,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1029,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1030,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "voice",
+      "token": -1031,
+      "name": "VE_012402_0000",
+      "sha256": "c735704a7da9b598bf962dd8843e7445e4b9aae545f1db239389473241afa25a",
+      "category_percent": 75,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1032,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1033,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "kind": "system",
+      "token": -1034,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "system",
+      "token": -1002,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "system",
+      "token": -1003,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "system",
+      "token": -1004,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "system",
+      "token": -1005,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "voice",
+      "token": -1006,
+      "name": "VE_012402_0000",
+      "sha256": "c735704a7da9b598bf962dd8843e7445e4b9aae545f1db239389473241afa25a",
+      "category_percent": 75,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "kind": "system",
+      "token": -1007,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1002,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1003,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1004,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1005,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1006,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "voice",
+      "token": -1007,
+      "name": "VE_012402_0000",
+      "sha256": "c735704a7da9b598bf962dd8843e7445e4b9aae545f1db239389473241afa25a",
+      "category_percent": 75,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1008,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1009,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1010,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1011,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1012,
+      "name": "se_CLICK",
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1013,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1014,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "kind": "system",
+      "token": -1015,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_b0023644690d4d5f9b85f62939063c10",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "kind": "system",
+      "token": -1001,
+      "name": "se_STAR",
+      "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": false
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "kind": "system",
+      "token": -1002,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "kind": "system",
+      "token": -1003,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "kind": "system",
+      "token": -1004,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "kind": "system",
+      "token": -1005,
+      "name": "se_PAGE",
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "category_percent": 50,
+      "playback_position_advanced": true,
+      "pcm_head_advanced": true
+    }
+  ],
+  "log_returns": [
+    {
+      "run": "story_saves_643c7a1585a84d4db909afc95528add6",
+      "sequence": 1,
+      "count": 1,
+      "bgm_same_player": false,
+      "voice": "not requested",
+      "background": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "sequence": 13,
+      "count": 13,
+      "bgm_same_player": true,
+      "voice": "not requested",
+      "background": false
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "sequence": 56,
+      "count": 56,
+      "bgm_same_player": true,
+      "voice": "same replay continues after close",
+      "background": true
+    },
+    {
+      "run": "story_saves_e4ad751974ed4f11af093e89e39f10a6",
+      "sequence": 58,
+      "count": 56,
+      "bgm_same_player": true,
+      "voice": "same replay continues after close",
+      "background": false
+    },
+    {
+      "run": "story_saves_dfc74e3a38b0416fb3c6cefbb4a0435e",
+      "sequence": 1,
+      "count": 56,
+      "bgm_same_player": true,
+      "voice": "same replay continues after close",
+      "background": false
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "sequence": 3,
+      "count": 56,
+      "bgm_same_player": true,
+      "voice": "same replay continues after close",
+      "background": false
+    },
+    {
+      "run": "story_saves_662e873c96cb4fa78161b716db1f084a",
+      "sequence": 4,
+      "count": 57,
+      "bgm_same_player": true,
+      "voice": "not requested",
+      "background": false
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "sequence": 1,
+      "count": 1,
+      "bgm_same_player": true,
+      "voice": "not requested",
+      "background": false
+    },
+    {
+      "run": "story_saves_6cbbe2f938da4c3b89805f452481efae",
+      "sequence": 2,
+      "count": 2,
+      "bgm_same_player": true,
+      "voice": "not requested",
+      "background": false
+    }
+  ],
+  "all_sessions_vm_zero_and_audio_cache_empty": true,
+  "limitations": [
+    "No manual listening or Windows acoustic parity claim",
+    "MediaPlayer progress is not an AudioTrack PCM head observation",
+    "Replay uses same voice channel; original dialogue voice is not restarted on log close"
+  ]
+}
