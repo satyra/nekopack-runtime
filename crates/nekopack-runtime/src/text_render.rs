@@ -2,10 +2,35 @@
 //! Includes the evidenced NekoPack punctuation wrapping rules, not a general kinsoku engine.
 use ab_glyph::{point, Font, FontVec};
 use nekopack_image::{Mng, RgbaImage};
-use std::error::Error;
+use std::{error::Error, sync::Arc};
 const BUDGET: usize = 16 * 1024 * 1024;
 /// Bounded host font input; Android 15's CJK collection exceeds 30 MiB.
 pub const MAX_FONT_BYTES: usize = 40 * 1024 * 1024;
+pub(crate) type SharedFont = Arc<FontVec>;
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) struct TextStyle {
+    pub opacity: u8,
+    pub bold: bool,
+    pub border: bool,
+}
+pub(crate) fn load_font(bytes: Vec<u8>, index: u32) -> Result<SharedFont> {
+    if bytes.len() > MAX_FONT_BYTES {
+        return Err("font exceeds 40 MiB input budget".into());
+    }
+    Ok(Arc::new(FontVec::try_from_vec_and_index(bytes, index)?))
+}
+// Host synthetic weight: one rightward pixel, without changing advances.
+fn embolden(fill: &mut RgbaImage) {
+    let w = fill.width() as usize;
+    for y in 0..fill.height() as usize {
+        for x in (1..w).rev() {
+            let at = (y * w + x) * 4;
+            let left = fill.pixels()[at - 1];
+            let alpha = fill.pixels()[at + 3].max(left);
+            fill.pixels_mut()[at..at + 4].copy_from_slice(&[255, 255, 255, alpha]);
+        }
+    }
+}
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 // BLESS Sprite.Clear(); Sprite.Blt(source, 0, 0, opacity): the native
@@ -40,12 +65,13 @@ struct Layout {
     origins: Vec<[i32; 2]>,
 }
 pub struct DialogueRenderer {
-    font: FontVec,
+    font: SharedFont,
     size: [u32; 2],
     bounds: [i32; 4],
     name: Panel,
     text: Panel,
     border: bool,
+    bold: bool,
     page: Option<Prepared>,
 }
 struct Prepared {
@@ -123,10 +149,22 @@ impl DialogueRenderer {
         opacity: u8,
         border: bool,
     ) -> Result<Self> {
-        if font.len() > MAX_FONT_BYTES {
-            return Err("font exceeds 40 MiB input budget".into());
-        }
-        let font = FontVec::try_from_vec_and_index(font, collection_index)?;
+        Self::with_font(
+            load_font(font, collection_index)?,
+            mng,
+            TextStyle {
+                opacity,
+                border,
+                bold: false,
+            },
+        )
+    }
+    pub(crate) fn with_font(font: SharedFont, mng: &[u8], style: TextStyle) -> Result<Self> {
+        let TextStyle {
+            opacity,
+            border,
+            bold,
+        } = style;
         let parsed = Mng::parse(mng, 4096)?;
         let size = [parsed.header[0], parsed.header[1]];
         RgbaImage::transparent(size[0], size[1], BUDGET)?;
@@ -195,22 +233,20 @@ impl DialogueRenderer {
             name,
             text,
             border,
+            bold,
             page: None,
         })
     }
 
-    fn layout(&self, text: &str, width: i32) -> Result<Layout> {
+    fn layout(font: &FontVec, text: &str, width: i32, bold: bool) -> Result<Layout> {
         if text.chars().count() > 4096 {
             return Err("dialogue exceeds 4096 scalar budget".into());
         }
         // 22 pixels per em; normalize ab_glyph's ascent/descent-based scale explicitly.
-        let units = self
-            .font
-            .units_per_em()
-            .ok_or("font has invalid em units")?;
+        let units = font.units_per_em().ok_or("font has invalid em units")?;
         let factor = 22.0 / units;
-        let scale = self.font.height_unscaled() * factor;
-        let baseline = self.font.ascent_unscaled() * factor;
+        let scale = font.height_unscaled() * factor;
+        let baseline = font.ascent_unscaled() * factor;
         let mut advances = Vec::new();
         for ch in text.chars() {
             if ch == '\n' {
@@ -220,13 +256,11 @@ impl DialogueRenderer {
             if ch.is_control() {
                 return Err("unsupported dialogue control character".into());
             }
-            let id = self.font.glyph_id(ch);
+            let id = font.glyph_id(ch);
             if id.0 == 0 {
                 return Err(format!("font missing U+{:04X}", ch as u32).into());
             }
-            advances.push(Some(
-                (self.font.h_advance_unscaled(id) * factor).round() as i32
-            ));
+            advances.push(Some((font.h_advance_unscaled(id) * factor).round() as i32));
         }
         let locations = positions(&text.chars().collect::<Vec<_>>(), &advances, width, 30)?;
         let mut used = 0usize;
@@ -237,11 +271,10 @@ impl DialogueRenderer {
                 if ch == '\n' {
                     return Ok(None);
                 }
-                let glyph = self
-                    .font
+                let glyph = font
                     .glyph_id(ch)
                     .with_scale_and_position(scale, point(x as f32, y as f32 + baseline));
-                let Some(outline) = self.font.outline_glyph(glyph) else {
+                let Some(outline) = font.outline_glyph(glyph) else {
                     return Ok(None);
                 };
                 let bounds = outline.px_bounds();
@@ -250,13 +283,14 @@ impl DialogueRenderer {
                 if w > 128 || h > 128 {
                     return Err("glyph raster exceeds 128px extent".into());
                 }
-                used += (w as usize + 2) * (h as usize + 2) * 8;
+                let padded_w = w + 2 + u32::from(bold);
+                used += (padded_w as usize) * (h as usize + 2) * 8;
                 if used > BUDGET {
                     return Err("dialogue glyph cache budget exceeded".into());
                 }
-                let mut fill = RgbaImage::transparent(w + 2, h + 2, BUDGET)?;
+                let mut fill = RgbaImage::transparent(padded_w, h + 2, BUDGET)?;
                 outline.draw(|x, y, coverage| {
-                    let i = (((y + 1) * (w + 2) + x + 1) * 4) as usize;
+                    let i = (((y + 1) * (padded_w) + x + 1) * 4) as usize;
                     fill.pixels_mut()[i..i + 4].copy_from_slice(&[
                         255,
                         255,
@@ -264,24 +298,30 @@ impl DialogueRenderer {
                         (coverage * 255.0).round() as u8,
                     ]);
                 });
-                let mut edge = RgbaImage::transparent(w + 2, h + 2, BUDGET)?;
+                if bold {
+                    embolden(&mut fill);
+                }
+                let mut edge = RgbaImage::transparent(padded_w, h + 2, BUDGET)?;
                 for y in 0..h + 2 {
-                    for x in 0..w + 2 {
+                    for x in 0..padded_w {
                         let mut alpha = 0;
                         for dy in -1..=1 {
                             for dx in -1..=1 {
                                 let xx = x as i32 + dx;
                                 let yy = y as i32 + dy;
-                                if xx >= 0 && yy >= 0 && xx < (w + 2) as i32 && yy < (h + 2) as i32
+                                if xx >= 0
+                                    && yy >= 0
+                                    && xx < (padded_w) as i32
+                                    && yy < (h + 2) as i32
                                 {
                                     alpha = alpha.max(
-                                        fill.pixels()
-                                            [((yy as u32 * (w + 2) + xx as u32) * 4 + 3) as usize],
+                                        fill.pixels()[((yy as u32 * (padded_w) + xx as u32) * 4 + 3)
+                                            as usize],
                                     );
                                 }
                             }
                         }
-                        edge.pixels_mut()[((y * (w + 2) + x) * 4 + 3) as usize] = alpha;
+                        edge.pixels_mut()[((y * (padded_w) + x) * 4 + 3) as usize] = alpha;
                     }
                 }
                 Ok(Some(Glyph {
@@ -319,7 +359,8 @@ impl DialogueRenderer {
         }
     }
     /// Rebuild from original DAT pixels; never multiply an already faded panel.
-    pub(crate) fn set_box_opacity(&mut self, mng: &[u8], opacity: u8) -> Result<()> {
+    pub(crate) fn set_style(&mut self, mng: &[u8], style: TextStyle) -> Result<()> {
+        let opacity = style.opacity;
         let parsed = Mng::parse(mng, 4096)?;
         let sprites = parsed.sprites()?;
         let decode = |name: &[u8]| -> Result<RgbaImage> {
@@ -335,6 +376,20 @@ impl DialogueRenderer {
         let text = decode(b"TEXT")?;
         self.name.image = name;
         self.text.image = text;
+        self.bold = style.bold;
+        self.border = style.border;
+        Ok(())
+    }
+    pub(crate) fn draw_preview(
+        font: &SharedFont,
+        text: &str,
+        target: &mut RgbaImage,
+        position: [i32; 2],
+        bold: bool,
+        border: bool,
+    ) -> Result<()> {
+        let layout = Self::layout(font, text, i32::MAX, bold)?;
+        Self::draw_glyphs(target, &layout.glyphs, position, border);
         Ok(())
     }
     pub fn prepare(&mut self, sequence: u64, speaker: &str, text: &str) -> Result<()> {
@@ -348,7 +403,7 @@ impl DialogueRenderer {
             let x = (self.name.width - encoded.len() as i32 * 11) / 2;
             // Name Print occurs before message.nut assigns LineWidth for the body.
             // Long names remain on one line and are clipped by the NAME sprite.
-            let glyphs = self.layout(speaker, i32::MAX)?;
+            let glyphs = Self::layout(&self.font, speaker, i32::MAX, self.bold)?;
             let mut image = RgbaImage::from_rgba(
                 self.name.image.width(),
                 self.name.image.height(),
@@ -363,7 +418,7 @@ impl DialogueRenderer {
             );
             Some(image)
         };
-        let layout = self.layout(text, self.text.width)?;
+        let layout = Self::layout(&self.font, text, self.text.width, self.bold)?;
         let glyphs = layout.glyphs;
         let clipped = glyphs.iter().flatten().any(|g| {
             g.position[1] + self.text.origin[1] + g.fill.height() as i32
@@ -447,6 +502,21 @@ mod tests {
             .map(|c| if *c == '\n' { None } else { Some(22) })
             .collect();
         positions(&chars, &advances, width, 30).unwrap()
+    }
+    #[test]
+    fn synthetic_bold_expands_once_and_preserves_coverage() {
+        let mut image = RgbaImage::transparent(6, 1, 24).unwrap();
+        image.pixels_mut()[7] = 128;
+        image.pixels_mut()[11] = 255;
+        embolden(&mut image);
+        let alpha: Vec<_> = image
+            .pixels()
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .map(|p| p[3])
+            .collect();
+        assert_eq!(alpha, [0, 128, 255, 255, 0, 0]);
     }
     #[test]
     fn native_hanging_stops_and_post_hanging_wrap() {

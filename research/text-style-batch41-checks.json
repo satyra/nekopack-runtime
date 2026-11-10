@@ -1,0 +1,47 @@
+{
+  "batch": 41,
+  "rust": {
+    "command": "cargo test --workspace",
+    "passed": 138,
+    "isolated_native_probe_runs": 7,
+    "status": "passed"
+  },
+  "clippy": {
+    "command": "cargo clippy --workspace --all-targets -- -D warnings",
+    "status": "passed"
+  },
+  "python": {
+    "command": "python -m unittest discover -s research -p test_*.py",
+    "passed": 17
+  },
+  "android_build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "a96bac817f6fc8983a4359003716b043a153adac1e0edcb3fdf2e1ae4b9d35fe",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "b86f031c1f51b5f5712af7db46272de2061d79725cacd4bf17d1777815a5fbaf"
+    }
+  },
+  "device_result": "text-style-batch41-emulator.json",
+  "default_rendering_comparison": {
+    "prior_run": "story_settings_171f5fb17bfe433aa5b3c6aa5a96eadb",
+    "default_dialogue_matches_batch40": true,
+    "sha256": "32bd6f115b2e53918726633819ead2ba78df30de2167debaf2f7812c81248e96"
+  },
+  "log_sha256": {
+    "tests": "cc74e8da97c54a75daa65403c203388dfa34d38b100790308d6c9abbe0865d87",
+    "clippy": "7a953d73ed40d76139825806f1ffe24c66584f4cde2349d9dc37482a6b5e432a",
+    "python": "83ccc24bc81ff5c90f91f2230fa1d87f34490ad19326b1a4021dfd5b34f37d69",
+    "build": "dde207424285283a037f3e11f50f20287a8e6b1971ab665dcfe252f4bee3374f",
+    "device": "801b5b61ca930de6966758f42bd0381bed01453dee3061d0f83e6d7216066acd"
+  },
+  "limitations": [
+    "ARM64 translated on x86_64, no physical phone",
+    "Noto host substitute and 1px synthetic bold, not proven GDI pixel parity",
+    "Preview responds to style and opacity, not typewriter animation",
+    "Legacy shortcut verifier excludes the dynamic preview rectangle; new style verifier covers it"
+  ]
+}

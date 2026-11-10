@@ -369,7 +369,7 @@ pub unsafe extern "C" fn neko_probe_story(
                     operation == 12,
                 ),
                 13 => state.as_mut().ok_or("no story session")?.text_config(),
-                15 => {
+                15 | 24 => {
                     use std::io::Read;
                     if count != 1 {
                         return Err("font installation requires one descriptor".into());
@@ -381,10 +381,21 @@ pub unsafe extern "C" fn neko_probe_story(
                     let mut bytes = Vec::new();
                     file.take(nekopack_runtime::text_render::MAX_FONT_BYTES as u64 + 1)
                         .read_to_end(&mut bytes)?;
-                    state
-                        .as_mut()
-                        .ok_or("no story session")?
-                        .install_dialogue_font(bytes, u32::try_from(sequence)?)
+                    if operation == 24 {
+                        TITLE.with(|title| -> Result<Vec<u8>, Box<dyn Error>> {
+                            title
+                                .borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .install_settings_font(bytes, u32::try_from(sequence)?)?;
+                            Ok(b"{\"installed\":true}".to_vec())
+                        })
+                    } else {
+                        state
+                            .as_mut()
+                            .ok_or("no story session")?
+                            .install_dialogue_font(bytes, u32::try_from(sequence)?)
+                    }
                 }
                 16 => state
                     .as_mut()

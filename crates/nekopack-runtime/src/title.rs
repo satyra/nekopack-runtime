@@ -35,6 +35,7 @@ pub struct TitleSession<R: Read + Seek> {
     pressed: Option<i32>,
     input_sequence: u64,
     settings: Option<crate::settings::Settings>,
+    preview_font: Option<crate::text_render::SharedFont>,
 }
 impl<R: Read + Seek> TitleSession<R> {
     pub fn open(mut store: DatGame<R>) -> Result<Self> {
@@ -133,6 +134,7 @@ impl<R: Read + Seek> TitleSession<R> {
             pressed: None,
             input_sequence: 0,
             settings: None,
+            preview_font: None,
         })
     }
     fn hit(&self, x: i32, y: i32) -> Option<i32> {
@@ -168,7 +170,11 @@ impl<R: Read + Seek> TitleSession<R> {
     }
     pub fn packet(&mut self, action: Option<i32>) -> Result<Vec<u8>> {
         if let Some(settings) = &self.settings {
-            return settings.packet(&mut self.system, self.input_sequence);
+            return settings.packet(
+                &mut self.system,
+                self.input_sequence,
+                self.preview_font.as_ref(),
+            );
         }
         let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
         for &i in &self.bases {
@@ -229,6 +235,10 @@ impl<R: Read + Seek> TitleSession<R> {
         }
         self.input_sequence += 1;
         self.packet(None)
+    }
+    pub fn install_settings_font(&mut self, bytes: Vec<u8>, index: u32) -> Result<()> {
+        self.preview_font = Some(crate::text_render::load_font(bytes, index)?);
+        Ok(())
     }
     pub fn export_preferences(&mut self) -> Result<Vec<u8>> {
         crate::preferences::export(&mut self.system)

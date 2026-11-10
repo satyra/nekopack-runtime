@@ -87,6 +87,7 @@ def main():
         draw(common['BASE']);draw(s['BASE'])
         values=dict(Screen=0,SkipNoRead=0,KeepSkip=0,KeepAuto=0,Movie=1,Popup=1,Effect=1,SysEffect=1,BOLD=0,BORDER=1,CenterKey=0,SpaceKey=0,MuteBGM=1,AutoSpeed=50,BoxOpacity=191)
         values.update(config)
+        values.update(BOLD=config.get("Bold",0),BORDER=config.get("Border",1))
         for key in sorted(s):
             if not key.startswith('= '):continue
             name=key[2:]
@@ -111,7 +112,12 @@ def main():
             for name in ('DELETE','AUTO','SKIP','LOG','HIDE','SAVE','LOAD','QSAVE','QLOAD','RESET','QUIT'):draw(s['= '+name])
         return canvas
     def pixels(name,expected):
-        raw=read('settings.png');assert np.array_equal(np.array(Image.open(io.BytesIO(raw))),np.array(expected)),name
+        raw=read('settings.png');actual=np.array(Image.open(io.BytesIO(raw)));expected=np.array(expected)
+        mask=np.ones(actual.shape[:2],dtype=bool)
+        if state()['page']==2:
+            # Dynamic glyph/style preview is covered by verify_story_settings --text-style-check.
+            sample,(x,y)=sheets[2]['SAMPLE'];mask[y:y+sample.height,x:x+sample.width]=False
+        assert np.array_equal(actual[mask],expected[mask]),name
         (work/(name+'.png')).write_bytes(raw);bounds('原版设置页');(work/(name+'-screen.png')).write_bytes(adb('exec-out','screencap','-p'))
         return hashlib.sha256(raw).hexdigest()
     launch();runs=[run];initial=state()['config'];checked={}
@@ -201,7 +207,7 @@ def main():
     # Restore only edited slots, preserving the other preferences.
     area('* F3');area('= '+original[0]);area('* F12');area('= '+original[-1]);assert state()['config']==initial
     close_title();launch();page(5);assert [s['action'] for s in state()['shortcuts']]==original
-    report=dict(execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,all_five_pages=checked,popup_pixels_equal=True,all_ten_slots_checked=True,all_ten_actions_checked=True,clear_persists=True,cancel_and_drag_out_preserve=True,modal_blocks_underlying_controls=True,home_restores_popup=True,restart_bindings=changed,other_preferences_unchanged=initial,restored_bindings=original,story_pages=pages,closed_vm_live_bytes=0,ui_retries=ui_retries,opacity_checks=opacity_checks,scope='binding edit/storage only; not a claim of executing all keyboard actions; static sample preview on page2')
+    report=dict(execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,all_five_pages=checked,popup_pixels_equal=True,all_ten_slots_checked=True,all_ten_actions_checked=True,clear_persists=True,cancel_and_drag_out_preserve=True,modal_blocks_underlying_controls=True,home_restores_popup=True,restart_bindings=changed,other_preferences_unchanged=initial,restored_bindings=original,story_pages=pages,closed_vm_live_bytes=0,ui_retries=ui_retries,opacity_checks=opacity_checks,scope='binding edit/storage only; not a claim of executing all keyboard actions; page2 dynamic preview region excluded here; verified separately by --text-style-check')
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 
 if __name__=='__main__':main()

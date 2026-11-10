@@ -187,7 +187,8 @@ pub struct StorySession<R: Read + Seek> {
     text_renderer: Option<crate::text_render::DialogueRenderer>,
     settings: Option<crate::settings::Settings>,
     settings_sequence: u64,
-    dialogue_opacity: Option<u8>,
+    dialogue_style: Option<crate::text_render::TextStyle>,
+    preview_font: Option<crate::text_render::SharedFont>,
     pending_effect: Option<HostEffect>,
     host_sequence: u64,
     effects: Vec<String>,
@@ -214,7 +215,13 @@ impl<R: Read + Seek> StorySession<R> {
             .ok_or("story settings are not open")?;
         let reveal = self.text_reveal.as_ref().unwrap();
         let mut packet = format!("{{\"story_sequence\":{},\"story_visible\":{},\"story_elapsed_ms\":{},\"motion_elapsed_ms\":{},\"story_steps\":{},", self.page.as_ref().unwrap().sequence, reveal.count(), reveal.elapsed(), self.motion_elapsed, self.machine.steps()).into_bytes();
-        packet.extend_from_slice(&settings.packet(&mut self.system, self.settings_sequence)?[1..]);
+        packet.extend_from_slice(
+            &settings.packet(
+                &mut self.system,
+                self.settings_sequence,
+                self.preview_font.as_ref(),
+            )?[1..],
+        );
         Ok(packet)
     }
     pub fn settings_pointer(
@@ -241,17 +248,15 @@ impl<R: Read + Seek> StorySession<R> {
         match command {
             0 => {
                 if !settings.cancel_popup() {
-                    self.system
-                        .eval("dialogue-style", "return Config.BoxOpacity.tostring()")?;
-                    let opacity = self.system.result().parse::<u8>()?;
-                    if self.dialogue_opacity != Some(opacity) {
+                    let style = crate::preferences::style(&mut self.system)?;
+                    if self.dialogue_style != Some(style) {
                         if let Some(renderer) = &mut self.text_renderer {
                             let mng = self.store.read("system", "msgbox.mng")?;
-                            renderer.set_box_opacity(&mng, opacity)?;
+                            renderer.set_style(&mng, style)?;
                             let page = self.page.as_ref().unwrap();
                             renderer.prepare(page.sequence, &page.speaker, &page.text)?;
                         }
-                        self.dialogue_opacity = Some(opacity);
+                        self.dialogue_style = Some(style);
                     }
                     self.settings = None;
                     self.settings_sequence += 1;
@@ -359,7 +364,8 @@ impl<R: Read + Seek> StorySession<R> {
             text_renderer: None,
             settings: None,
             settings_sequence: 0,
-            dialogue_opacity: None,
+            dialogue_style: None,
+            preview_font: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
@@ -414,29 +420,22 @@ impl<R: Read + Seek> StorySession<R> {
         if self.failed || self.text_reveal.is_some() {
             return Err("font must be installed before interactive dialogue begins".into());
         }
-        self.system
-            .eval("dialogue-style", "return Config.BoxOpacity.tostring()")?;
-        let opacity = self.system.result().parse::<u8>()?;
-        self.dialogue_opacity = Some(opacity);
-        self.system
-            .eval("dialogue-style", "return Config.Border.tostring()")?;
-        let border = self.system.result().parse::<u8>()?;
-        self.system
-            .eval("dialogue-style", "return Config.Bold.tostring()")?;
-        if border > 1 || self.system.result() != "0" {
-            return Err("unsupported dialogue border/bold configuration".into());
-        }
+        let style = crate::preferences::style(&mut self.system)?;
+        let crate::text_render::TextStyle {
+            opacity,
+            border,
+            bold,
+        } = style;
+        self.dialogue_style = Some(style);
+        let font = crate::text_render::load_font(bytes, index)?;
+        self.preview_font = Some(font.clone());
         self.system.eval("dialogue-style", "return Config.Font")?;
         let requested = quote(self.system.result().as_bytes())?;
         let mng = self.store.read("system", "msgbox.mng")?;
-        self.text_renderer = Some(crate::text_render::DialogueRenderer::new(
-            bytes,
-            index,
-            &mng,
-            opacity,
-            border == 1,
+        self.text_renderer = Some(crate::text_render::DialogueRenderer::with_font(
+            font, &mng, style,
         )?);
-        Ok(format!("{{\"requested_font\":{requested},\"host_font_override\":true,\"opacity\":{opacity},\"border\":{border},\"font_size\":22,\"line_span\":8}}").into_bytes())
+        Ok(format!("{{\"requested_font\":{requested},\"host_font_override\":true,\"opacity\":{opacity},\"border\":{},\"bold\":{},\"font_size\":22,\"line_span\":8}}",u8::from(border),u8::from(bold)).into_bytes())
     }
     pub fn dialogue_image(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed || self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
@@ -1364,7 +1363,8 @@ mod tests {
             text_renderer: None,
             settings: None,
             settings_sequence: 0,
-            dialogue_opacity: None,
+            dialogue_style: None,
+            preview_font: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),

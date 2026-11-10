@@ -33,6 +33,7 @@ pub(crate) struct Settings {
     pressed: Option<Control>,
     pub unsupported: bool,
     editing: Option<usize>,
+    preview_text: Option<String>,
 }
 impl Settings {
     pub fn open<R: Read + Seek>(store: &mut DatGame<R>, page: u32) -> Result<Self> {
@@ -75,7 +76,26 @@ impl Settings {
                 }
             }
         }
+        let preview_text = if page == 2 {
+            let script = crate::dat::decode(&store.read("system", "config.nut")?)?;
+            let text = script
+                .lines()
+                .find_map(|l| l.trim().strip_prefix("local text = "))
+                .ok_or("missing static config preview text")?;
+            let text = text
+                .trim()
+                .strip_prefix('"')
+                .and_then(|s| s.strip_suffix('"'))
+                .ok_or("unsupported config preview literal")?;
+            if text.contains('\\') {
+                return Err("escaped config preview literal is not supported".into());
+            }
+            Some(text.to_owned())
+        } else {
+            None
+        };
         Ok(Self {
+            preview_text,
             page,
             size,
             images,
@@ -127,9 +147,14 @@ impl Settings {
             return Some(Control::Track);
         }
         for (i, name) in FIELDS.iter().enumerate() {
-            if i == 1 {
+            if preferences::maximum(i) == 1 {
                 for v in 0..=1 {
-                    if self.hit_image(&format!("= {name}#{v}"), x, y) {
+                    let key = match *name {
+                        "Bold" => "BOLD",
+                        "Border" => "BORDER",
+                        _ => name,
+                    };
+                    if self.hit_image(&format!("= {key}#{v}"), x, y) {
                         return Some(Control::Radio(i, v));
                     }
                 }
@@ -212,7 +237,12 @@ impl Settings {
         }
         Ok(None)
     }
-    pub fn packet(&self, vm: &mut SystemVm, input_sequence: u64) -> Result<Vec<u8>> {
+    pub fn packet(
+        &self,
+        vm: &mut SystemVm,
+        input_sequence: u64,
+        font: Option<&crate::text_render::SharedFont>,
+    ) -> Result<Vec<u8>> {
         let values = preferences::values(vm)?;
         let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
         let draw = |canvas: &mut RgbaImage, key: &str, offset: [i32; 2]| {
@@ -309,8 +339,28 @@ impl Settings {
                 ((track.pixels.height() - bar.pixels.height()) * (self.page - 1) / 4) as i32,
             ],
         );
-        // Preview panel image is original; dynamic sample text is a separate future feature.
-        draw(&mut canvas, "SAMPLE", [0, 0]);
+        if let Some(text) = &self.preview_text {
+            let style = preferences::style(vm)?;
+            let sample = &self.images["SAMPLE"];
+            let mut pixels = RgbaImage::from_rgba(
+                sample.pixels.width(),
+                sample.pixels.height(),
+                sample.pixels.pixels().to_vec(),
+                BUDGET,
+            )?;
+            for p in pixels.pixels_mut().as_chunks_mut::<4>().0 {
+                p[3] = (u32::from(p[3]) * u32::from(style.opacity) / 255) as u8;
+            }
+            canvas.draw(&pixels, sample.position);
+            crate::text_render::DialogueRenderer::draw_preview(
+                font.ok_or("settings preview font is not installed")?,
+                text,
+                &mut canvas,
+                self.images["TSAMPLE"].position,
+                style.bold,
+                style.border,
+            )?;
+        }
         if self.editing.is_some() {
             draw(&mut canvas, "LIST", [0, 0]);
             for (id, name) in preferences::ACTIONS.iter().enumerate() {
@@ -358,8 +408,15 @@ impl Settings {
             })
             .collect::<Result<Vec<_>>>()?
             .join(",");
+        let preview = if self.preview_text.is_some() {
+            let image = &self.images["SAMPLE"];
+            let anchor = &self.images["TSAMPLE"];
+            format!("{{\"bounds\":[{},{},{},{}],\"text_origin\":[{},{}],\"font_size\":22,\"synthetic_bold\":true}}",image.position[0],image.position[1],image.pixels.width(),image.pixels.height(),anchor.position[0],anchor.position[1])
+        } else {
+            "null".into()
+        };
         let shortcuts = shortcuts.join(",");
-        let mut packet=format!("{{\"kind\":\"settings\",\"page\":{},\"editing_slot\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}}}}\n",self.page,self.editing.unwrap_or(0),self.unsupported).into_bytes();
+        let mut packet=format!("{{\"kind\":\"settings\",\"page\":{},\"editing_slot\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"preview\":{preview},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}}}}\n",self.page,self.editing.unwrap_or(0),self.unsupported).into_bytes();
         canvas.write_png(&mut packet)?;
         Ok(packet)
     }
@@ -425,6 +482,7 @@ mod tests {
             pressed: None,
             unsupported: false,
             editing: None,
+            preview_text: None,
         };
         let mut vm = SystemVm::try_new().unwrap();
         vm.eval("setup","Config <- {ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();

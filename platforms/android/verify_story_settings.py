@@ -8,6 +8,7 @@ from PIL import Image
 def main():
     p=argparse.ArgumentParser()
     for key in ('adb','serial','reference','work','output'):p.add_argument('--'+key,required=True)
+    p.add_argument('--text-style-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[]
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -58,11 +59,11 @@ def main():
             adb('shell','input','tap',*point(x+w*(value+.5)/maximum,y+h/2))
             wait(lambda:state()['input_sequence']>=s['input_sequence']+2)
         assert state()['config'][name]==value,(name,state()['config'])
-    def launch(probe):
+    def launch(probe,title_settings=False):
         nonlocal run
         run='story_settings_'+uuid.uuid4().hex;runs.append(run)
         adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--ez','lifecycle_probe','true','--es','run_id',run)
-        title=wait(lambda:obj('title-presented.json'));x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==1)
+        title=wait(lambda:obj('title-presented.json'));x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==(3 if title_settings else 1))
         adb('shell','input','tap',*point(x+w/2,y+h/2,'游戏标题菜单'))
     def open_menu():
         old=state()['input_sequence'];control('原版设置');wait(lambda:state()['input_sequence']>old)
@@ -90,6 +91,52 @@ def main():
     assert machine=='x86_64' and bridge not in ('','0')
     apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:');sha=adb('shell','sha256sum',apk).decode().split()[0]
     assert sha==json.loads(Path('.local/android-probe/build.json').read_text())['sha256']['nekopack-arm64-probe.apk']
+    text_styles={}
+    if a.text_style_check:
+        def preview(label):
+            raw=read('settings.png');image=Image.open(io.BytesIO(raw));x,y,w,h=state()['preview']['bounds']
+            crop=np.array(image)[y:y+h,x:x+w];assert crop[:,:,:3].max()>200
+            (work/(label+'.png')).write_bytes(raw)
+            return dict(sha256=hashlib.sha256(crop.tobytes()).hexdigest(),white=int(np.all(crop[:,:,:3]>200,axis=2).sum()))
+        launch(1,True);wait(state);page(2);original=state()['config'];title_preview=preview('title-preview')
+        before=state()['input_sequence'];adb('shell','input','keyevent','KEYCODE_BACK')
+        wait(lambda:obj('title-presented.json')['input_sequence']>before)
+        title=obj('title-presented.json');x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==1)
+        adb('shell','input','tap',*point(x+w/2,y+h/2,'游戏标题菜单'));wait(lambda:state().get('story_sequence')==1)
+        page(2);assert preview('story-preview')==title_preview
+        origins=None;style_results={}
+        for bold,border in ((0,1),(0,0),(1,1),(1,0)):
+            area('= BOLD#'+str(bold));area('= BORDER#'+str(border))
+            assert state()['config']['Bold']==bold and state()['config']['Border']==border
+            sample=preview(f'preview-{bold}-{border}');events=len(lines('text-events.jsonl'))
+            close_menu();wait(lambda:len(lines('text-events.jsonl'))>events and obj('text-1.json')['complete'])
+            baseline(1);raw=read('dialogue-1.png');image=np.array(Image.open(io.BytesIO(raw)))
+            geometry=obj('dialogue-1.json')
+            if origins is None:origins=geometry['origins']
+            assert geometry['origins']==origins,'synthetic weight must preserve layout advances'
+            style_results[f'{bold}-{border}']=dict(preview=sample,dialogue_sha256=hashlib.sha256(raw).hexdigest(),dialogue_white=int(np.all(image[:,:,:3]>200,axis=2).sum()))
+            (work/f'dialogue-{bold}-{border}.png').write_bytes(raw)
+            open_menu();page(2)
+        assert len({r['preview']['sha256'] for r in style_results.values()})==4
+        assert len({r['dialogue_sha256'] for r in style_results.values()})==4
+        for border in (0,1):
+            assert style_results[f'1-{border}']['preview']['white']>style_results[f'0-{border}']['preview']['white']
+            assert style_results[f'1-{border}']['dialogue_white']>style_results[f'0-{border}']['dialogue_white']
+        opacity=[]
+        for value in (0,127,255):
+            set_value('BoxOpacity',value,255);opacity.append(preview('preview-opacity-'+str(value))['sha256'])
+        assert len(set(opacity))==3
+        set_value('BoxOpacity',original['BoxOpacity'],255)
+        close_menu();finish()
+        launch(1);wait(state)
+        assert state()['config']['Bold']==1 and state()['config']['Border']==0
+        assert obj('dialogue-font.json')['bold']==1 and obj('dialogue-font.json')['border']==0
+        page(2);assert preview('restarted-preview')==style_results['1-0']['preview']
+        area('= BOLD#'+str(original['Bold']));area('= BORDER#'+str(original['Border']))
+        assert state()['config']==original
+        close_menu();wait(lambda:obj('text-1.json')['complete']);finish()
+        text_styles=dict(combinations=style_results,title_story_preview_equal=True,preview_opacity_hashes=opacity,restart_styles_preserved=True,layout_advances_unchanged=True,original_preferences_restored=original)
+        print('four text styles, live preview, opacity and restart passed',flush=True)
     launch(1);wait(state);initial=state()['config'];frozen=snapshot(state())
     assert initial['TextSpeed']<100, 'partial-text regression requires non-instant text; restore pre-test configuration first'
     (work/('initial-config-'+run+'.json')).write_text(json.dumps(initial),encoding='utf8')
@@ -160,6 +207,6 @@ def main():
     close_menu();wait(lambda:obj('text-1.json') and obj('text-1.json')['complete'])
     assert b'No such file' in read('lifecycle-closed.json')
     baseline(1);finish()
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

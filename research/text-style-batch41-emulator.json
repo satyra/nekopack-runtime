@@ -1,0 +1,120 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "b86f031c1f51b5f5712af7db46272de2061d79725cacd4bf17d1777815a5fbaf",
+  "runs": [
+    "story_settings_4fd81c759694459483cb8c4c013545cb",
+    "story_settings_7ebd534047de4ef3aa26881f0338d896",
+    "story_settings_b7bbdf7312bd4fb786859e10b8ec5252",
+    "story_settings_487ef31e4cc346ffac43c4b45ca4da13",
+    "story_settings_1040d23ad41a40ad81eb1e1f4b262d9e"
+  ],
+  "partial_dialogue": {
+    "story_sequence": 1,
+    "story_visible": 7,
+    "story_elapsed_ms": 126,
+    "motion_elapsed_ms": 0,
+    "story_steps": 142
+  },
+  "resumed_dialogue": {
+    "sequence": 1,
+    "elapsed_ms": 199,
+    "visible": 11,
+    "complete": false,
+    "advance": false,
+    "stop_voice": false,
+    "click": false
+  },
+  "settings_time_excluded": true,
+  "opacity_applies_to_current_page": true,
+  "text_speed_applies_next_page": true,
+  "other_settings_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191,
+    "Bold": 0,
+    "Border": 1
+  },
+  "background_keeps_modal_paused": true,
+  "bgm_pause_resume": true,
+  "motion_checkpoint": {
+    "story_sequence": 56,
+    "story_visible": 6,
+    "story_elapsed_ms": 102,
+    "motion_elapsed_ms": 34,
+    "story_steps": 412
+  },
+  "motion_finishes_after_return": true,
+  "story_pages_verified": 57,
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [],
+  "read_transport_retries": [],
+  "back_keeps_activity_alive": true,
+  "back_cancels_popup_before_leaving_settings": true,
+  "back_returns_to_same_dialogue": true,
+  "bgm_same_player_resumed": true,
+  "new_gain_applied_before_resume": true,
+  "intro_return_button_used": true,
+  "text_styles": {
+    "combinations": {
+      "0-1": {
+        "preview": {
+          "sha256": "ee043593da954d977d6bd00ceb242fc4ece2733a2093fa6aa04795ed4f3c5b81",
+          "white": 2309
+        },
+        "dialogue_sha256": "32bd6f115b2e53918726633819ead2ba78df30de2167debaf2f7812c81248e96",
+        "dialogue_white": 1138
+      },
+      "0-0": {
+        "preview": {
+          "sha256": "d22df59ff52fb29904ab7c756f02c09923ae8dc8fb1c752fe9a566222ebf35c0",
+          "white": 2353
+        },
+        "dialogue_sha256": "bab7324764c807f3d548cfab396d725ac34190b935dd411146cdecb27bd77352",
+        "dialogue_white": 1445
+      },
+      "1-1": {
+        "preview": {
+          "sha256": "5facdf72d2323639faf10470cdd8d292d7a53b1a48d8d7a0653ea54d86152966",
+          "white": 3434
+        },
+        "dialogue_sha256": "825f875b0b5f2f39edd2b0c11908f0c3001cce4f26506c9ee7fb5c7c0caa8363",
+        "dialogue_white": 1703
+      },
+      "1-0": {
+        "preview": {
+          "sha256": "ba47ad702c193fef85ae683bfdd31dc96709feb6dee88092df65252a23da2fd1",
+          "white": 3484
+        },
+        "dialogue_sha256": "b0f6d497bbf0ae9457f81187da395d18c3dd5d7462524aebca2bd381ac2cb263",
+        "dialogue_white": 2016
+      }
+    },
+    "title_story_preview_equal": true,
+    "preview_opacity_hashes": [
+      "2f072d89829c71ac6efc5e21788c4bcb7cb377dfac2118993e77e053cd84c3fa",
+      "550f04e3ec1903b3205495002295f973c02d11ec038ad0903d1203a62afe5d89",
+      "8270376e21244e3ffb45c4eda16385ce5ba36521dfdbabc473116a08358b3fa7"
+    ],
+    "restart_styles_preserved": true,
+    "layout_advances_unchanged": true,
+    "original_preferences_restored": {
+      "TextSpeed": 50,
+      "KeepVoice": 1,
+      "VolBGM": 50,
+      "VolVO": 75,
+      "VolSE": 50,
+      "VolENV": 50,
+      "VolSYS": 50,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1
+    }
+  }
+}
