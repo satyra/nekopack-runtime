@@ -14,6 +14,7 @@ def main():
     p.add_argument('--shortcut-check',action='store_true')
     p.add_argument('--hide-check',action='store_true')
     p.add_argument('--menu-check',action='store_true')
+    p.add_argument('--reset-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[];history_profile=''
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -101,7 +102,11 @@ def main():
     def menu_action(name):
         old=menu_state();button=next(b for b in old['buttons'] if b['action']==name);assert button['enabled']
         x,y,w,h=button['bounds'];adb('shell','input','tap',*point(x+w/2,y+h/2,'原版剧情菜单'))
-        return wait(lambda:menu_state() if menu_state()['kind']=='story_menu_closed' or (menu_state()['input_sequence']>old['input_sequence']+1 and menu_state()['pointer_kind']==2 and menu_state()['accepting']) else None)
+        def presented():
+            current=menu_state()
+            if current['kind']=='story_menu_closed' or (current['input_sequence']>old['input_sequence']+1 and current['pointer_kind']==2 and current['accepting']):return current
+            return None
+        return wait(presented)
     def menu_cancel():
         before=menu_state()['checkpoint'];count=len(lines('text-events.jsonl'))
         adb('shell','input','keyevent','KEYCODE_BACK');wait(lambda:menu_state()['kind']=='story_menu_closed')
@@ -109,6 +114,57 @@ def main():
         wait(lambda:len(lines('text-events.jsonl'))>count)
         resumed=lines('text-events.jsonl')[count];assert resumed['sequence']==before['sequence'] and not resumed['advance']
         assert b'No such file' in read('lifecycle-closed.json')
+    reset_results=[]
+    if a.reset_check:
+        history_profile='reset_'+uuid.uuid4().hex
+        def restart_title():
+            nonlocal run
+            old_run=run;before=menu_state()['checkpoint'];events=lines('text-events.jsonl')
+            pid=adb('shell','pidof',pkg).decode().strip()
+            menu_action('RESET');closed=wait(lambda:obj('return-title.json'))
+            assert closed['sequence']==before['sequence'] and closed['native']==dict(closed=True,vm_live_bytes=0)
+            audio=closed['audio'];assert audio['closed'] and all(audio[k]==0 for k in ('players','pending_start','paused_players','gains','tokens','audio_cache_files'))
+            assert all(not audio[k] for k in ('focused','motion_active','animator','bgm_animator'))
+            old_host=lines('host-events.jsonl');assert old_host[-1]['event']=='released'
+            run=closed['new_run'];runs.append(run)
+            title=wait(lambda:obj('title-presented.json'));created=obj('session-created.json')
+            assert created['parent']==old_run and created['instance']!=closed['old_instance'] and created['time_ms']>=closed['closed_at_ms']
+            assert adb('shell','pidof',pkg).decode().strip()==pid,'reset unexpectedly restarted Android process'
+            assert title['kind']=='title' and next(b for b in title['buttons'] if b['id']==1)['enabled']
+            # The old Activity must never close the new thread-local VM on destruction.
+            time.sleep(1)
+            def old_read(name):return adb('exec-out','run-as',pkg,'cat',f'files/{old_run}/{name}')
+            assert b'No such file' in old_read('error.txt') and b'No such file' in old_read('lifecycle-closed.json')
+            assert [json.loads(x) for x in old_read('text-events.jsonl').splitlines() if x.startswith(b'{')]==events
+            assert [json.loads(x) for x in old_read('host-events.jsonl').splitlines() if x.startswith(b'{')]==old_host
+            x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==1)
+            adb('shell','input','tap',*point(x+w/2,y+h/2,'游戏标题菜单'))
+            wait(lambda:obj('text-1.json') and obj('text-1.json')['complete']);baseline(1)
+            first=lines('text-events.jsonl')[0];assert first['sequence']==1 and first['elapsed_ms']==0 and not first['auto'] and not first['skip']
+            reset_results.append(dict(old_run=old_run,new_run=run,old_sequence=before['sequence'],closure=closed,new_instance=created['instance'],same_process=True,old_callbacks_stopped=True,new_first_page_matches_baseline=True,first_page_read=first['read']))
+            print('reset at page',before['sequence'],'old VM/audio cleanup and new first page passed',flush=True)
+            return first
+        launch(-1,menu_probe=1);wait(lambda:menu_state() and menu_state()['kind']=='story_menu')
+        first=restart_title();assert not first['read'],'unacknowledged first page was incorrectly marked read'
+        control('原版设置');wait(state);saved_config=state()['config'];close_menu()
+        control('继续');wait(lambda:obj('text-2.json') and obj('text-2.json')['complete']);baseline(2)
+        control('剧情菜单');wait(lambda:menu_state() and menu_state()['kind']=='story_menu');first=restart_title();assert first['read']
+        control('原版设置');wait(state);assert state()['config']==saved_config;close_menu()
+        # Reach a real BGM/voice chapter, reset with the BGM player still live.
+        for n in range(1,14):
+            wait(lambda:obj(f'text-{n}.json') and obj(f'text-{n}.json')['complete']);baseline(n)
+            if n==13:break
+            control('继续')
+            if n==12:wait(lambda:obj('movie-8-info.json'));control('返回剧情')
+        control('剧情菜单');wait(lambda:menu_state() and menu_state()['kind']=='story_menu');first=restart_title();assert first['read']
+        bgm_closed=adb('exec-out','run-as',pkg,'cat',f"files/{reset_results[-1]['old_run']}/audio-lifecycle.jsonl")
+        before_audio=[json.loads(x) for x in bgm_closed.splitlines() if x.startswith(b'{') and json.loads(x)['event']=='return_title_before_close'][-1]
+        assert before_audio['channels']['bgm']['playing']
+        reset_results[-1]['active_bgm_released']=True
+        control('原版设置');wait(state);assert state()['config']==saved_config;close_menu()
+        control('继续');wait(lambda:obj('text-2.json') and obj('text-2.json')['complete']);baseline(2);finish()
+        history_profile=''
+        print('three title resets, old VM/audio cleanup, read history and fresh start passed',flush=True)
     if a.menu_check:
         launch(-1,menu_probe=1);wait(lambda:menu_state() and menu_state()['kind']=='story_menu')
         first=menu_state();assert first['checkpoint']['visible']>0 and not obj('text-1.json')['complete']
@@ -121,7 +177,7 @@ def main():
         start=point(x+w/2,y+h/2,'原版剧情菜单');end=point(0,0,'原版剧情菜单')
         adb('shell','input','swipe',*start,*end,'400');wait(lambda:menu_state()['input_sequence']>=2 and menu_state()['pointer_kind']==2 and menu_state()['accepting'])
         assert menu_state()['kind']=='story_menu' and menu_state()['checkpoint']==checkpoint
-        for action in ('SAVE','LOAD','RESET'):
+        for action in ('SAVE','LOAD'):
             unsupported=menu_action(action);assert unsupported['unsupported']==action and unsupported['checkpoint']==checkpoint
         adb('shell','input','keyevent','KEYCODE_F1');time.sleep(.3);assert menu_state()['kind']=='story_menu' and state() is None
         adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2)
@@ -134,9 +190,9 @@ def main():
         saved=state()['config'];page(2);set_value('TextSpeed',100);set_value('TextSpeed',saved['TextSpeed']);close_menu()
         assert obj('text-2.json') is None
         control('继续');wait(lambda:obj('text-2.json'));baseline(2)
-        control('剧情菜单');wait(lambda:menu_state()['kind']=='story_menu');menu_action('QUIT')
+        control('剧情菜单');wait(lambda:menu_state() and menu_state()['kind']=='story_menu');menu_action('QUIT')
         wait(lambda:b'VM live bytes=0' in read('closed.txt'))
-        menu_results=dict(partial_checkpoint=checkpoint,original_buttons=first['buttons'],drag_cancel=True,unsupported_save_load_reset_preserve_page=True,function_keys_blocked=True,background_preserves_menu=True,back_consumed=True,f2_opens=True,config_returns_same_page=True,next_after_close=True,menu_quit_closes_vm=True,closed_vm_live_bytes=0)
+        menu_results=dict(partial_checkpoint=checkpoint,original_buttons=first['buttons'],drag_cancel=True,unsupported_save_load_preserve_page=True,function_keys_blocked=True,background_preserves_menu=True,back_consumed=True,f2_opens=True,config_returns_same_page=True,next_after_close=True,menu_quit_closes_vm=True,closed_vm_live_bytes=0)
         print('original story menu, F2, unsupported action, nested config and Back passed',flush=True)
     hide_results={}
     hidden_label='隐藏对话框；点击恢复'
@@ -446,6 +502,6 @@ def main():
         launch(1);wait(state);assert state()['config']==auto_original;close_menu();finish()
         auto_results=dict(auto_only_advances=55,voice_completion_callbacks=len(completions),voiced_pages=voiced,unvoiced_pages=unvoiced,unvoiced_delay_min_ms=502,background_freezes=True,settings_freezes=True,auto_speed_saved_and_restored=True,manual_cancel_stops_progress=True,motion_checkpoint=auto_frozen)
         print('auto playback, voice completion, settings and cancellation passed',flush=True)
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results,hide_dialogue=hide_results,story_menu=menu_results)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results,hide_dialogue=hide_results,story_menu=menu_results,title_reset=reset_results)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

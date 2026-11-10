@@ -1,0 +1,10 @@
+{
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "registration_va": "0x40715e",
+  "wrapper_va": "0x40c518",
+  "request_va": "0x4530a8",
+  "target_string": "title",
+  "request_flag": "0x5510cd",
+  "body_sha256": "25b52d927c2d3b00802823990f1a73b12bf86308429ccd73db98973bc7c71f68",
+  "scope": "Pinned native wrapper passes title to 0x48963c and sets a request flag. Does not prove internal VM ownership, audio release, or all native callee behavior."
+}

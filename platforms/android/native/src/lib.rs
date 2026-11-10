@@ -490,14 +490,30 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .effect_frame(sequence, elapsed_ms),
-                3 => {
+                3 | 39 => {
+                    if operation == 39
+                        && !state
+                            .as_ref()
+                            .ok_or("no story session")?
+                            .return_title_requested()
+                    {
+                        return Err("return title was not requested".into());
+                    }
                     TITLE.with(|t| *t.borrow_mut() = None);
                     *state = None;
                     check(
                         SystemVm::validation_live_bytes() == 0,
                         "story close VM leak",
                     )?;
-                    Ok(b"{\"closed\":true}\n".to_vec())
+                    if operation == 39 {
+                        Ok(format!(
+                            "{{\"closed\":true,\"vm_live_bytes\":{}}}\n",
+                            SystemVm::validation_live_bytes()
+                        )
+                        .into_bytes())
+                    } else {
+                        Ok(b"{\"closed\":true}\n".to_vec())
+                    }
                 }
                 _ => Err("unknown story operation".into()),
             }

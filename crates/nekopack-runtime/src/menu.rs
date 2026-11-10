@@ -159,7 +159,7 @@ impl Menu {
     }
 }
 pub(crate) fn supported(name: &str) -> bool {
-    matches!(name, "CONFIG" | "QUIT")
+    matches!(name, "CONFIG" | "QUIT" | "RESET")
 }
 
 #[cfg(test)]
@@ -169,11 +169,11 @@ impl Menu {
         images.insert(
             0,
             Image {
-                pixels: RgbaImage::transparent(3, 1, 12).unwrap(),
+                pixels: RgbaImage::transparent(4, 1, 16).unwrap(),
                 position: [0, 0],
             },
         );
-        let buttons = ["SAVE", "CONFIG", "QUIT"]
+        let buttons = ["SAVE", "CONFIG", "QUIT", "RESET"]
             .iter()
             .enumerate()
             .map(|(i, name)| {
@@ -197,7 +197,7 @@ impl Menu {
             images,
             buttons,
             base: 0,
-            background: RgbaImage::filled(3, 1, [0, 0, 0, 255], 12).unwrap(),
+            background: RgbaImage::filled(4, 1, [0, 0, 0, 255], 16).unwrap(),
             pressed: None,
             input_sequence: 0,
         }

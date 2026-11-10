@@ -1,0 +1,368 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "3c9000f4a88013bdf80ca4715542e31263778dfff8acb372c60b71307cdd204a",
+  "runs": [
+    "story_settings_4d0f19047b1146578dc7cd5fabf2bbcc",
+    "story_restart_23d936e5af5548df9ba6e14ff245e031",
+    "story_restart_02281d8c9b2d4b109d8a0251cf880001",
+    "story_restart_8ba31fb1fd124d43a942127585abcb9f",
+    "story_settings_720981b5b6dd4c43a47e97ef849b470e",
+    "story_settings_ad430c9d566042ff9ae6bbb2901c1006",
+    "story_settings_56ad4eb94e224d88b26cd8237477ca86",
+    "story_settings_2759e7eb0acd4df7a33725375e05b3f7",
+    "story_settings_dd93e9bd2fbd407b88dfef0d85fc741a",
+    "story_settings_0af58452ecb043cf88ce1c9ab0ebc662",
+    "story_settings_98b81b3d46014224ba401aca4f5afd80",
+    "story_settings_748bd862a01849689d170dba5e8a412f",
+    "story_settings_a5dd8e3c6c0b4b3eb0c61652386dabef",
+    "story_settings_0026fc2ee7184c9b923e9d1b9c121205",
+    "story_settings_c21be39a443a420a9829d00c39fc6a46",
+    "story_settings_87ab6c9244264eeb9773f718d534b09b",
+    "story_settings_468b4e09c1a048a7ba7e9eb49b6386b8"
+  ],
+  "partial_dialogue": {
+    "story_sequence": 1,
+    "story_visible": 7,
+    "story_elapsed_ms": 126,
+    "motion_elapsed_ms": 0,
+    "story_steps": 142
+  },
+  "resumed_dialogue": {
+    "sequence": 1,
+    "skip": false,
+    "read": true,
+    "auto": false,
+    "voice_finished": false,
+    "elapsed_ms": 216,
+    "visible": 12,
+    "complete": false,
+    "advance": false,
+    "stop_voice": false,
+    "click": false
+  },
+  "settings_time_excluded": true,
+  "opacity_applies_to_current_page": true,
+  "text_speed_applies_next_page": true,
+  "other_settings_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191,
+    "Bold": 0,
+    "Border": 1,
+    "AutoSpeed": 50,
+    "SkipNoRead": 0
+  },
+  "background_keeps_modal_paused": true,
+  "bgm_pause_resume": true,
+  "motion_checkpoint": {
+    "story_sequence": 56,
+    "story_visible": 6,
+    "story_elapsed_ms": 103,
+    "motion_elapsed_ms": 36,
+    "story_steps": 412
+  },
+  "motion_finishes_after_return": true,
+  "story_pages_verified": 57,
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [
+    "ERROR: null root node returned by UiTestAutomationBridge.\r\n",
+    "ERROR: null root node returned by UiTestAutomationBridge.\r\n"
+  ],
+  "read_transport_retries": [],
+  "back_keeps_activity_alive": true,
+  "back_cancels_popup_before_leaving_settings": true,
+  "back_returns_to_same_dialogue": true,
+  "bgm_same_player_resumed": true,
+  "new_gain_applied_before_resume": true,
+  "intro_return_button_used": true,
+  "text_styles": {},
+  "auto_playback": {
+    "auto_only_advances": 55,
+    "voice_completion_callbacks": 19,
+    "voiced_pages": 19,
+    "unvoiced_pages": 36,
+    "unvoiced_delay_min_ms": 502,
+    "background_freezes": true,
+    "settings_freezes": true,
+    "auto_speed_saved_and_restored": true,
+    "manual_cancel_stops_progress": true,
+    "motion_checkpoint": {
+      "story_sequence": 56,
+      "story_visible": 6,
+      "story_elapsed_ms": 106,
+      "motion_elapsed_ms": 43,
+      "story_steps": 412
+    }
+  },
+  "skip_playback": {
+    "profile": "5f2ba14f68404ee29958b7e721d351a1",
+    "current_unread_toggle_advances_once": true,
+    "read_pages_after_restart": 5,
+    "stops_on_unread_page": 6,
+    "skipped_voice_pages": [
+      4,
+      5
+    ],
+    "voice_starts_during_read_run": 1,
+    "force_unread_page": 7,
+    "manual_cancel": true,
+    "skip_preference_restart": true,
+    "original_skip_preference": 0
+  },
+  "shortcut_execution": {
+    "original_bindings": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ],
+    "restored_bindings": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ],
+    "current_binding_auto": true,
+    "current_binding_skip": true,
+    "cancel_skip_while_running": true,
+    "f1_opens_settings": true,
+    "modal_blocks_quit": true,
+    "unsupported_save_no_advance": true,
+    "unbound_no_advance": true,
+    "quit_vm_live_bytes": 0,
+    "bindings_survive_restart": true,
+    "original_bindings_restored": true
+  },
+  "hide_dialogue": {
+    "partial_text": {
+      "hidden": true,
+      "sequence": 1,
+      "visible": 7,
+      "elapsed_ms": 121,
+      "steps": 142,
+      "auto": false,
+      "skip": false
+    },
+    "restored_text": {
+      "sequence": 1,
+      "skip": false,
+      "read": true,
+      "auto": false,
+      "voice_finished": true,
+      "elapsed_ms": 6819,
+      "visible": 17,
+      "complete": true,
+      "advance": false,
+      "stop_voice": false,
+      "click": false
+    },
+    "frozen_viewport_sha256": "b6860f66608d1bd226c0fbba081be82aed58759c06cbd11d05ff8319fcc295ea",
+    "back_space_touch_enter_restore": true,
+    "hide_binding_executes": true,
+    "function_keys_blocked_while_hidden": true,
+    "original_binding_restored": true,
+    "bgm_continues_hidden": true,
+    "bgm_same_player": true,
+    "background_preserves_hidden": true,
+    "background_pauses_audio": true,
+    "motion_continues_behind_frozen_snapshot": true
+  },
+  "story_menu": {
+    "partial_checkpoint": {
+      "sequence": 1,
+      "steps": 142,
+      "visible": 7,
+      "elapsed_ms": 122
+    },
+    "original_buttons": [
+      {
+        "action": "CONFIG",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          487,
+          275,
+          307,
+          38
+        ]
+      },
+      {
+        "action": "LOAD",
+        "enabled": true,
+        "supported": false,
+        "bounds": [
+          517,
+          193,
+          247,
+          34
+        ]
+      },
+      {
+        "action": "QUIT",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          487,
+          454,
+          307,
+          37
+        ]
+      },
+      {
+        "action": "RESET",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          467,
+          365,
+          347,
+          37
+        ]
+      },
+      {
+        "action": "SAVE",
+        "enabled": true,
+        "supported": false,
+        "bounds": [
+          517,
+          113,
+          247,
+          33
+        ]
+      }
+    ],
+    "drag_cancel": true,
+    "unsupported_save_load_preserve_page": true,
+    "function_keys_blocked": true,
+    "background_preserves_menu": true,
+    "back_consumed": true,
+    "f2_opens": true,
+    "config_returns_same_page": true,
+    "next_after_close": true,
+    "menu_quit_closes_vm": true,
+    "closed_vm_live_bytes": 0,
+    "bgm_background_pauses": true,
+    "bgm_same_player_resumes": true
+  },
+  "title_reset": [
+    {
+      "old_run": "story_settings_4d0f19047b1146578dc7cd5fabf2bbcc",
+      "new_run": "story_restart_23d936e5af5548df9ba6e14ff245e031",
+      "old_sequence": 1,
+      "closure": {
+        "sequence": 1,
+        "old_instance": "3f9e6004-6cef-441f-ab4c-b3e53a665b4e",
+        "new_run": "story_restart_23d936e5af5548df9ba6e14ff245e031",
+        "native": {
+          "closed": true,
+          "vm_live_bytes": 0
+        },
+        "audio": {
+          "closed": true,
+          "players": 0,
+          "pending_start": 0,
+          "paused_players": 0,
+          "gains": 0,
+          "tokens": 0,
+          "focused": false,
+          "motion_active": false,
+          "animator": false,
+          "bgm_animator": false,
+          "audio_cache_files": 0
+        },
+        "closed_at_ms": 4546940
+      },
+      "new_instance": "43eab0ce-3c40-4c66-8c04-ebcca5c3d23b",
+      "same_process": true,
+      "old_callbacks_stopped": true,
+      "new_first_page_matches_baseline": true,
+      "first_page_read": false
+    },
+    {
+      "old_run": "story_restart_23d936e5af5548df9ba6e14ff245e031",
+      "new_run": "story_restart_02281d8c9b2d4b109d8a0251cf880001",
+      "old_sequence": 2,
+      "closure": {
+        "sequence": 2,
+        "old_instance": "43eab0ce-3c40-4c66-8c04-ebcca5c3d23b",
+        "new_run": "story_restart_02281d8c9b2d4b109d8a0251cf880001",
+        "native": {
+          "closed": true,
+          "vm_live_bytes": 0
+        },
+        "audio": {
+          "closed": true,
+          "players": 0,
+          "pending_start": 0,
+          "paused_players": 0,
+          "gains": 0,
+          "tokens": 0,
+          "focused": false,
+          "motion_active": false,
+          "animator": false,
+          "bgm_animator": false,
+          "audio_cache_files": 0
+        },
+        "closed_at_ms": 4564542
+      },
+      "new_instance": "961f8ad9-7da8-4c38-bc4e-2bee9abd9616",
+      "same_process": true,
+      "old_callbacks_stopped": true,
+      "new_first_page_matches_baseline": true,
+      "first_page_read": true
+    },
+    {
+      "old_run": "story_restart_02281d8c9b2d4b109d8a0251cf880001",
+      "new_run": "story_restart_8ba31fb1fd124d43a942127585abcb9f",
+      "old_sequence": 13,
+      "closure": {
+        "sequence": 13,
+        "old_instance": "961f8ad9-7da8-4c38-bc4e-2bee9abd9616",
+        "new_run": "story_restart_8ba31fb1fd124d43a942127585abcb9f",
+        "native": {
+          "closed": true,
+          "vm_live_bytes": 0
+        },
+        "audio": {
+          "closed": true,
+          "players": 0,
+          "pending_start": 0,
+          "paused_players": 0,
+          "gains": 0,
+          "tokens": 0,
+          "focused": false,
+          "motion_active": false,
+          "animator": false,
+          "bgm_animator": false,
+          "audio_cache_files": 0
+        },
+        "closed_at_ms": 4622058
+      },
+      "new_instance": "f17a2a3d-7336-4e9f-b001-55e8f4790978",
+      "same_process": true,
+      "old_callbacks_stopped": true,
+      "new_first_page_matches_baseline": true,
+      "first_page_read": true,
+      "active_bgm_released": true
+    }
+  ]
+}

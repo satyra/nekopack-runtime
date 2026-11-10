@@ -165,6 +165,7 @@ class MainActivity : Activity() {
         val runId=intent.getStringExtra("run_id") ?: "story-manual"
         require(Regex("[a-zA-Z0-9_-]{1,64}").matches(runId))
         val root=File(filesDir,runId);root.mkdirs();storyRunRoot=root
+        File(root,"session-created.json").writeText(JSONObject().put("instance",instanceId).put("parent",intent.getStringExtra("restart_parent") ?: JSONObject.NULL).put("time_ms",android.os.SystemClock.elapsedRealtime()).toString())
         val layout=LinearLayout(this);layout.orientation=LinearLayout.VERTICAL
         val image=ImageView(this);image.scaleType=ImageView.ScaleType.FIT_CENTER
         val stage=FrameLayout(this);stage.setBackgroundColor(android.graphics.Color.BLACK)
@@ -316,6 +317,33 @@ class MainActivity : Activity() {
         }
         hiddenView.setOnClickListener{restoreDialogue()}
         hiddenBack={if(!storyClosing&&(dialogueHidden||hideBusy)){restoreDialogue();true}else false}
+        fun returnToTitle(){
+            storyClosing=true;shortcutKey=null;storyMenuBack=null;hiddenBack=null;settingsBack=null
+            controls.visibility=android.view.View.GONE;dialogue.stop();movieHost?.close()
+            storyEffects!!.lifecycleAudio("return_title_before_close");storyEffects!!.close()
+            val audioClosed=storyEffects!!.cleanupState()
+            val childRun="story_restart_"+java.util.UUID.randomUUID().toString().replace("-","")
+            text.visibility=android.view.View.VISIBLE;text.text="正在返回标题…"
+            worker.execute{try{
+                check(audioClosed.getBoolean("closed") && audioClosed.getInt("players")==0 && audioClosed.getInt("audio_cache_files")==0){"audio cleanup incomplete"}
+                persistConfig()
+                val history=story(intArrayOf(),31,0)
+                check(history.size>=5 && history.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,82,68,1))){String(history,Charsets.UTF_8)}
+                check(getPreferences(MODE_PRIVATE).edit().putString(readKey,android.util.Base64.encodeToString(history,android.util.Base64.NO_WRAP)).commit())
+                val nativeClosed=JSONObject(String(story(intArrayOf(),39,0),Charsets.UTF_8))
+                check(nativeClosed.optBoolean("closed") && nativeClosed.getLong("vm_live_bytes")==0L){nativeClosed.toString()}
+                storyLoaded=false
+                val report=JSONObject().put("sequence",sequence).put("old_instance",instanceId).put("new_run",childRun)
+                    .put("native",nativeClosed).put("audio",audioClosed).put("closed_at_ms",android.os.SystemClock.elapsedRealtime())
+                val tmp=File(root,"return-title.tmp");tmp.writeText(report.toString());check(tmp.renameTo(File(root,"return-title.json")))
+                runOnUiThread{menuTimeline.post{if(!isDestroyed&&!isFinishing){
+                    val nextTitle=Intent(this,MainActivity::class.java).putExtra("title_game",game).putExtra("run_id",childRun).putExtra("restart_parent",runId)
+                        .putExtra("lifecycle_probe",intent.getBooleanExtra("lifecycle_probe",false))
+                    intent.getStringExtra("read_history_probe")?.let{nextTitle.putExtra("read_history_probe",it)}
+                    startActivity(nextTitle);finish()
+                }}}
+            }catch(error:Throwable){fail(error)}}
+        }
         lateinit var storyMenuView:TitleView
         fun presentStoryMenu(packet:ByteArray,unlock:Boolean,inputKind:Int=-1){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
@@ -332,7 +360,7 @@ class MainActivity : Activity() {
                     autoEnabled=false;skipEnabled=false;auto.text="自动：关";skip.text="快进：关"
                     when(meta.getString("action")){
                         "CONFIG"->originalSettings.performClick()
-                        "HIDE"->hide.performClick()
+                        "RESET"->returnToTitle()
                         "QUIT"->close.performClick()
                         else->dialogue.resume()
                     }

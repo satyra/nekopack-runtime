@@ -164,12 +164,17 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         File(root,"voice-next-events.jsonl").appendText(event.toString()+"\n")
     }
     private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
+    internal fun cleanupState():JSONObject = JSONObject().put("closed",closed).put("players",players.size)
+        .put("pending_start",pendingStart.size).put("paused_players",focusPaused.size).put("gains",gains.size).put("tokens",audioTokens.size)
+        .put("focused",focused).put("motion_active",motionSequence!=0L).put("animator",animator!=null).put("bgm_animator",bgmAnimator!=null)
+        .put("audio_cache_files",root.listFiles()!!.count{it.name.startsWith("audio-")&&it.extension=="ogg"})
     fun close(){
         if(closed)return
         stopMotion();closed=true;timeline.close();animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
         val owned=players.values.toList();players.clear();gains.clear();focusPaused.clear();pendingStart.clear();audioTokens.clear()
         for((player,_) in owned)player.release()
         if(focused)audio.abandonAudioFocus(focus)
+        focused=false
         val undeleted=owned.map{it.second}.filter{!it.delete()}
         log("released","all",0,players.size.toLong())
         if(undeleted.isNotEmpty())failure(IllegalStateException("audio cache cleanup failed"))
