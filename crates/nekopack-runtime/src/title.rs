@@ -216,8 +216,15 @@ impl<R: Read + Seek> TitleSession<R> {
             return Err("settings are not open".into());
         }
         match command {
-            0 => self.settings = None,
-            1 => crate::preferences::reset(&mut self.system)?,
+            0 => {
+                if !self.settings.as_mut().unwrap().cancel_popup() {
+                    self.settings = None
+                }
+            }
+            1 => {
+                self.settings.as_mut().unwrap().cancel_popup();
+                crate::preferences::reset(&mut self.system)?
+            }
             _ => return Err("unknown settings command".into()),
         }
         self.input_sequence += 1;

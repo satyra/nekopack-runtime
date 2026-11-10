@@ -1,0 +1,37 @@
+{
+  "batch": 37,
+  "rust": {
+    "command": "cargo test --workspace",
+    "passed": 136,
+    "isolated_native_probe_runs": 7,
+    "status": "passed"
+  },
+  "clippy": {
+    "command": "cargo clippy --workspace --all-targets -- -D warnings",
+    "status": "passed"
+  },
+  "python": {
+    "command": "python -m unittest discover -s research -p test_*.py",
+    "passed": 17
+  },
+  "android_build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "705e1aa197f3e53022e5416b7e00be7273050a946e0c253e617084e836615a0d",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "8a13c37f6e81912d137202d27b03e7f47a6eca36a8c3511dc536817be9ae7bb7"
+    }
+  },
+  "device_result": "shortcut-edit-batch37-emulator.json",
+  "execution": "ARM64 translated on x86_64 emulator via libnb.so; no physical device verification",
+  "log_sha256": {
+    "tests": "a051757c7194f0d8eb9ff879735a30413249dd439a9286ef60b6199a140da324",
+    "clippy": "369da142ece414860c6b1b3cf442fc13a85e3d2ffdd11da40a5ff33f6c6983ac",
+    "python": "3836c853dfe1b35eb3a30385bc3019a5395047520e0798aef4827ef6d422a1de",
+    "build": "b9c370f50759dd9d39b46405877e0a9fd32160248dc8a0685c4fb21e8dab362b",
+    "device": "eda9babd47fd62246307e02a7b96b293ae751ece58fffeb46694aac7dc94c77b"
+  }
+}

@@ -178,7 +178,7 @@ class MainActivity : Activity() {
         fun persistConfig(){
             if(!titleFirst)return
             val bytes=story(intArrayOf(),20,0)
-            check(bytes.size==12 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,1))){String(bytes,Charsets.UTF_8)}
+            check(bytes.size==22 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,2))){String(bytes,Charsets.UTF_8)}
             check(getPreferences(MODE_PRIVATE).edit().putString(preferenceKey,android.util.Base64.encodeToString(bytes,android.util.Base64.NO_WRAP)).commit()){"configuration save failed"}
         }
         var sequence=0L
@@ -318,7 +318,7 @@ class MainActivity : Activity() {
                 show(packet)
         }
         val configControls=LinearLayout(this);configControls.orientation=LinearLayout.VERTICAL;configControls.visibility=android.view.View.GONE
-        val configNotice=TextView(this);configNotice.text="已接通：文字速度、五路音量、语音保留。其他选项及示例文字预览尚未接入。";configControls.addView(configNotice)
+        val configNotice=TextView(this);configNotice.text="已接通：文字速度、五路音量、语音保留、F3～F12 绑定编辑。其他选项及示例文字预览尚未接入。";configControls.addView(configNotice)
         val configButtons=LinearLayout(this);val configBack=Button(this);configBack.text="返回标题";val configReset=Button(this);configReset.text="恢复已接通选项默认值"
         configButtons.addView(configBack,LinearLayout.LayoutParams(0,-2,1f));configButtons.addView(configReset,LinearLayout.LayoutParams(0,-2,1f));configControls.addView(configButtons);layout.addView(configControls)
         lateinit var titleView:TitleView
@@ -338,7 +338,8 @@ class MainActivity : Activity() {
             val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid title PNG")
             runOnUiThread{timeline.post(cancel={bitmap.recycle()}){
                 if(!isDestroyed&&!storyClosing){
-                    configBack.isEnabled=true;configReset.isEnabled=true
+                    configBack.isEnabled=true;configReset.isEnabled=metadata.optInt("editing_slot",0)==0
+                    configBack.text=if(metadata.optInt("editing_slot",0)>0)"取消选择" else "返回标题"
                     configControls.visibility=if(isSettings)android.view.View.VISIBLE else android.view.View.GONE
                     titleView.contentDescription=if(isSettings)"原版设置页" else "游戏标题菜单"
                     titleView.present(bitmap);if(unlock)titleView.accepting=true

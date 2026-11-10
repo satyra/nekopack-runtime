@@ -22,6 +22,8 @@ enum Control {
     Radio(usize, i32),
     Page(i32),
     Track,
+    Shortcut(usize),
+    Choice(usize),
     Unsupported,
 }
 pub(crate) struct Settings {
@@ -30,6 +32,7 @@ pub(crate) struct Settings {
     images: BTreeMap<String, Image>,
     pressed: Option<Control>,
     pub unsupported: bool,
+    editing: Option<usize>,
 }
 impl Settings {
     pub fn open<R: Read + Seek>(store: &mut DatGame<R>, page: u32) -> Result<Self> {
@@ -78,6 +81,7 @@ impl Settings {
             images,
             pressed: None,
             unsupported: false,
+            editing: None,
         })
     }
     fn hit_image(&self, key: &str, x: i32, y: i32) -> bool {
@@ -89,7 +93,31 @@ impl Settings {
             )
         })
     }
+    pub fn cancel_popup(&mut self) -> bool {
+        self.pressed = None;
+        self.editing.take().is_some()
+    }
     fn hit(&self, x: i32, y: i32) -> Option<Control> {
+        if self.editing.is_some() {
+            return preferences::ACTIONS
+                .iter()
+                .enumerate()
+                .find(|(_, name)| {
+                    self.hit_image(
+                        &format!("= {}", if name.is_empty() { "DELETE" } else { name }),
+                        x,
+                        y,
+                    )
+                })
+                .map(|(i, _)| Control::Choice(i));
+        }
+        if self.page == 5 {
+            for slot in 3..=12 {
+                if self.hit_image(&format!("* F{slot}"), x, y) {
+                    return Some(Control::Shortcut(slot));
+                }
+            }
+        }
         for (key, d) in [("= PAGE--", -1), ("= PAGE++", 1)] {
             if self.hit_image(key, x, y) {
                 return Some(Control::Page(d));
@@ -163,6 +191,12 @@ impl Settings {
                                 + 1,
                         ));
                     }
+                    Control::Shortcut(slot) => self.editing = Some(slot),
+                    Control::Choice(action) => {
+                        let slot = self.editing.ok_or("shortcut picker is not open")?;
+                        preferences::set_shortcut(vm, slot, action)?;
+                        self.editing = None;
+                    }
                     Control::Unsupported => self.unsupported = true,
                     Control::Slider(_) => unreachable!(),
                 },
@@ -210,15 +244,11 @@ impl Settings {
         }
         let mut shortcuts = Vec::new();
         if self.page == 5 {
-            vm.eval(
-                "settings-shortcuts",
-                "local s=\"\";for(local i=2;i<12;++i)s+=Config.ShortCuts[i]+\"\\n\";return s",
-            )?;
-            let result = vm.result();
-            let names: Vec<_> = result.lines().collect();
-            if names.len() != 10 {
-                return Err("invalid shortcut caption count".into());
-            }
+            let ids = preferences::shortcut_ids(vm)?;
+            let names: Vec<_> = ids
+                .iter()
+                .map(|id| preferences::ACTIONS[*id as usize])
+                .collect();
             let origin = self
                 .images
                 .get("* F3")
@@ -276,6 +306,18 @@ impl Settings {
         );
         // Preview panel image is original; dynamic sample text is a separate future feature.
         draw(&mut canvas, "SAMPLE", [0, 0]);
+        if self.editing.is_some() {
+            draw(&mut canvas, "LIST", [0, 0]);
+            for (id, name) in preferences::ACTIONS.iter().enumerate() {
+                let key = if name.is_empty() { "DELETE" } else { name };
+                let prefix = if self.pressed == Some(Control::Choice(id)) {
+                    "+"
+                } else {
+                    "="
+                };
+                draw(&mut canvas, &format!("{prefix} {key}"), [0, 0]);
+            }
+        }
         let config = FIELDS
             .iter()
             .map(|k| {
@@ -290,7 +332,15 @@ impl Settings {
         let areas = self
             .images
             .iter()
-            .filter(|(k, _)| k.starts_with("* ") || visible_normal(self.page, k))
+            .filter(|(k, _)| {
+                if self.editing.is_some() {
+                    preferences::ACTIONS.iter().any(|name| {
+                        **k == format!("= {}", if name.is_empty() { "DELETE" } else { name })
+                    })
+                } else {
+                    k.starts_with("* ") || visible_normal(self.page, k)
+                }
+            })
             .map(|(k, i)| {
                 Ok(format!(
                     "{}:[{},{},{},{}]",
@@ -304,7 +354,7 @@ impl Settings {
             .collect::<Result<Vec<_>>>()?
             .join(",");
         let shortcuts = shortcuts.join(",");
-        let mut packet=format!("{{\"kind\":\"settings\",\"page\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}}}}\n",self.page,self.unsupported).into_bytes();
+        let mut packet=format!("{{\"kind\":\"settings\",\"page\":{},\"editing_slot\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}}}}\n",self.page,self.editing.unwrap_or(0),self.unsupported).into_bytes();
         canvas.write_png(&mut packet)?;
         Ok(packet)
     }
@@ -343,6 +393,59 @@ fn slider_value(x: i32, left: i32, width: u32) -> i32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn modal_blocks_page_and_commits_only_matching_choice() {
+        let images = [
+            ("* F3", 0),
+            ("* PAGE", 30),
+            ("= SAVE", 50),
+            ("= DELETE", 70),
+        ]
+        .into_iter()
+        .map(|(key, x)| {
+            (
+                key.into(),
+                Image {
+                    pixels: RgbaImage::transparent(10, 10, 400).unwrap(),
+                    position: [x, 0],
+                },
+            )
+        })
+        .collect();
+        let mut page = Settings {
+            page: 5,
+            size: [100, 100],
+            images,
+            pressed: None,
+            unsupported: false,
+            editing: None,
+        };
+        let mut vm = SystemVm::try_new().unwrap();
+        vm.eval("setup","Config <- {ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();
+        page.pointer(&mut vm, 0, 5, 5).unwrap();
+        page.pointer(&mut vm, 2, 5, 5).unwrap();
+        assert_eq!(page.editing, Some(3));
+        assert_eq!(page.hit(35, 5), None);
+        assert_eq!(page.hit(5, 5), None);
+        page.pointer(&mut vm, 0, 55, 5).unwrap();
+        page.pointer(&mut vm, 1, 35, 5).unwrap();
+        page.pointer(&mut vm, 2, 55, 5).unwrap();
+        assert_eq!(page.editing, Some(3));
+        assert_eq!(preferences::shortcut_ids(&mut vm).unwrap()[0], 9);
+        assert!(page.cancel_popup());
+        assert_eq!(page.editing, None);
+        page.pointer(&mut vm, 0, 5, 5).unwrap();
+        page.pointer(&mut vm, 2, 5, 5).unwrap();
+        page.pointer(&mut vm, 0, 55, 5).unwrap();
+        page.pointer(&mut vm, 2, 55, 5).unwrap();
+        assert_eq!(page.editing, None);
+        assert_eq!(preferences::shortcut_ids(&mut vm).unwrap()[0], 5);
+        page.pointer(&mut vm, 0, 5, 5).unwrap();
+        page.pointer(&mut vm, 2, 5, 5).unwrap();
+        page.pointer(&mut vm, 0, 75, 5).unwrap();
+        page.pointer(&mut vm, 2, 75, 5).unwrap();
+        assert_eq!(preferences::shortcut_ids(&mut vm).unwrap()[0], 0);
+    }
     #[test]
     fn shortcut_popup_choices_are_not_page_controls() {
         for key in [
