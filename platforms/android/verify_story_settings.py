@@ -11,6 +11,7 @@ def main():
     p.add_argument('--text-style-check',action='store_true')
     p.add_argument('--auto-check',action='store_true')
     p.add_argument('--skip-check',action='store_true')
+    p.add_argument('--shortcut-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[];history_profile=''
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -93,6 +94,39 @@ def main():
     assert machine=='x86_64' and bridge not in ('','0')
     apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:');sha=adb('shell','sha256sum',apk).decode().split()[0]
     assert sha==json.loads(Path('.local/android-probe/build.json').read_text())['sha256']['nekopack-arm64-probe.apk']
+    shortcut_results={}
+    if a.shortcut_check:
+        def key(slot,expected):
+            count=len(lines('shortcut-events.jsonl'))
+            adb('shell','input','keyevent','KEYCODE_F'+str(slot))
+            events=wait(lambda:lines('shortcut-events.jsonl') if len(lines('shortcut-events.jsonl'))>count else None)
+            result=events[-1];assert result['slot']==slot and result['delivery']==expected,result
+            return result
+        launch(1);wait(state);shortcut_config=state()['config'];page(5)
+        original_shortcuts=[x['action'] for x in state()['shortcuts']]
+        edits={3:'AUTO',4:'SKIP',5:'SAVE',6:'QUIT',12:''}
+        for slot,action in edits.items():area('* F'+str(slot));area('= '+(action or 'DELETE'))
+        page(1);area('= SkipNoRead#1');close_menu();wait(lambda:obj('text-1.json')['complete'])
+        assert key(3,'applied')['auto'];assert not key(3,'applied')['auto']
+        time.sleep(.3);before_keys=len([x for x in lines('text-events.jsonl') if x['advance']])
+        assert key(5,'unsupported')['action']=='SAVE';assert key(12,'unbound')['action']==''
+        assert len([x for x in lines('text-events.jsonl') if x['advance']])==before_keys,'unsupported/unbound input advanced the story'
+        assert key(4,'applied')['skip'];assert not key(4,'applied')['skip']
+        time.sleep(.5);advances=len([x for x in lines('text-events.jsonl') if x['advance']]);time.sleep(1)
+        assert len([x for x in lines('text-events.jsonl') if x['advance']])==advances
+        old=state()['input_sequence'];key(1,'settings');wait(lambda:state()['input_sequence']>old)
+        key_count=len(lines('shortcut-events.jsonl'));adb('shell','input','keyevent','KEYCODE_F6');time.sleep(.5)
+        assert len(lines('shortcut-events.jsonl'))==key_count and b'No such file' in read('closed.txt')
+        close_menu();key(6,'quit');wait(lambda:b'VM live bytes=0' in read('closed.txt'))
+        launch(1);wait(state);page(5)
+        for slot,action in edits.items():assert state()['shortcuts'][slot-3]['action']==action
+        for slot in edits:area('* F'+str(slot));area('= '+(original_shortcuts[slot-3] or 'DELETE'))
+        restored_shortcuts=[x['action'] for x in state()['shortcuts']]
+        assert restored_shortcuts==original_shortcuts
+        page(1);area('= SkipNoRead#'+str(shortcut_config['SkipNoRead']));assert state()['config']==shortcut_config
+        close_menu();finish()
+        shortcut_results=dict(original_bindings=original_shortcuts,restored_bindings=restored_shortcuts,current_binding_auto=True,current_binding_skip=True,cancel_skip_while_running=True,f1_opens_settings=True,modal_blocks_quit=True,unsupported_save_no_advance=True,unbound_no_advance=True,quit_vm_live_bytes=0,bindings_survive_restart=True,original_bindings_restored=True)
+        print('real function-key dispatch, live bindings, modal boundary and VM close passed',flush=True)
     skip_results={}
     if a.skip_check:
         history_profile=uuid.uuid4().hex
@@ -291,6 +325,6 @@ def main():
         launch(1);wait(state);assert state()['config']==auto_original;close_menu();finish()
         auto_results=dict(auto_only_advances=55,voice_completion_callbacks=len(completions),voiced_pages=voiced,unvoiced_pages=unvoiced,unvoiced_delay_min_ms=502,background_freezes=True,settings_freezes=True,auto_speed_saved_and_restored=True,manual_cancel_stops_progress=True,motion_checkpoint=auto_frozen)
         print('auto playback, voice completion, settings and cancellation passed',flush=True)
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

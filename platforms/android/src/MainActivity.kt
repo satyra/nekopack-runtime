@@ -25,6 +25,7 @@ class MainActivity : Activity() {
     private val timeline=SessionTimeline()
     private val menuTimeline=SessionTimeline()
     @Volatile private var storyConfigOpen=false
+    private var shortcutKey:((Int)->Unit)?=null
     private var settingsBack:(()->Boolean)?=null
     private var lifecycleGeneration=0L
     private val instanceId=java.util.UUID.randomUUID().toString()
@@ -234,7 +235,7 @@ class MainActivity : Activity() {
                 if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
                 runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
-        },{enabled->skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=enabled&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
+        },{enabled->skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=(enabled||autoEnabled)&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
             if(originalSettings.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("settings_probe_sequence",-1)&&!intent.getBooleanExtra("settings_probe_used",false)){
                 intent.putExtra("settings_probe_used",true);originalSettings.performClick()
             }
@@ -243,12 +244,13 @@ class MainActivity : Activity() {
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         })
         auto.setOnClickListener {
-            dialogue.suspend();auto.isEnabled=false;next.isEnabled=false;originalSettings.isEnabled=false
             val token=sequence;val enabled=!autoEnabled
+            if(enabled)dialogue.suspend()
+            auto.isEnabled=false;next.isEnabled=false;originalSettings.isEnabled=false
             worker.execute{try{
                 val state=JSONObject(String(story(intArrayOf(),if(enabled)26 else 25,token),Charsets.UTF_8))
                 check(!state.has("error")){state.optString("error")}
-                runOnUiThread{timeline.post{if(!storyClosing){autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";dialogue.resume()}}}
+                runOnUiThread{timeline.post{if(!storyClosing){autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";if(enabled)dialogue.resume()}}}
             }catch(error:Throwable){fail(error)}}
         }
         skip.setOnClickListener {
@@ -261,6 +263,33 @@ class MainActivity : Activity() {
                 File(root,"skip-controls.jsonl").appendText(state.toString()+"\n")
                 runOnUiThread{timeline.post{if(!storyClosing){skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";if(enabled)dialogue.resume()}}}
             }catch(error:Throwable){fail(error)}}
+        }
+        var shortcutBusy=false
+        shortcutKey={slot->
+            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!timeline.paused&&sequence>0){
+                shortcutBusy=true;val token=sequence
+                worker.execute{try{
+                    val result=JSONObject(String(story(intArrayOf(),33,token,slot.toLong()),Charsets.UTF_8))
+                    check(!result.has("error")){result.optString("error")}
+                    runOnUiThread{timeline.post{shortcutBusy=false;if(!storyClosing){
+                        val status=result.getString("status");val action=result.getString("action")
+                        if(storyConfigOpen)result.put("delivery","modal")
+                        else if(status=="applied"){
+                            autoEnabled=result.getBoolean("auto");skipEnabled=result.getBoolean("skip")
+                            auto.text=if(autoEnabled)"自动：开" else "自动：关";skip.text=if(skipEnabled)"快进：开" else "快进：关"
+                            dialogue.refresh();result.put("delivery","applied")
+                        }else if(status=="request"){
+                            if(action=="CONFIG"&&sequence==token&&originalSettings.isEnabled){originalSettings.performClick();result.put("delivery","settings")}
+                            else if(action=="QUIT"){close.performClick();result.put("delivery","quit")}
+                            else result.put("delivery","busy")
+                        }else {
+                            result.put("delivery",status)
+                            if(status=="unsupported")android.widget.Toast.makeText(this,"此快捷动作尚未接通：$action",android.widget.Toast.LENGTH_SHORT).show()
+                        }
+                        File(root,"shortcut-events.jsonl").appendText(result.toString()+"\n")
+                    }}}
+                }catch(error:Throwable){fail(error)}}
+            }
         }
         storyEffects=StoryEffects(this,image,overlay,root,timeline,{kind,token,elapsed,ready->
             worker.execute{try{
@@ -363,7 +392,7 @@ class MainActivity : Activity() {
                 show(packet)
         }
         val configControls=LinearLayout(this);configControls.orientation=LinearLayout.VERTICAL;configControls.visibility=android.view.View.GONE
-        val configNotice=TextView(this);configNotice.text="已接通：文字速度、粗体/边框、动态示例、对话框透明度、五路音量、语音保留、F3～F12 绑定编辑。其他选项尚未接入。";configControls.addView(configNotice)
+        val configNotice=TextView(this);configNotice.text="已接通：文字/自动速度、跳过未读、粗体/边框、动态示例、透明度、音量、语音保留、快捷键编辑；快捷执行支持设置、自动、快进、退出。";configControls.addView(configNotice)
         val configButtons=LinearLayout(this);val configBack=Button(this);configBack.text="返回标题";val configReset=Button(this);configReset.text="恢复已接通选项默认值"
         configButtons.addView(configBack,LinearLayout.LayoutParams(0,-2,1f));configButtons.addView(configReset,LinearLayout.LayoutParams(0,-2,1f));configControls.addView(configButtons);layout.addView(configControls)
         lateinit var titleView:TitleView
@@ -400,7 +429,8 @@ class MainActivity : Activity() {
                     configControls.visibility=if(isSettings)android.view.View.VISIBLE else android.view.View.GONE
                     titleView.contentDescription=if(isSettings)"原版设置页" else "游戏标题菜单"
                     titleView.present(bitmap);if(unlock)titleView.accepting=true
-                    File(root,"$prefix-presented.json").writeText(metadata.toString())
+                    val snapshot=File(root,"$prefix-presented.tmp");snapshot.writeText(metadata.toString())
+                    check(snapshot.renameTo(File(root,"$prefix-presented.json"))){"cannot publish presented menu state"}
                     text.text="标题主页 · 点击开始游戏"
                     if(isSettings && metadata.getBoolean("unsupported"))android.widget.Toast.makeText(this,"此选项尚未接入",android.widget.Toast.LENGTH_SHORT).show()
                     val action=metadata.optInt("action",0)
@@ -493,6 +523,17 @@ class MainActivity : Activity() {
             worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
         }
     }
+    override fun onKeyDown(keyCode:Int,event:android.view.KeyEvent):Boolean {
+        if(keyCode in android.view.KeyEvent.KEYCODE_F1..android.view.KeyEvent.KEYCODE_F12 && shortcutKey!=null)return true
+        return super.onKeyDown(keyCode,event)
+    }
+    override fun onKeyUp(keyCode:Int,event:android.view.KeyEvent):Boolean {
+        if(keyCode in android.view.KeyEvent.KEYCODE_F1..android.view.KeyEvent.KEYCODE_F12 && shortcutKey!=null){
+            if(!event.isCanceled)shortcutKey!!.invoke(keyCode-android.view.KeyEvent.KEYCODE_F1+1)
+            return true
+        }
+        return super.onKeyUp(keyCode,event)
+    }
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         if(settingsBack?.invoke()!=true)super.onBackPressed()
@@ -517,7 +558,7 @@ class MainActivity : Activity() {
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        settingsBack=null
+        settingsBack=null;shortcutKey=null
         storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()

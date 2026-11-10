@@ -1,0 +1,51 @@
+{
+  "rust_top_level_tests": 147,
+  "isolated_host_native_probes": 7,
+  "python_tests": 17,
+  "verifier_py_compile": "passed",
+  "cargo_fmt": "passed",
+  "clippy_workspace_all_targets_deny_warnings": "passed",
+  "target": "aarch64-linux-android",
+  "ndk": "r27d",
+  "api": 23,
+  "sha256": {
+    "libnekopack_probe.so": "e763e8ec520bbe41847562810cc68f15adc14ab20233e16101874b7f6ae3f0d6",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "33f703c866152bfb8a6e476f719d99223c48a5500e92bf5077354b8adbd617aa"
+  },
+  "device_report": "shortcut-execution-batch44-emulator.json",
+  "execution": "translated ARM64 on x86_64",
+  "snapshot_read_race": "A later run failed while reading a partially overwritten menu JSON snapshot. Published menu snapshots atomically and reran; interrupted session bindings/config were verified unchanged and VM closed cleanly.",
+  "failed_gated_apk": {
+    "sha256": "eaa937c3e40399b098729b2e4d04f2aa5de96a1cf6b462b14bf6936977b2b180",
+    "failure": "AUTO off tap occurred while its button was disabled by in-flight frame gating; test timed out; app force-stopped after failure."
+  },
+  "first_pass_apk_sha256": "b4878524f96fb33254ecd696719961ebf570751eac949a696e3913ceb6669a49",
+  "final_rerun_reason": "Separate cancellation from safe-point actions: AUTO off remains available during in-flight frames without revoking a granted ACK.",
+  "independent_restoration_readback": {
+    "source": "Android SharedPreferences NKCF v6",
+    "all_ten_bindings_equal": true,
+    "actions": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ]
+  },
+  "ui_dump_retries": 1,
+  "read_transport_retries": 0,
+  "log_sha256": {
+    "batch44-tests.log": "b80e24d04b5d93cd3e5c1386ac3d6b2cecf415edd5405f58861c8268a39f350a",
+    "batch44-clippy.log": "13c176c79e7c5573edfb4b98e0c0a343d97d1e125f827051aba16bbb4fbb0df2",
+    "batch44-python.log": "14618a9c1f8854908cfa2a2e67e0a853364b7c9218326264e740d292b58a1937",
+    "batch44-build-fixed.log": "3f32b16050c9dbb3c03c3b8345b14f9b6826bcf8b45c519b2766b204644425bd",
+    "batch44-emulator-fixed.log": "d67d494584e0501da29e2eec004bed850199297a5facca2db2ca8229a97eb5b5"
+  }
+}

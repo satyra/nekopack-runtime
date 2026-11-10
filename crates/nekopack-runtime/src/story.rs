@@ -561,15 +561,61 @@ impl<R: Read + Seek> StorySession<R> {
         )
         .into_bytes())
     }
+    /// Platform-neutral function-key input. Cancellation can cross an already granted page ACK.
+    pub fn shortcut(&mut self, slot: u64, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        let action = crate::preferences::shortcut_action(&mut self.system, slot)?;
+        let live = !self.failed && self.settings.is_none();
+        let page = live
+            && self.page.as_ref().map(|p| p.sequence) == Some(sequence)
+            && self.text_reveal.as_ref().is_some_and(|r| !r.advance);
+        let status = if !live {
+            "busy"
+        } else {
+            match action.as_str() {
+                "" => "unbound",
+                "AUTO" if self.auto_mode => {
+                    self.set_auto_mode(sequence, false)?;
+                    "applied"
+                }
+                "SKIP" if self.skip_mode => {
+                    self.skip_mode = false;
+                    "applied"
+                }
+                "AUTO" if page => {
+                    self.set_auto_mode(sequence, true)?;
+                    "applied"
+                }
+                "SKIP" if page => {
+                    self.set_skip_mode(sequence, true)?;
+                    "applied"
+                }
+                "AUTO" | "SKIP" => "busy",
+                "CONFIG" if page => "request",
+                "CONFIG" => "busy",
+                "QUIT" => "request",
+                _ => "unsupported",
+            }
+        };
+        Ok(format!(
+            "{{\"slot\":{slot},\"action\":{},\"status\":{},\"auto\":{},\"skip\":{}}}",
+            quote(action.as_bytes())?,
+            quote(status.as_bytes())?,
+            self.auto_mode,
+            self.skip_mode
+        )
+        .into_bytes())
+    }
     pub fn set_auto_mode(
         &mut self,
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.settings.is_some()
-            || self.failed
-            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
-            || self.text_reveal.as_ref().is_none_or(|r| r.advance)
+        if self.settings.is_some() || self.failed {
+            return Err("auto unavailable while stopped or in settings".into());
+        }
+        if enabled
+            && (self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+                || self.text_reveal.as_ref().is_none_or(|r| r.advance))
         {
             return Err("auto mode requires an active dialogue".into());
         }
@@ -1507,6 +1553,69 @@ mod tests {
     }
 
     #[test]
+    fn auto_cancel_preserves_granted_ack_and_stops_following_page() {
+        let mut s = session(b"one\ntwo");
+        s.system
+            .eval(
+                "config",
+                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0}",
+            )
+            .unwrap();
+        s.enable_interactive_text();
+        s.poll_packet().unwrap();
+        s.text_frame(1, 0, false).unwrap();
+        s.set_auto_mode(1, true).unwrap();
+        s.text_frame(1, 502, false).unwrap();
+        assert!(s.text_reveal.as_ref().unwrap().advance);
+        s.set_auto_mode(0, false).unwrap();
+        assert!(!s.auto_mode);
+        assert!(s.text_reveal.as_ref().unwrap().advance);
+        s.acknowledge_text(1).unwrap();
+        assert!(s.acknowledge_text(1).is_err());
+        s.text_frame(2, 0, false).unwrap();
+        s.text_frame(2, 10000, false).unwrap();
+        assert!(!s.text_reveal.as_ref().unwrap().advance);
+    }
+    #[test]
+    fn shortcut_uses_current_bindings_and_cancels_across_pending_ack() {
+        let mut s = session(b"one\ntwo");
+        s.system.eval("config","Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"CONFIG\",\"MENU\",\"AUTO\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();
+        s.enable_interactive_text();
+        let original = s.poll_packet().unwrap();
+        s.text_frame(1, 0, false).unwrap();
+        assert!(s.shortcut(0, 1).is_err());
+        assert!(s.shortcut(13, 1).is_err());
+        assert!(String::from_utf8(s.shortcut(5, 1).unwrap())
+            .unwrap()
+            .contains("unsupported"));
+        assert_eq!(s.poll_packet().unwrap(), original);
+        s.shortcut(3, 1).unwrap();
+        assert!(s.auto_mode);
+        s.system
+            .eval("edit", "Config.ShortCuts[2]=\"SKIP\"")
+            .unwrap();
+        s.shortcut(3, 1).unwrap();
+        assert!(s.skip_mode);
+        assert!(!s.auto_mode);
+        s.text_frame(1, 1, false).unwrap();
+        assert!(s.text_reveal.as_ref().unwrap().advance);
+        s.shortcut(3, 0).unwrap();
+        assert!(!s.skip_mode);
+        assert!(String::from_utf8(s.shortcut(3, 0).unwrap())
+            .unwrap()
+            .contains("busy"));
+        s.acknowledge_text(1).unwrap();
+        s.text_frame(2, 0, false).unwrap();
+        assert!(!s.skip_mode);
+        s.system.eval("unbind", "Config.ShortCuts[2]=\"\"").unwrap();
+        assert!(String::from_utf8(s.shortcut(3, 2).unwrap())
+            .unwrap()
+            .contains("unbound"));
+        assert!(String::from_utf8(s.shortcut(1, 2).unwrap())
+            .unwrap()
+            .contains("request"));
+    }
+    #[test]
     fn skip_stops_at_next_unread_and_history_survives_restart() {
         fn make() -> StorySession<std::io::Cursor<Vec<u8>>> {
             let mut s = session(b"one\ntwo\nthree");
@@ -1612,7 +1721,7 @@ mod tests {
         assert!(s.set_auto_mode(1, true).is_err());
         s.text_frame_with_voice(1, 0, false, false).unwrap();
         s.set_auto_mode(1, true).unwrap();
-        assert!(s.set_auto_mode(2, false).is_err());
+        assert!(s.set_auto_mode(2, true).is_err());
         let result =
             String::from_utf8(s.text_frame_with_voice(1, 502, false, true).unwrap()).unwrap();
         assert!(result.contains("\"advance\":true"));

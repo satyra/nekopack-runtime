@@ -24,9 +24,10 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
         stop();active=true;busy=false;sequence=token;speaker=name;started=timeline.now()
         ready(false);send(false,0)
     }
+    fun refresh(){if(active&&!busy){ready(false);send(false,timeline.now()-started)}}
     fun click(){if(!active)return;ready(false);if(busy){pendingClick=true;return};send(true,timeline.now()-started)}
     private fun send(click:Boolean,elapsed:Long){
-        busy=true;val generation=++epoch;val token=sequence
+        ready(false);busy=true;val generation=++epoch;val token=sequence
         request(if(click)12 else 11,token,elapsed){state,bitmap,geometry->
             if(active&&epoch==generation){
                 busy=false;check(state.getLong("sequence")==token);visibleCount=state.getLong("visible")

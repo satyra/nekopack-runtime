@@ -20,6 +20,20 @@ const MAGIC: &[u8] = b"NKCF\x06";
 pub(crate) const ACTIONS: [&str; 11] = [
     "", "AUTO", "SKIP", "LOG", "HIDE", "SAVE", "LOAD", "QSAVE", "QLOAD", "RESET", "QUIT",
 ];
+pub(crate) fn shortcut_action(vm: &mut SystemVm, slot: u64) -> Result<String> {
+    if !(1..=12).contains(&slot) {
+        return Err("shortcut must be F1..F12".into());
+    }
+    vm.eval(
+        "shortcut-action",
+        &format!("return Config.ShortCuts[{}]", slot - 1),
+    )?;
+    let action = vm.result();
+    if action != "CONFIG" && action != "MENU" && !ACTIONS.contains(&action.as_str()) {
+        return Err("unknown shortcut action".into());
+    }
+    Ok(action)
+}
 pub(crate) fn shortcut_ids(vm: &mut SystemVm) -> Result<Vec<u8>> {
     vm.eval(
         "shortcut-preferences",
