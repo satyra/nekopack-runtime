@@ -1,0 +1,1495 @@
+{
+  "run": "menu_sounds_eea1f57ffb5d40498feeba26eb7b3947",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "e6deef3d6df317a05cbc6acae757d52ceeb71114a162ff6a9bc5d70d38b5b1d5",
+  "original_sounds": {
+    "se_PAGE": {
+      "ordinal": 35,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "bytes": 6078
+    },
+    "se_CLICK": {
+      "ordinal": 84,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "bytes": 10807
+    },
+    "se_OK": {
+      "ordinal": 87,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "bytes": 10807
+    }
+  },
+  "actions": [
+    {
+      "action": "title opens settings",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1001,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "first-page arrow stays silent",
+      "system_sounds": []
+    },
+    {
+      "action": "settings page 1 -> 2",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1002,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "confirm same-value radio",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1003,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "settings page 2 -> 3",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1004,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "VolSYS slider tap 50 -> 50",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1005,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "system volume edge 50 -> 0",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1006,
+          "ui_audio": true,
+          "restore_category_percent": 0
+        }
+      ]
+    },
+    {
+      "action": "VolSYS slider tap 0 -> 37",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 0,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1007,
+          "ui_audio": true,
+          "restore_category_percent": 37
+        }
+      ]
+    },
+    {
+      "action": "VolSYS slider tap 37 -> 50",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 37,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1008,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "settings page 3 -> 4",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1009,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "settings page 4 -> 5",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1010,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "last-page arrow stays silent",
+      "system_sounds": []
+    },
+    {
+      "action": "open shortcut picker silently",
+      "system_sounds": []
+    },
+    {
+      "action": "cancel shortcut picker silently",
+      "system_sounds": []
+    },
+    {
+      "action": "reopen shortcut picker silently",
+      "system_sounds": []
+    },
+    {
+      "action": "confirm shortcut choice",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1011,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "open shortcut picker for restoration",
+      "system_sounds": []
+    },
+    {
+      "action": "restore shortcut binding",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_CLICK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1012,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "settings returns to title",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1013,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "open story menu",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1014,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "cancel story menu with Back",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1015,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "open story menu for SAVE",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1016,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "open SAVE without a menu cue",
+      "system_sounds": []
+    },
+    {
+      "action": "open story menu for LOAD",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1017,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "open LOAD without a menu cue",
+      "system_sounds": []
+    },
+    {
+      "action": "open story menu for CONFIG",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1018,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "CONFIG uses only the settings PAGE cue",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1019,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "settings PAGE plays after Home return while BGM stays paused",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1020,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "story settings page 3",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1021,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "story settings page 4",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1022,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "story settings page 5",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1023,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "settings returns to the same story with PAGE",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1024,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "action": "open settings to verify reset button",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1025,
+          "ui_audio": true,
+          "restore_category_percent": 50
+        }
+      ]
+    },
+    {
+      "action": "Android restore-defaults button stays silent",
+      "system_sounds": []
+    },
+    {
+      "action": "settings returns to the same story with PAGE",
+      "system_sounds": [
+        {
+          "host_effect": "system",
+          "name": "se_PAGE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1026,
+          "ui_audio": true
+        }
+      ]
+    }
+  ],
+  "audio": [
+    {
+      "token": -1001,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1001,
+        "time_ms": 28924147,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1001,
+        "time_ms": 28924224,
+        "value": 4704
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1001,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 33145170,
+        "time_ms": 28924147
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1002,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1002,
+        "time_ms": 28929921,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1002,
+        "time_ms": 28929971,
+        "value": 3763
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1002,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 121045836,
+        "time_ms": 28929920
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1003,
+      "name": "se_OK",
+      "category_percent": 50,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1003,
+        "time_ms": 28932048,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1003,
+        "time_ms": 28932099,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1003,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 238403477,
+        "time_ms": 28932048
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1004,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1004,
+        "time_ms": 28934328,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1004,
+        "time_ms": 28934378,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1004,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 260057258,
+        "time_ms": 28934327
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1005,
+      "name": "se_CLICK",
+      "category_percent": 50,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1005,
+        "time_ms": 28936624,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1005,
+        "time_ms": 28936675,
+        "value": 3763
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1005,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 57756827,
+        "time_ms": 28936623
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1006,
+      "name": "se_CLICK",
+      "category_percent": 50,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1006,
+        "time_ms": 28939265,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1006,
+        "time_ms": 28939315,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1006,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 125241400,
+        "time_ms": 28939265
+      },
+      "updated_gain": {
+        "kind": "system",
+        "token": -1006,
+        "category_percent": 0,
+        "output": 0,
+        "fade": 1,
+        "duck": 1,
+        "player": 125241400,
+        "time_ms": 28939265
+      }
+    },
+    {
+      "token": -1007,
+      "name": "se_CLICK",
+      "category_percent": 0,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1007,
+        "time_ms": 28940236,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1007,
+        "time_ms": 28940286,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1007,
+        "category_percent": 0,
+        "output": 0,
+        "fade": 1,
+        "duck": 1,
+        "player": 92258321,
+        "time_ms": 28940236
+      },
+      "updated_gain": {
+        "kind": "system",
+        "token": -1007,
+        "category_percent": 37,
+        "output": 0.37,
+        "fade": 1,
+        "duck": 1,
+        "player": 92258321,
+        "time_ms": 28940236
+      }
+    },
+    {
+      "token": -1008,
+      "name": "se_CLICK",
+      "category_percent": 37,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1008,
+        "time_ms": 28941306,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1008,
+        "time_ms": 28941357,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1008,
+        "category_percent": 37,
+        "output": 0.37,
+        "fade": 1,
+        "duck": 1,
+        "player": 34612598,
+        "time_ms": 28941306
+      },
+      "updated_gain": {
+        "kind": "system",
+        "token": -1008,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 34612598,
+        "time_ms": 28941306
+      }
+    },
+    {
+      "token": -1009,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1009,
+        "time_ms": 28943869,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1009,
+        "time_ms": 28943920,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1009,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 193861495,
+        "time_ms": 28943869
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1010,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1010,
+        "time_ms": 28946185,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1010,
+        "time_ms": 28946236,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1010,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 61894628,
+        "time_ms": 28946184
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1011,
+      "name": "se_CLICK",
+      "category_percent": 50,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1011,
+        "time_ms": 28955564,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1011,
+        "time_ms": 28955614,
+        "value": 3763
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1011,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 121811987,
+        "time_ms": 28955563
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1012,
+      "name": "se_CLICK",
+      "category_percent": 50,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1012,
+        "time_ms": 28959955,
+        "value": 943
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1012,
+        "time_ms": 28960005,
+        "value": 3763
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1012,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 66496080,
+        "time_ms": 28959954
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1013,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1013,
+        "time_ms": 28961091,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1013,
+        "time_ms": 28961141,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1013,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 143745097,
+        "time_ms": 28961090
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1014,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1014,
+        "time_ms": 29013002,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1014,
+        "time_ms": 29013053,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1014,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 76780893,
+        "time_ms": 29013002
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1015,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1015,
+        "time_ms": 29013811,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1015,
+        "time_ms": 29013861,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1015,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 222764754,
+        "time_ms": 29013811
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1016,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1016,
+        "time_ms": 29016512,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1016,
+        "time_ms": 29016563,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1016,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 5897983,
+        "time_ms": 29016511
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1017,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1017,
+        "time_ms": 29022336,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1017,
+        "time_ms": 29022386,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1017,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 259312529,
+        "time_ms": 29022335
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1018,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1018,
+        "time_ms": 29028136,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1018,
+        "time_ms": 29028186,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1018,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 116449410,
+        "time_ms": 29028135
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1019,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1019,
+        "time_ms": 29031088,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1019,
+        "time_ms": 29031145,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1019,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 260268947,
+        "time_ms": 29031087
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1020,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1020,
+        "time_ms": 29036379,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1020,
+        "time_ms": 29036430,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1020,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 61627337,
+        "time_ms": 29036378
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1021,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1021,
+        "time_ms": 29038610,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1021,
+        "time_ms": 29038661,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1021,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 181437134,
+        "time_ms": 29038610
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1022,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1022,
+        "time_ms": 29040828,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1022,
+        "time_ms": 29040879,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1022,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 200713711,
+        "time_ms": 29040828
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1023,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1023,
+        "time_ms": 29043103,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1023,
+        "time_ms": 29043154,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1023,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 74295548,
+        "time_ms": 29043102
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1024,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1024,
+        "time_ms": 29043870,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1024,
+        "time_ms": 29043922,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1024,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 185985925,
+        "time_ms": 29043870
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1025,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1025,
+        "time_ms": 29046245,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1025,
+        "time_ms": 29046295,
+        "value": 2822
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1025,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 46621671,
+        "time_ms": 29046245
+      },
+      "updated_gain": null
+    },
+    {
+      "token": -1026,
+      "name": "se_PAGE",
+      "category_percent": 50,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "playing": {
+        "event": "playing",
+        "kind": "system",
+        "token": -1026,
+        "time_ms": 29048992,
+        "value": 754
+      },
+      "progress": {
+        "event": "pcm_head",
+        "kind": "system",
+        "token": -1026,
+        "time_ms": 29049051,
+        "value": 1881
+      },
+      "first_gain": {
+        "kind": "system",
+        "token": -1026,
+        "category_percent": 50,
+        "output": 0.5,
+        "fade": 1,
+        "duck": 1,
+        "player": 143051065,
+        "time_ms": 29048991
+      },
+      "updated_gain": null
+    }
+  ],
+  "story": {
+    "page": 13,
+    "scene_sha256": "fe4547f8f6ef50280d677cfbc596de303af4034e82130b7db52208bd7471ad4e",
+    "back_dialogue": {
+      "sequence": 13,
+      "skip": false,
+      "read": false,
+      "auto": false,
+      "voice_finished": true,
+      "elapsed_ms": 3576,
+      "visible": 7,
+      "complete": true,
+      "advance": false,
+      "stop_voice": false,
+      "click": false
+    },
+    "config_dialogue": {
+      "sequence": 13,
+      "skip": false,
+      "read": false,
+      "auto": false,
+      "voice_finished": true,
+      "elapsed_ms": 19148,
+      "visible": 7,
+      "complete": true,
+      "advance": false,
+      "stop_voice": false,
+      "click": false
+    },
+    "modal_audio_paused": {
+      "event": "paused",
+      "time_ms": 29030872,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 225426042,
+          "playing": false,
+          "position": 24922,
+          "gain": 0.25
+        }
+      }
+    },
+    "home_audio": [
+      {
+        "event": "paused_stable_1",
+        "time_ms": 29031842,
+        "channels": {
+          "bgm": {
+            "token": 9,
+            "player_id": 225426042,
+            "playing": false,
+            "position": 24922,
+            "gain": 0.25
+          },
+          "system": {
+            "token": -1019,
+            "player_id": 260268947,
+            "playing": false,
+            "position": 277,
+            "gain": 0.5
+          }
+        }
+      },
+      {
+        "event": "paused_stable_2",
+        "time_ms": 29032843,
+        "channels": {
+          "bgm": {
+            "token": 9,
+            "player_id": 225426042,
+            "playing": false,
+            "position": 24922,
+            "gain": 0.25
+          },
+          "system": {
+            "token": -1019,
+            "player_id": 260268947,
+            "playing": false,
+            "position": 277,
+            "gain": 0.5
+          }
+        }
+      }
+    ],
+    "resumed_audio": {
+      "event": "resumed",
+      "time_ms": 29043879,
+      "channels": {
+        "bgm": {
+          "token": 9,
+          "player_id": 225426042,
+          "playing": true,
+          "position": 24981,
+          "gain": 0.25
+        },
+        "system": {
+          "token": -1024,
+          "player_id": 185985925,
+          "playing": true,
+          "position": 0,
+          "gain": 0.5
+        }
+      }
+    },
+    "original_config": {
+      "TextSpeed": 50,
+      "KeepVoice": 1,
+      "VolBGM": 50,
+      "VolVO": 75,
+      "VolSE": 50,
+      "VolENV": 50,
+      "VolSYS": 50,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1,
+      "AutoSpeed": 50,
+      "SkipNoRead": 0
+    },
+    "original_bindings": [
+      {
+        "key": "F3",
+        "action": "RESET",
+        "offset": [
+          0,
+          0
+        ]
+      },
+      {
+        "key": "F4",
+        "action": "QUIT",
+        "offset": [
+          507,
+          0
+        ]
+      },
+      {
+        "key": "F5",
+        "action": "SAVE",
+        "offset": [
+          0,
+          49
+        ]
+      },
+      {
+        "key": "F6",
+        "action": "LOAD",
+        "offset": [
+          507,
+          49
+        ]
+      },
+      {
+        "key": "F7",
+        "action": "QSAVE",
+        "offset": [
+          0,
+          98
+        ]
+      },
+      {
+        "key": "F8",
+        "action": "QLOAD",
+        "offset": [
+          507,
+          98
+        ]
+      },
+      {
+        "key": "F9",
+        "action": "LOG",
+        "offset": [
+          0,
+          147
+        ]
+      },
+      {
+        "key": "F10",
+        "action": "HIDE",
+        "offset": [
+          507,
+          147
+        ]
+      },
+      {
+        "key": "F11",
+        "action": "AUTO",
+        "offset": [
+          0,
+          196
+        ]
+      },
+      {
+        "key": "F12",
+        "action": "SKIP",
+        "offset": [
+          507,
+          196
+        ]
+      }
+    ],
+    "reset_config": {
+      "TextSpeed": 50,
+      "KeepVoice": 1,
+      "VolBGM": 50,
+      "VolVO": 75,
+      "VolSE": 50,
+      "VolENV": 50,
+      "VolSYS": 50,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1,
+      "AutoSpeed": 50,
+      "SkipNoRead": 0
+    },
+    "vm_live_bytes": 0
+  },
+  "application_preferences_restored": true
+}

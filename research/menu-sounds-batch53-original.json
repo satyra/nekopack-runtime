@@ -1,0 +1,210 @@
+{
+  "scope": "BLESS original EXE and DAT static evidence",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "sound_function": {
+    "instructions": {
+      "0x4468cd": "push 0x550af0",
+      "0x4468d3": "mov ebx, 0x5845e0",
+      "0x4468f7": "push 0x550ae7",
+      "0x4468fd": "call 0x4492a4",
+      "0x446918": "push 0x550af6",
+      "0x44691d": "call 0x4065d0",
+      "0x446924": "lea esi, [ebx + 0x60]",
+      "0x446928": "call 0x4c0478",
+      "0x44694e": "call 0x4c0024"
+    },
+    "strings": {
+      "0x550af0": "se_%s",
+      "0x550ae7": "sound/se",
+      "0x550af6": "VolSYS"
+    },
+    "restore_volume": {
+      "instructions": {
+        "0x406eaf": "push 0x40b9d4",
+        "0x406eb4": "push 0x54835a",
+        "0x406ebb": "call 0x40a7ac",
+        "0x40b9d7": "call 0x446a88",
+        "0x446af6": "push 0x550b25",
+        "0x446afb": "call 0x4065d0",
+        "0x446b02": "push 0x584640",
+        "0x446b07": "call 0x4c0478",
+        "0x4c0487": "mov eax, dword ptr [ebx + 8]",
+        "0x4c048a": "test eax, eax",
+        "0x4c0494": "je 0x4c04db",
+        "0x4c04bb": "mov eax, dword ptr [edx + 8]",
+        "0x4c04be": "add eax, 0x6c",
+        "0x4c04c3": "mov dword ptr [eax + 4], edx",
+        "0x4c04c9": "mov dword ptr [eax], ecx",
+        "0x4c04ce": "mov dword ptr [eax + 8], edx",
+        "0x4c04d1": "add eax, 0xc",
+        "0x4c04d5": "call 0x4b5558",
+        "0x4c04db": "mov dword ptr [ebx + 0xc], edi",
+        "0x4b555f": "call 0x54724a",
+        "0x4b5564": "mov dword ptr [ebx], eax",
+        "0x54724a": "jmp dword ptr [0x5af538]"
+      },
+      "strings": {
+        "0x54835a": "RestoreVolume",
+        "0x550b25": "VolSYS"
+      },
+      "shared_system_channel": "0x584640",
+      "timer_import": {
+        "0x5af538": "timeGetTime"
+      },
+      "active_object_update": "RestoreVolume reads VolSYS and calls the same setter on the system channel as sound. With an active object the setter writes its gain state and stores a timeGetTime timestamp. It also stores the channel gain for future playback."
+    }
+  },
+  "scripts": {
+    "shortcut.nut": {
+      "ordinal": 14,
+      "raw_dat_sha256": "8ae14e1b766d50d5cb12c4ec01de9b1827acfa0a6af38724c2ccbafde28f66ea",
+      "export_sha256": "863c20e5636f676c79d5b7fcbca4865b1b7a03c130d452e3e420a08f2c401a91",
+      "normalized_line_locations": {
+        "ViewMenu": [
+          91,
+          92,
+          109,
+          113,
+          114
+        ]
+      }
+    },
+    "config.nut": {
+      "ordinal": 23,
+      "raw_dat_sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+      "export_sha256": "3fc43c6d28b4e7c62b9d5eded3740c6a7c74b85aa037dd05a628d8a51d2b2f7c",
+      "normalized_line_locations": {
+        "shortcut_popup": [
+          78,
+          84,
+          85,
+          86,
+          87
+        ],
+        "ViewConfigPage": [
+          123,
+          124,
+          128,
+          153,
+          158,
+          177,
+          194,
+          195,
+          207,
+          208,
+          210,
+          220,
+          223,
+          230,
+          235,
+          237
+        ],
+        "ViewConfig": [
+          247,
+          248,
+          249
+        ]
+      }
+    },
+    "gui.nut": {
+      "ordinal": 4,
+      "raw_dat_sha256": "27e4851cab99dc14897ae8e9124ba2ab59a670b5f90442084725ba69898b7a4a",
+      "export_sha256": "4a14f904802944afd49392a5718bf12b5ffd54f6524a96aadd0a221ead240de7",
+      "normalized_line_locations": {
+        "ScrollBar": [
+          27,
+          44,
+          46,
+          47,
+          48
+        ],
+        "RadioButton": [
+          114,
+          123,
+          124
+        ],
+        "RadioList": [
+          229,
+          233
+        ],
+        "VolumeBar": [
+          253,
+          266,
+          267,
+          269,
+          270,
+          271
+        ]
+      }
+    },
+    "system.nut": {
+      "ordinal": 37,
+      "raw_dat_sha256": "c7ae50d65fe9d27843add27fa21687066283ead2a275f6b394f9fb89af71aa74",
+      "export_sha256": "4691bef4a9692d5ea8658c6da6a778f8acf02ddacbb853de693c6da30b1a1cce",
+      "normalized_line_locations": {
+        "InvokeCommand": [
+          66,
+          70,
+          71,
+          91,
+          92
+        ]
+      }
+    }
+  },
+  "sounds": {
+    "PAGE": {
+      "resource": "sound/se/se_PAGE.ogg",
+      "ordinal": 35,
+      "sha256": "317eab82ffc4478ffead11e490aed91e5a208d64f8bd69d97eabc66ddaad7de6",
+      "bytes": 6078,
+      "category": "VolSYS"
+    },
+    "CLICK": {
+      "resource": "sound/se/se_CLICK.ogg",
+      "ordinal": 84,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "bytes": 10807,
+      "category": "VolSYS"
+    },
+    "OK": {
+      "resource": "sound/se/se_OK.ogg",
+      "ordinal": 87,
+      "sha256": "df096194cb105106495747fa87c19ba5ad8425a1bf38cc8e889a7a16ef0d9ddb",
+      "bytes": 10807,
+      "category": "VolSYS"
+    },
+    "SELECT": {
+      "resource": "sound/se/se_SELECT.ogg",
+      "ordinal": 57,
+      "sha256": "0b6855c0f70942523d0f49cba9a6c2992b376faea8d056538515da354154dd7a",
+      "bytes": 6517,
+      "category": "VolSYS"
+    }
+  },
+  "triggers": {
+    "menu": [
+      "PAGE on entry and ID_CANCEL.",
+      "ID_OK on an enabled hit dispatches its command without a general menu selection cue.",
+      "The AUTO and SKIP commands play CLICK in InvokeCommand."
+    ],
+    "settings": [
+      "PAGE on entry and each return from ViewConfigPage, including exit.",
+      "The page scrollbar is silent itself. ViewConfigPage returns on an actual page change; a same-page selection is silent.",
+      "The default action changes settings silently.",
+      "RadioButton plays SELECT when the hover hit changes to a nonzero option and OK on any option confirmation, even when already selected. RadioList uses RadioButton.",
+      "VolumeBar plays CLICK on track confirmation, drag events hitting the track, and endpoint confirmation.",
+      "VolumeBar starts CLICK at the prior VolSYS. On the sound page gui.Get(Config) then writes the new value and RestoreVolume updates the active system sound gain."
+    ],
+    "shortcut_picker": [
+      "Opening a shortcut picker is silent.",
+      "Confirming a valid choice or DELETE plays CLICK. Unbound hits are silent."
+    ]
+  },
+  "limits": [
+    "The evidence is static. Windows live timing and listening comparisons were not performed.",
+    "The static call order does not establish whether any samples were output at the prior VolSYS before the active gain was updated.",
+    "SELECT is verified as an original resource and hover trigger. The Android touch adaptation does not synthesize hover.",
+    "This evidence covers ViewMenu and ViewConfig. Original title-map controls and other command screens are outside this check."
+  ]
+}

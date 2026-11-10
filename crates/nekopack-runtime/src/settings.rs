@@ -31,6 +31,7 @@ pub(crate) struct Settings {
     size: [u32; 2],
     images: BTreeMap<String, Image>,
     pressed: Option<Control>,
+    slider_x: i32,
     pub unsupported: bool,
     editing: Option<usize>,
     preview_text: Option<String>,
@@ -100,6 +101,7 @@ impl Settings {
             size,
             images,
             pressed: None,
+            slider_x: 0,
             unsupported: false,
             editing: None,
         })
@@ -189,41 +191,69 @@ impl Settings {
             ),
         )
     }
-    /// Returns a requested page; page resource replacement is owned by the session.
-    pub fn pointer(&mut self, vm: &mut SystemVm, kind: i32, x: i32, y: i32) -> Result<Option<u32>> {
+    /// Returns an actual page change and the sounds with their trigger-time volume.
+    /// The session owns page resource replacement.
+    pub fn pointer(
+        &mut self,
+        vm: &mut SystemVm,
+        kind: i32,
+        x: i32,
+        y: i32,
+    ) -> Result<(Option<u32>, Vec<crate::message_log::Cue>)> {
         self.unsupported = false;
         let hit = self.hit(x, y);
+        let mut page = None;
+        let mut sound = None;
         match kind {
             0 => {
                 self.pressed = hit;
                 if let Some(Control::Slider(i)) = self.pressed {
-                    self.slide(vm, i, x)?
+                    sound = Some(sound_cue(vm, 2)?);
+                    self.slide(vm, i, x)?;
+                    self.slider_x = x;
                 }
             }
             1 => {
                 if let Some(Control::Slider(i)) = self.pressed {
-                    self.slide(vm, i, x)?
+                    if hit == self.pressed {
+                        sound = Some(sound_cue(vm, 2)?);
+                    }
+                    self.slide(vm, i, x)?;
+                    self.slider_x = x;
                 } else if self.pressed != hit {
                     self.pressed = None
                 }
             }
             2 => match self.pressed.take() {
-                Some(Control::Slider(i)) => self.slide(vm, i, x)?,
+                Some(Control::Slider(i)) => {
+                    if x != self.slider_x && hit == Some(Control::Slider(i)) {
+                        sound = Some(sound_cue(vm, 2)?);
+                    }
+                    self.slide(vm, i, x)?;
+                }
                 Some(control) if Some(control.clone()) == hit => match control {
-                    Control::Edge(i, v) | Control::Radio(i, v) => preferences::set(vm, i, v)?,
-                    Control::Page(d) => return Ok(Some((self.page as i32 + d).clamp(1, 5) as u32)),
+                    Control::Edge(i, v) => {
+                        sound = Some(sound_cue(vm, 2)?);
+                        preferences::set(vm, i, v)?;
+                    }
+                    Control::Radio(i, v) => {
+                        sound = Some(sound_cue(vm, 3)?);
+                        preferences::set(vm, i, v)?;
+                    }
+                    Control::Page(d) => page = Some((self.page as i32 + d).clamp(1, 5) as u32),
                     Control::Track => {
                         let area = &self.images["* PAGE"];
-                        return Ok(Some(
+                        page = Some(
                             ((i64::from(y) - i64::from(area.position[1])) * 5
                                 / i64::from(area.pixels.height()))
                             .clamp(0, 4) as u32
                                 + 1,
-                        ));
+                        );
                     }
                     Control::Shortcut(slot) => self.editing = Some(slot),
                     Control::Choice(action) => {
                         let slot = self.editing.ok_or("shortcut picker is not open")?;
+                        sound = Some(sound_cue(vm, 2)?);
                         preferences::set_shortcut(vm, slot, action)?;
                         self.editing = None;
                     }
@@ -235,7 +265,11 @@ impl Settings {
             3 => self.pressed = None,
             _ => return Err("invalid settings pointer event".into()),
         }
-        Ok(None)
+        let page = page.filter(|&page| page != self.page);
+        if page.is_some() {
+            sound = Some(sound_cue(vm, 1)?);
+        }
+        Ok((page, sound.into_iter().collect()))
     }
     pub fn packet(
         &self,
@@ -421,6 +455,10 @@ impl Settings {
         Ok(packet)
     }
 }
+fn sound_cue(vm: &mut SystemVm, id: u8) -> Result<(u8, i32)> {
+    Ok((id, crate::message_log::audio_volume(vm, "VolSYS")? as i32))
+}
+
 // A shared sprite sheet also contains ShortCutsWindow's modal choices. Only
 // controls bound by ViewConfigPage/its GUI belong to the normal fifth page.
 fn visible_normal(page: u32, key: &str) -> bool {
@@ -480,20 +518,21 @@ mod tests {
             size: [100, 100],
             images,
             pressed: None,
+            slider_x: 0,
             unsupported: false,
             editing: None,
             preview_text: None,
         };
         let mut vm = SystemVm::try_new().unwrap();
-        vm.eval("setup","Config <- {ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();
+        vm.eval("setup","Config <- {VolSYS=40,ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();
         page.pointer(&mut vm, 0, 5, 5).unwrap();
-        page.pointer(&mut vm, 2, 5, 5).unwrap();
+        assert_eq!(page.pointer(&mut vm, 2, 5, 5).unwrap(), (None, vec![]));
         assert_eq!(page.editing, Some(3));
         assert_eq!(page.hit(35, 5), None);
         assert_eq!(page.hit(5, 5), None);
         page.pointer(&mut vm, 0, 55, 5).unwrap();
         page.pointer(&mut vm, 1, 35, 5).unwrap();
-        page.pointer(&mut vm, 2, 55, 5).unwrap();
+        assert_eq!(page.pointer(&mut vm, 2, 55, 5).unwrap(), (None, vec![]));
         assert_eq!(page.editing, Some(3));
         assert_eq!(preferences::shortcut_ids(&mut vm).unwrap()[0], 9);
         assert!(page.cancel_popup());
@@ -501,14 +540,70 @@ mod tests {
         page.pointer(&mut vm, 0, 5, 5).unwrap();
         page.pointer(&mut vm, 2, 5, 5).unwrap();
         page.pointer(&mut vm, 0, 55, 5).unwrap();
-        page.pointer(&mut vm, 2, 55, 5).unwrap();
+        assert_eq!(
+            page.pointer(&mut vm, 2, 55, 5).unwrap(),
+            (None, vec![(2, 40)])
+        );
         assert_eq!(page.editing, None);
         assert_eq!(preferences::shortcut_ids(&mut vm).unwrap()[0], 5);
         page.pointer(&mut vm, 0, 5, 5).unwrap();
         page.pointer(&mut vm, 2, 5, 5).unwrap();
         page.pointer(&mut vm, 0, 75, 5).unwrap();
-        page.pointer(&mut vm, 2, 75, 5).unwrap();
+        assert_eq!(
+            page.pointer(&mut vm, 2, 75, 5).unwrap(),
+            (None, vec![(2, 40)])
+        );
         assert_eq!(preferences::shortcut_ids(&mut vm).unwrap()[0], 0);
+    }
+    #[test]
+    fn touch_sounds_use_pre_mutation_volume_and_only_real_page_changes() {
+        let images = [
+            ("* VolSYS", [0, 0], 100, 10),
+            ("* VolSYS++", [100, 0], 10, 10),
+            ("= BOLD#0", [0, 10], 10, 10),
+            ("* PAGE", [110, 0], 10, 50),
+        ]
+        .into_iter()
+        .map(|(key, position, width, height)| {
+            (
+                key.into(),
+                Image {
+                    pixels: RgbaImage::transparent(width, height, 4000).unwrap(),
+                    position,
+                },
+            )
+        })
+        .collect();
+        let mut settings = Settings {
+            page: 3,
+            size: [120, 50],
+            images,
+            pressed: None,
+            slider_x: 0,
+            unsupported: false,
+            editing: None,
+            preview_text: None,
+        };
+        let mut vm = SystemVm::try_new().unwrap();
+        vm.eval("setup", r#"
+Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,BoxOpacity=191,Bold=0,Border=1,AutoSpeed=50,SkipNoRead=0,VoiceCheck={},ShortCuts=["CONFIG","MENU","RESET","QUIT","SAVE","LOAD","QSAVE","QLOAD","LOG","HIDE","AUTO","SKIP"]}
+function RestoreVolume(){}
+"#).unwrap();
+        let mut pointer = |kind, x, y| settings.pointer(&mut vm, kind, x, y).unwrap();
+        assert_eq!(pointer(0, 50, 5), (None, vec![(2, 50)]));
+        assert_eq!(pointer(1, 0, 5), (None, vec![(2, 50)]));
+        assert_eq!(pointer(1, 70, 5), (None, vec![(2, 0)]));
+        assert_eq!(pointer(2, 70, 5), (None, vec![]));
+        assert_eq!(pointer(0, 70, 5), (None, vec![(2, 70)]));
+        assert_eq!(pointer(2, 80, 5), (None, vec![(2, 70)]));
+        assert_eq!(pointer(0, 105, 5), (None, vec![]));
+        assert_eq!(pointer(2, 105, 5), (None, vec![(2, 80)]));
+        assert_eq!(pointer(0, 5, 15), (None, vec![]));
+        assert_eq!(pointer(2, 5, 15), (None, vec![(3, 100)]));
+        assert_eq!(pointer(0, 115, 25), (None, vec![]));
+        assert_eq!(pointer(2, 115, 25), (None, vec![]));
+        assert_eq!(pointer(0, 115, 35), (None, vec![]));
+        assert_eq!(pointer(2, 115, 35), (Some(4), vec![(1, 100)]));
     }
     #[test]
     fn shortcut_popup_choices_are_not_page_controls() {

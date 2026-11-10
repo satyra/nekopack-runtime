@@ -499,10 +499,28 @@ pub unsafe extern "C" fn neko_probe_story(
                         })
                     }
                 }
-                56 => state
-                    .as_mut()
-                    .ok_or("no story session")?
-                    .log_sound(sequence),
+                56 => {
+                    if count == 0 {
+                        return state
+                            .as_mut()
+                            .ok_or("no story session")?
+                            .log_sound(sequence);
+                    }
+                    if count != 1 {
+                        return Err("UI sound requires a volume".into());
+                    }
+                    let volume = unsafe { *fds };
+                    if let Some(story) = state.as_mut() {
+                        story.ui_sound(sequence, volume)
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .ui_sound(sequence, volume)
+                        })
+                    }
+                }
                 55 => state
                     .as_mut()
                     .ok_or("no story session")?

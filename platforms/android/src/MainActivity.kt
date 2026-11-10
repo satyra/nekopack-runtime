@@ -323,19 +323,31 @@ class MainActivity : Activity() {
         hiddenView.setOnClickListener{restoreDialogue()}
         hiddenBack={if(!storyClosing&&(dialogueHidden||hideBusy)){restoreDialogue();true}else false}
         var uiAudioToken=-1000L
-        fun playUiAudio(packet:ByteArray){
+        fun playUiAudio(packet:ByteArray,afterStartVolume:Int?=null){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()};val token=--uiAudioToken
             meta.put("token",token).put("ui_audio",true)
+            if(afterStartVolume!=null)meta.put("restore_category_percent",afterStartVolume)
             val bytes=packet.copyOfRange(split+1,packet.size);val file=File(root,"audio-$token.ogg");file.writeBytes(bytes)
             val digest=java.security.MessageDigest.getInstance("SHA-256").digest(bytes).joinToString(""){"%02x".format(it.toInt() and 255)}
             File(root,"audio-$token.json").writeText(JSONObject().put("kind",meta.getString("host_effect")).put("name",meta.getString("name")).put("sha256",digest).toString())
             File(root,"effect-$token.json").writeText(meta.toString())
             val clip=try{ShortClip.read(file)}catch(error:Exception){file.delete();throw error}
             runOnUiThread{menuTimeline.post(cancel={file.delete()}){if(storyClosing){file.delete()}else{
-                storyEffects!!.configureCategory(meta.getString("host_effect"),meta.getInt("category_percent"))
                 storyEffects!!.run(meta,null,file,clip){File(root,"ui-audio-events.jsonl").appendText(meta.toString()+"\n")}
             }}}
+        }
+        fun playSystemSounds(meta:JSONObject){
+            val volume=if(meta.optString("kind")=="settings")meta.getJSONObject("config").getInt("VolSYS")else null
+            val cues=meta.optJSONArray("system_sounds")
+            if(cues==null||cues.length()==0){
+                if(volume!=null)runOnUiThread{menuTimeline.post{if(!storyClosing)storyEffects!!.configureCategory("system",volume)}}
+                return
+            }
+            for(i in 0 until cues.length()){
+                val cue=cues.getJSONObject(i)
+                playUiAudio(story(intArrayOf(cue.getInt("category_percent")),56,cue.getLong("id")),volume)
+            }
         }
         fun openLog(){
             storyLogOpen=true;dialogue.suspend();timeline.pause();controls.visibility=android.view.View.GONE;dialogueView.visibility=android.view.View.INVISIBLE
@@ -554,6 +566,7 @@ class MainActivity : Activity() {
         fun presentStoryMenu(packet:ByteArray,unlock:Boolean,inputKind:Int=-1){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.optString("error")}
+            playSystemSounds(meta)
             meta.put("pointer_kind",inputKind)
             val closed=meta.getString("kind")=="story_menu_closed"
             if(closed)check(story(intArrayOf(),1,0).contentEquals(File(root,"menu-checkpoint.bin").readBytes())){"menu advanced dialogue"}
@@ -739,6 +752,7 @@ class MainActivity : Activity() {
         fun showTitle(packet:ByteArray,unlock:Boolean){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!metadata.has("error")){metadata.optString("error")}
+            playSystemSounds(metadata)
             if(metadata.optString("kind")=="story_settings_closed"){
                 check(metadata.getLong("sequence")==sequence){"settings changed dialogue token"}
                 check(story(intArrayOf(),1,0).contentEquals(File(root,"settings-story-checkpoint.bin").readBytes())){"settings advanced the script"}
@@ -746,7 +760,7 @@ class MainActivity : Activity() {
                 runOnUiThread{menuTimeline.post{if(!storyClosing){try{
                     stage.removeView(titleView);configControls.visibility=android.view.View.GONE
                     dialogueView.visibility=android.view.View.VISIBLE;controls.visibility=android.view.View.VISIBLE
-                    storyConfigOpen=false;timeline.resume();storyEffects!!.resume();dialogue.resume()
+                    storyConfigOpen=false;timeline.resume();storyEffects!!.resumeStory();dialogue.resume()
                     File(root,"story-settings-events.jsonl").appendText(JSONObject(metadata.toString()).put("event","closed").put("active_ms",timeline.now()).toString()+"\n")
                 }catch(error:Throwable){lifecycleFailure(error)}}}}
                 return
@@ -792,7 +806,7 @@ class MainActivity : Activity() {
             if(!storyClosing)worker.execute{try{if(!storyClosing)showTitle(story(intArrayOf(kind,x,y),18,0),kind==2)}catch(error:Throwable){fail(error)}}
         }
         originalSettings.setOnClickListener {
-            storyConfigOpen=true;dialogue.suspend();timeline.pause();storyEffects!!.pause()
+            storyConfigOpen=true;dialogue.suspend();timeline.pause();storyEffects!!.pauseStory()
             controls.visibility=android.view.View.GONE;dialogueView.visibility=android.view.View.GONE
             titleView.accepting=false;stage.addView(titleView,FrameLayout.LayoutParams(-1,-1))
             val token=sequence
@@ -902,7 +916,7 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         lifecycleGeneration++
-        menuTimeline.resume();if(!storyConfigOpen&&!storySaveOpen&&!storyLogOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}else if(storySaveOpen||storyLogOpen){try{storyEffects?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
+        menuTimeline.resume();if(!storyConfigOpen&&!storySaveOpen&&!storyLogOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}else if(storyConfigOpen||storySaveOpen||storyLogOpen){try{storyEffects?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {

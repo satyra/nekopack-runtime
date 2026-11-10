@@ -1,0 +1,59 @@
+{
+  "base_commit": "56b7d388975c9239df4b3ab94017fcb281ccd411",
+  "apk_sha256": "e6deef3d6df317a05cbc6acae757d52ceeb71114a162ff6a9bc5d70d38b5b1d5",
+  "execution": "translated ARM64 on x86_64",
+  "device": "emulator-5568",
+  "native_bridge": "libnb.so",
+  "checks": {
+    "rust_top_level_passed": 162,
+    "isolated_native_probes_passed": 7,
+    "python_tests_passed": 17,
+    "fmt_check": true,
+    "clippy_all_targets_deny_warnings": true,
+    "python_compile": true,
+    "ndk_arm64_build": true,
+    "menu_actions": 35,
+    "sound_counts": {
+      "se_PAGE": 19,
+      "se_OK": 1,
+      "se_CLICK": 6
+    },
+    "story_pages_verified": 57,
+    "side_menu": true,
+    "vm_live_bytes": 0
+  },
+  "report_sha256": {
+    "research/menu-sounds-batch53-original.json": "21e98f91e4cbce41adeafa368288ab0ac3547f9eeb991267b1e235071f37fc42",
+    "research/menu-sounds-batch53-emulator.json": "ea2587c382d5acba402fd3848cf1aac17b2700539d61aa503ceff4849788601d",
+    "research/menu-sounds-batch53-settings.json": "f2deab5d081320bd080f414464673002bd4f99e45f5db0b1fb7ace64f7de152b",
+    "research/menu-sounds-batch53-side.json": "5fe886e623eb736bb395b11201b706c648765bd2a74fd369f9fc8c5b8cbb5bd2"
+  },
+  "log_sha256": {
+    ".local/batch53-tests.log": "94fc0e5608a2b5b2377019214e2bee19285bbeaab4d719435e57791d82734f36",
+    ".local/batch53-clippy.log": "ed666e7d0a419d89280b965116e575f746658805e1c5071b76457bfe3ace1c8d",
+    ".local/batch53-python-tests.log": "d7fc4fab771aae9fe9358802d37579eee3c7fb93614563d1afb8257deda3eb67",
+    ".local/batch53-build.log": "a05a56177bf9edbb0520dc8bb12420c5ca7f2ac22f73eb26c8ace45071b5687c",
+    ".local/batch53-menu.log": "5c818c8504be42a0b9d88c10a4d4cd11ad75c62fc2cd00b9372f0e7781353aeb",
+    ".local/batch53-settings.log": "7143c83604b5666be01c3a9d05f3186a56793d31833a175bba68456777cc5d65",
+    ".local/batch53-side.log": "c0852caa1094e63aae5c9d5d399bc523d9318f82a07a7740ae283debf36e9c4c"
+  },
+  "source_sha256": {
+    "crates/nekopack-runtime/src/message_log.rs": "e2428bb87e8354ba1bda7c76197bbf013670988538664425c0260e96aa5e91c9",
+    "crates/nekopack-runtime/src/settings.rs": "5679cf6b65e06668f3616446aa9411d903efd88c6df3fe020efac2b7ec515ccc",
+    "crates/nekopack-runtime/src/story.rs": "bf6a74144c8a9701c74b9e3d751d831ffad78c61d56e3453e664fab82a65fabb",
+    "crates/nekopack-runtime/src/story/log.rs": "79eb84501c2bf58fd0716ddd542713152848ed06b17928d9d498e0ba71182bca",
+    "crates/nekopack-runtime/src/title.rs": "e5310e7135e3074c87c84e51a41d33bee8df129aac8e3a4c87519805ca5f58ea",
+    "platforms/android/native/src/lib.rs": "c6e9a4f7c738b83eb108ba1c640d3429bd9fa336260c798616b7d76094c4390f",
+    "platforms/android/src/MainActivity.kt": "2cb89f9124362a1b55fc042af51973d5265a82a0dcc6d8387696beb8c28eada4",
+    "platforms/android/src/StoryEffects.kt": "b28344a094528b08db112b686b0830c10a4a610a3298fab9d2852eed067ffa7c",
+    "platforms/android/verify_menu_sounds.py": "a9190e2d7f82972d3eef77d5e260278f31eb046dbc8257365c04fe9dfad2ede0",
+    "research/verify_original_menu_sounds.py": "546e9d41a65b4f1f5b73ed4941c9d36c19cad47b06f4c168d27b86f05b64bd98"
+  },
+  "limits": [
+    "No physical ARM64 device or human listening verification in this batch.",
+    "Original sound semantics verified statically; no sample-exact Windows comparison.",
+    "Mouse-hover SELECT is not synthesized from Android touch.",
+    "Continuous drag sound events have Rust unit coverage; device slider checks use taps supported by this emulator.",
+    "No full auto/skip or save compatibility suite rerun."
+  ]
+}

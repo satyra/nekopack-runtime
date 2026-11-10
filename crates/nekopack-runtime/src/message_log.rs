@@ -263,6 +263,15 @@ pub(crate) fn audio<R: Read + Seek>(
         Audio::Click => ("system", "sound/se", "se_CLICK", "VolSYS"),
     };
     let percent = audio_volume(system, volume)?;
+    audio_packet(store, kind, folder, name, percent)
+}
+fn audio_packet<R: Read + Seek>(
+    store: &mut DatGame<R>,
+    kind: &str,
+    folder: &str,
+    name: &str,
+    percent: u32,
+) -> Result<Vec<u8>> {
     let bytes = store.read(folder, &format!("{name}.ogg"))?;
     if !bytes.starts_with(b"OggS") {
         return Err("invalid UI audio resource".into());
@@ -272,13 +281,44 @@ pub(crate) fn audio<R: Read + Seek>(
     Ok(out)
 }
 
-fn audio_volume(system: &mut SystemVm, field: &str) -> Result<u32> {
+pub(crate) fn audio_volume(system: &mut SystemVm, field: &str) -> Result<u32> {
     system.eval("ui-audio-volume", &format!("if(typeof Config.{field} != \"integer\")throw \"invalid UI audio configuration type\"\nreturn Config.{field}.tostring()"))?;
     let percent = system.result().trim().parse::<u32>()?;
     if percent > 100 {
         return Err("invalid UI audio volume".into());
     }
     Ok(percent)
+}
+
+pub(crate) type Cue = (u8, i32);
+pub(crate) fn page_cue(vm: &mut SystemVm) -> Result<Vec<Cue>> {
+    Ok(vec![(1, audio_volume(vm, "VolSYS")? as i32)])
+}
+pub(crate) fn with_sounds(packet: Vec<u8>, cues: &[Cue]) -> Vec<u8> {
+    let sounds = cues
+        .iter()
+        .map(|(id, volume)| format!("{{\"id\":{id},\"category_percent\":{volume}}}"))
+        .collect::<Vec<_>>()
+        .join(",");
+    let mut out = format!("{{\"system_sounds\":[{sounds}],").into_bytes();
+    out.extend_from_slice(&packet[1..]);
+    out
+}
+pub(crate) fn sound_at<R: Read + Seek>(
+    store: &mut DatGame<R>,
+    id: u64,
+    volume: i32,
+) -> Result<Vec<u8>> {
+    if !(0..=100).contains(&volume) {
+        return Err("invalid UI sound volume".into());
+    }
+    let name = match id {
+        1 => "se_PAGE",
+        2 => "se_CLICK",
+        3 => "se_OK",
+        _ => return Err("unknown UI sound".into()),
+    };
+    audio_packet(store, "system", "sound/se", name, volume as u32)
 }
 
 #[cfg(test)]

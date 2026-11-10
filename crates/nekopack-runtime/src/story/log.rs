@@ -65,6 +65,9 @@ impl<R: Read + Seek> StorySession<R> {
             crate::message_log::Audio::Voice(&e.voice),
         )
     }
+    pub fn ui_sound(&mut self, id: u64, volume: i32) -> Result<Vec<u8>, Box<dyn Error>> {
+        crate::message_log::sound_at(&mut self.store, id, volume)
+    }
     pub fn log_sound(&mut self, sound: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         let sound = match sound {
             1 => crate::message_log::Audio::Page,

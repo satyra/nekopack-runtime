@@ -245,7 +245,11 @@ impl<R: Read + Seek> StorySession<R> {
             .collect::<Vec<_>>();
         let background = self.scene.render_pixels(&positions)?;
         self.menu = Some(crate::menu::Menu::open(&mut self.store, &plan, background)?);
-        self.menu_packet(None)
+        let cues = crate::message_log::page_cue(&mut self.system)?;
+        Ok(crate::message_log::with_sounds(
+            self.menu_packet(None)?,
+            &cues,
+        ))
     }
     fn menu_packet(&self, unsupported: Option<&str>) -> Result<Vec<u8>, Box<dyn Error>> {
         self.menu
@@ -288,7 +292,9 @@ impl<R: Read + Seek> StorySession<R> {
         self.menu_packet(None)
     }
     pub fn cancel_menu(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        self.close_menu(sequence, "")
+        let cues = crate::message_log::page_cue(&mut self.system)?;
+        let packet = self.close_menu(sequence, "")?;
+        Ok(crate::message_log::with_sounds(packet, &cues))
     }
     fn close_menu(&mut self, sequence: u64, action: &str) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed
@@ -323,7 +329,9 @@ impl<R: Read + Seek> StorySession<R> {
         self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
         self.skip_mode = false;
         self.settings_sequence += 1;
-        self.settings_packet()
+        let cues = crate::message_log::page_cue(&mut self.system)?;
+        let packet = self.settings_packet()?;
+        Ok(crate::message_log::with_sounds(packet, &cues))
     }
     fn settings_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         let settings = self
@@ -351,11 +359,13 @@ impl<R: Read + Seek> StorySession<R> {
             .settings
             .as_mut()
             .ok_or("story settings are not open")?;
-        if let Some(page) = settings.pointer(&mut self.system, kind, x, y)? {
+        let (page, cues) = settings.pointer(&mut self.system, kind, x, y)?;
+        if let Some(page) = page {
             self.settings = Some(crate::settings::Settings::open(&mut self.store, page)?);
         }
         self.settings_sequence += 1;
-        self.settings_packet()
+        let packet = self.settings_packet()?;
+        Ok(crate::message_log::with_sounds(packet, &cues))
     }
     pub fn settings_command(&mut self, command: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         let settings = self
@@ -377,7 +387,9 @@ impl<R: Read + Seek> StorySession<R> {
                     }
                     self.settings = None;
                     self.settings_sequence += 1;
-                    return Ok(format!("{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n", self.page.as_ref().unwrap().sequence, self.settings_sequence).into_bytes());
+                    let packet = format!("{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n", self.page.as_ref().unwrap().sequence, self.settings_sequence).into_bytes();
+                    let cues = crate::message_log::page_cue(&mut self.system)?;
+                    return Ok(crate::message_log::with_sounds(packet, &cues));
                 }
             }
             1 => {
@@ -1925,7 +1937,7 @@ mod tests {
     #[test]
     fn menu_is_modal_and_unsupported_actions_preserve_dialogue() {
         let mut s = session(b"one\ntwo");
-        s.system.eval("config","Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"CONFIG\",\"MENU\"]}").unwrap();
+        s.system.eval("config","Config <- {VolSYS=53,TextSpeed=0,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"CONFIG\",\"MENU\"]}").unwrap();
         s.enable_interactive_text();
         let packet = s.poll_packet().unwrap();
         s.text_frame(1, 0, false).unwrap();
@@ -1956,7 +1968,8 @@ mod tests {
         assert!(s.menu.is_some());
         assert_eq!(s.poll_packet().unwrap(), packet);
         assert_eq!(s.export_read_history(), b"NKRD\x01");
-        s.cancel_menu(1).unwrap();
+        let closed = String::from_utf8(s.cancel_menu(1).unwrap()).unwrap();
+        assert!(closed.contains("\"system_sounds\":[{\"id\":1,\"category_percent\":53}]"));
         assert!(!s.auto_mode && !s.skip_mode);
         assert!(s.cancel_menu(1).is_err());
         assert_eq!(s.poll_packet().unwrap(), packet);
@@ -1968,6 +1981,7 @@ mod tests {
             s.menu_pointer(1, 0, x, 0).unwrap();
             let closed = String::from_utf8(s.menu_pointer(1, 2, x, 0).unwrap()).unwrap();
             assert!(closed.contains(&format!("\"action\":\"{action}\"")));
+            assert!(!closed.contains("system_sounds"));
             assert!(s.menu.is_none());
             assert!(!s.auto_mode);
         }

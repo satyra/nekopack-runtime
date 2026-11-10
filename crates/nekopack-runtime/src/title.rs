@@ -33,6 +33,7 @@ pub struct TitleSession<R: Read + Seek> {
     bases: Vec<usize>,
     buttons: Vec<Button>,
     pressed: Option<i32>,
+    sound_cues: Vec<crate::message_log::Cue>,
     input_sequence: u64,
     settings: Option<crate::settings::Settings>,
     save_ui: Option<crate::save_ui::SaveUi>,
@@ -40,6 +41,9 @@ pub struct TitleSession<R: Read + Seek> {
     preview_font: Option<crate::text_render::SharedFont>,
 }
 impl<R: Read + Seek> TitleSession<R> {
+    pub fn ui_sound(&mut self, id: u64, volume: i32) -> Result<Vec<u8>> {
+        crate::message_log::sound_at(&mut self.store, id, volume)
+    }
     pub fn star_sound(&mut self) -> Result<Vec<u8>> {
         crate::message_log::audio(
             &mut self.store,
@@ -204,6 +208,7 @@ impl<R: Read + Seek> TitleSession<R> {
             bases,
             buttons,
             pressed: None,
+            sound_cues: Vec::new(),
             input_sequence: 0,
             settings: None,
             save_ui: None,
@@ -229,7 +234,9 @@ impl<R: Read + Seek> TitleSession<R> {
     pub fn pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Option<i32>> {
         self.input_sequence += 1;
         if let Some(settings) = self.settings.as_mut() {
-            if let Some(page) = settings.pointer(&mut self.system, kind, x, y)? {
+            let (page, cues) = settings.pointer(&mut self.system, kind, x, y)?;
+            self.sound_cues = cues;
+            if let Some(page) = page {
                 self.settings = Some(crate::settings::Settings::open(&mut self.store, page)?)
             }
             return Ok(None);
@@ -237,18 +244,21 @@ impl<R: Read + Seek> TitleSession<R> {
         let hit = self.hit(x, y);
         let action = update_pointer(&mut self.pressed, kind, hit)?;
         if action == Some(3) {
+            self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
             self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
             return Ok(None);
         }
         Ok(action)
     }
     pub fn packet(&mut self, action: Option<i32>) -> Result<Vec<u8>> {
+        let cues = std::mem::take(&mut self.sound_cues);
         if let Some(settings) = &self.settings {
-            return settings.packet(
+            let packet = settings.packet(
                 &mut self.system,
                 self.input_sequence,
                 self.preview_font.as_ref(),
-            );
+            )?;
+            return Ok(crate::message_log::with_sounds(packet, &cues));
         }
         let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
         for &i in &self.bases {
@@ -289,7 +299,7 @@ impl<R: Read + Seek> TitleSession<R> {
         let (source, line) = self.machine.location().ok_or("title location missing")?;
         let mut result=format!("{{\"kind\":\"title\",\"input_sequence\":{},\"width\":{},\"height\":{},\"source\":{},\"line\":{},\"steps\":{},\"pressed\":{},\"action\":{},\"buttons\":[{}]}}\n",self.input_sequence,self.size[0],self.size[1],quote(source)?,line,self.machine.steps(),self.pressed.unwrap_or(0),action.unwrap_or(0),buttons).into_bytes();
         canvas.write_png(&mut result)?;
-        Ok(result)
+        Ok(crate::message_log::with_sounds(result, &cues))
     }
     pub fn settings_command(&mut self, command: u64) -> Result<Vec<u8>> {
         if self.settings.is_none() {
@@ -298,6 +308,7 @@ impl<R: Read + Seek> TitleSession<R> {
         match command {
             0 => {
                 if !self.settings.as_mut().unwrap().cancel_popup() {
+                    self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
                     self.settings = None
                 }
             }
