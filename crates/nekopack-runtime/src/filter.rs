@@ -6,12 +6,14 @@ pub(crate) enum Filter {
     #[default]
     None,
     Night,
+    Sunset,
 }
 impl Filter {
     pub fn parse(args: &[Vec<u8>]) -> Result<Self, String> {
         match args {
             [] => Ok(Self::None),
             [name] if name == "夜".as_bytes() => Ok(Self::Night),
+            [name] if name == "夕".as_bytes() => Ok(Self::Sunset),
             _ => Err("unsupported actor filter arguments".into()),
         }
     }
@@ -19,16 +21,29 @@ impl Filter {
         match self {
             Self::None => "null",
             Self::Night => "\"night\"",
+            Self::Sunset => "\"sunset\"",
         }
     }
     pub fn apply(self, image: &mut RgbaImage) {
-        if self == Self::Night {
-            // Original packed BGRA: paddusb 0x00000011; psubusb 0x00111600.
-            for p in image.pixels_mut().as_chunks_mut::<4>().0 {
-                p[0] = p[0].saturating_sub(17);
-                p[1] = p[1].saturating_sub(22);
-                p[2] = p[2].saturating_add(17);
+        // Convert the original packed BGRA operands to RGB channel order.
+        let (add, subtract) = match self {
+            Self::None => return,
+            Self::Night => ([0, 0, 17], [17, 22, 0]),
+            Self::Sunset => ([34, 0, 0], [0, 16, 34]),
+        };
+        for pixel in image.pixels_mut().as_chunks_mut::<4>().0 {
+            for channel in 0..3 {
+                pixel[channel] = pixel[channel]
+                    .saturating_add(add[channel])
+                    .saturating_sub(subtract[channel]);
             }
+        }
+    }
+    pub fn save_id(self) -> u64 {
+        match self {
+            Self::None => 0,
+            Self::Night => 1,
+            Self::Sunset => 2,
         }
     }
 }
@@ -36,6 +51,15 @@ impl Filter {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn sunset_uses_original_rgb_operands_and_preserves_alpha() {
+        let mut image =
+            RgbaImage::from_rgba(2, 1, vec![240, 64, 100, 19, 10, 12, 28, 0], 8).unwrap();
+        let filter = Filter::parse(&["夕".as_bytes().to_vec()]).unwrap();
+        assert_eq!(filter, Filter::Sunset);
+        filter.apply(&mut image);
+        assert_eq!(image.pixels(), &[255, 48, 66, 19, 44, 0, 0, 0]);
+    }
     #[test]
     fn night_clamps_every_channel_and_preserves_alpha() {
         let pixels = (0..=255u8).flat_map(|v| [v, v, v, v]).collect();

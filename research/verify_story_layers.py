@@ -44,8 +44,7 @@ def main():
     if not words:continue
     command,*args=words
     if command=='.filter' and a.actor_filter:
-     assert args in [[],['夜']]
-     active_filter='night' if args else None
+     active_filter={():None,('夜',):'night',('夕',):'sunset'}[tuple(args)]
     elif command=='.img0':
      bg=args[0] if args and args[0] not in colors else None
      bgcolor=colors.get(args[0]) if args else None
@@ -93,6 +92,8 @@ def main():
      actor=Image.open(io.BytesIO(raw)).convert('RGBA')
      if a.actor_filter and layer['filter']=='night':
       actor=actor.point([max(0,v-17) for v in range(256)]+[max(0,v-22) for v in range(256)]+[min(255,v+17) for v in range(256)]+list(range(256)))
+     elif a.actor_filter and layer['filter']=='sunset':
+      actor=actor.point([min(255,v+34) for v in range(256)]+[max(0,v-16) for v in range(256)]+[max(0,v-34) for v in range(256)]+list(range(256)))
      canvas.alpha_composite(actor,position)
    if visual and not overlay:canvas.alpha_composite(Image.open(io.BytesIO(read('image/visual/'+visual+'.png'))).convert('RGBA'))
    actual=Image.open(path.with_suffix('.png')).convert('RGBA')

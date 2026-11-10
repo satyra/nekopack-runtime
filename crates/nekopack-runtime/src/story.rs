@@ -2805,6 +2805,24 @@ mod tests {
         }
     }
     #[test]
+    fn spaced_brackets_queue_two_excursions_without_moving_the_anchor() {
+        let mut s = moving_session(b".img6 [ ]\nfirst\nsecond");
+        s.scene.actors[0].anchor[0] = 200;
+        let packet = s.poll_packet().unwrap();
+        let steps = s.machine.steps();
+        for (time, x) in [(0, 200), (125, 150), (250, 200), (375, 250), (500, 200)] {
+            let frame = s.page_frame(1, time).unwrap();
+            let split = frame.iter().position(|b| *b == b'\n').unwrap();
+            let pixels = &frame[split + 1..];
+            assert_eq!(&pixels[x * 4..x * 4 + 4], [83, 88, 137, 255]);
+            assert_eq!(s.poll_packet().unwrap(), packet);
+            assert_eq!(s.machine.steps(), steps);
+        }
+        s.acknowledge_text(1).unwrap();
+        assert_eq!(s.scene.actors[0].anchor, [200, 0]);
+        assert!(s.motions.is_empty());
+    }
+    #[test]
     fn dip_frames_restore_y_and_early_next_never_commits_peak_or_reorders() {
         for early in [false, true] {
             let mut s = moving_session(b".img6 _\nfirst\nsecond");

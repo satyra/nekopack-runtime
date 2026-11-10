@@ -18,7 +18,7 @@ mod tests {
     fn saved_scene_retains_pixels_order_and_filter_without_double_applying() {
         let mut scene = Scene::new([1, 1]);
         scene.background_color = Some([10, 20, 30, 255]);
-        scene.filter = crate::filter::Filter::Night;
+        scene.filter = crate::filter::Filter::Sunset;
         let mut a = layer(1, [100, 110, 120, 128]);
         a.filter_pending = true;
         scene.put(a, Order::Front).unwrap();
@@ -30,6 +30,8 @@ mod tests {
         let mut r = nekopack_script::checkpoint::Reader::new(&w.0).unwrap();
         let mut restored = Scene::load(&mut r, [1, 1]).unwrap();
         r.finish().unwrap();
+        assert_eq!(restored.filter, crate::filter::Filter::Sunset);
+        assert_eq!(restored.actors[0].filter, crate::filter::Filter::Sunset);
         assert_eq!(restored.metadata().unwrap(), metadata);
         assert_eq!(restored.render().unwrap(), expected);
         assert_eq!(restored.render().unwrap(), expected);
@@ -121,6 +123,17 @@ mod tests {
         let excursion = plan(&[b"[[[[".to_vec()], &macros, 640).unwrap();
         assert_eq!(excursion.motions, [MotionKind::Excursion(-200)]);
         assert_eq!(excursion.order, Order::Keep);
+        let alternating = plan(
+            &[b"face".to_vec(), b"[".to_vec(), b"]".to_vec()],
+            &macros,
+            640,
+        )
+        .unwrap();
+        assert_eq!(alternating.name.as_deref(), Some("face"));
+        assert_eq!(
+            alternating.motions,
+            [MotionKind::Excursion(-50), MotionKind::Excursion(50)]
+        );
         let nested = BTreeMap::from([
             ("alias".into(), vec!["_".into()]),
             ("_".into(), vec!["front".into()]),
@@ -198,6 +211,7 @@ pub(crate) fn plan(
             || (!word.is_empty() && word.bytes().all(|b| b == b'>'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'<'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'['))
+            || (!word.is_empty() && word.bytes().all(|b| b == b']'))
         {
             if word == "[]" {
                 p.motions.push(MotionKind::Stationary);
@@ -207,11 +221,12 @@ pub(crate) fn plan(
                 p.motions.push(MotionKind::Dip);
                 continue;
             }
-            if word.bytes().all(|b| b == b'[') {
+            if word.starts_with(['[', ']']) {
+                let pixels_per_symbol = if word.starts_with('[') { -50 } else { 50 };
                 p.motions.push(MotionKind::Excursion(
                     i32::try_from(word.len())
                         .ok()
-                        .and_then(|n| n.checked_mul(-50))
+                        .and_then(|n| n.checked_mul(pixels_per_symbol))
                         .ok_or("actor excursion overflow")?,
                 ));
                 continue;
@@ -326,7 +341,7 @@ impl Scene {
         }
         w.number(self.dimensions[0].into());
         w.number(self.dimensions[1].into());
-        w.number(u64::from(self.filter == crate::filter::Filter::Night));
+        w.number(self.filter.save_id());
         w.text(self.background_name.as_deref().unwrap_or(""));
         if let Some(i) = &self.background {
             image(w, i)?;
@@ -342,7 +357,7 @@ impl Scene {
             w.number(a.slot.into());
             w.text(&a.name);
             w.text(&a.folder);
-            w.number(u64::from(a.filter == crate::filter::Filter::Night));
+            w.number(a.filter.save_id());
             w.number(u64::from(a.filter_pending));
             for n in a.offset.into_iter().chain(a.anchor) {
                 w.number(u64::from(n as u32));
@@ -379,6 +394,7 @@ impl Scene {
             match r.number()? {
                 0 => Ok(crate::filter::Filter::None),
                 1 => Ok(crate::filter::Filter::Night),
+                2 => Ok(crate::filter::Filter::Sunset),
                 _ => Err("invalid saved filter".into()),
             }
         }
