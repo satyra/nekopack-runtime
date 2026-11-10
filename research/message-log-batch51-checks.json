@@ -1,0 +1,71 @@
+{
+  "base_commit": "38ff5351c8d4837da1d2cc8beb48be0e2183e5fb",
+  "rust_top_level_tests": 161,
+  "isolated_native_probes": 7,
+  "python_tests": 17,
+  "cargo_fmt": "check passed",
+  "clippy": "workspace all-targets deny warnings passed",
+  "verifier_py_compile": "passed",
+  "ndk": "r27d",
+  "api": 23,
+  "target": "aarch64-linux-android",
+  "execution": "translated ARM64 on x86_64",
+  "sha256": {
+    "libnekopack_probe.so": "25dc7c19a8a99e652a6a729b1fee0feb428ae7d1cf6435760d1d09a37c67a280",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "bd482065c25ffabadbd89ee3ed980725aef045f7e5ee8b991c30f2f03b41a793"
+  },
+  "log_return_cases": 9,
+  "star_operations": 29,
+  "star_progress_observed": 29,
+  "history_voice_replays": 4,
+  "main_baseline_pages": 57,
+  "settings_baseline_pages": 57,
+  "legacy_nksv1": "current entry restored; next dialogue appended",
+  "new_save_format": "NKSV2 with message history",
+  "report_sha256": {
+    "message-log-batch51-original.json": "cffb68103d47b1e23120c29a34bb2927c55429383df01e551cea94261fdba7ac",
+    "message-log-batch51-emulator.json": "c68d92e0629cbf193afe24d64bf2a5dd82d4ffbb7bc46b524731c6ed273482e9",
+    "message-log-batch51-audio.json": "9e51504389c15698b5af15fef1376fe384eaffd3357389765fe1ec0465d9ff63",
+    "message-log-batch51-independent.json": "c8fc8eea72efc8cb602f56d4b311238a36a65f1c5288d9ad5c35b4ef4e7687a8",
+    "message-log-batch51-side-menu.json": "7b28d3a17ec44c791a9edd442b0a4f9e34bea52e11a80bc8f5244a3a3a17debf",
+    "message-log-batch51-settings.json": "2203ef847a854e5765c26b34c2865cbb06f951722d5be3c43da7502faceb1e5f"
+  },
+  "log_sha256": {
+    "batch51-tests.log": "66667b2a7c416b2a46e886ab87a4fca653926bb7661c87ff228f5d579d894f9f",
+    "batch51-clippy.log": "d827ab50baf8a6a52ffe52a7fe39050e6d0e5faaee0b1158545a3b7c23880104",
+    "batch51-python.log": "8b715c42c8e8ad1d52ebe49dba9595f458fa3fd2c48627c1439cc9a22b0a6bc9",
+    "batch51-build.log": "ff98031553668f260aa7308570363eaedd018505b358535a881d78fbb48747d3",
+    "batch51-emulator.log": "222d82b45aeffdec16b3ec731503bf1edb835913a05746f29fcb9ead5324a022",
+    "batch51-audio.log": "06f1fe2c27743db5e2ca8e774fd95c13401d5af7cc1f0b0564fc86e53081a27b",
+    "batch51-independent.log": "9d98b4cc2ae35b8d3a402dd67120085b09788337f7405b8635076e0747f7c99b",
+    "batch51-side-menu.log": "fa671c69b43022eb97c37d4e045bf2bd599500c799369d523ffb1c915c3d2766",
+    "batch51-settings.log": "8b07a27972979bf65058638180077055cf2114e1a750292e25401f5ae4e3203d"
+  },
+  "ui_automation_null_hierarchy_retries": 2,
+  "original_evidence": "Pinned static BLESS EXE and raw DAT scripts/resources; no live Windows parity claim",
+  "configuration_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191,
+    "Bold": 0,
+    "Border": 1,
+    "AutoSpeed": 50,
+    "SkipNoRead": 0
+  },
+  "limitations": [
+    "ARM64 translated execution, no physical device",
+    "No manual listening or acoustic parity validation",
+    "Host font, not MS Gothic pixel parity",
+    "PAGE/CLICK extra log sounds not implemented",
+    "No original .sav interoperability or sample-position resume",
+    "NKSV1 contains no historical log, only current entry is recoverable",
+    "Full auto/skip suite not rerun this batch"
+  ]
+}

@@ -13,6 +13,7 @@ pub(crate) struct Saved {
     audio: BTreeMap<String, (String, bool)>,
     audio_effects: std::collections::VecDeque<HostEffect>,
     page_effects: Vec<String>,
+    history: Option<crate::message_log::History>,
 }
 impl<R: Read + Seek> StorySession<R> {
     pub fn side_menu(&mut self, quick: Option<&[u8]>) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -35,7 +36,8 @@ impl<R: Read + Seek> StorySession<R> {
             .pointer(kind, x, y)
     }
     pub fn begin_save(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed
+        if self.log_ui.is_some()
+            || self.failed
             || self.return_title_requested
             || self.menu.is_some()
             || self.settings.is_some()
@@ -46,7 +48,7 @@ impl<R: Read + Seek> StorySession<R> {
         {
             return Err("stale save/load request".into());
         }
-        self.save_modal = true;
+        self.dialogue_modal = true;
         self.auto_mode = false;
         self.skip_mode = false;
         Ok(b"{\"ready\":true}".to_vec())
@@ -101,7 +103,8 @@ impl<R: Read + Seek> StorySession<R> {
             .set_slot(id, value)
     }
     fn save_boundary(&self) -> Result<(), Box<dyn Error>> {
-        if !self.save_modal
+        if self.log_ui.is_some()
+            || !self.dialogue_modal
             || self.failed
             || self.return_title_requested
             || self.pending_effect.is_some()
@@ -116,7 +119,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.save_boundary()?;
         self.save_ui = None;
         self.prepared_save = None;
-        self.save_modal = false;
+        self.dialogue_modal = false;
         Ok(b"{\"closed\":true}".to_vec())
     }
     pub fn export_save(&self) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -149,10 +152,11 @@ impl<R: Read + Seek> StorySession<R> {
             w.text(name);
             w.number(u64::from(*looping));
         }
+        self.message_history.save(&mut w);
         if w.0.len() > LIMIT - 13 {
             return Err("runtime save exceeds limit".into());
         }
-        let mut out = b"NKSV\x01".to_vec();
+        let mut out = b"NKSV\x02".to_vec();
         out.extend(digest(&w.0).to_le_bytes());
         out.extend(w.0);
         Ok(out)
@@ -189,6 +193,14 @@ impl<R: Read + Seek> StorySession<R> {
                 quote(saved.labels.caption.as_bytes())?
             ),
         )?;
+        self.rebuilding_page = saved.history.is_some();
+        self.message_history = saved.history.unwrap_or_default();
+        self.log_face = self
+            .message_history
+            .entries
+            .last()
+            .map(|e| e.face.clone())
+            .unwrap_or_default();
         self.machine = saved.machine;
         self.scene = saved.scene;
         self.labels = saved.labels;
@@ -202,7 +214,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.page = None;
         self.text_reveal = None;
         self.effects = saved.page_effects;
-        self.save_modal = false;
+        self.dialogue_modal = false;
         self.auto_mode = false;
         self.skip_mode = false;
         self.dialogue_hidden = false;
@@ -211,6 +223,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.flash = None;
         // Materialize the pending text without completing it or executing preceding commands.
         self.advance()?;
+        self.rebuilding_page = false;
         for effect in &mut self.restore_audio {
             self.host_sequence += 1;
             effect.token = self.host_sequence;
@@ -228,7 +241,11 @@ impl Saved {
         dimensions: [u32; 2],
         with_audio: bool,
     ) -> Result<Self, Box<dyn Error>> {
-        if bytes.len() > LIMIT || bytes.len() < 13 || &bytes[..5] != b"NKSV\x01" {
+        if bytes.len() > LIMIT
+            || bytes.len() < 13
+            || &bytes[..4] != b"NKSV"
+            || !matches!(bytes[4], 1 | 2)
+        {
             return Err("unknown runtime save format".into());
         }
         if digest(&bytes[13..]) != u64::from_le_bytes(bytes[5..13].try_into()?) {
@@ -287,6 +304,20 @@ impl Saved {
                 return Err("invalid saved audio".into());
             }
         }
+        let history = if bytes[4] == 2 {
+            Some(crate::message_log::History::load(&mut r)?)
+        } else {
+            None
+        };
+        if let Some(h) = &history {
+            let last = h.entries.last().ok_or("empty saved message log")?;
+            if last.name != speaker
+                || last.voice != voice
+                || Some(last.text.as_bytes()) != machine.pending_text()
+            {
+                return Err("saved log does not match dialogue".into());
+            }
+        }
         r.finish()?;
         let mut audio_effects = std::collections::VecDeque::new();
         let mut sounds = audio.clone();
@@ -316,6 +347,7 @@ impl Saved {
         }
         // Validate rendering before the destructive commit, including saved positions.
         let mut saved = Saved {
+            history,
             page_effects,
             machine,
             scene,

@@ -1,0 +1,182 @@
+{
+  "log_checks": [
+    {
+      "run": "story_saves_0ba8899733a74c6c81b4ee7c7bf86435",
+      "token": 1,
+      "count": 1,
+      "page": 1,
+      "voice_token": null,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_ac94266eb0ea483c832cc06d5a8c80fa",
+      "token": 13,
+      "count": 13,
+      "page": 13,
+      "voice_token": null,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_ac94266eb0ea483c832cc06d5a8c80fa",
+      "token": 56,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1015,
+      "background": true,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_ac94266eb0ea483c832cc06d5a8c80fa",
+      "token": 58,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1017,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_7122c5bbdbbd4758878ebcf2e2a52e89",
+      "token": 1,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1002,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "token": 3,
+      "count": 56,
+      "page": 56,
+      "voice_token": -1003,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "token": 4,
+      "count": 57,
+      "page": 57,
+      "voice_token": null,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_8b44835e01a34d31872427487f292d83",
+      "token": 1,
+      "count": 1,
+      "page": 56,
+      "voice_token": null,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    },
+    {
+      "run": "story_saves_8b44835e01a34d31872427487f292d83",
+      "token": 2,
+      "count": 2,
+      "page": 57,
+      "voice_token": null,
+      "background": false,
+      "same_scene_and_dialogue": true,
+      "bgm_same_player": true
+    }
+  ],
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "bd482065c25ffabadbd89ee3ed980725aef045f7e5ee8b991c30f2f03b41a793",
+  "profile": "save_28fca3b9a8b74b979383f65398b2c3cc",
+  "runs": [
+    "story_saves_0ba8899733a74c6c81b4ee7c7bf86435",
+    "story_saves_dafcf5429ffe4defad320abf98c14e5c",
+    "story_saves_ac94266eb0ea483c832cc06d5a8c80fa",
+    "story_saves_7122c5bbdbbd4758878ebcf2e2a52e89",
+    "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+    "story_saves_6c39e00425d84b9895ce3688fb013449",
+    "story_saves_8b44835e01a34d31872427487f292d83"
+  ],
+  "story_run": "story_saves_ac94266eb0ea483c832cc06d5a8c80fa",
+  "results": [
+    {
+      "case": "system_volume",
+      "initial": 23,
+      "tested": 17,
+      "restored": 50,
+      "se_unchanged": true
+    },
+    {
+      "case": "first_page",
+      "new_sequence": 3,
+      "next_sequence": 4,
+      "background_modal": true,
+      "empty_slot_disabled": true,
+      "overwrite_exact_bytes": true,
+      "page_navigation_and_mode_switch": true
+    },
+    {
+      "case": "process_restart",
+      "durable": true
+    },
+    {
+      "case": "actor_queue_page",
+      "menu_checkpoint": {
+        "sequence": 56,
+        "steps": 412,
+        "visible": 6,
+        "elapsed_ms": 104
+      },
+      "restored_sequence": 58,
+      "next_sequence": 59,
+      "audio_released": true,
+      "bgm_and_voice_started": true
+    },
+    {
+      "case": "corrupt_slot",
+      "rejected_before_release": true,
+      "current_page_preserved": true,
+      "next_page_verified": true
+    },
+    {
+      "case": "title_load",
+      "cancel_preserves_title": true,
+      "no_start_story_execution": true,
+      "saved_page": 56,
+      "next_page": 57,
+      "corrupt_slot_disabled": true
+    },
+    {
+      "case": "quick_history",
+      "writes": 12,
+      "retained": 10,
+      "newest_page": 56,
+      "oldest_page": 3,
+      "hash_order_verified": true,
+      "normal_slot_unchanged": true,
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "title_run": "story_saves_6c39e00425d84b9895ce3688fb013449",
+      "function_keys": true,
+      "original_side_menu": true,
+      "title_q_page": true,
+      "corruption_preserves_current_state": true
+    },
+    {
+      "case": "legacy_v1",
+      "loaded": true,
+      "only_restored_current_entry": true,
+      "next_page_verified": true
+    }
+  ],
+  "baseline_pages": 57,
+  "closed_vm_live_bytes": 0,
+  "scope": "Runtime NKSV slots; no original .sav interoperability. Audio resource/loop/channel restart, not sample-position equivalence."
+}

@@ -1,0 +1,130 @@
+{
+  "ui_report_sha256": "c68d92e0629cbf193afe24d64bf2a5dd82d4ffbb7bc46b524731c6ed273482e9",
+  "execution": "translated ARM64 on x86_64",
+  "apk_sha256": "bd482065c25ffabadbd89ee3ed980725aef045f7e5ee8b991c30f2f03b41a793",
+  "sessions": [
+    {
+      "run": "story_saves_0ba8899733a74c6c81b4ee7c7bf86435",
+      "text_events": 26,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_dafcf5429ffe4defad320abf98c14e5c",
+      "text_events": 14,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_ac94266eb0ea483c832cc06d5a8c80fa",
+      "text_events": 466,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_7122c5bbdbbd4758878ebcf2e2a52e89",
+      "text_events": 8,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "text_events": 34,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_6c39e00425d84b9895ce3688fb013449",
+      "text_events": 7,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_8b44835e01a34d31872427487f292d83",
+      "text_events": 9,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    }
+  ],
+  "audio": {
+    "bgm": {
+      "original_token": 9,
+      "restored_token": 29,
+      "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+      "resource_identity_equal": true
+    },
+    "voice": {
+      "original_token": 27,
+      "restored_token": 30,
+      "sha256": "4f896acd370ab76c161533a91a311e819aed78a6c33d484eeb758b5db0b61eb6",
+      "resource_identity_equal": true
+    }
+  },
+  "quick_audio": [
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "page": 56,
+      "kind": "bgm",
+      "token": 3,
+      "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+      "resource_identity_equal": true
+    },
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "page": 56,
+      "kind": "voice",
+      "token": 4,
+      "sha256": "4f896acd370ab76c161533a91a311e819aed78a6c33d484eeb758b5db0b61eb6",
+      "resource_identity_equal": true
+    },
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "page": 56,
+      "kind": "bgm",
+      "token": 6,
+      "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+      "resource_identity_equal": true
+    },
+    {
+      "run": "story_saves_5fb5971843e64ba8bd1b69b25dc6ce26",
+      "page": 56,
+      "kind": "voice",
+      "token": 7,
+      "sha256": "4f896acd370ab76c161533a91a311e819aed78a6c33d484eeb758b5db0b61eb6",
+      "resource_identity_equal": true
+    },
+    {
+      "run": "story_saves_6c39e00425d84b9895ce3688fb013449",
+      "page": 56,
+      "kind": "bgm",
+      "token": 1,
+      "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+      "resource_identity_equal": true
+    },
+    {
+      "run": "story_saves_6c39e00425d84b9895ce3688fb013449",
+      "page": 56,
+      "kind": "voice",
+      "token": 2,
+      "sha256": "4f896acd370ab76c161533a91a311e819aed78a6c33d484eeb758b5db0b61eb6",
+      "resource_identity_equal": true
+    }
+  ],
+  "quick_storage": [
+    {
+      "directory": "7514feae918cd6828847381c8d39c2cd3b523c50ef2d1a53a28296f8fc4d544c_probe_save_28fca3b9a8b74b979383f65398b2c3cc",
+      "indexed_slots": 10,
+      "physical_snapshots": 11,
+      "all_index_entries_present": true
+    }
+  ],
+  "no_old_audio_callbacks": true,
+  "corruption_error_then_cancel": true
+}

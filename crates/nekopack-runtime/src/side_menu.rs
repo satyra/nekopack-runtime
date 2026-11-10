@@ -115,7 +115,7 @@ impl SideMenu {
             buttons.push(format!(
                 "{{\"action\":{},\"enabled\":{enabled},\"supported\":{},\"bounds\":[{},{},{},{}]}}",
                 quote(name.as_bytes())?,
-                *name != "LOG",
+                true,
                 b[0],
                 b[1],
                 b[2],

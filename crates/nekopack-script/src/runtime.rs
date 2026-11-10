@@ -144,6 +144,13 @@ pub struct Machine {
     max_depth: usize,
 }
 impl Machine {
+    pub fn pending_text(&self) -> Option<&[u8]> {
+        if let Some(Request::Text(text)) = &self.pending {
+            Some(text)
+        } else {
+            None
+        }
+    }
     /// Save only at a pending text boundary; native Squirrel stacks are never serialized.
     pub fn save_dialogue(&self) -> Result<Vec<u8>, String> {
         if !matches!(self.pending, Some(Request::Text(_))) {

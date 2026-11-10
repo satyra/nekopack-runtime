@@ -26,6 +26,8 @@ class MainActivity : Activity() {
     private val menuTimeline=SessionTimeline()
     @Volatile private var storyConfigOpen=false
     @Volatile private var storySaveOpen=false
+    @Volatile private var storyLogOpen=false
+    private var storyLogBack:(()->Boolean)?=null
     private var shortcutKey:((Int)->Unit)?=null
     private var storySaveBack:(()->Boolean)?=null
     private var storyMenuBack:(()->Boolean)?=null
@@ -320,6 +322,54 @@ class MainActivity : Activity() {
         }
         hiddenView.setOnClickListener{restoreDialogue()}
         hiddenBack={if(!storyClosing&&(dialogueHidden||hideBusy)){restoreDialogue();true}else false}
+        var uiAudioToken=-1000L
+        fun playUiAudio(packet:ByteArray){
+            val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()};val token=--uiAudioToken
+            meta.put("token",token).put("ui_audio",true)
+            val bytes=packet.copyOfRange(split+1,packet.size);val file=File(root,"audio-$token.ogg");file.writeBytes(bytes)
+            val digest=java.security.MessageDigest.getInstance("SHA-256").digest(bytes).joinToString(""){"%02x".format(it.toInt() and 255)}
+            File(root,"audio-$token.json").writeText(JSONObject().put("kind",meta.getString("host_effect")).put("name",meta.getString("name")).put("sha256",digest).toString())
+            File(root,"effect-$token.json").writeText(meta.toString())
+            val clip=try{ShortClip.read(file)}catch(error:Exception){file.delete();throw error}
+            runOnUiThread{menuTimeline.post(cancel={file.delete()}){if(storyClosing){file.delete()}else{
+                storyEffects!!.configureCategory(meta.getString("host_effect"),meta.getInt("category_percent"))
+                storyEffects!!.run(meta,null,file,clip){File(root,"ui-audio-events.jsonl").appendText(meta.toString()+"\n")}
+            }}}
+        }
+        fun openLog(){
+            storyLogOpen=true;dialogue.suspend();timeline.pause();controls.visibility=android.view.View.GONE;dialogueView.visibility=android.view.View.INVISIBLE
+            autoEnabled=false;skipEnabled=false;auto.text="自动：关";skip.text="快进：关"
+            storyEffects!!.lifecycleAudio("log_open")
+            val token=sequence;var busy=true
+            lateinit var view:TitleView
+            val back=Button(this);back.text="返回剧情";layout.addView(back)
+            fun closeLog(){if(!busy){busy=true;view.accepting=false;worker.execute{try{
+                val result=JSONObject(String(story(intArrayOf(),53,token),Charsets.UTF_8));check(result.optString("kind")=="log_closed"){result.toString()}
+                check(story(intArrayOf(),1,0).contentEquals(File(root,"log-checkpoint.bin").readBytes())){"log advanced story"}
+                runOnUiThread{menuTimeline.post{if(!storyClosing){
+                    stage.removeView(view);layout.removeView(back);storyLogOpen=false;storyLogBack=null
+                    controls.visibility=android.view.View.VISIBLE;dialogueView.visibility=android.view.View.VISIBLE;timeline.resume();dialogue.resume()
+                    storyEffects!!.lifecycleAudio("log_closed");File(root,"log-events.jsonl").appendText(result.toString()+"\n")
+                }}}
+            }catch(error:Throwable){fail(error)}}}}
+            fun present(packet:ByteArray,unlock:Boolean){
+                val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+                val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));val png=packet.copyOfRange(split+1,packet.size)
+                val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid message log bitmap")
+                File(root,"message-log.png").writeBytes(png)
+                runOnUiThread{menuTimeline.post(cancel={bitmap.recycle()}){if(!storyClosing){
+                    view.present(bitmap);if(unlock){busy=false;view.accepting=true}
+                    meta.put("story_sequence",token).put("accepting",view.accepting)
+                    val tmp=File(root,"message-log-presented.tmp");tmp.writeText(meta.toString());check(tmp.renameTo(File(root,"message-log-presented.json")))
+                    if(meta.getInt("replay")>0){val index=meta.getLong("replay");worker.execute{try{playUiAudio(story(intArrayOf(),55,index))}catch(error:Throwable){fail(error)}}}
+                }else bitmap.recycle()}}
+            }
+            view=TitleView(this){kind,x,y->if(!storyClosing){if(kind==2)busy=true;worker.execute{try{present(story(intArrayOf(kind,x,y),52,token),kind==2)}catch(error:Throwable){fail(error)}}}}
+            view.contentDescription="原版消息日志";view.accepting=false;stage.addView(view,FrameLayout.LayoutParams(-1,-1))
+            back.setOnClickListener{closeLog()};storyLogBack={if(storyLogOpen){closeLog();true}else false}
+            worker.execute{try{File(root,"log-checkpoint.bin").writeBytes(story(intArrayOf(),1,0));present(story(intArrayOf(),51,token),true)}catch(error:Throwable){fail(error)}}
+        }
         fun saveDirectory():File {
             val scope=java.security.MessageDigest.getInstance("SHA-256").digest("${tree}_$game".toByteArray()).joinToString(""){"%02x".format(it.toInt() and 255)}
             val probe=intent.getStringExtra("save_probe")
@@ -332,7 +382,7 @@ class MainActivity : Activity() {
         fun openSaveSlots(initialSave:Boolean,fromTitle:Boolean=false,quick:Boolean=false){
             storySaveOpen=true
             if(!fromTitle)dialogue.suspend()
-            timeline.pause();storyEffects!!.pause();controls.visibility=android.view.View.GONE
+            timeline.pause();controls.visibility=android.view.View.GONE
             val directory=saveDirectory()
             val quickSlots=QuickSlots(directory)
             var saving=initialSave;var page=0;var busy=true
@@ -374,6 +424,7 @@ class MainActivity : Activity() {
             fun operate(id:Int){
                 busy=true;view.accepting=false;val saveMode=saving
                 worker.execute{try{
+                    playUiAudio(story(intArrayOf(),54,0))
                     val result=if(saveMode){
                         var state=JSONObject()
                         fun export(file:File){
@@ -435,7 +486,7 @@ class MainActivity : Activity() {
         }
         var sidePresentSequence=0L
         lateinit var sideView:SideMenuView
-        fun sideAvailable()=menu.isEnabled&&!storyClosing&&!storySaveOpen&&!storyConfigOpen&&!menuOpen&&!dialogueHidden&&!autoEnabled&&!skipEnabled&&!timeline.paused
+        fun sideAvailable()=menu.isEnabled&&!storyClosing&&!storySaveOpen&&!storyLogOpen&&!storyConfigOpen&&!menuOpen&&!dialogueHidden&&!autoEnabled&&!skipEnabled&&!timeline.paused
         fun presentSide(packet:ByteArray,token:Long){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val meta=JSONObject(String(packet,0,split,Charsets.UTF_8))
@@ -455,7 +506,7 @@ class MainActivity : Activity() {
                         "AUTO"->auto.performClick()
                         "SKIP"->skip.performClick()
                         "CONFIG"->originalSettings.performClick()
-                        "LOG"->android.widget.Toast.makeText(this,"消息日志尚未接通",android.widget.Toast.LENGTH_SHORT).show()
+                        "LOG"->openLog()
                     }
                     File(root,"side-menu-events.jsonl").appendText(meta.put("story_sequence",token).toString()+"\n")
                 }
@@ -515,6 +566,7 @@ class MainActivity : Activity() {
                         "CONFIG"->originalSettings.performClick()
                         "SAVE"->openSaveSlots(true)
                         "LOAD"->openSaveSlots(false)
+                        "LOG"->openLog()
                         "QSAVE"->openSaveSlots(true,quick=true)
                         "QLOAD"->openSaveSlots(false,quick=true)
                         "RESET"->returnToTitle()
@@ -547,14 +599,14 @@ class MainActivity : Activity() {
         }
         var shortcutBusy=false
         shortcutKey={slot->
-            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!menuOpen&&!storySaveOpen&&!timeline.paused&&sequence>0){
+            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!menuOpen&&!storySaveOpen&&!storyLogOpen&&!timeline.paused&&sequence>0){
                 shortcutBusy=true;val token=sequence
                 worker.execute{try{
                     val result=JSONObject(String(story(intArrayOf(),33,token,slot.toLong()),Charsets.UTF_8))
                     check(!result.has("error")){result.optString("error")}
                     runOnUiThread{timeline.post{shortcutBusy=false;if(!storyClosing){
                         val status=result.getString("status");val action=result.getString("action")
-                        if(storyConfigOpen||menuOpen||storySaveOpen||dialogueHidden||hideBusy)result.put("delivery","modal")
+                        if(storyConfigOpen||menuOpen||storySaveOpen||storyLogOpen||dialogueHidden||hideBusy)result.put("delivery","modal")
                         else if(status=="applied"){
                             autoEnabled=result.getBoolean("auto");skipEnabled=result.getBoolean("skip")
                             auto.text=if(autoEnabled)"自动：开" else "自动：关";skip.text=if(skipEnabled)"快进：开" else "快进：关"
@@ -564,6 +616,7 @@ class MainActivity : Activity() {
                             else if(action=="MENU"&&sequence==token&&menu.isEnabled){menu.performClick();result.put("delivery","menu")}
                             else if(action=="HIDE"&&sequence==token&&hide.isEnabled){hide.performClick();result.put("delivery","hidden")}
                             else if((action=="QSAVE"||action=="QLOAD")&&sequence==token){openSaveSlots(action=="QSAVE",quick=true);result.put("delivery","quick")}
+                            else if(action=="LOG"&&sequence==token){openLog();result.put("delivery","log")}
                             else if(action=="QUIT"){close.performClick();result.put("delivery","quit")}
                             else result.put("delivery","busy")
                         }else {
@@ -596,7 +649,7 @@ class MainActivity : Activity() {
                     }}}
                 }
             }catch(error:Throwable){fail(error)}}
-        }){error->worker.execute{fail(error)}}
+        },audioTimeline=menuTimeline){error->worker.execute{fail(error)}}
         show={packet->
             if(storyClosing) Unit else {
                 val split=packet.indexOf(10.toByte());check(split>=0)
@@ -829,7 +882,7 @@ class MainActivity : Activity() {
     }
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if(storySaveBack?.invoke()!=true && storyMenuBack?.invoke()!=true && hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
+        if(storyLogBack?.invoke()!=true && storySaveBack?.invoke()!=true && storyMenuBack?.invoke()!=true && hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
     }
     override fun onPause() {
         lifecycleGeneration++
@@ -847,11 +900,11 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         lifecycleGeneration++
-        menuTimeline.resume();if(!storyConfigOpen&&!storySaveOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
+        menuTimeline.resume();if(!storyConfigOpen&&!storySaveOpen&&!storyLogOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}else if(storySaveOpen||storyLogOpen){try{storyEffects?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        settingsBack=null;shortcutKey=null;hiddenBack=null;storyMenuBack=null;storySaveBack=null
+        settingsBack=null;shortcutKey=null;hiddenBack=null;storyMenuBack=null;storySaveBack=null;storyLogBack=null
         storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()

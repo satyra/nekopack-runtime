@@ -40,6 +40,9 @@ pub struct TitleSession<R: Read + Seek> {
     preview_font: Option<crate::text_render::SharedFont>,
 }
 impl<R: Read + Seek> TitleSession<R> {
+    pub fn star_sound(&mut self) -> Result<Vec<u8>> {
+        crate::message_log::audio(&mut self.store, &mut self.system, None)
+    }
     pub fn open_save_ui(&mut self) -> Result<Vec<u8>> {
         if self.settings.is_some() {
             return Err("title settings are open".into());

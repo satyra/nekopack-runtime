@@ -14,7 +14,7 @@ import org.json.JSONObject
 import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
-class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val timeline:SessionTimeline,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val failure:(Throwable)->Unit) {
+class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val timeline:SessionTimeline,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val audioTimeline:SessionTimeline=timeline,private val failure:(Throwable)->Unit) {
     private val players=mutableMapOf<String,Pair<ChannelPlayer,File>>()
     private var animator:ValueAnimator?=null
     private var bgmAnimator:ValueAnimator?=null
@@ -30,6 +30,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private val focusPaused=mutableSetOf<String>()
     private val pendingStart=mutableMapOf<String,()->Unit>()
     private val audioTokens=mutableMapOf<String,Long>()
+    private var audioPaused=false
     private var focusSuspended=false
     private var ducked=false
     private var closed=false
@@ -77,7 +78,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         File(root,"audio-gain-events.jsonl").appendText(JSONObject().put("kind",kind).put("token",audioTokens.getValue(kind)).put("category_percent",categoryVolumes.getValue(kind)).put("output",gain.output).put("fade",gain.fade).put("duck",gain.duck).put("player",System.identityHashCode(players.getValue(kind).first)).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
     }
     private fun regainFocus() {
-        if(timeline.paused){focused=false;return}
+        if(audioPaused){focused=false;return}
         focused=true;focusSuspended=false;ducked=false
         for(kind in gains.keys)applyGain(kind)
         for(kind in focusPaused) {
@@ -88,7 +89,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             log(if(prepared!=null)"playing" else "resumed",kind,audioTokens.getValue(kind),player.duration.toLong(),playbackStarted)
             prepared?.invoke()
         }
-        focusPaused.clear();if(!timeline.paused)bgmAnimator?.resume()
+        focusPaused.clear();bgmAnimator?.resume()
     }
     private val focus=AudioManager.OnAudioFocusChangeListener { change->
         if(!closed) {
@@ -123,6 +124,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     }
     fun pause(){
         if(closed)return
+        audioPaused=true
         for(kind in gains.keys){
             val player=players.getValue(kind).first
             if(player.isPlaying){player.pause();focusPaused.add(kind);log("paused",kind,audioTokens.getValue(kind),player.currentPosition.toLong())}
@@ -133,6 +135,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     }
     fun resume(){
         if(closed)return
+        audioPaused=false
         lifecycleAudio("resuming")
         if(players.isNotEmpty()){
             check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied on resume"}
@@ -171,9 +174,10 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     fun resetForLoad(){
         check(!closed)
         stopMotion();animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
-        for(kind in players.keys.toList())release(kind)
-        check(players.isEmpty()&&pendingStart.isEmpty()&&focusPaused.isEmpty())
-        log("load_released","all",0,players.size.toLong())
+        for(kind in players.keys.toList())if(kind!="system")release(kind)
+        check(players.keys.all{it=="system"}&&pendingStart.keys.all{it=="system"}&&focusPaused.all{it=="system"})
+        log("load_released","all",0,0)
+        audioTokens["system"]?.let{log("load_system_retained","system",it)}
     }
     fun close(){
         if(closed)return
@@ -186,11 +190,12 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         log("released","all",0,players.size.toLong())
         if(undeleted.isNotEmpty())failure(IllegalStateException("audio cache cleanup failed"))
     }
+    fun configureCategory(kind:String,percent:Int){check(percent in 0..100);categoryVolumes[kind]=percent}
     fun run(meta:JSONObject,bitmap:Bitmap?,file:File?,shortClip:ShortClip?=null,complete:()->Unit){
         if(closed){file?.delete();return}
         val kind=meta.getString("host_effect");val token=meta.getLong("token");val duration=meta.getLong("duration_ms")
         val started=timeline.now();log("begin",kind,token,duration)
-        fun done(){timeline.post{if(!closed){log("ack",kind,token,timeline.now()-started);complete()}}}
+        fun done(){(if(meta.optBoolean("ui_audio"))audioTimeline else timeline).post{if(!closed){log("ack",kind,token,timeline.now()-started);complete()}}}
         try {
             when(kind){
                 "wait"->timeline.post(duration){done()}
@@ -230,7 +235,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                 log("finished",kind,token,timeline.now()-started)
                             }
                         })
-                        animation.start();if(focusSuspended||timeline.paused)animation.pause();done()
+                        animation.start();if(focusSuspended||audioPaused)animation.pause();done()
                     }
                 }
                 "flash"->{
@@ -276,9 +281,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     }})
                     animation.start()
                 }
-                "bgm","env","se","voice"->{
+                "bgm","env","se","voice","system"->{
                     check(file!=null)
-                    if(!focused&&!timeline.paused){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};regainFocus()}
+                    if(!focused&&!audioPaused){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};regainFocus()}
                     release(kind)
                     val player=ChannelPlayer(shortClip);players[kind]=player to file
                     player.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(if(kind=="voice")AudioAttributes.CONTENT_TYPE_SPEECH else AudioAttributes.CONTENT_TYPE_MUSIC).build())
@@ -295,28 +300,28 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                     it.setVolume(gain.output,gain.output);log("gain",kind,token,percent.toLong())
                                 }else {it.isLooping=false;gains[kind]=AudioGain(1f)}
                                 applyGain(kind)
-                                if(focusSuspended||timeline.paused){focusPaused.add(kind);pendingStart[kind]={done()};log("focus_pending",kind,token)}
+                                if(focusSuspended||audioPaused){focusPaused.add(kind);pendingStart[kind]={done()};log("focus_pending",kind,token)}
                                 else {it.start();val playbackStarted=SystemClock.elapsedRealtime();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong(),playbackStarted)}
                                 if(kind=="env" || kind=="se"){
                                     log("looping",kind,token,if(it.isLooping)1 else 0)
                                     players["bgm"]?.first?.let{peer->if(peer.isPlaying)log("peer_playing","bgm",token,peer.currentPosition.toLong())}
                                 }
-                                if(!focusSuspended&&!timeline.paused)done()
+                                if(!focusSuspended&&!audioPaused)done()
                                 val sampleDelay=if(kind=="env" || (kind=="se"&&player.isLooping))200L else 50L
                                 val progress=object:Runnable {
                                     private var samples=0
                                     private var previousPosition=-1L
                                     override fun run(){
                                         if(closed||players[kind]?.first!==player)return
-                                        if(!player.isPlaying){if(focusPaused.contains(kind))timeline.post(200){run()};return}
+                                        if(!player.isPlaying){if(focusPaused.contains(kind))audioTimeline.post(200){run()};return}
                                         val position=player.currentPosition.toLong();samples++
                                         player.playbackHead?.let{head->log("pcm_head",kind,token,head)}
                                         log("progress",kind,token,position)
                                         if((kind=="env" || kind=="se") && position<previousPosition)log("looped",kind,token,position)
                                         previousPosition=position
-                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples*sampleDelay<5000))timeline.post(sampleDelay){run()}
+                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples*sampleDelay<5000))audioTimeline.post(sampleDelay){run()}
                                     }
-                                };timeline.post(sampleDelay){progress.run()}}
+                                };audioTimeline.post(sampleDelay){progress.run()}}
                             catch(error:Throwable){failure(error)}
                         }
                     }

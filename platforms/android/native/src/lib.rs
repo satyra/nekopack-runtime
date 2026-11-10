@@ -472,6 +472,37 @@ pub unsafe extern "C" fn neko_probe_story(
                         })
                     }
                 }
+                51 => state.as_mut().ok_or("no story session")?.open_log(sequence),
+                52 => {
+                    if count != 3 {
+                        return Err("log pointer requires kind/x/y".into());
+                    }
+                    let v = unsafe { std::slice::from_raw_parts(fds, count) };
+                    state
+                        .as_mut()
+                        .ok_or("no story session")?
+                        .log_pointer(v[0], v[1], v[2])
+                }
+                53 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .close_log(sequence),
+                54 => {
+                    if let Some(s) = state.as_mut() {
+                        s.star_sound()
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .star_sound()
+                        })
+                    }
+                }
+                55 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .log_voice(sequence as usize),
                 49 => {
                     use std::io::Read;
                     if count > 1 {

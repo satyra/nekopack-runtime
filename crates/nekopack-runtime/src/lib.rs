@@ -266,3 +266,5 @@ mod bootstrap_tests {
 }
 
 mod side_menu;
+
+mod message_log;

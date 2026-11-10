@@ -1,0 +1,331 @@
+{
+  "scope": "BLESS static evidence; no Windows live timing or acoustic parity claim",
+  "exe_sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+  "facts": [
+    {
+      "va": "0x4468cd",
+      "instruction": "push 0x550af0"
+    },
+    {
+      "va": "0x4468d3",
+      "instruction": "mov ebx, 0x5845e0"
+    },
+    {
+      "va": "0x4468f7",
+      "instruction": "push 0x550ae7"
+    },
+    {
+      "va": "0x4468fd",
+      "instruction": "call 0x4492a4"
+    },
+    {
+      "va": "0x446918",
+      "instruction": "push 0x550af6"
+    },
+    {
+      "va": "0x446924",
+      "instruction": "lea esi, [ebx + 0x60]"
+    },
+    {
+      "va": "0x446928",
+      "instruction": "call 0x4c0478"
+    },
+    {
+      "va": "0x446932",
+      "instruction": "push 0x64"
+    },
+    {
+      "va": "0x446935",
+      "instruction": "call 0x4c04e8"
+    },
+    {
+      "va": "0x44693d",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x446942",
+      "instruction": "call 0x4c0558"
+    },
+    {
+      "va": "0x44694a",
+      "instruction": "push 0"
+    },
+    {
+      "va": "0x44694e",
+      "instruction": "call 0x4c0024"
+    }
+  ],
+  "scripts": {
+    "message.nut": {
+      "sha256": "ce65a47f87403f20705e3264572fa4e5a2223185b21617f264cbf1aaa3472236",
+      "raw_dat_sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+      "ordinal": 8,
+      "normalized_line_locations": {
+        "function ViewLog()": [
+          65
+        ],
+        "for(local i=0; i<4; ++i)": [
+          75
+        ],
+        "local pagemax = MessageLog.len() - 4": [
+          109
+        ],
+        "if(m.voice)PlayVoice(m.voice)": [
+          131
+        ],
+        "if(!rest)MessageLog.append(m);": [
+          225
+        ],
+        "case ID_CANCEL:": [
+          52,
+          134,
+          337
+        ],
+        "g.Size = 22": [
+          73
+        ],
+        "g.LineWidth = text.width - 10": [
+          82
+        ]
+      }
+    },
+    "saveload.nut": {
+      "sha256": "43aebe919f6a8497470e3801ba0190ea4deba96f08257ac85dcf38bda5cfd4f4",
+      "raw_dat_sha256": "c836a951f051219f7a9c28dcbac72c6f9230647b34441130805034e2114c4d4d",
+      "ordinal": 1,
+      "normalized_line_locations": {
+        "::Save(f,MessageLog)": [
+          35
+        ],
+        "MessageLog = ::Load(f)": [
+          43
+        ],
+        "function QuickSave()": [
+          87
+        ],
+        "function QuickLoad(id=1)": [
+          96
+        ],
+        "function NormalSave(id)": [
+          103
+        ],
+        "function NormalLoad(id)": [
+          108
+        ],
+        "sound(\"STAR\")": [
+          89,
+          96,
+          105,
+          108
+        ]
+      }
+    },
+    "system.nut": {
+      "sha256": "4691bef4a9692d5ea8658c6da6a778f8acf02ddacbb853de693c6da30b1a1cce",
+      "raw_dat_sha256": "c7ae50d65fe9d27843add27fa21687066283ead2a275f6b394f9fb89af71aa74",
+      "ordinal": 37,
+      "normalized_line_locations": {
+        "MessageLog <- []": [
+          59
+        ]
+      }
+    }
+  },
+  "lookup": [
+    "selected\t0\t79",
+    "candidate\t0\t79\t0"
+  ],
+  "log": {
+    "ordinal": 3,
+    "sha256": "470dfb799b1e38f748b477c3eb8e7dc8e8cf39e5d3bb214122c0f0578b2f6eab",
+    "sprites": [
+      {
+        "ordinal": 0,
+        "x": 0,
+        "y": 0,
+        "name": "BASE"
+      },
+      {
+        "ordinal": 1,
+        "x": 41,
+        "y": 545,
+        "name": "- ITEM3"
+      },
+      {
+        "ordinal": 2,
+        "x": 41,
+        "y": 405,
+        "name": "- ITEM2"
+      },
+      {
+        "ordinal": 3,
+        "x": 41,
+        "y": 265,
+        "name": "- ITEM1"
+      },
+      {
+        "ordinal": 4,
+        "x": 41,
+        "y": 125,
+        "name": "- ITEM0"
+      },
+      {
+        "ordinal": 5,
+        "x": 41,
+        "y": 545,
+        "name": "= ITEM3"
+      },
+      {
+        "ordinal": 6,
+        "x": 41,
+        "y": 405,
+        "name": "= ITEM2"
+      },
+      {
+        "ordinal": 7,
+        "x": 41,
+        "y": 265,
+        "name": "= ITEM1"
+      },
+      {
+        "ordinal": 8,
+        "x": 41,
+        "y": 125,
+        "name": "= ITEM0"
+      },
+      {
+        "ordinal": 9,
+        "x": 41,
+        "y": 545,
+        "name": "+ ITEM3"
+      },
+      {
+        "ordinal": 10,
+        "x": 41,
+        "y": 405,
+        "name": "+ ITEM2"
+      },
+      {
+        "ordinal": 11,
+        "x": 41,
+        "y": 265,
+        "name": "+ ITEM1"
+      },
+      {
+        "ordinal": 12,
+        "x": 41,
+        "y": 125,
+        "name": "+ ITEM0"
+      },
+      {
+        "ordinal": 13,
+        "x": 1214,
+        "y": 92,
+        "name": "= SCROLL--"
+      },
+      {
+        "ordinal": 14,
+        "x": 1214,
+        "y": 92,
+        "name": "+ SCROLL--"
+      },
+      {
+        "ordinal": 15,
+        "x": 1214,
+        "y": 654,
+        "name": "= SCROLL++"
+      },
+      {
+        "ordinal": 16,
+        "x": 1214,
+        "y": 654,
+        "name": "+ SCROLL++"
+      },
+      {
+        "ordinal": 17,
+        "x": 1218,
+        "y": 134,
+        "name": "*SCROLL"
+      },
+      {
+        "ordinal": 18,
+        "x": 1218,
+        "y": 133,
+        "name": "@SCROLL"
+      },
+      {
+        "ordinal": 19,
+        "x": 136,
+        "y": 160,
+        "name": "TEXT0"
+      },
+      {
+        "ordinal": 20,
+        "x": 136,
+        "y": 300,
+        "name": "TEXT1"
+      },
+      {
+        "ordinal": 21,
+        "x": 136,
+        "y": 440,
+        "name": "TEXT2"
+      },
+      {
+        "ordinal": 22,
+        "x": 136,
+        "y": 580,
+        "name": "TEXT3"
+      },
+      {
+        "ordinal": 23,
+        "x": 87,
+        "y": 127,
+        "name": "NAME0"
+      },
+      {
+        "ordinal": 24,
+        "x": 87,
+        "y": 267,
+        "name": "NAME1"
+      },
+      {
+        "ordinal": 25,
+        "x": 87,
+        "y": 407,
+        "name": "NAME2"
+      },
+      {
+        "ordinal": 26,
+        "x": 87,
+        "y": 547,
+        "name": "NAME3"
+      }
+    ]
+  },
+  "star": {
+    "resource": "sound/se/se_STAR.ogg",
+    "archive": "sound.dat",
+    "ordinal": 79,
+    "sha256": "4af7aea6ec56389b0b612e8fd8dd9256a98b4caa5d79bf5f7d1a63c951838b11",
+    "bytes": 27729,
+    "sample_rate": 44100,
+    "channels": 2,
+    "frames": 92416,
+    "duration_seconds": 2.0956009070294783,
+    "category": "VolSYS"
+  },
+  "semantics": {
+    "log_rows": 4,
+    "initial_page": "max(0, count - 4)",
+    "voice": "PlayVoice replaces the current voice channel; closing log does not explicitly stop voice",
+    "bgm": "ViewLog contains no BGM stop/pause",
+    "save": "MessageLog is saved/restored; InRestore skips append",
+    "star_trigger": "QuickSave/NormalSave after InRoute check; QuickLoad/NormalLoad before file load"
+  },
+  "limits": [
+    "Static target build evidence only",
+    "Runtime log font uses installed host font, not MS Gothic pixel parity",
+    "PAGE/CLICK UI sounds are outside this STAR batch"
+  ]
+}

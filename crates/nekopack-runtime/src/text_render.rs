@@ -33,6 +33,61 @@ fn embolden(fill: &mut RgbaImage) {
 }
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
+pub(crate) fn draw_log_text(
+    canvas: &mut RgbaImage,
+    font: &FontVec,
+    text: &str,
+    padding: i32,
+    center: bool,
+) -> Result<()> {
+    let factor = 22.0 / font.units_per_em().ok_or("invalid font em")?;
+    let scale = font.height_unscaled() * factor;
+    let baseline = font.ascent_unscaled() * factor;
+    let chars: Vec<_> = text.chars().collect();
+    let advances: Vec<_> = chars
+        .iter()
+        .map(|c| {
+            if *c == '\n' {
+                None
+            } else {
+                Some((font.h_advance_unscaled(font.glyph_id(*c)) * factor).round() as i32)
+            }
+        })
+        .collect();
+    let width = canvas.width() as i32 - padding;
+    let locations = positions(&chars, &advances, width, 30)?;
+    let shift = if center {
+        (width - advances.iter().flatten().sum::<i32>()) / 2
+    } else {
+        0
+    };
+    for (c, [x, y]) in chars.iter().zip(locations) {
+        if *c == '\n' {
+            continue;
+        }
+        if let Some(outline) = font.outline_glyph(
+            font.glyph_id(*c)
+                .with_scale_and_position(scale, point((x + shift) as f32, y as f32 + baseline)),
+        ) {
+            let bounds = outline.px_bounds();
+            outline.draw(|gx, gy, a| {
+                let px = bounds.min.x as i32 + gx as i32;
+                let py = bounds.min.y as i32 + gy as i32;
+                if px >= 0
+                    && py >= 0
+                    && (px as u32) < canvas.width()
+                    && (py as u32) < canvas.height()
+                {
+                    let i = ((py as u32 * canvas.width() + px as u32) * 4) as usize;
+                    let alpha = canvas.pixels()[i + 3].max((a * 255.0).round() as u8);
+                    canvas.pixels_mut()[i..i + 4].copy_from_slice(&[255, 255, 255, alpha]);
+                }
+            });
+        }
+    }
+    Ok(())
+}
+
 pub(crate) fn draw_save_label(
     canvas: &mut RgbaImage,
     font: &FontVec,
