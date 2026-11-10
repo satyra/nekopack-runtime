@@ -26,7 +26,7 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
     }
     fun click(){if(!active)return;ready(false);if(busy){pendingClick=true;return};send(true,timeline.now()-started)}
     private fun send(click:Boolean,elapsed:Long){
-        busy=true;val generation=epoch;val token=sequence
+        busy=true;val generation=++epoch;val token=sequence
         request(if(click)12 else 11,token,elapsed){state,bitmap,geometry->
             if(active&&epoch==generation){
                 busy=false;check(state.getLong("sequence")==token);visibleCount=state.getLong("visible")
@@ -39,7 +39,7 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
                 else {
                     ready(true)
                     if(pendingClick){pendingClick=false;this.click()}
-                    else if(!state.getBoolean("complete"))timeline.post(33){if(active&&epoch==generation&&!busy)send(false,timeline.now()-started)}
+                    else if(!state.getBoolean("complete") || state.getBoolean("auto"))timeline.post(33){if(active&&epoch==generation&&!busy)send(false,timeline.now()-started)}
                 }
             }else bitmap.recycle()
         }

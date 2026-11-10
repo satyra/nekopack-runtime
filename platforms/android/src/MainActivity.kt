@@ -175,6 +175,7 @@ class MainActivity : Activity() {
         val settings=Button(this);settings.text="音量";settings.isEnabled=false;controls.addView(settings,LinearLayout.LayoutParams(0,-2,1f))
         val textSettings=Button(this);textSettings.text="文字";textSettings.isEnabled=false;controls.addView(textSettings,LinearLayout.LayoutParams(0,-2,1f))
         val originalSettings=Button(this);originalSettings.text="原版设置";originalSettings.isEnabled=false;controls.addView(originalSettings,LinearLayout.LayoutParams(0,-2,1f))
+        val auto=Button(this);auto.text="自动：关";auto.isEnabled=false;controls.addView(auto,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -182,7 +183,7 @@ class MainActivity : Activity() {
         fun persistConfig(){
             if(!titleFirst)return
             val bytes=story(intArrayOf(),20,0)
-            check(bytes.size==25 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,4))){String(bytes,Charsets.UTF_8)}
+            check(bytes.size==26 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,5))){String(bytes,Charsets.UTF_8)}
             check(getPreferences(MODE_PRIVATE).edit().putString(preferenceKey,android.util.Base64.encodeToString(bytes,android.util.Base64.NO_WRAP)).commit()){"configuration save failed"}
         }
         var sequence=0L
@@ -213,8 +214,9 @@ class MainActivity : Activity() {
         }
         lifecycleFailure={error->worker.execute{fail(error)}}
         dialogue=DialoguePresentation(dialogueView,timeline,root,{op,token,elapsed,done->
+            val frameOp=if(storyEffects!!.voiceFinished())op+16 else op
             worker.execute{try{if(!storyClosing){
-                val state=JSONObject(String(story(intArrayOf(),op,token,elapsed),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
+                val state=JSONObject(String(story(intArrayOf(),frameOp,token,elapsed),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
                 val frame=story(intArrayOf(),16,token);val split=frame.indexOf(10.toByte());check(split>=0){String(frame,Charsets.UTF_8)}
                 val geometry=JSONObject(String(frame,0,split,Charsets.UTF_8));val png=frame.copyOfRange(split+1,frame.size)
                 val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid dialogue overlay")
@@ -223,7 +225,7 @@ class MainActivity : Activity() {
                 if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
                 runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
-        },{enabled->next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
+        },{enabled->auto.isEnabled=enabled&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
             if(originalSettings.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("settings_probe_sequence",-1)&&!intent.getBooleanExtra("settings_probe_used",false)){
                 intent.putExtra("settings_probe_used",true);originalSettings.performClick()
             }
@@ -231,6 +233,16 @@ class MainActivity : Activity() {
             storyEffects?.stopMotion();storyEffects?.finishDialogue(sequence,stopVoice);val token=sequence
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         })
+        var autoEnabled=false
+        auto.setOnClickListener {
+            dialogue.suspend();auto.isEnabled=false;next.isEnabled=false;originalSettings.isEnabled=false
+            val token=sequence;val enabled=!autoEnabled
+            worker.execute{try{
+                val state=JSONObject(String(story(intArrayOf(),if(enabled)26 else 25,token),Charsets.UTF_8))
+                check(!state.has("error")){state.optString("error")}
+                runOnUiThread{timeline.post{if(!storyClosing){autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";dialogue.resume()}}}
+            }catch(error:Throwable){fail(error)}}
+        }
         storyEffects=StoryEffects(this,image,overlay,root,timeline,{kind,token,elapsed,ready->
             worker.execute{try{
                 if(!storyClosing && (kind!="motion" || storyEffects!!.isMotionActive(token))){

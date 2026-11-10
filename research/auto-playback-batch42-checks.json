@@ -1,0 +1,30 @@
+{
+  "rust_top_level_tests": 142,
+  "isolated_host_native_probes": 7,
+  "rust_failures": 0,
+  "python_tests": 17,
+  "cargo_fmt_check": "passed",
+  "clippy_workspace_all_targets_deny_warnings": "passed",
+  "android_ndk": "r27d",
+  "target": "aarch64-linux-android",
+  "api": 23,
+  "sha256": {
+    "libnekopack_probe.so": "d89f1815fe8cc93db8b455076e02b023b34e190981001ba847b3e365405844bc",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "8ec9ff47a2a0f1a43b7548d65ad8e3f08057fdbe8d8a27e4cc4c5bc38ab744af"
+  },
+  "device_report": "auto-playback-batch42-emulator.json",
+  "device_execution": "translated ARM64 on x86_64",
+  "ui_dump_retries": 1,
+  "read_transport_retries": 0,
+  "first_pass_apk_sha256": "ca55498e05e40871e584e2da183f02c566d840dbbf066b2e83206415579a84dc",
+  "final_rerun_reason": "Validate final APK after making AutoSpeed initialization atomic on validation failure.",
+  "log_sha256": {
+    "batch42-tests.log": "b4d8ac26c5208705dbf8a00b2015a5e74110995b859d882e8f0c49bfac36cbc3",
+    "batch42-clippy.log": "b4a8375d42700b1ed903547855f6b3ae466d2ff4e6c38b6808d341c33fa18345",
+    "batch42-python-final.log": "5b2ecf1d7a6f5324251f58cc3a64900ee1aef3c8494943a2e7b61e33d06c668d",
+    "batch42-build-final.log": "f412f2f0a12b3a87acff2f924e48ecef30b420abc92d7f69a11ae24d7f77e773",
+    "batch42-final-emulator.log": "3fb398f397d3f49e54dcf35d6008f5ab877d726de9c3deabefb08d323c8d0e71"
+  }
+}

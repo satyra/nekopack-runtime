@@ -2,7 +2,7 @@
 use nekopack_script::system::SystemVm;
 use std::{collections::BTreeMap, error::Error};
 pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
-pub(crate) const FIELDS: [&str; 10] = [
+pub(crate) const FIELDS: [&str; 11] = [
     "TextSpeed",
     "KeepVoice",
     "VolBGM",
@@ -13,8 +13,9 @@ pub(crate) const FIELDS: [&str; 10] = [
     "BoxOpacity",
     "Bold",
     "Border",
+    "AutoSpeed",
 ];
-const MAGIC: &[u8] = b"NKCF\x04";
+const MAGIC: &[u8] = b"NKCF\x05";
 pub(crate) const ACTIONS: [&str; 11] = [
     "", "AUTO", "SKIP", "LOG", "HIDE", "SAVE", "LOAD", "QSAVE", "QLOAD", "RESET", "QUIT",
 ];
@@ -76,7 +77,7 @@ pub(crate) fn maximum(index: usize) -> i32 {
     }
 }
 fn validate(v: &[u8]) -> Result<()> {
-    if !matches!(v.len(), 7 | 8 | 10)
+    if !matches!(v.len(), 7 | 8 | 10 | 11)
         || v.iter()
             .enumerate()
             .any(|(i, &v)| i32::from(v) > maximum(i))
@@ -138,6 +139,7 @@ fn decode(bytes: &[u8]) -> Result<(&[u8], Option<&[u8]>)> {
         2 => (7, 17),
         3 => (8, 18),
         4 => (10, 20),
+        5 => (11, 21),
         _ => return Err("unknown runtime preferences format/version".into()),
     };
     if payload.len() != length {
@@ -175,14 +177,14 @@ mod tests {
     #[test]
     fn import_is_validated_before_mutation_and_reset_uses_game_defaults() {
         let mut vm = SystemVm::try_new().unwrap();
-        vm.eval("setup", "Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,BoxOpacity=191,Bold=0,Border=1,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}\nConfigDefault <- clone Config\nConfigDefault.ShortCuts = clone Config.ShortCuts\nApplies <- 0\nfunction RestoreVolume(){Applies++}").unwrap();
+        vm.eval("setup", "Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,BoxOpacity=191,Bold=0,Border=1,AutoSpeed=50,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}\nConfigDefault <- clone Config\nConfigDefault.ShortCuts = clone Config.ShortCuts\nApplies <- 0\nfunction RestoreVolume(){Applies++}").unwrap();
         let original = export(&mut vm).unwrap();
-        assert_eq!(original.len(), 25);
+        assert_eq!(original.len(), 26);
         set_shortcut(&mut vm, 3, 1).unwrap();
         set_shortcut(&mut vm, 12, 0).unwrap();
         let edited = export(&mut vm).unwrap();
-        assert_eq!(edited[15], 1);
-        assert_eq!(edited[24], 0);
+        assert_eq!(edited[16], 1);
+        assert_eq!(edited[25], 0);
         set(&mut vm, 2, 20).unwrap();
         assert_eq!(shortcut_ids(&mut vm).unwrap()[0], 1);
         assert_eq!(shortcut_ids(&mut vm).unwrap()[9], 0);
@@ -190,7 +192,7 @@ mod tests {
         import(&mut vm, &legacy).unwrap();
         assert_eq!(export(&mut vm).unwrap(), edited);
         // v2 imports its own shortcuts but preserves the new opacity field.
-        let legacy2 = [b"NKCF\x02".as_slice(), &edited[5..12], &edited[15..]].concat();
+        let legacy2 = [b"NKCF\x02".as_slice(), &edited[5..12], &edited[16..]].concat();
         set(&mut vm, 7, 127).unwrap();
         import(&mut vm, &legacy2).unwrap();
         assert_eq!(values(&mut vm).unwrap()["BoxOpacity"], 127);
@@ -203,12 +205,20 @@ mod tests {
         assert!(set(&mut vm, 7, 256).is_err());
         assert!(set(&mut vm, 7, -1).is_err());
         assert_eq!(export(&mut vm).unwrap(), edited);
-        let legacy3 = [b"NKCF\x03".as_slice(), &edited[5..13], &edited[15..]].concat();
+        let legacy3 = [b"NKCF\x03".as_slice(), &edited[5..13], &edited[16..]].concat();
         set(&mut vm, 8, 1).unwrap();
         set(&mut vm, 9, 0).unwrap();
         import(&mut vm, &legacy3).unwrap();
         assert!(style(&mut vm).unwrap().bold);
         assert!(!style(&mut vm).unwrap().border);
+        let legacy4 = [b"NKCF\x04".as_slice(), &edited[5..15], &edited[16..]].concat();
+        set(&mut vm, 10, 73).unwrap();
+        import(&mut vm, &legacy4).unwrap();
+        assert_eq!(values(&mut vm).unwrap()["AutoSpeed"], 73);
+        set(&mut vm, 10, 50).unwrap();
+        // Restore style changed above after testing v4 migration.
+        set(&mut vm, 8, 1).unwrap();
+        set(&mut vm, 9, 0).unwrap();
         let bold = export(&mut vm).unwrap();
         reset(&mut vm).unwrap();
         import(&mut vm, &bold).unwrap();
@@ -218,7 +228,7 @@ mod tests {
         set(&mut vm, 8, 0).unwrap();
         set(&mut vm, 9, 1).unwrap();
         let mut corrupt = edited.clone();
-        corrupt[24] = 11;
+        corrupt[25] = 11;
         assert!(import(&mut vm, &corrupt).is_err());
         assert_eq!(export(&mut vm).unwrap(), edited);
         assert!(set_shortcut(&mut vm, 2, 1).is_err());
@@ -244,7 +254,7 @@ mod tests {
     }
     #[test]
     fn version_length_and_ranges_are_strict() {
-        let valid = [MAGIC, &[50, 1, 50, 75, 50, 50, 50, 191, 0, 1], &[0; 10]].concat();
+        let valid = [MAGIC, &[50, 1, 50, 75, 50, 50, 50, 191, 0, 1, 50], &[0; 10]].concat();
         assert!(decode(&valid).is_ok());
         for n in 0..valid.len() {
             assert!(decode(&valid[..n]).is_err())
@@ -274,13 +284,14 @@ mod tests {
         bad.push(0);
         assert!(decode(&bad).is_err());
         for (i, value) in [
-            (4, 5),
+            (4, 6),
             (5, 101),
             (6, 2),
             (7, 101),
             (13, 2),
             (14, 2),
-            (15, 11),
+            (15, 101),
+            (16, 11),
         ] {
             let mut bad = valid.clone();
             bad[i] = value;

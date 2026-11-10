@@ -183,6 +183,7 @@ pub struct StorySession<R: Read + Seek> {
     failed: bool,
     host_mode: bool,
     interactive_text: bool,
+    auto_mode: bool,
     text_reveal: Option<crate::dialogue::Reveal>,
     text_renderer: Option<crate::text_render::DialogueRenderer>,
     settings: Option<crate::settings::Settings>,
@@ -360,6 +361,7 @@ impl<R: Read + Seek> StorySession<R> {
             failed: false,
             host_mode: false,
             interactive_text: false,
+            auto_mode: false,
             text_reveal: None,
             text_renderer: None,
             settings: None,
@@ -493,6 +495,31 @@ impl<R: Read + Seek> StorySession<R> {
         elapsed: u64,
         click: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
+        self.text_frame_with_voice(sequence, elapsed, click, false)
+    }
+    pub fn set_auto_mode(
+        &mut self,
+        sequence: u64,
+        enabled: bool,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.settings.is_some()
+            || self.failed
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+            || self.text_reveal.as_ref().is_none_or(|r| r.advance)
+        {
+            return Err("auto mode requires an active dialogue".into());
+        }
+        self.auto_mode = enabled;
+        Ok(format!("{{\"auto\":{enabled}}}").into_bytes())
+    }
+    /// Host reports completion for the current page; only the core grants progression.
+    pub fn text_frame_with_voice(
+        &mut self,
+        sequence: u64,
+        elapsed: u64,
+        click: bool,
+        voice_finished: bool,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.settings.is_some()
             || self.failed
             || !self.interactive_text
@@ -509,14 +536,18 @@ impl<R: Read + Seek> StorySession<R> {
                 let page = self.page.as_ref().unwrap();
                 renderer.prepare(sequence, &page.speaker, &page.text)?;
             }
-            self.text_reveal = Some(crate::dialogue::Reveal::new(
+            self.system
+                .eval("auto-speed", "return Config.AutoSpeed.tostring()")?;
+            let mut reveal = crate::dialogue::Reveal::new(
                 self.page.as_ref().unwrap().text.clone(),
                 speed,
                 keep,
-            )?);
+            )?;
+            reveal.set_auto_speed(self.system.result().parse()?)?;
+            self.text_reveal = Some(reveal);
         }
         // The original reads KeepVoice at NEXT, while TextSpeed is captured on entry.
-        let keep = if click {
+        let keep = if click || self.auto_mode {
             Some(self.read_text_config()?.1 == 1)
         } else {
             None
@@ -525,8 +556,14 @@ impl<R: Read + Seek> StorySession<R> {
         if let Some(keep) = keep {
             state.keep_voice = keep;
         }
-        let advance = state.update(elapsed, click)?;
-        Ok(format!("{{\"sequence\":{sequence},\"elapsed_ms\":{elapsed},\"visible\":{},\"text\":{},\"complete\":{},\"advance\":{advance},\"stop_voice\":{}}}",state.count(),quote(state.visible().as_bytes())?,state.complete(),advance&&!state.keep_voice&&!self.page.as_ref().unwrap().voice.is_empty()).into_bytes())
+        let advance = state.auto_frame(
+            elapsed,
+            click,
+            self.auto_mode,
+            !self.page.as_ref().unwrap().voice.is_empty(),
+            voice_finished,
+        )?;
+        Ok(format!("{{\"sequence\":{sequence},\"auto\":{},\"voice_finished\":{voice_finished},\"elapsed_ms\":{elapsed},\"visible\":{},\"text\":{},\"complete\":{},\"advance\":{advance},\"stop_voice\":{}}}",self.auto_mode,state.count(),quote(state.visible().as_bytes())?,state.complete(),advance&&!state.keep_voice&&!self.page.as_ref().unwrap().voice.is_empty()).into_bytes())
     }
     pub fn poll_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed {
@@ -1359,6 +1396,7 @@ mod tests {
             failed: false,
             host_mode: false,
             interactive_text: false,
+            auto_mode: false,
             text_reveal: None,
             text_renderer: None,
             settings: None,
@@ -1372,10 +1410,56 @@ mod tests {
     }
 
     #[test]
+    fn invalid_auto_speed_does_not_leave_an_initialized_page() {
+        let mut s = session(b"one");
+        s.system
+            .eval(
+                "config",
+                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=101}",
+            )
+            .unwrap();
+        s.enable_interactive_text();
+        s.poll_packet().unwrap();
+        assert!(s.text_frame(1, 0, false).is_err());
+        assert!(s.text_reveal.is_none());
+        assert!(s.text_frame(1, 0, false).is_err());
+    }
+    #[test]
+    fn auto_frames_keep_page_until_ack_and_reject_stale_events() {
+        let mut s = session(b"one\ntwo");
+        s.system
+            .eval(
+                "config",
+                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=100}",
+            )
+            .unwrap();
+        s.enable_interactive_text();
+        let page = s.poll_packet().unwrap();
+        assert!(s.set_auto_mode(1, true).is_err());
+        s.text_frame_with_voice(1, 0, false, false).unwrap();
+        s.set_auto_mode(1, true).unwrap();
+        assert!(s.set_auto_mode(2, false).is_err());
+        let result =
+            String::from_utf8(s.text_frame_with_voice(1, 502, false, true).unwrap()).unwrap();
+        assert!(result.contains("\"advance\":true"));
+        assert_eq!(s.poll_packet().unwrap(), page);
+        assert!(s.text_frame_with_voice(1, 503, false, true).is_err());
+        s.acknowledge_text(1).unwrap();
+        assert!(s.acknowledge_text(1).is_err());
+        assert!(s.text_frame_with_voice(1, 504, false, true).is_err());
+        let result =
+            String::from_utf8(s.text_frame_with_voice(2, 0, false, false).unwrap()).unwrap();
+        assert!(result.contains("\"auto\":true"));
+        s.set_auto_mode(2, false).unwrap();
+        let result =
+            String::from_utf8(s.text_frame_with_voice(2, 10000, false, true).unwrap()).unwrap();
+        assert!(result.contains("\"advance\":false"));
+    }
+    #[test]
     fn interactive_text_requires_two_phase_input_and_preserves_cached_page() {
         let mut s = session("一二三四五六\nnext".as_bytes());
         s.system
-            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1}")
+            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50}")
             .unwrap();
         s.enable_interactive_text();
         let packet = s.page().unwrap().packet().unwrap();
@@ -1409,7 +1493,7 @@ mod tests {
     fn settings_reject_invalid_entry_without_consuming_dialogue() {
         let mut s = session(b"first\nsecond");
         s.system
-            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1}")
+            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50}")
             .unwrap();
         s.enable_interactive_text();
         assert!(s.open_settings(1).is_err());

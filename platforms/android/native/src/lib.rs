@@ -363,11 +363,19 @@ pub unsafe extern "C" fn neko_probe_story(
                 }
                 1 => state.as_mut().ok_or("no story session")?.poll_packet(),
                 9 => state.as_mut().ok_or("no story session")?.audio_config(),
-                11 | 12 => state.as_mut().ok_or("no story session")?.text_frame(
-                    sequence,
-                    elapsed_ms,
-                    operation == 12,
-                ),
+                25 | 26 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .set_auto_mode(sequence, operation == 26),
+                11 | 12 | 27 | 28 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .text_frame_with_voice(
+                        sequence,
+                        elapsed_ms,
+                        operation == 12 || operation == 28,
+                        operation == 27 || operation == 28,
+                    ),
                 13 => state.as_mut().ok_or("no story session")?.text_config(),
                 15 | 24 => {
                     use std::io::Read;

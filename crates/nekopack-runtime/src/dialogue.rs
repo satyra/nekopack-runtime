@@ -8,6 +8,8 @@ pub(crate) struct Reveal {
     elapsed: u64,
     shown: usize,
     pub advance: bool,
+    completed_at: Option<u64>,
+    auto_delay: u64,
 }
 impl Reveal {
     pub fn new(text: String, speed: u64, keep_voice: u64) -> Result<Self, String> {
@@ -26,6 +28,8 @@ impl Reveal {
             elapsed: 0,
             shown: 0,
             advance: false,
+            completed_at: None,
+            auto_delay: 1750,
         })
     }
     pub fn update(&mut self, elapsed: u64, click: bool) -> Result<bool, String> {
@@ -50,6 +54,9 @@ impl Reveal {
             self.end += offset + character.len_utf8();
             self.shown = count;
         }
+        if self.complete() && self.completed_at.is_none() {
+            self.completed_at = Some(elapsed);
+        }
         if click {
             if self.complete() {
                 self.advance = true;
@@ -57,6 +64,39 @@ impl Reveal {
             }
             self.shown = self.total;
             self.end = self.text.len();
+        }
+        Ok(false)
+    }
+    pub fn set_auto_speed(&mut self, speed: u64) -> Result<(), String> {
+        if speed > 100 {
+            return Err("invalid AutoSpeed".into());
+        }
+        self.auto_delay = 3000 - speed * 25;
+        Ok(())
+    }
+    pub fn auto_frame(
+        &mut self,
+        elapsed: u64,
+        click: bool,
+        enabled: bool,
+        voiced: bool,
+        voice_finished: bool,
+    ) -> Result<bool, String> {
+        if self.advance {
+            return Err("dialogue advance already granted".into());
+        }
+        let manual = self.update(elapsed, click)?;
+        if manual || click || !enabled {
+            return Ok(manual);
+        }
+        let next = if voiced {
+            voice_finished
+        } else {
+            self.completed_at
+                .is_some_and(|at| elapsed.saturating_sub(at) > self.auto_delay + 1)
+        };
+        if next {
+            return self.update(elapsed, true);
         }
         Ok(false)
     }
@@ -77,6 +117,31 @@ impl Reveal {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn auto_unvoiced_delay_disable_and_single_ack() {
+        for (speed, delay) in [(0, 3000), (50, 1750), (100, 500)] {
+            let mut r = Reveal::new("a".into(), 100, 1).unwrap();
+            r.set_auto_speed(speed).unwrap();
+            assert!(!r.auto_frame(0, false, true, false, true).unwrap());
+            assert!(!r.auto_frame(delay + 1, false, true, false, true).unwrap());
+            assert!(!r.auto_frame(delay + 2, false, false, false, true).unwrap());
+            assert!(r.auto_frame(delay + 2, false, true, false, true).unwrap());
+            assert!(r.auto_frame(delay + 3, false, true, false, true).is_err());
+        }
+    }
+    #[test]
+    fn auto_voice_completion_reveals_then_advances_and_pause_is_not_completion() {
+        let mut r = Reveal::new("long voice text".into(), 0, 1).unwrap();
+        assert!(!r.auto_frame(0, false, true, true, false).unwrap());
+        assert!(!r.auto_frame(1, false, true, true, true).unwrap());
+        assert!(r.complete());
+        assert!(!r.auto_frame(1, false, true, true, false).unwrap());
+        assert!(r.auto_frame(2, false, true, true, true).unwrap());
+        let mut r = Reveal::new("text".into(), 100, 1).unwrap();
+        assert!(!r.auto_frame(0, false, true, true, false).unwrap());
+        assert!(!r.auto_frame(10000, false, true, true, false).unwrap());
+        assert!(r.auto_frame(10001, false, true, true, true).unwrap());
+    }
     #[test]
     fn two_clicks_unicode_and_monotonic_time() {
         let mut r = Reveal::new("中😀文abc".into(), 0, 1).unwrap();

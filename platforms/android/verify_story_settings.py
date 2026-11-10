@@ -9,6 +9,7 @@ def main():
     p=argparse.ArgumentParser()
     for key in ('adb','serial','reference','work','output'):p.add_argument('--'+key,required=True)
     p.add_argument('--text-style-check',action='store_true')
+    p.add_argument('--auto-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[]
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -25,8 +26,8 @@ def main():
     def lines(name):
         raw=read(name)
         return [json.loads(x) for x in raw.splitlines() if x.startswith(b'{')]
-    def wait(fn):
-        until=time.monotonic()+120
+    def wait(fn,timeout=120):
+        until=time.monotonic()+timeout
         while time.monotonic()<until:
             error=read('error.txt');assert b'No such file' in error,error
             result=fn()
@@ -207,6 +208,52 @@ def main():
     close_menu();wait(lambda:obj('text-1.json') and obj('text-1.json')['complete'])
     assert b'No such file' in read('lifecycle-closed.json')
     baseline(1);finish()
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles)
+    auto_results={}
+    if a.auto_check:
+        launch(1);wait(state);auto_original=state()['config'];page(2);set_value('AutoSpeed',100)
+        close_menu();finish()
+        launch(56)
+        wait(lambda:obj('text-1.json'))
+        l,t,r,b=bounds('自动：关');auto_point=(str((l+r)//2),str((t+b)//2))
+        adb('shell','input','tap',*auto_point)
+        wait(lambda:any(x.get('auto') for x in lines('text-events.jsonl')))
+        adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(.5)
+        frozen_events=lines('text-events.jsonl');time.sleep(2)
+        assert lines('text-events.jsonl')==frozen_events,'auto advanced while backgrounded'
+        adb('shell','am','start','-W','--activity-reorder-to-front','-n',pkg+'/.MainActivity')
+        wait(lambda:obj('movie-8-info.json'));control('返回剧情')
+        print('auto passed first 12 pages and background freeze',flush=True)
+        wait(lambda:state() and state().get('story_sequence')==56,300)
+        assert state()['config']['AutoSpeed']==100,'AutoSpeed was not persisted'
+        auto_frozen=snapshot(state());background_check();assert snapshot(state())==auto_frozen
+        events=lines('text-events.jsonl');advances=[x for x in events if x['advance']]
+        assert [x['sequence'] for x in advances]==list(range(1,56))
+        assert all(x['auto'] and not x['click'] for x in advances)
+        voiced=unvoiced=0
+        for n in range(1,56):
+            baseline(n);meta=obj(f'page-{n}.json');history=[x for x in events if x['sequence']==n];end=history[-1]
+            if meta['voice']:
+                voiced+=1;assert end['voice_finished']
+            else:
+                unvoiced+=1;complete=next(x for x in history if x['complete'])
+                assert end['elapsed_ms']-complete['elapsed_ms']>501
+        assert voiced and unvoiced
+        completions=[x for x in lines('host-events.jsonl') if x['event']=='completed' and x['kind']=='voice']
+        assert len(completions)==voiced,'each voiced advance requires a real completion callback'
+        voice_next={x['sequence']:x for x in lines('voice-next-events.jsonl')}
+        for n in range(1,56):
+            if obj(f'page-{n}.json')['voice']:
+                assert voice_next[n]['player']==0 and not voice_next[n]['playing_before']
+        # The current page retains its entry delay; restored preference applies next page.
+        page(2);set_value('AutoSpeed',auto_original['AutoSpeed']);close_menu()
+        adb('shell','input','tap',*auto_point)
+        wait(lambda:any(x['sequence']>=56 and not x['auto'] for x in lines('text-events.jsonl')))
+        count=len([x for x in lines('text-events.jsonl') if x['advance']]);time.sleep(2)
+        assert len([x for x in lines('text-events.jsonl') if x['advance']])==count
+        finish()
+        launch(1);wait(state);assert state()['config']==auto_original;close_menu();finish()
+        auto_results=dict(auto_only_advances=55,voice_completion_callbacks=len(completions),voiced_pages=voiced,unvoiced_pages=unvoiced,unvoiced_delay_min_ms=502,background_freezes=True,settings_freezes=True,auto_speed_saved_and_restored=True,manual_cancel_stops_progress=True,motion_checkpoint=auto_frozen)
+        print('auto playback, voice completion, settings and cancellation passed',flush=True)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

@@ -151,6 +151,8 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         return JSONObject().put("playing",player.isPlaying).put("position",player.currentPosition)
             .put("gain",gains.getValue("bgm").output).put("suspended",focusSuspended).put("token",audioTokens.getValue("bgm"))
     }
+    // Completed players are released; a focus-paused player remains owned and unfinished.
+    fun voiceFinished() = !players.containsKey("voice")
     fun stopVoice(){ release("voice") }
     fun finishDialogue(sequence:Long,stop:Boolean){
         val player=players["voice"]?.first
