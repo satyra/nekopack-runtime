@@ -25,6 +25,7 @@ class MainActivity : Activity() {
     private val timeline=SessionTimeline()
     private val menuTimeline=SessionTimeline()
     @Volatile private var storyConfigOpen=false
+    private var settingsBack:(()->Boolean)?=null
     private var lifecycleGeneration=0L
     private val instanceId=java.util.UUID.randomUUID().toString()
     private var lifecycleFailure:(Throwable)->Unit={throw it}
@@ -384,6 +385,13 @@ class MainActivity : Activity() {
             File(root,"story-settings-events.jsonl").appendText(JSONObject().put("event","opened").put("sequence",token).put("active_ms",timeline.now()).toString()+"\n")
             worker.execute{try{File(root,"settings-story-checkpoint.bin").writeBytes(story(intArrayOf(),1,0));showTitle(story(intArrayOf(),23,token),true)}catch(error:Throwable){fail(error)}}
         }
+        settingsBack={
+            if(storyConfigOpen || configControls.visibility==android.view.View.VISIBLE){
+                // Consume Back while a settings request is in flight, too.
+                if(configBack.isEnabled)configBack.performClick()
+                true
+            }else false
+        }
         if(titleFirst){dialogueView.visibility=android.view.View.GONE;controls.visibility=android.view.View.GONE;text.visibility=android.view.View.GONE;stage.addView(titleView,FrameLayout.LayoutParams(-1,-1))}
         worker.execute {
             try {
@@ -444,6 +452,10 @@ class MainActivity : Activity() {
             worker.execute{try{val result=story(intArrayOf(),3,0);check(String(result,Charsets.UTF_8).contains("\"closed\":true"));File(root,"closed.txt").writeText("closed; VM live bytes=0");runOnUiThread{finish()}}catch(error:Throwable){fail(error)}}
         }
     }
+    @Suppress("DEPRECATION")
+    override fun onBackPressed() {
+        if(settingsBack?.invoke()!=true)super.onBackPressed()
+    }
     override fun onPause() {
         lifecycleGeneration++
         menuTimeline.pause();timeline.pause();storyEffects?.pause();movieHost?.pause()
@@ -464,6 +476,7 @@ class MainActivity : Activity() {
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
+        settingsBack=null
         storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()

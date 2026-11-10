@@ -67,7 +67,7 @@ def main():
     def open_menu():
         old=state()['input_sequence'];control('原版设置');wait(lambda:state()['input_sequence']>old)
     def close_menu():
-        old=len(lines('story-settings-events.jsonl'));control('返回剧情')
+        old=len(lines('story-settings-events.jsonl'));adb('shell','input','keyevent','KEYCODE_BACK')
         wait(lambda:len(lines('story-settings-events.jsonl'))>old)
     def finish():control('结束运行');wait(lambda:b'VM live bytes=0' in read('closed.txt'))
     def baseline(n):
@@ -99,8 +99,12 @@ def main():
     page(3);set_value('VolVO',0);set_value('VolBGM',0)
     page(4);area('= KeepVoice#0')
     assert snapshot(state())==frozen
-    page(5);area('* F3');assert state()['editing_slot']==3
-    control('取消选择');wait(lambda:not state()['editing_slot']);assert snapshot(state())==frozen
+    page(5);original_bindings=[x['action'] for x in state()['shortcuts']]
+    area('* F3');assert state()['editing_slot']==3
+    before_cancel=len(lines('story-settings-events.jsonl'))
+    adb('shell','input','keyevent','KEYCODE_BACK');wait(lambda:not state()['editing_slot']);assert snapshot(state())==frozen
+    assert len(lines('story-settings-events.jsonl'))==before_cancel
+    assert [x['action'] for x in state()['shortcuts']]==original_bindings
     (work/'settings-screen.png').write_bytes(adb('exec-out','screencap','-p'))
     count=len(lines('text-events.jsonl'));close_menu()
     wait(lambda:len(lines('text-events.jsonl'))>count)
@@ -153,8 +157,9 @@ def main():
     finish()
     launch(1);wait(state)
     assert state()['config']==initial
-    adb('shell','input','keyevent','KEYCODE_BACK')
-    wait(lambda:obj('lifecycle-closed.json') and obj('lifecycle-closed.json').get('closed') is True)
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,destroy_while_settings_open=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True)
+    close_menu();wait(lambda:obj('text-1.json') and obj('text-1.json')['complete'])
+    assert b'No such file' in read('lifecycle-closed.json')
+    baseline(1);finish()
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

@@ -1,0 +1,62 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "9159a652cf2e72c28e23554c2792658fdb19b1c00f8ff7d8d443ed5cdcd8ab1e",
+  "runs": [
+    "story_settings_fd74fac9cea04a788832e021ca2cc298",
+    "story_settings_643ec08755be4f93895f755aa5272bbf",
+    "story_settings_171f5fb17bfe433aa5b3c6aa5a96eadb"
+  ],
+  "partial_dialogue": {
+    "story_sequence": 1,
+    "story_visible": 7,
+    "story_elapsed_ms": 124,
+    "motion_elapsed_ms": 0,
+    "story_steps": 142
+  },
+  "resumed_dialogue": {
+    "sequence": 1,
+    "elapsed_ms": 202,
+    "visible": 12,
+    "complete": false,
+    "advance": false,
+    "stop_voice": false,
+    "click": false
+  },
+  "settings_time_excluded": true,
+  "opacity_applies_to_current_page": true,
+  "text_speed_applies_next_page": true,
+  "other_settings_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191
+  },
+  "background_keeps_modal_paused": true,
+  "bgm_pause_resume": true,
+  "motion_checkpoint": {
+    "story_sequence": 56,
+    "story_visible": 7,
+    "story_elapsed_ms": 126,
+    "motion_elapsed_ms": 41,
+    "story_steps": 412
+  },
+  "motion_finishes_after_return": true,
+  "story_pages_verified": 57,
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [
+    "ERROR: null root node returned by UiTestAutomationBridge.\r\n"
+  ],
+  "read_transport_retries": [],
+  "back_keeps_activity_alive": true,
+  "back_cancels_popup_before_leaving_settings": true,
+  "back_returns_to_same_dialogue": true,
+  "bgm_same_player_resumed": true,
+  "new_gain_applied_before_resume": true,
+  "intro_return_button_used": true
+}

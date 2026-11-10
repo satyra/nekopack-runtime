@@ -1,0 +1,27 @@
+{
+  "batch": 40,
+  "android_build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "fe0b6ed1731c10977e0465cf453c7754bbb5a795528ecd7f4e756ce6d5005553",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "9159a652cf2e72c28e23554c2792658fdb19b1c00f8ff7d8d443ed5cdcd8ab1e"
+    }
+  },
+  "device_result": "android-back-batch40-emulator.json",
+  "python_syntax": {
+    "command": "python -m py_compile platforms/android/verify_story_settings.py",
+    "status": "passed"
+  },
+  "rust_core": "unchanged; prior Batch39 tests not counted as new runs",
+  "validation": "real Android KEYCODE_BACK for popup cancellation and story settings return; 57 baseline story pages; BGM/motion/background and explicit VM close",
+  "log_sha256": {
+    "build": "6d2dd29c9ec535bc52d936a307f8258e267f163161264369d88ebab08dbd5805",
+    "device": "d4895d9eda5674e4de15632d352c049b8d968456ff9279c61effb4de439ce3be"
+  },
+  "ui_retries": 1,
+  "read_transport_retries": 0
+}
