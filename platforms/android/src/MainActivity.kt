@@ -25,7 +25,9 @@ class MainActivity : Activity() {
     private val timeline=SessionTimeline()
     private val menuTimeline=SessionTimeline()
     @Volatile private var storyConfigOpen=false
+    @Volatile private var storySaveOpen=false
     private var shortcutKey:((Int)->Unit)?=null
+    private var storySaveBack:(()->Boolean)?=null
     private var storyMenuBack:(()->Boolean)?=null
     private var hiddenBack:(()->Boolean)?=null
     private var settingsBack:(()->Boolean)?=null
@@ -200,6 +202,7 @@ class MainActivity : Activity() {
         var hideBusy=false
         var menuOpen=false
         var menuBusy=false
+
         var sequence=0L
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
@@ -317,6 +320,156 @@ class MainActivity : Activity() {
         }
         hiddenView.setOnClickListener{restoreDialogue()}
         hiddenBack={if(!storyClosing&&(dialogueHidden||hideBusy)){restoreDialogue();true}else false}
+        fun saveDirectory():File {
+            val scope=java.security.MessageDigest.getInstance("SHA-256").digest("${tree}_$game".toByteArray()).joinToString(""){"%02x".format(it.toInt() and 255)}
+            val probe=intent.getStringExtra("save_probe")
+            if(probe!=null)check(Regex("[a-zA-Z0-9_-]{1,64}").matches(probe))
+            val directory=File(filesDir,"saves/$scope"+(if(probe==null)"" else "_probe_$probe"));check(directory.isDirectory||directory.mkdirs())
+            return directory
+        }
+        lateinit var returnTitleFromSave:(ByteArray)->Unit
+        lateinit var enterLoadedStory:(ByteArray)->Unit
+        fun openSaveSlots(initialSave:Boolean,fromTitle:Boolean=false,quick:Boolean=false){
+            storySaveOpen=true
+            if(!fromTitle)dialogue.suspend()
+            timeline.pause();storyEffects!!.pause();controls.visibility=android.view.View.GONE
+            val directory=saveDirectory()
+            val quickSlots=QuickSlots(directory)
+            var saving=initialSave;var page=0;var busy=true
+            val cached=mutableMapOf<Int,Pair<Long,Long>>()
+            lateinit var view:TitleView
+            lateinit var present:(ByteArray,Boolean)->Unit
+            fun slotFile(id:Int):File?=if(id>100)quickSlots.slot(id-100) else File(directory,"slot-%03d.nksv".format(id))
+            fun publish(event:String,id:Int=0,extra:JSONObject=JSONObject()){
+                val value=extra.put("event",event).put("slot",id).put("page",page).put("saving",saving).put("from_title",fromTitle).put("sequence",sequence).put("directory",directory.name)
+                val tmp=File(root,"save-state.tmp");tmp.writeText(value.toString());check(tmp.renameTo(File(root,"save-state.json")))
+                File(root,"save-events.jsonl").appendText(value.toString()+"\n")
+            }
+            fun failure(error:Exception){
+                if(quick)worker.execute{try{story(intArrayOf(),43,0);runOnUiThread{menuTimeline.post{
+                    stage.removeView(view);storySaveOpen=false;storySaveBack=null;timeline.resume();storyEffects!!.resume()
+                    controls.visibility=android.view.View.VISIBLE;dialogue.resume()
+                }}}catch(fatal:Throwable){fail(fatal)}}
+                runOnUiThread{menuTimeline.post{if(!storyClosing){busy=false;view.accepting=true;publish("error",0,JSONObject().put("message",error.message));android.widget.Toast.makeText(this,"存读档失败：${error.message}",android.widget.Toast.LENGTH_LONG).show()}}}
+            }
+            fun refresh():ByteArray {
+                for(id in page*10+1..page*10+10){
+                    val file=slotFile(id);val signature=(file?.lastModified() ?: 0L) to (file?.length() ?: 0L)
+                    if(cached[id]!=signature){
+                        val bytes=if(file!=null && file.isFile){
+                            val stamp=java.text.SimpleDateFormat("yyyy/MM/dd H:mm",java.util.Locale.ROOT).format(java.util.Date(file.lastModified())).toByteArray(Charsets.UTF_8)
+                            ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->story(intArrayOf(fd.fd)+stamp.map{it.toInt() and 255}.toIntArray(),46,id.toLong())}
+                        }else story(intArrayOf(),46,id.toLong())
+                        val result=JSONObject(String(bytes,Charsets.UTF_8));check(result.optBoolean("updated")){result.optString("error",result.toString())};cached[id]=signature
+                    }
+                }
+                return story(intArrayOf(),47,0)
+            }
+            fun leave(){stage.removeView(view);storySaveOpen=false;storySaveBack=null;timeline.resume();storyEffects!!.resume()}
+            fun cancelSlots(){if(!busy){busy=true;view.accepting=false;worker.execute{try{
+                val packet=story(intArrayOf(),43,0)
+                if(fromTitle){returnTitleFromSave(packet);runOnUiThread{menuTimeline.post{publish("cancelled");leave()}}}
+                else{val result=JSONObject(String(packet,Charsets.UTF_8));check(result.optBoolean("closed")){result.toString()};runOnUiThread{menuTimeline.post{publish("cancelled");leave();controls.visibility=android.view.View.VISIBLE;dialogue.resume()}}}
+            }catch(error:Throwable){fail(error)}}}}
+            fun operate(id:Int){
+                busy=true;view.accepting=false;val saveMode=saving
+                worker.execute{try{
+                    val result=if(saveMode){
+                        var state=JSONObject()
+                        fun export(file:File){
+                            state=ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_CREATE or ParcelFileDescriptor.MODE_TRUNCATE or ParcelFileDescriptor.MODE_READ_WRITE).use{fd->JSONObject(String(story(intArrayOf(fd.fd),40,0),Charsets.UTF_8))}
+                            check(state.optBoolean("saved")){state.optString("error",state.toString())}
+                        }
+                        if(quick)quickSlots.write(::export) else {
+                            val temporary=File(directory,"slot-%03d.tmp".format(id));export(temporary)
+                            Os.rename(temporary.absolutePath,slotFile(id)!!.absolutePath)
+                        }
+                        cached.remove(id);state
+                    }else ParcelFileDescriptor.open(slotFile(id) ?: error("没有快捷存档"),ParcelFileDescriptor.MODE_READ_ONLY).use{fd->JSONObject(String(story(intArrayOf(fd.fd),41,0),Charsets.UTF_8))}.also{check(it.optBoolean("prepared")){it.optString("error",it.toString())}}
+                    if(saveMode){
+                        if(quick){
+                            val closed=JSONObject(String(story(intArrayOf(),43,0),Charsets.UTF_8));check(closed.optBoolean("closed")){closed.toString()}
+                            runOnUiThread{menuTimeline.post{publish("saved",id,result);leave();controls.visibility=android.view.View.VISIBLE;dialogue.resume();android.widget.Toast.makeText(this,"已快捷存档",android.widget.Toast.LENGTH_SHORT).show()}}
+                        }else{val packet=refresh();present(packet,true);runOnUiThread{menuTimeline.post{publish("saved",id,result)}}}
+                    }
+                    else runOnUiThread{menuTimeline.post{if(!storyClosing){
+                        dialogue.stop();storyEffects!!.resetForLoad();publish("prepared",id,result)
+                        worker.execute{try{
+                            val packet=story(intArrayOf(),42,0)
+                            runOnUiThread{menuTimeline.post{leave();controls.visibility=android.view.View.VISIBLE;dialogueView.visibility=android.view.View.VISIBLE;publish("loaded",id)}}
+                            if(fromTitle)enterLoadedStory(packet) else show(packet)
+                        }catch(error:Throwable){fail(error)}}
+                    }}}
+                }catch(error:Exception){failure(error)}}
+            }
+            present={packet,unlock->
+                val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+                val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()}
+                saving=meta.getBoolean("saving");page=meta.getInt("page")
+                if(meta.getBoolean("refresh")){present(refresh(),unlock)}else{
+                    val png=packet.copyOfRange(split+1,packet.size);val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid save UI bitmap")
+                    File(root,"save-ui.png").writeBytes(png)
+                    runOnUiThread{menuTimeline.post(cancel={bitmap.recycle()}){if(!storyClosing){
+                        view.present(bitmap);if(unlock){busy=false;view.accepting=true}
+                        val tmp=File(root,"save-ui-presented.tmp");tmp.writeText(meta.put("accepting",unlock).toString());check(tmp.renameTo(File(root,"save-ui-presented.json")))
+                        val action=meta.getInt("action")
+                        when{action==-1->cancelSlots();action in 1..110->operate(action)}
+                    }else bitmap.recycle()}}
+                }
+            }
+            view=TitleView(this){kind,x,y->if(!storyClosing){if(kind==2)busy=true;worker.execute{try{present(story(intArrayOf(kind,x,y),45,0),kind==2)}catch(error:Throwable){fail(error)}}}}
+            view.contentDescription="原版存读档页";view.accepting=false;if(!quick)stage.addView(view,FrameLayout.LayoutParams(-1,-1))
+            storySaveBack={if(storySaveOpen){cancelSlots();true}else false}
+            val saveToken=sequence
+            worker.execute{try{
+                if(!fromTitle){
+                    val ready=JSONObject(String(story(intArrayOf(),48,saveToken),Charsets.UTF_8))
+                    if(!ready.optBoolean("ready")){
+                        runOnUiThread{menuTimeline.post{publish("cancelled",0,ready);leave();controls.visibility=android.view.View.VISIBLE;dialogue.resume()}}
+                        return@execute
+                    }
+                }
+                if(quick){runOnUiThread{menuTimeline.post{autoEnabled=false;skipEnabled=false;auto.text="自动：关";skip.text="快进：关";publish("quick_open");operate(101)}}}
+                else{present(story(intArrayOf(),44,if(initialSave)1 else 0),true);runOnUiThread{menuTimeline.post{publish("open")}}}
+            }catch(error:Throwable){fail(error)}}
+        }
+        var sidePresentSequence=0L
+        lateinit var sideView:SideMenuView
+        fun sideAvailable()=menu.isEnabled&&!storyClosing&&!storySaveOpen&&!storyConfigOpen&&!menuOpen&&!dialogueHidden&&!autoEnabled&&!skipEnabled&&!timeline.paused
+        fun presentSide(packet:ByteArray,token:Long){
+            val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8))
+            val png=packet.copyOfRange(split+1,packet.size);val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid side menu bitmap")
+            File(root,"side-menu.png").writeBytes(png)
+            runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){
+                sideView.present(bitmap,meta);meta.put("render_sequence",++sidePresentSequence).put("expanded",sideView.expanded)
+                val tmp=File(root,"side-menu-presented.tmp");tmp.writeText(meta.toString());check(tmp.renameTo(File(root,"side-menu-presented.json")))
+                val action=meta.getString("action")
+                if(action.isNotEmpty()&&sequence==token&&sideAvailable()){
+                    sideView.collapse()
+                    when(action){
+                        "QSAVE"->openSaveSlots(true,quick=true)
+                        "QLOAD"->openSaveSlots(false,quick=true)
+                        "SAVE"->openSaveSlots(true)
+                        "LOAD"->openSaveSlots(false)
+                        "AUTO"->auto.performClick()
+                        "SKIP"->skip.performClick()
+                        "CONFIG"->originalSettings.performClick()
+                        "LOG"->android.widget.Toast.makeText(this,"消息日志尚未接通",android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                    File(root,"side-menu-events.jsonl").appendText(meta.put("story_sequence",token).toString()+"\n")
+                }
+            }else bitmap.recycle()}}
+        }
+        fun loadSide(){
+            val file=QuickSlots(saveDirectory()).slot(1)
+            val packet=if(file!=null&&file.isFile)ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->story(intArrayOf(fd.fd),49,0)}else story(intArrayOf(),49,0)
+            presentSide(packet,sequence)
+        }
+        sideView=SideMenuView(this,::sideAvailable,{if(!storyClosing)worker.execute{try{loadSide()}catch(error:Throwable){fail(error)}}},{kind,x,y->
+            if(!storyClosing){val token=sequence;worker.execute{try{presentSide(story(intArrayOf(kind,x,y),50,token),token)}catch(error:Throwable){fail(error)}}}
+        })
+        stage.addView(sideView,FrameLayout.LayoutParams(-1,-1))
         fun returnToTitle(){
             storyClosing=true;shortcutKey=null;storyMenuBack=null;hiddenBack=null;settingsBack=null
             controls.visibility=android.view.View.GONE;dialogue.stop();movieHost?.close()
@@ -360,6 +513,10 @@ class MainActivity : Activity() {
                     autoEnabled=false;skipEnabled=false;auto.text="自动：关";skip.text="快进：关"
                     when(meta.getString("action")){
                         "CONFIG"->originalSettings.performClick()
+                        "SAVE"->openSaveSlots(true)
+                        "LOAD"->openSaveSlots(false)
+                        "QSAVE"->openSaveSlots(true,quick=true)
+                        "QLOAD"->openSaveSlots(false,quick=true)
                         "RESET"->returnToTitle()
                         "QUIT"->close.performClick()
                         else->dialogue.resume()
@@ -390,14 +547,14 @@ class MainActivity : Activity() {
         }
         var shortcutBusy=false
         shortcutKey={slot->
-            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!menuOpen&&!timeline.paused&&sequence>0){
+            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!menuOpen&&!storySaveOpen&&!timeline.paused&&sequence>0){
                 shortcutBusy=true;val token=sequence
                 worker.execute{try{
                     val result=JSONObject(String(story(intArrayOf(),33,token,slot.toLong()),Charsets.UTF_8))
                     check(!result.has("error")){result.optString("error")}
                     runOnUiThread{timeline.post{shortcutBusy=false;if(!storyClosing){
                         val status=result.getString("status");val action=result.getString("action")
-                        if(storyConfigOpen||menuOpen||dialogueHidden||hideBusy)result.put("delivery","modal")
+                        if(storyConfigOpen||menuOpen||storySaveOpen||dialogueHidden||hideBusy)result.put("delivery","modal")
                         else if(status=="applied"){
                             autoEnabled=result.getBoolean("auto");skipEnabled=result.getBoolean("skip")
                             auto.text=if(autoEnabled)"自动：开" else "自动：关";skip.text=if(skipEnabled)"快进：开" else "快进：关"
@@ -406,6 +563,7 @@ class MainActivity : Activity() {
                             if(action=="CONFIG"&&sequence==token&&originalSettings.isEnabled){originalSettings.performClick();result.put("delivery","settings")}
                             else if(action=="MENU"&&sequence==token&&menu.isEnabled){menu.performClick();result.put("delivery","menu")}
                             else if(action=="HIDE"&&sequence==token&&hide.isEnabled){hide.performClick();result.put("delivery","hidden")}
+                            else if((action=="QSAVE"||action=="QLOAD")&&sequence==token){openSaveSlots(action=="QSAVE",quick=true);result.put("delivery","quick")}
                             else if(action=="QUIT"){close.performClick();result.put("delivery","quit")}
                             else result.put("delivery","busy")
                         }else {
@@ -501,6 +659,7 @@ class MainActivity : Activity() {
             }
         }
         fun enterStory(packet:ByteArray){
+                loadSide()
                 val savedRead=getPreferences(MODE_PRIVATE).getString(readKey,null)
                 if(savedRead!=null){
                     val bytes=android.util.Base64.decode(savedRead,android.util.Base64.NO_WRAP)
@@ -518,7 +677,7 @@ class MainActivity : Activity() {
                 show(packet)
         }
         val configControls=LinearLayout(this);configControls.orientation=LinearLayout.VERTICAL;configControls.visibility=android.view.View.GONE
-        val configNotice=TextView(this);configNotice.text="已接通：文字/自动速度、跳过未读、粗体/边框、动态示例、透明度、音量、语音保留、快捷键编辑；快捷执行支持剧情菜单、设置、隐藏、自动、快进、退出。";configControls.addView(configNotice)
+        val configNotice=TextView(this);configNotice.text="已接通：文字/自动速度、跳过未读、粗体/边框、动态示例、透明度、音量、语音保留、快捷键编辑；快捷执行支持剧情菜单、设置、快捷存读、隐藏、自动、快进、退出。";configControls.addView(configNotice)
         val configButtons=LinearLayout(this);val configBack=Button(this);configBack.text="返回标题";val configReset=Button(this);configReset.text="恢复已接通选项默认值"
         configButtons.addView(configBack,LinearLayout.LayoutParams(0,-2,1f));configButtons.addView(configReset,LinearLayout.LayoutParams(0,-2,1f));configControls.addView(configButtons);layout.addView(configControls)
         lateinit var titleView:TitleView
@@ -560,10 +719,17 @@ class MainActivity : Activity() {
                     text.text="标题主页 · 点击开始游戏"
                     if(isSettings && metadata.getBoolean("unsupported"))android.widget.Toast.makeText(this,"此选项尚未接入",android.widget.Toast.LENGTH_SHORT).show()
                     val action=metadata.optInt("action",0)
-                    if(action==4)close.performClick()
+                    if(action==2)openSaveSlots(false,true)
+                    else if(action==4)close.performClick()
                     else if(action!=0)android.widget.Toast.makeText(this,"此入口尚未接入；当前支持开始游戏",android.widget.Toast.LENGTH_SHORT).show()
                 }else bitmap.recycle()
             }}
+        }
+        returnTitleFromSave={packet->showTitle(packet,true)}
+        enterLoadedStory={packet->
+            File(root,"title-loaded.json").writeText("{\"loaded\":true}")
+            runOnUiThread{menuTimeline.post{stage.removeView(titleView);dialogueView.visibility=android.view.View.VISIBLE;controls.visibility=android.view.View.VISIBLE}}
+            enterStory(packet)
         }
         configBack.setOnClickListener{configBack.isEnabled=false;configReset.isEnabled=false;titleView.cancel();titleView.accepting=false;worker.execute{try{showTitle(story(intArrayOf(),22,0),true)}catch(error:Throwable){fail(error)}}}
         configReset.setOnClickListener{configBack.isEnabled=false;configReset.isEnabled=false;titleView.cancel();titleView.accepting=false;worker.execute{try{showTitle(story(intArrayOf(),22,1),true)}catch(error:Throwable){fail(error)}}}
@@ -663,7 +829,7 @@ class MainActivity : Activity() {
     }
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if(storyMenuBack?.invoke()!=true && hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
+        if(storySaveBack?.invoke()!=true && storyMenuBack?.invoke()!=true && hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
     }
     override fun onPause() {
         lifecycleGeneration++
@@ -681,11 +847,11 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         lifecycleGeneration++
-        menuTimeline.resume();if(!storyConfigOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
+        menuTimeline.resume();if(!storyConfigOpen&&!storySaveOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        settingsBack=null;shortcutKey=null;hiddenBack=null;storyMenuBack=null
+        settingsBack=null;shortcutKey=null;hiddenBack=null;storyMenuBack=null;storySaveBack=null
         storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()

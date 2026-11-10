@@ -33,6 +33,57 @@ fn embolden(fill: &mut RgbaImage) {
 }
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
+pub(crate) fn draw_save_label(
+    canvas: &mut RgbaImage,
+    font: &FontVec,
+    text: &str,
+    position: [i32; 2],
+    size: f32,
+    color: [u8; 3],
+    width: i32,
+) -> Result<()> {
+    use ab_glyph::ScaleFont;
+    let scaled = font.as_scaled(size);
+    let mut x = position[0] as f32;
+    for ch in text.chars() {
+        let id = font.glyph_id(ch);
+        let advance = scaled.h_advance(id);
+        if x + advance > (position[0] + width) as f32 {
+            break;
+        }
+        let glyph =
+            id.with_scale_and_position(size, point(x, position[1] as f32 + scaled.ascent()));
+        if let Some(outline) = font.outline_glyph(glyph) {
+            let b = outline.px_bounds();
+            let w = b.width() as u32 + 1;
+            let h = b.height() as u32;
+            if w > 0 && h > 0 {
+                let mut image = RgbaImage::transparent(w, h, BUDGET)?;
+                outline.draw(|gx, gy, a| {
+                    let at = ((gy * w + gx) * 4) as usize;
+                    image.pixels_mut()[at..at + 4].copy_from_slice(&[
+                        color[0],
+                        color[1],
+                        color[2],
+                        (a * 255.0).round() as u8,
+                    ]);
+                });
+                for y in 0..h {
+                    for x in (1..w).rev() {
+                        let at = ((y * w + x) * 4) as usize;
+                        let alpha = image.pixels()[at + 3].max(image.pixels()[at - 1]);
+                        image.pixels_mut()[at..at + 4]
+                            .copy_from_slice(&[color[0], color[1], color[2], alpha]);
+                    }
+                }
+                canvas.draw(&image, [b.min.x as i32, b.min.y as i32]);
+            }
+        }
+        x += advance;
+    }
+    Ok(())
+}
+
 // BLESS Sprite.Clear(); Sprite.Blt(source, 0, 0, opacity): the native
 // MMX loop interpolates all four channels, not straight-alpha source-over.
 // See research/verify_dialogue_rendering.py. Keep this local to dialogue;

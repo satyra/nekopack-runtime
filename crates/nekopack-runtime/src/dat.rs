@@ -24,6 +24,24 @@ pub(crate) fn decode(bytes: &[u8]) -> Result<String, String> {
     }
 }
 impl<R: Read + Seek> DatGame<R> {
+    /// Mount-layout identity plus script validation is used by runtime saves.
+    /// This is not a cryptographic hash of every resource payload.
+    pub(crate) fn save_identity(&self) -> u64 {
+        let mut w = nekopack_script::checkpoint::Writer::default();
+        for a in &self.archives {
+            let h = a.header();
+            for n in [h.name_seed, h.priority, h.index_key, h.index_length] {
+                w.number(u64::from(n));
+            }
+            for e in a.entries() {
+                for n in [e.directory_hash, e.name_hash, e.length, e.key] {
+                    w.number(u64::from(n));
+                }
+                w.number(e.block_offset);
+            }
+        }
+        nekopack_script::checkpoint::digest(&w.0)
+    }
     pub fn mount(sources: impl IntoIterator<Item = R>) -> Result<Self, String> {
         let mut archives = Vec::new();
         let mut catalog = Catalog::default();

@@ -35,9 +35,74 @@ pub struct TitleSession<R: Read + Seek> {
     pressed: Option<i32>,
     input_sequence: u64,
     settings: Option<crate::settings::Settings>,
+    save_ui: Option<crate::save_ui::SaveUi>,
+    prepared_save: Option<crate::story::saves::Saved>,
     preview_font: Option<crate::text_render::SharedFont>,
 }
 impl<R: Read + Seek> TitleSession<R> {
+    pub fn open_save_ui(&mut self) -> Result<Vec<u8>> {
+        if self.settings.is_some() {
+            return Err("title settings are open".into());
+        }
+        self.save_ui = Some(crate::save_ui::SaveUi::open(&mut self.store, false, true)?);
+        self.save_ui_packet(0, true)
+    }
+    pub fn save_ui_pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Vec<u8>> {
+        let (action, refresh) = self
+            .save_ui
+            .as_mut()
+            .ok_or("save UI is not open")?
+            .pointer(kind, x, y)?;
+        self.save_ui_packet(action, refresh)
+    }
+    pub fn save_ui_packet(&self, action: i32, refresh: bool) -> Result<Vec<u8>> {
+        self.save_ui.as_ref().ok_or("save UI is not open")?.packet(
+            self.preview_font
+                .as_ref()
+                .ok_or("save UI font not installed")?,
+            action,
+            refresh,
+        )
+    }
+    pub fn save_ui_slot(&mut self, id: usize, bytes: Option<&[u8]>, stamp: String) -> Result<()> {
+        let value = bytes
+            .map(|b| {
+                crate::story::saves::Saved::decode(b, &mut self.store, self.size, false)
+                    .and_then(|s| s.preview(stamp))
+            })
+            .transpose()
+            .map_err(|e| e.to_string());
+        self.save_ui
+            .as_mut()
+            .ok_or("save UI is not open")?
+            .set_slot(id, value)
+    }
+    pub fn prepare_save(&mut self, bytes: &[u8]) -> Result<Vec<u8>> {
+        if self.save_ui.is_none() {
+            return Err("title load UI is not open".into());
+        }
+        self.prepared_save = None;
+        self.prepared_save = Some(crate::story::saves::Saved::decode(
+            bytes,
+            &mut self.store,
+            self.size,
+            true,
+        )?);
+        Ok(b"{\"prepared\":true}".to_vec())
+    }
+    pub fn cancel_save(&mut self) -> Result<Vec<u8>> {
+        self.save_ui = None;
+        self.prepared_save = None;
+        self.packet(None)
+    }
+    pub fn load(self) -> Result<StorySession<R>> {
+        let saved = self.prepared_save.ok_or("no prepared title save")?;
+        let mut story = StorySession::from_bootstrap(self.store, self.machine, self.system)?;
+        story.enable_host_effects();
+        story.enable_interactive_text();
+        story.apply_saved(saved)?;
+        Ok(story)
+    }
     pub fn open(mut store: DatGame<R>) -> Result<Self> {
         let (mut machine, mut system) = bootstrap_begin(&mut store, 1, &mut std::io::sink(), true)?;
         let Step::Request(Request::Command { name, args, rows }) = machine.advance(&mut store)?
@@ -134,6 +199,8 @@ impl<R: Read + Seek> TitleSession<R> {
             pressed: None,
             input_sequence: 0,
             settings: None,
+            save_ui: None,
+            prepared_save: None,
             preview_font: None,
         })
     }

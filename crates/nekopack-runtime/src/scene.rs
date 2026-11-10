@@ -14,6 +14,26 @@ pub(crate) enum Order {
 mod tests {
     use super::*;
     use nekopack_image::decode_png;
+    #[test]
+    fn saved_scene_retains_pixels_order_and_filter_without_double_applying() {
+        let mut scene = Scene::new([1, 1]);
+        scene.background_color = Some([10, 20, 30, 255]);
+        scene.filter = crate::filter::Filter::Night;
+        let mut a = layer(1, [100, 110, 120, 128]);
+        a.filter_pending = true;
+        scene.put(a, Order::Front).unwrap();
+        scene.put(layer(2, [30, 40, 50, 50]), Order::Front).unwrap();
+        let expected = scene.render().unwrap();
+        let metadata = scene.metadata().unwrap();
+        let mut w = nekopack_script::checkpoint::Writer::default();
+        scene.save(&mut w).unwrap();
+        let mut r = nekopack_script::checkpoint::Reader::new(&w.0).unwrap();
+        let mut restored = Scene::load(&mut r, [1, 1]).unwrap();
+        r.finish().unwrap();
+        assert_eq!(restored.metadata().unwrap(), metadata);
+        assert_eq!(restored.render().unwrap(), expected);
+        assert_eq!(restored.render().unwrap(), expected);
+    }
     fn layer(slot: u8, color: [u8; 4]) -> Layer {
         Layer {
             filter_pending: false,
@@ -288,6 +308,123 @@ pub(crate) struct Scene {
     pub actors: Vec<Layer>,
 }
 impl Scene {
+    pub fn save(
+        &self,
+        w: &mut nekopack_script::checkpoint::Writer,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        fn image(
+            w: &mut nekopack_script::checkpoint::Writer,
+            i: &RgbaImage,
+        ) -> Result<(), Box<dyn std::error::Error>> {
+            let mut png = Vec::new();
+            i.write_png(&mut png)?;
+            w.bytes(&png);
+            Ok(())
+        }
+        fn color(w: &mut nekopack_script::checkpoint::Writer, c: Option<[u8; 4]>) {
+            w.bytes(&c.map(|v| v.to_vec()).unwrap_or_default());
+        }
+        w.number(self.dimensions[0].into());
+        w.number(self.dimensions[1].into());
+        w.number(u64::from(self.filter == crate::filter::Filter::Night));
+        w.text(self.background_name.as_deref().unwrap_or(""));
+        if let Some(i) = &self.background {
+            image(w, i)?;
+        }
+        color(w, self.background_color);
+        color(w, self.overlay);
+        w.text(self.visual.as_ref().map_or("", |(n, _)| n));
+        if let Some((_, i)) = &self.visual {
+            image(w, i)?;
+        }
+        w.number(self.actors.len() as u64);
+        for a in &self.actors {
+            w.number(a.slot.into());
+            w.text(&a.name);
+            w.text(&a.folder);
+            w.number(u64::from(a.filter == crate::filter::Filter::Night));
+            w.number(u64::from(a.filter_pending));
+            for n in a.offset.into_iter().chain(a.anchor) {
+                w.number(u64::from(n as u32));
+            }
+            image(w, &a.image)?;
+        }
+        Ok(())
+    }
+    pub fn load(
+        r: &mut nekopack_script::checkpoint::Reader<'_>,
+        dimensions: [u32; 2],
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        fn image(
+            r: &mut nekopack_script::checkpoint::Reader<'_>,
+            budget: &mut usize,
+        ) -> Result<RgbaImage, Box<dyn std::error::Error>> {
+            let i = nekopack_image::decode_png(r.bytes()?, *budget)?;
+            *budget -= i.pixels().len();
+            Ok(i)
+        }
+        fn color(
+            r: &mut nekopack_script::checkpoint::Reader<'_>,
+        ) -> Result<Option<[u8; 4]>, Box<dyn std::error::Error>> {
+            let b = r.bytes()?;
+            if b.is_empty() {
+                Ok(None)
+            } else {
+                Ok(Some(b.try_into()?))
+            }
+        }
+        fn filter(
+            r: &mut nekopack_script::checkpoint::Reader<'_>,
+        ) -> Result<crate::filter::Filter, String> {
+            match r.number()? {
+                0 => Ok(crate::filter::Filter::None),
+                1 => Ok(crate::filter::Filter::Night),
+                _ => Err("invalid saved filter".into()),
+            }
+        }
+        if [r.number()?, r.number()?] != dimensions.map(u64::from) {
+            return Err("saved dimensions differ".into());
+        }
+        let mut s = Self::new(dimensions);
+        let mut budget = RETAINED_BUDGET;
+        s.filter = filter(r)?;
+        let name = r.text()?;
+        if !name.is_empty() {
+            s.background_name = Some(name);
+            s.background = Some(image(r, &mut budget)?);
+        }
+        s.background_color = color(r)?;
+        s.overlay = color(r)?;
+        let name = r.text()?;
+        if !name.is_empty() {
+            s.visual = Some((name, image(r, &mut budget)?));
+        }
+        for _ in 0..r.count(9)? {
+            let slot = u8::try_from(r.number()?)?;
+            if !(1..=9).contains(&slot) || s.actors.iter().any(|a| a.slot == slot) {
+                return Err("invalid saved actor slot".into());
+            }
+            let name = r.text()?;
+            let folder = r.text()?;
+            let filter = filter(r)?;
+            let filter_pending = r.count(1)? == 1;
+            let mut coordinates = [0; 4];
+            for c in &mut coordinates {
+                *c = u32::try_from(r.number()?)? as i32;
+            }
+            s.actors.push(Layer {
+                slot,
+                name,
+                folder,
+                filter,
+                filter_pending,
+                offset: [coordinates[0], coordinates[1]],
+                anchor: [coordinates[2], coordinates[3]],
+                image: image(r, &mut budget)?,
+            });
+        }
+        Ok(s)
+    }
     pub fn new(dimensions: [u32; 2]) -> Self {
         Self {
             filter: crate::filter::Filter::None,

@@ -1,0 +1,49 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "c7594cfb9bedb81270aae7d538b026fe0f6787cde784de1af223744d905c3789",
+  "profile": "save_7de73d24f22a404787a18f3c04b3cc26",
+  "runs": [
+    "story_saves_7a5ba0112acb4760808105f46babdcbb",
+    "story_saves_cc83702ba9464779937abccbc79ad6b5",
+    "story_saves_4d1f5ef1f04e4729a2c6933672f0b6a0"
+  ],
+  "results": [
+    {
+      "case": "first_page",
+      "new_sequence": 3,
+      "next_sequence": 4,
+      "background_modal": true,
+      "empty_slot_disabled": true,
+      "overwrite_exact_bytes": true,
+      "page_navigation_and_mode_switch": true
+    },
+    {
+      "case": "process_restart",
+      "durable": true
+    },
+    {
+      "case": "actor_queue_page",
+      "menu_checkpoint": {
+        "sequence": 56,
+        "steps": 412,
+        "visible": 6,
+        "elapsed_ms": 103
+      },
+      "restored_sequence": 58,
+      "next_sequence": 59,
+      "audio_released": true,
+      "bgm_and_voice_started": true
+    },
+    {
+      "case": "corrupt_slot",
+      "rejected_before_release": true,
+      "current_page_preserved": true,
+      "next_page_verified": true
+    }
+  ],
+  "baseline_pages": 57,
+  "closed_vm_live_bytes": 0,
+  "scope": "Runtime NKSV slots; no original .sav interoperability. Audio resource/loop/channel restart, not sample-position equivalence."
+}

@@ -361,6 +361,162 @@ pub unsafe extern "C" fn neko_probe_story(
                     state.as_mut().unwrap().enable_interactive_text();
                     state.as_mut().unwrap().poll_packet()
                 }
+                40 | 41 | 46 => {
+                    use std::io::{Read, Write};
+                    if operation == 46 && count == 0 {
+                        if let Some(session) = state.as_mut() {
+                            session.save_ui_slot(sequence as usize, None, String::new())?;
+                        } else {
+                            TITLE.with(|t| {
+                                t.borrow_mut()
+                                    .as_mut()
+                                    .ok_or("no title session")?
+                                    .save_ui_slot(sequence as usize, None, String::new())
+                            })?;
+                        }
+                        return Ok(b"{\"updated\":true}".to_vec());
+                    }
+                    if count == 0 || (operation != 46 && count != 1) {
+                        return Err("save requires a descriptor".into());
+                    }
+                    let values = unsafe { std::slice::from_raw_parts(fds, count) };
+                    let mut file = std::fs::File::from(
+                        unsafe { BorrowedFd::borrow_raw(values[0]) }.try_clone_to_owned()?,
+                    );
+                    if operation == 40 {
+                        let bytes = state.as_ref().ok_or("no story session")?.export_save()?;
+                        file.write_all(&bytes)?;
+                        file.sync_all()?;
+                        Ok(format!("{{\"saved\":true,\"bytes\":{}}}", bytes.len()).into_bytes())
+                    } else {
+                        let mut bytes = Vec::new();
+                        file.take((nekopack_script::checkpoint::LIMIT + 1) as u64)
+                            .read_to_end(&mut bytes)?;
+                        if operation == 46 {
+                            let stamp = String::from_utf8(
+                                values[1..]
+                                    .iter()
+                                    .map(|v| u8::try_from(*v))
+                                    .collect::<Result<Vec<_>, _>>()?,
+                            )?;
+                            if let Some(session) = state.as_mut() {
+                                session.save_ui_slot(sequence as usize, Some(&bytes), stamp)?;
+                            } else {
+                                TITLE.with(|t| {
+                                    t.borrow_mut()
+                                        .as_mut()
+                                        .ok_or("no title session")?
+                                        .save_ui_slot(sequence as usize, Some(&bytes), stamp)
+                                })?;
+                            }
+                            Ok(b"{\"updated\":true}".to_vec())
+                        } else if let Some(session) = state.as_mut() {
+                            session.prepare_save(&bytes)
+                        } else {
+                            TITLE.with(|t| {
+                                t.borrow_mut()
+                                    .as_mut()
+                                    .ok_or("no title session")?
+                                    .prepare_save(&bytes)
+                            })
+                        }
+                    }
+                }
+                42 => {
+                    if let Some(session) = state.as_mut() {
+                        session.commit_save()
+                    } else {
+                        let session = TITLE
+                            .with(|t| t.borrow_mut().take().ok_or("no title session")?.load())?;
+                        *state = Some(session);
+                        state.as_mut().unwrap().poll_packet()
+                    }
+                }
+                43 => {
+                    if let Some(session) = state.as_mut() {
+                        session.cancel_save()
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .cancel_save()
+                        })
+                    }
+                }
+                44 => {
+                    if let Some(session) = state.as_mut() {
+                        session.open_save_ui(sequence == 1)
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .open_save_ui()
+                        })
+                    }
+                }
+                45 => {
+                    if count != 3 {
+                        return Err("save pointer needs kind/x/y".into());
+                    }
+                    let values = unsafe { std::slice::from_raw_parts(fds, count) };
+                    if let Some(session) = state.as_mut() {
+                        session.save_ui_pointer(values[0], values[1], values[2])
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .save_ui_pointer(values[0], values[1], values[2])
+                        })
+                    }
+                }
+                49 => {
+                    use std::io::Read;
+                    if count > 1 {
+                        return Err("side menu requires optional quick descriptor".into());
+                    }
+                    let mut bytes = Vec::new();
+                    if count == 1 {
+                        let fd = unsafe { *fds };
+                        let file = std::fs::File::from(
+                            unsafe { BorrowedFd::borrow_raw(fd) }.try_clone_to_owned()?,
+                        );
+                        file.take((nekopack_script::checkpoint::LIMIT + 1) as u64)
+                            .read_to_end(&mut bytes)?;
+                    }
+                    state
+                        .as_mut()
+                        .ok_or("no story session")?
+                        .side_menu(if count == 1 { Some(&bytes) } else { None })
+                }
+                50 => {
+                    if count != 3 {
+                        return Err("side pointer needs kind/x/y".into());
+                    }
+                    let v = unsafe { std::slice::from_raw_parts(fds, count) };
+                    state
+                        .as_mut()
+                        .ok_or("no story session")?
+                        .side_pointer(v[0], v[1], v[2])
+                }
+                48 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .begin_save(sequence),
+                47 => {
+                    if let Some(session) = state.as_mut() {
+                        session.save_ui_packet(0, false)
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .save_ui_packet(0, false)
+                        })
+                    }
+                }
                 1 => state.as_mut().ok_or("no story session")?.poll_packet(),
                 9 => state.as_mut().ok_or("no story session")?.audio_config(),
                 36 => state
@@ -521,6 +677,23 @@ pub unsafe extern "C" fn neko_probe_story(
     });
     let bytes = match result {
         Ok(Ok(bytes)) => bytes,
+        // Save export and preparation are transactional external-input operations.
+        // Their ordinary I/O/format errors must not destroy the live scene. Panics
+        // and errors after commit still use the fatal cleanup path below.
+        Ok(Err(error)) if matches!(operation, 40 | 41 | 46 | 48) => {
+            let message = error
+                .to_string()
+                .replace('\\', "\\\\")
+                .replace('"', "\\\"")
+                .replace('\n', "\\n")
+                .replace('\r', "\\r")
+                .replace('\t', "\\t");
+            format!(
+                "{{\"recoverable\":true,\"vm_live_bytes\":{},\"error\":\"{message}\"}}\n",
+                SystemVm::validation_live_bytes()
+            )
+            .into_bytes()
+        }
         other => {
             TITLE.with(|t| *t.borrow_mut() = None);
             let checkpoint = STORY.with(|cell| {

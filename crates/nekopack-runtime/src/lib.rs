@@ -7,6 +7,7 @@ mod menu;
 mod motion;
 mod preferences;
 mod read_history;
+pub mod save_ui;
 mod scene;
 mod settings;
 pub mod shake;
@@ -263,3 +264,5 @@ mod bootstrap_tests {
         assert_eq!(system.result(), "1");
     }
 }
+
+mod side_menu;

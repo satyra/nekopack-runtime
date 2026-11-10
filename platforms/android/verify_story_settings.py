@@ -177,13 +177,18 @@ def main():
         start=point(x+w/2,y+h/2,'原版剧情菜单');end=point(0,0,'原版剧情菜单')
         adb('shell','input','swipe',*start,*end,'400');wait(lambda:menu_state()['input_sequence']>=2 and menu_state()['pointer_kind']==2 and menu_state()['accepting'])
         assert menu_state()['kind']=='story_menu' and menu_state()['checkpoint']==checkpoint
-        for action in ('SAVE','LOAD'):
-            unsupported=menu_action(action);assert unsupported['unsupported']==action and unsupported['checkpoint']==checkpoint
         adb('shell','input','keyevent','KEYCODE_F1');time.sleep(.3);assert menu_state()['kind']=='story_menu' and state() is None
         adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2)
         adb('shell','am','start','-W','--activity-reorder-to-front','-n',pkg+'/.MainActivity');bounds('原版剧情菜单','content-desc')
         assert menu_state()['checkpoint']==checkpoint and len(lines('text-events.jsonl'))==count
         menu_cancel();baseline(1);assert obj('text-2.json') is None
+        for action in ('SAVE','LOAD'):
+            old=len(lines('story-menu-events.jsonl'));adb('shell','input','keyevent','KEYCODE_F2')
+            wait(lambda:len(lines('story-menu-events.jsonl'))>old and menu_state()['kind']=='story_menu')
+            before=len(lines('save-events.jsonl'));menu_action(action)
+            wait(lambda:len(lines('save-events.jsonl'))>before and obj('save-state.json')['event']=='open')
+            adb('shell','input','keyevent','KEYCODE_BACK');wait(lambda:obj('save-state.json')['event']=='cancelled')
+            baseline(1);assert obj('text-2.json') is None
         old=len(lines('story-menu-events.jsonl'));adb('shell','input','keyevent','KEYCODE_F2')
         wait(lambda:len(lines('story-menu-events.jsonl'))>old and menu_state()['kind']=='story_menu')
         menu_action('CONFIG');wait(state);assert state()['story_sequence']==1
@@ -192,8 +197,8 @@ def main():
         control('继续');wait(lambda:obj('text-2.json'));baseline(2)
         control('剧情菜单');wait(lambda:menu_state() and menu_state()['kind']=='story_menu');menu_action('QUIT')
         wait(lambda:b'VM live bytes=0' in read('closed.txt'))
-        menu_results=dict(partial_checkpoint=checkpoint,original_buttons=first['buttons'],drag_cancel=True,unsupported_save_load_preserve_page=True,function_keys_blocked=True,background_preserves_menu=True,back_consumed=True,f2_opens=True,config_returns_same_page=True,next_after_close=True,menu_quit_closes_vm=True,closed_vm_live_bytes=0)
-        print('original story menu, F2, unsupported action, nested config and Back passed',flush=True)
+        menu_results=dict(partial_checkpoint=checkpoint,original_buttons=first['buttons'],drag_cancel=True,save_load_cancel_preserve_page=True,function_keys_blocked=True,background_preserves_menu=True,back_consumed=True,f2_opens=True,config_returns_same_page=True,next_after_close=True,menu_quit_closes_vm=True,closed_vm_live_bytes=0)
+        print('original story menu, F2, save/load cancel, nested config and Back passed',flush=True)
     hide_results={}
     hidden_label='隐藏对话框；点击恢复'
     def hide_state():return obj('hide-state.json')

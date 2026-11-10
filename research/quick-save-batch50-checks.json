@@ -1,0 +1,53 @@
+{
+  "base_commit": "bf63b4d0abb624f2f07804197c570eb723f231da",
+  "rust_top_level_tests": 158,
+  "isolated_native_probes": 7,
+  "python_tests": 17,
+  "cargo_fmt": "check passed",
+  "clippy": "workspace all-targets deny warnings passed",
+  "verifier_py_compile": "passed",
+  "ndk": "r27d",
+  "api": 23,
+  "target": "aarch64-linux-android",
+  "execution": "translated ARM64 on x86_64",
+  "sha256": {
+    "libnekopack_probe.so": "011b4ddfbba5ce75a6ce64f5ee5427d3e088943945c638a0b97271b6144b0a5e",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "0da003db6e23f3baa9ec473cd98b2d7efbfb73139973705bde2febbf9dc8757e"
+  },
+  "reports": [
+    "quick-save-batch50-emulator.json",
+    "quick-save-batch50-independent.json",
+    "quick-save-batch50-side-menu.json"
+  ],
+  "report_sha256": {
+    "quick-save-batch50-emulator.json": "204f88d5a09bc8de6a5a754e4e9a62a70026d0bb144ada82310397abf31280e4",
+    "quick-save-batch50-independent.json": "a1e0a6512d16d7a57ef2a701b7f2577c6763c22f89a2038ce0f4f434b36adad5",
+    "quick-save-batch50-side-menu.json": "bd08a38a37c1f13ec40e4d17aa142bc568d5eae9f7069226c2ff1b16cc64580b"
+  },
+  "log_sha256": {
+    "batch50-tests.log": "302d391c13d8afe5b051f206a88e6124f7ca9c168d3553d78b6a03dacb333af2",
+    "batch50-clippy.log": "e9704d4d1ee91199970b99eb3702c521cf8dd5bf1dd7cec78cd1b6832667e97c",
+    "batch50-python.log": "d2434044c24a987980db3b20b68c9db09eb784a752fe7a84a0e6a80bb469db45",
+    "batch50-build.log": "ede117ca4d6c87bf4ff69c4bcd04d32951f07225897b6d1058acde11f4af6318",
+    "batch50-emulator.log": "0f8ac809086569cf259fdf424f4a4f04aead989f80b3071298297b5b67f009f7",
+    "batch50-independent.log": "9d98b4cc2ae35b8d3a402dd67120085b09788337f7405b8635076e0747f7c99b",
+    "batch50-side-menu.log": "2d1e03a71f493c3d85a4552dcb81c22f8adeb88f94d19ac9ac8cee4412587cda"
+  },
+  "original_script_sha256": {
+    "shortcut.nut": "863c20e5636f676c79d5b7fcbca4865b1b7a03c130d452e3e420a08f2c401a91",
+    "saveload.nut": "43aebe919f6a8497470e3801ba0190ea4deba96f08257ac85dcf38bda5cfd4f4",
+    "system.nut": "4691bef4a9692d5ea8658c6da6a778f8acf02ddacbb853de693c6da30b1a1cce",
+    "config.nut": "3fc43c6d28b4e7c62b9d5eded3740c6a7c74b85aa037dd05a628d8a51d2b2f7c"
+  },
+  "original_evidence": "Static installed BLESS scripts and sprites; user-supplied BLACK and WHITE screenshot confirms the separate right-side surface, not BLESS dynamic timing.",
+  "touch_adaptation": "Tap original right-side region to reveal, then an item; outside tap collapses.",
+  "ui_automation_null_hierarchy_retries": 1,
+  "limitations": [
+    "No ARM64 physical device in this batch",
+    "No native .sav interoperability or audio sample-position restore",
+    "STAR confirmation sound and LOG remain unimplemented",
+    "No full automatic/skip regression or power-loss/storage-fault injection in this batch"
+  ]
+}

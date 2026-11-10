@@ -122,6 +122,64 @@ pub(crate) struct Queue {
     started: u64,
 }
 impl Queue {
+    pub fn save(&self, w: &mut nekopack_script::checkpoint::Writer) {
+        w.number(self.slot.into());
+        w.number(self.current as u64);
+        w.number(self.started);
+        w.number(self.segments.len() as u64);
+        for m in &self.segments {
+            let (kind, delta) = match m.kind {
+                Kind::Horizontal => (0, m.end[0] - m.start[0]),
+                Kind::Dip => (1, 0),
+                Kind::Stationary => (2, 0),
+                Kind::HorizontalExcursion(d) => (3, d),
+            };
+            w.number(kind);
+            w.number(u64::from(delta as u32));
+            for n in m.start.into_iter().chain(m.center) {
+                w.number(u64::from(n as u32));
+            }
+        }
+    }
+    pub fn load(
+        r: &mut nekopack_script::checkpoint::Reader<'_>,
+        elapsed: u64,
+    ) -> Result<Self, String> {
+        let slot = u8::try_from(r.number()?).map_err(|_| "invalid motion slot")?;
+        if !(1..=9).contains(&slot) {
+            return Err("invalid motion slot".into());
+        }
+        let current = r.count(1024)?;
+        let started = r.number()?;
+        let count = r.count(1024)?;
+        if count == 0 || current > count || started > elapsed {
+            return Err("invalid motion clock".into());
+        }
+        let mut segments = Vec::new();
+        for _ in 0..count {
+            let kind = r.number()?;
+            let delta = u32::try_from(r.number()?).map_err(|_| "invalid motion delta")? as i32;
+            let mut c = [0; 4];
+            for n in &mut c {
+                *n = u32::try_from(r.number()?).map_err(|_| "invalid motion coordinate")? as i32;
+            }
+            let start = [c[0], c[1]];
+            let center = [c[2], c[3]];
+            segments.push(match kind {
+                0 => Motion::new(slot, start, delta, center)?,
+                1 => Motion::dip(slot, start, center)?,
+                2 => Motion::stationary(slot, start, center)?,
+                3 => Motion::horizontal_excursion(slot, start, delta, center)?,
+                _ => return Err("invalid motion kind".into()),
+            });
+        }
+        Ok(Self {
+            slot,
+            segments,
+            current,
+            started,
+        })
+    }
     pub fn new(slot: u8, segments: Vec<Motion>) -> Self {
         assert!(!segments.is_empty());
         Self {
@@ -166,6 +224,28 @@ impl Queue {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn saved_queue_retains_current_segment_and_clock() {
+        let mut q = Queue::new(
+            1,
+            vec![
+                Motion::dip(1, [640, 360], [640, 360]).unwrap(),
+                Motion::new(1, [640, 360], 350, [640, 360]).unwrap(),
+            ],
+        );
+        q.position(0);
+        q.position(280);
+        q.position(350);
+        let mut w = nekopack_script::checkpoint::Writer::default();
+        q.save(&mut w);
+        let mut reader = nekopack_script::checkpoint::Reader::new(&w.0).unwrap();
+        let mut restored = Queue::load(&mut reader, 350).unwrap();
+        reader.finish().unwrap();
+        for t in [350, 400, 530, 1000] {
+            assert_eq!(q.position(t), restored.position(t));
+            assert_eq!(q.finished(), restored.finished());
+        }
+    }
     #[test]
     fn queue_discards_overshoot_and_actors_finish_independently() {
         let center = [640, 360];

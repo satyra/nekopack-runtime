@@ -16,6 +16,7 @@ use std::{
     error::Error,
     io::{Read, Seek},
 };
+pub(crate) mod saves;
 const PIXELS: usize = 64 * 1024 * 1024;
 const AUDIO_CONFIG_FIELDS: [(&str, &str); 5] = [
     ("bgm", "VolBGM"),
@@ -171,6 +172,14 @@ pub struct StorySession<R: Read + Seek> {
     scene: Scene,
     motions: Vec<crate::motion::Queue>,
     motion_elapsed: u64,
+    motion_restore_base: u64,
+    save_modal: bool,
+    save_ui: Option<crate::save_ui::SaveUi>,
+    side_menu: Option<crate::side_menu::SideMenu>,
+    prepared_save: Option<saves::Saved>,
+    restore_audio: std::collections::VecDeque<HostEffect>,
+    restoring: bool,
+    persistent_audio: BTreeMap<String, (String, bool)>,
     presented: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
     shake: Option<crate::shake::Frames>,
@@ -205,7 +214,8 @@ impl<R: Read + Seek> StorySession<R> {
         self.return_title_requested
     }
     pub fn open_menu(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.failed
             || self.menu.is_some()
             || self.dialogue_hidden
@@ -285,6 +295,7 @@ impl<R: Read + Seek> StorySession<R> {
         let checkpoint = self.menu_checkpoint()?;
         self.menu = None;
         self.return_title_requested = action == "RESET";
+        self.save_modal = matches!(action, "SAVE" | "LOAD" | "QSAVE" | "QLOAD");
         self.auto_mode = false;
         self.skip_mode = false;
         // Outer InvokeCommand(ID_MENU) cancels modes after returning.
@@ -292,7 +303,8 @@ impl<R: Read + Seek> StorySession<R> {
     }
     /// A modal over the current acknowledged presentation, never a new VM.
     pub fn open_settings(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.menu.is_some()
             || self.dialogue_hidden
             || self.failed
@@ -448,6 +460,14 @@ impl<R: Read + Seek> StorySession<R> {
             scene: Scene::new([mng.header[0], mng.header[1]]),
             motions: Vec::new(),
             motion_elapsed: 0,
+            motion_restore_base: 0,
+            save_modal: false,
+            save_ui: None,
+            side_menu: None,
+            prepared_save: None,
+            restore_audio: std::collections::VecDeque::new(),
+            restoring: false,
+            persistent_audio: BTreeMap::new(),
             presented: None,
             wipe: None,
             shake: None,
@@ -493,7 +513,8 @@ impl<R: Read + Seek> StorySession<R> {
             .ok_or_else(|| "host effect requires acknowledgement".into())
     }
     pub fn next(&mut self, sequence: u64) -> Result<&Page, Box<dyn Error>> {
-        if self.settings.is_some() || self.failed {
+        if self.save_modal || self.return_title_requested || self.settings.is_some() || self.failed
+        {
             return Err("story session stopped after error".into());
         }
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
@@ -507,6 +528,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.page = None;
         self.motions.clear();
         self.motion_elapsed = 0;
+        self.motion_restore_base = 0;
         self.speaker.clear();
         self.voice.clear();
         self.page()
@@ -639,7 +661,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.menu.is_some()
             || self.dialogue_hidden
             || self.failed
@@ -670,7 +693,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         hidden: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.menu.is_some()
             || self.failed
             || self.settings.is_some()
@@ -696,7 +720,8 @@ impl<R: Read + Seek> StorySession<R> {
             && self.settings.is_none()
             && !self.dialogue_hidden
             && self.menu.is_none()
-            && !self.return_title_requested;
+            && !self.return_title_requested
+            && !self.save_modal;
         let page = live
             && self.page.as_ref().map(|p| p.sequence) == Some(sequence)
             && self.text_reveal.as_ref().is_some_and(|r| !r.advance);
@@ -722,8 +747,8 @@ impl<R: Read + Seek> StorySession<R> {
                     "applied"
                 }
                 "AUTO" | "SKIP" => "busy",
-                "CONFIG" | "HIDE" | "MENU" if page => "request",
-                "CONFIG" | "HIDE" | "MENU" => "busy",
+                "CONFIG" | "HIDE" | "MENU" | "QSAVE" | "QLOAD" if page => "request",
+                "CONFIG" | "HIDE" | "MENU" | "QSAVE" | "QLOAD" => "busy",
                 "QUIT" => "request",
                 _ => "unsupported",
             }
@@ -742,7 +767,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.menu.is_some()
             || self.dialogue_hidden
             || self.settings.is_some()
@@ -770,7 +796,8 @@ impl<R: Read + Seek> StorySession<R> {
         click: bool,
         voice_finished: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.menu.is_some()
             || self.dialogue_hidden
             || self.settings.is_some()
@@ -906,6 +933,33 @@ impl<R: Read + Seek> StorySession<R> {
         if self.flash.as_ref().is_some_and(|f| !f.finished()) {
             return Err("flash acknowledged before final phase".into());
         }
+        if self.restoring {
+            self.pending_effect = self.restore_audio.pop_front();
+            self.restoring = self.pending_effect.is_some();
+            return self.poll_packet();
+        }
+        let effect_ref = self.pending_effect.as_ref().unwrap();
+        match effect_ref.kind.as_str() {
+            "bgm" | "env" | "se" => {
+                if effect_ref.audio_loop {
+                    self.persistent_audio
+                        .insert(effect_ref.kind.clone(), (effect_ref.name.clone(), true));
+                } else {
+                    self.persistent_audio.remove(&effect_ref.kind);
+                }
+            }
+            "bgm_stop" | "bgm_fade" => {
+                self.persistent_audio.remove("bgm");
+            }
+            "env_stop" => {
+                self.persistent_audio.remove("env");
+            }
+            "se_stop" => {
+                self.persistent_audio.remove("se");
+            }
+            "movie" => self.persistent_audio.clear(),
+            _ => {}
+        }
         self.machine.complete(None)?;
         let effect = self.pending_effect.take().unwrap();
         self.flash = None;
@@ -919,7 +973,8 @@ impl<R: Read + Seek> StorySession<R> {
         self.poll_packet()
     }
     pub fn acknowledge_text(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.return_title_requested
+        if self.save_modal
+            || self.return_title_requested
             || self.menu.is_some()
             || self.dialogue_hidden
             || self.settings.is_some()
@@ -938,6 +993,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.page = None;
         self.motions.clear();
         self.motion_elapsed = 0;
+        self.motion_restore_base = 0;
         self.speaker.clear();
         self.voice.clear();
         self.poll_packet()
@@ -955,6 +1011,9 @@ impl<R: Read + Seek> StorySession<R> {
         {
             return Err("stale or missing dialogue motion request".into());
         }
+        let elapsed_ms = elapsed_ms
+            .checked_add(self.motion_restore_base)
+            .ok_or("motion restore clock overflow")?;
         if elapsed_ms < self.motion_elapsed {
             return Err("invalid dialogue motion clock".into());
         }
@@ -1669,6 +1728,14 @@ mod tests {
             scene: Scene::new([1, 1]),
             motions: Vec::new(),
             motion_elapsed: 0,
+            motion_restore_base: 0,
+            save_modal: false,
+            save_ui: None,
+            side_menu: None,
+            prepared_save: None,
+            restore_audio: std::collections::VecDeque::new(),
+            restoring: false,
+            persistent_audio: BTreeMap::new(),
             presented: None,
             wipe: None,
             shake: None,
@@ -1729,6 +1796,77 @@ mod tests {
     }
 
     #[test]
+    fn damaged_save_does_not_change_live_dialogue_and_cancel_resumes() {
+        let mut s = session(b"one\ntwo");
+        s.system
+            .eval(
+                "config",
+                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=0}",
+            )
+            .unwrap();
+        s.enable_interactive_text();
+        let original = s.poll_packet().unwrap();
+        s.text_frame(1, 0, false).unwrap();
+        s.labels.in_route = true;
+        s.labels.route = "test".into();
+        s.save_modal = true;
+        let save = s.export_save().unwrap();
+        assert!(s.text_frame(1, 1, true).is_err());
+        assert!(s.next(1).is_err());
+        assert!(s.open_menu(1).is_err());
+        let mut damaged = save.clone();
+        *damaged.last_mut().unwrap() ^= 1;
+        assert!(s
+            .prepare_save(&damaged)
+            .unwrap_err()
+            .to_string()
+            .contains("checksum"));
+        assert!(s.prepare_save(b"NKSV").is_err());
+        assert!(s.commit_save().is_err());
+        assert_eq!(s.poll_packet().unwrap(), original);
+        assert_eq!(s.export_save().unwrap(), save);
+        s.cancel_save().unwrap();
+        assert!(s.export_save().is_err());
+        let resumed = s.text_frame(1, 0, true).unwrap();
+        assert!(String::from_utf8(resumed)
+            .unwrap()
+            .contains("\"advance\":true"));
+        assert!(s.text_frame(1, 0, true).is_err());
+        assert_eq!(s.acknowledge_text(1).unwrap(), s.poll_packet().unwrap());
+        assert_eq!(s.page.as_ref().unwrap().text, "two");
+    }
+
+    #[test]
+    fn quick_save_modal_preserves_page_and_rejects_stale_requests() {
+        let mut s = session(b"one\ntwo");
+        s.system.eval("config", "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"QSAVE\",\"QLOAD\"]}").unwrap();
+        s.enable_interactive_text();
+        let before = s.poll_packet().unwrap();
+        s.text_frame(1, 0, false).unwrap();
+        assert!(String::from_utf8(s.shortcut(1, 1).unwrap())
+            .unwrap()
+            .contains("request"));
+        assert!(String::from_utf8(s.shortcut(2, 0).unwrap())
+            .unwrap()
+            .contains("busy"));
+        assert!(s.begin_save(2).is_err());
+        assert!(!s.save_modal);
+        s.set_auto_mode(1, true).unwrap();
+        s.begin_save(1).unwrap();
+        assert!(!s.auto_mode && !s.skip_mode);
+        assert!(s.text_frame(1, 50, true).is_err());
+        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
+            .unwrap()
+            .contains("busy"));
+        assert_eq!(s.poll_packet().unwrap(), before);
+        s.cancel_save().unwrap();
+        assert_eq!(s.poll_packet().unwrap(), before);
+        s.text_frame(1, 10000, true).unwrap();
+        assert!(s.begin_save(1).is_err());
+        assert!(!s.save_modal);
+    }
+
+    #[test]
     fn menu_is_modal_and_unsupported_actions_preserve_dialogue() {
         let mut s = session(b"one\ntwo");
         s.system.eval("config","Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"CONFIG\",\"MENU\"]}").unwrap();
@@ -1757,7 +1895,7 @@ mod tests {
         assert!(
             std::str::from_utf8(unsupported.split(|b| *b == 10).next().unwrap())
                 .unwrap()
-                .contains("\"unsupported\":\"SAVE\"")
+                .contains("\"unsupported\":\"LOG\"")
         );
         assert!(s.menu.is_some());
         assert_eq!(s.poll_packet().unwrap(), packet);

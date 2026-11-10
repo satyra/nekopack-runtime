@@ -1,6 +1,7 @@
 //! Byte-preserving bootstrap parser, cooperative scenario state, and system bridge.
 //! Parsing performs no CP932/CP936 conversion; unsupported syntax stays explicit.
 use std::{fmt, ops::Range};
+pub mod checkpoint;
 pub mod runtime;
 pub mod system;
 

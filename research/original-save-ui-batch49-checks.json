@@ -1,0 +1,43 @@
+{
+  "base_commit": "bf63b4d0abb624f2f07804197c570eb723f231da",
+  "rust_top_level_tests": 156,
+  "isolated_native_probes": 7,
+  "python_tests": 17,
+  "cargo_fmt": "check passed",
+  "clippy": "workspace all-targets deny warnings passed",
+  "verifier_py_compile": "passed",
+  "ndk": "r27d",
+  "api": 23,
+  "target": "aarch64-linux-android",
+  "execution": "translated ARM64 on x86_64",
+  "sha256": {
+    "libnekopack_probe.so": "4ccf509bae29e0804ff33040be8d911c1e53c5c03315830dad97a11fad69d902",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "390063a0e4280509f99e6c9e7bccc75534a12ddf9aaecb1d11a740a47d23aaa9"
+  },
+  "save_regression": "original-save-ui-batch49-emulator.json",
+  "compatibility_regression": "original-save-ui-batch49-settings-emulator.json",
+  "independent_evidence": "original-save-ui-batch49-independent.json",
+  "visual_check": {
+    "save": ".local/batch49-populated-save.png",
+    "title_load": ".local/batch49-title-load.png",
+    "checked": "ten slots, thumbnail and label alignment, page tabs, title hides Save switch, corrupt preview"
+  },
+  "log_sha256": {
+    "batch49-tests.log": "78f66ff5a50a9d172c055a19b4aed8db772cd593d9dfb0720ee1667f5364ee23",
+    "batch49-clippy.log": "1c1a6b9cc5fd8a2cef83ec982fdd12ee81db315fa8aebdd1b232b6b416b3f653",
+    "batch49-python.log": "05d582ffc38dbdd478b363f0f3d92e240ecb4200b0a9493fb321873eaa858434",
+    "batch49-build.log": "987929680793e26f2980e799b10a327491deedfa8572ab4f107ab86a5342b982",
+    "batch49-emulator.log": "cdb389a418472e09b07c3c5260bce8cf5652956176f56bcc956bcd50f5acc2c4",
+    "batch49-independent.log": "9d98b4cc2ae35b8d3a402dd67120085b09788337f7405b8635076e0747f7c99b",
+    "batch49-settings-emulator.log": "b794ad9920438d9d7a4814af54198b0ba0712b506b97ecbf39e608d2bce3aef3"
+  },
+  "limitations": [
+    "ARM64 translated execution on x86_64, not physical ARM64",
+    "No native .sav interoperability; Q quick load remains unsupported",
+    "No full automatic/skip regression in this batch",
+    "Host font and thumbnail resampling not proven pixel-identical to original"
+  ],
+  "ui_automation_observation": "Two transient null hierarchy dumps retried by existing bounded hierarchy lookup; assertions and final regression passed."
+}

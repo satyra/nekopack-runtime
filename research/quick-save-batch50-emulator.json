@@ -1,0 +1,76 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "0da003db6e23f3baa9ec473cd98b2d7efbfb73139973705bde2febbf9dc8757e",
+  "profile": "save_0df2af5b035648dba6447e36fc98b40c",
+  "runs": [
+    "story_saves_e00c871579ae4edf82e679cac1298e87",
+    "story_saves_d701125039d648178b100cf8a8f44cd1",
+    "story_saves_a5605d57471a45ee88224e2fa355e7cf",
+    "story_saves_b2a5c832b6844c9f8ccc995a83dcf83b",
+    "story_saves_585ff314f0b34efbb1cebc305676702d",
+    "story_saves_7ab31c2d705c4b4d884958a86bce31d2"
+  ],
+  "story_run": "story_saves_a5605d57471a45ee88224e2fa355e7cf",
+  "results": [
+    {
+      "case": "first_page",
+      "new_sequence": 3,
+      "next_sequence": 4,
+      "background_modal": true,
+      "empty_slot_disabled": true,
+      "overwrite_exact_bytes": true,
+      "page_navigation_and_mode_switch": true
+    },
+    {
+      "case": "process_restart",
+      "durable": true
+    },
+    {
+      "case": "actor_queue_page",
+      "menu_checkpoint": {
+        "sequence": 56,
+        "steps": 412,
+        "visible": 6,
+        "elapsed_ms": 105
+      },
+      "restored_sequence": 58,
+      "next_sequence": 59,
+      "audio_released": true,
+      "bgm_and_voice_started": true
+    },
+    {
+      "case": "corrupt_slot",
+      "rejected_before_release": true,
+      "current_page_preserved": true,
+      "next_page_verified": true
+    },
+    {
+      "case": "title_load",
+      "cancel_preserves_title": true,
+      "no_start_story_execution": true,
+      "saved_page": 56,
+      "next_page": 57,
+      "corrupt_slot_disabled": true
+    },
+    {
+      "case": "quick_history",
+      "writes": 12,
+      "retained": 10,
+      "newest_page": 56,
+      "oldest_page": 3,
+      "hash_order_verified": true,
+      "normal_slot_unchanged": true,
+      "run": "story_saves_585ff314f0b34efbb1cebc305676702d",
+      "title_run": "story_saves_7ab31c2d705c4b4d884958a86bce31d2",
+      "function_keys": true,
+      "original_side_menu": true,
+      "title_q_page": true,
+      "corruption_preserves_current_state": true
+    }
+  ],
+  "baseline_pages": 57,
+  "closed_vm_live_bytes": 0,
+  "scope": "Runtime NKSV slots; no original .sav interoperability. Audio resource/loop/channel restart, not sample-position equivalence."
+}

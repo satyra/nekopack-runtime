@@ -1,0 +1,56 @@
+{
+  "base_commit": "bf63b4d0abb624f2f07804197c570eb723f231da",
+  "rust_top_level_tests": 154,
+  "isolated_native_probes": 7,
+  "python_tests": 17,
+  "cargo_fmt": "passed",
+  "clippy": "workspace all-targets deny warnings passed",
+  "verifier_py_compile": "passed",
+  "ndk": "r27d",
+  "api": 23,
+  "target": "aarch64-linux-android",
+  "execution": "translated ARM64 on x86_64",
+  "sha256": {
+    "libnekopack_probe.so": "62729c98ab539101f58548d21a7768d6fc9a97530effdbd950116256addd3296",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "c7594cfb9bedb81270aae7d538b026fe0f6787cde784de1af223744d905c3789"
+  },
+  "save_regression": "story-save-batch48-emulator.json",
+  "compatibility_regression": "story-save-batch48-settings-emulator.json",
+  "independent_evidence": "story-save-batch48-independent.json",
+  "late_reset_checks": [
+    {
+      "run": "story_settings_68efb39c58474cd98a3ea642aebaa7a0",
+      "no_late_callbacks": true,
+      "no_second_vm_close": true
+    },
+    {
+      "run": "story_restart_587e2f0de3684e2e979de7f82b8d78c8",
+      "no_late_callbacks": true,
+      "no_second_vm_close": true
+    },
+    {
+      "run": "story_restart_a58340b460094bb5bfe016fc916445c8",
+      "no_late_callbacks": true,
+      "no_second_vm_close": true
+    }
+  ],
+  "visual_check": {
+    "run": "story_saves_754bcafe073e4928acb71dc7400f4bf7",
+    "slot": 10,
+    "saved_bytes": 716040,
+    "closed_vm_live_bytes": 0,
+    "layout": "landscape, scroll to bottom and back to same dialogue verified"
+  },
+  "failed_first_device_run": "Checksum rejection reached the old fatal JNI cleanup; fixed the save export/prepare error boundary and reran the complete save regression.",
+  "log_sha256": {
+    "batch48-tests.log": "430e21f3329a443c560c0f69e77657cef532fdb30684f9528e34583f4e8687d5",
+    "batch48-clippy.log": "d56a4e82e4abe0bcee3633bbe6c46b977abc351bcd82cc36459accc9272032d5",
+    "batch48-python.log": "f11dc2f3939c8c921c57aa39dfa35a27770900f69452cf781f63d4de84a3f035",
+    "batch48-build.log": "6faf5c1b5e7b645c1bfd2fc7adab92396cee4b809001f088eac0d4f11efae13b",
+    "batch48-emulator.log": "518afa2ace606e0e9c5cc4395517ce969383959c4053975619a4a01eb3c85da5",
+    "batch48-emulator-first.log": "85f790404fc4c146af61196921b7ccd034d4ab4d500688f44cb0fa6d2546213a",
+    "batch48-settings-emulator.log": "6fdd33d519df34b815a3e2461626bedd6f60f23774d948f22d8c79b54725c809"
+  }
+}

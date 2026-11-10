@@ -1,0 +1,59 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "390063a0e4280509f99e6c9e7bccc75534a12ddf9aaecb1d11a740a47d23aaa9",
+  "profile": "save_91342143db5141ec922e306eb4391f74",
+  "runs": [
+    "story_saves_5412f6e3ddf84290a443dc50538dbe24",
+    "story_saves_86c22d67eb3e47a8bdea2ba21d9efe46",
+    "story_saves_c6c6d724d62643ada3672b590e7cc9c4",
+    "story_saves_6c9e3b012c3749ddbee5e3f92ab64048"
+  ],
+  "story_run": "story_saves_c6c6d724d62643ada3672b590e7cc9c4",
+  "results": [
+    {
+      "case": "first_page",
+      "new_sequence": 3,
+      "next_sequence": 4,
+      "background_modal": true,
+      "empty_slot_disabled": true,
+      "overwrite_exact_bytes": true,
+      "page_navigation_and_mode_switch": true
+    },
+    {
+      "case": "process_restart",
+      "durable": true
+    },
+    {
+      "case": "actor_queue_page",
+      "menu_checkpoint": {
+        "sequence": 56,
+        "steps": 412,
+        "visible": 6,
+        "elapsed_ms": 105
+      },
+      "restored_sequence": 58,
+      "next_sequence": 59,
+      "audio_released": true,
+      "bgm_and_voice_started": true
+    },
+    {
+      "case": "corrupt_slot",
+      "rejected_before_release": true,
+      "current_page_preserved": true,
+      "next_page_verified": true
+    },
+    {
+      "case": "title_load",
+      "cancel_preserves_title": true,
+      "no_start_story_execution": true,
+      "saved_page": 56,
+      "next_page": 57,
+      "corrupt_slot_disabled": true
+    }
+  ],
+  "baseline_pages": 57,
+  "closed_vm_live_bytes": 0,
+  "scope": "Runtime NKSV slots; no original .sav interoperability. Audio resource/loop/channel restart, not sample-position equivalence."
+}

@@ -1,0 +1,257 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "c7594cfb9bedb81270aae7d538b026fe0f6787cde784de1af223744d905c3789",
+  "runs": [
+    "story_settings_68efb39c58474cd98a3ea642aebaa7a0",
+    "story_restart_587e2f0de3684e2e979de7f82b8d78c8",
+    "story_restart_a58340b460094bb5bfe016fc916445c8",
+    "story_restart_268312e4a7d7400aac63b2146aaf2945",
+    "story_settings_9262aab49e774827bd4ea9be4ba95a28",
+    "story_settings_8b6fd3239eb144d9951500df80c38fc5",
+    "story_settings_4bbcd2bf469440ac98b1310d58e48fd4",
+    "story_settings_25f9f8239b6e4f5cbb9160ee5fc37c0c"
+  ],
+  "partial_dialogue": {
+    "story_sequence": 1,
+    "story_visible": 7,
+    "story_elapsed_ms": 127,
+    "motion_elapsed_ms": 0,
+    "story_steps": 142
+  },
+  "resumed_dialogue": {
+    "sequence": 1,
+    "skip": false,
+    "read": true,
+    "auto": false,
+    "voice_finished": false,
+    "elapsed_ms": 213,
+    "visible": 12,
+    "complete": false,
+    "advance": false,
+    "stop_voice": false,
+    "click": false
+  },
+  "settings_time_excluded": true,
+  "opacity_applies_to_current_page": true,
+  "text_speed_applies_next_page": true,
+  "other_settings_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191,
+    "Bold": 0,
+    "Border": 1,
+    "AutoSpeed": 50,
+    "SkipNoRead": 0
+  },
+  "background_keeps_modal_paused": true,
+  "bgm_pause_resume": true,
+  "motion_checkpoint": {
+    "story_sequence": 56,
+    "story_visible": 6,
+    "story_elapsed_ms": 102,
+    "motion_elapsed_ms": 35,
+    "story_steps": 412
+  },
+  "motion_finishes_after_return": true,
+  "story_pages_verified": 57,
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [],
+  "read_transport_retries": [],
+  "back_keeps_activity_alive": true,
+  "back_cancels_popup_before_leaving_settings": true,
+  "back_returns_to_same_dialogue": true,
+  "bgm_same_player_resumed": true,
+  "new_gain_applied_before_resume": true,
+  "intro_return_button_used": true,
+  "text_styles": {},
+  "auto_playback": {},
+  "skip_playback": {},
+  "shortcut_execution": {},
+  "hide_dialogue": {},
+  "story_menu": {
+    "partial_checkpoint": {
+      "sequence": 1,
+      "steps": 142,
+      "visible": 7,
+      "elapsed_ms": 121
+    },
+    "original_buttons": [
+      {
+        "action": "CONFIG",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          487,
+          275,
+          307,
+          38
+        ]
+      },
+      {
+        "action": "LOAD",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          517,
+          193,
+          247,
+          34
+        ]
+      },
+      {
+        "action": "QUIT",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          487,
+          454,
+          307,
+          37
+        ]
+      },
+      {
+        "action": "RESET",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          467,
+          365,
+          347,
+          37
+        ]
+      },
+      {
+        "action": "SAVE",
+        "enabled": true,
+        "supported": true,
+        "bounds": [
+          517,
+          113,
+          247,
+          33
+        ]
+      }
+    ],
+    "drag_cancel": true,
+    "save_load_cancel_preserve_page": true,
+    "function_keys_blocked": true,
+    "background_preserves_menu": true,
+    "back_consumed": true,
+    "f2_opens": true,
+    "config_returns_same_page": true,
+    "next_after_close": true,
+    "menu_quit_closes_vm": true,
+    "closed_vm_live_bytes": 0,
+    "bgm_background_pauses": true,
+    "bgm_same_player_resumes": true
+  },
+  "title_reset": [
+    {
+      "old_run": "story_settings_68efb39c58474cd98a3ea642aebaa7a0",
+      "new_run": "story_restart_587e2f0de3684e2e979de7f82b8d78c8",
+      "old_sequence": 1,
+      "closure": {
+        "sequence": 1,
+        "old_instance": "20c0e6fb-a25d-4d0d-a5da-18cd003f6e1b",
+        "new_run": "story_restart_587e2f0de3684e2e979de7f82b8d78c8",
+        "native": {
+          "closed": true,
+          "vm_live_bytes": 0
+        },
+        "audio": {
+          "closed": true,
+          "players": 0,
+          "pending_start": 0,
+          "paused_players": 0,
+          "gains": 0,
+          "tokens": 0,
+          "focused": false,
+          "motion_active": false,
+          "animator": false,
+          "bgm_animator": false,
+          "audio_cache_files": 0
+        },
+        "closed_at_ms": 8787121
+      },
+      "new_instance": "c0ec6a59-e6fd-4c74-b771-e2318af24fc2",
+      "same_process": true,
+      "old_callbacks_stopped": true,
+      "new_first_page_matches_baseline": true,
+      "first_page_read": false
+    },
+    {
+      "old_run": "story_restart_587e2f0de3684e2e979de7f82b8d78c8",
+      "new_run": "story_restart_a58340b460094bb5bfe016fc916445c8",
+      "old_sequence": 2,
+      "closure": {
+        "sequence": 2,
+        "old_instance": "c0ec6a59-e6fd-4c74-b771-e2318af24fc2",
+        "new_run": "story_restart_a58340b460094bb5bfe016fc916445c8",
+        "native": {
+          "closed": true,
+          "vm_live_bytes": 0
+        },
+        "audio": {
+          "closed": true,
+          "players": 0,
+          "pending_start": 0,
+          "paused_players": 0,
+          "gains": 0,
+          "tokens": 0,
+          "focused": false,
+          "motion_active": false,
+          "animator": false,
+          "bgm_animator": false,
+          "audio_cache_files": 0
+        },
+        "closed_at_ms": 8804492
+      },
+      "new_instance": "509c2529-ad78-4b6c-a53a-0be08f5f748c",
+      "same_process": true,
+      "old_callbacks_stopped": true,
+      "new_first_page_matches_baseline": true,
+      "first_page_read": true
+    },
+    {
+      "old_run": "story_restart_a58340b460094bb5bfe016fc916445c8",
+      "new_run": "story_restart_268312e4a7d7400aac63b2146aaf2945",
+      "old_sequence": 13,
+      "closure": {
+        "sequence": 13,
+        "old_instance": "509c2529-ad78-4b6c-a53a-0be08f5f748c",
+        "new_run": "story_restart_268312e4a7d7400aac63b2146aaf2945",
+        "native": {
+          "closed": true,
+          "vm_live_bytes": 0
+        },
+        "audio": {
+          "closed": true,
+          "players": 0,
+          "pending_start": 0,
+          "paused_players": 0,
+          "gains": 0,
+          "tokens": 0,
+          "focused": false,
+          "motion_active": false,
+          "animator": false,
+          "bgm_animator": false,
+          "audio_cache_files": 0
+        },
+        "closed_at_ms": 8865752
+      },
+      "new_instance": "7ec8b423-061a-4384-b9f0-ec7e1ecc30ed",
+      "same_process": true,
+      "old_callbacks_stopped": true,
+      "new_first_page_matches_baseline": true,
+      "first_page_read": true,
+      "active_bgm_released": true
+    }
+  ]
+}

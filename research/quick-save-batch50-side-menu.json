@@ -1,0 +1,19 @@
+{
+  "run": "side_menu_b000cb4a49df4dde902d2569eb5c5334",
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "0da003db6e23f3baa9ec473cd98b2d7efbfb73139973705bde2febbf9dc8757e",
+  "original_sprite_order": true,
+  "empty_quick_load_disabled": true,
+  "touch_quick_save_load": true,
+  "normal_save_load_cancel": true,
+  "config_returns_same_dialogue": true,
+  "log_explicitly_unsupported": true,
+  "restored_scene_sha256": "c8fc8f21486fb64c18d6ffa1a4aefbc18352049886169392c135ddb1915cb73f",
+  "closed_vm_live_bytes": 0,
+  "screenshots": [
+    ".local\\batch50-side-device\\side-empty.png",
+    ".local\\batch50-side-device\\side-ready.png"
+  ]
+}

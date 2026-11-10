@@ -144,6 +144,146 @@ pub struct Machine {
     max_depth: usize,
 }
 impl Machine {
+    /// Save only at a pending text boundary; native Squirrel stacks are never serialized.
+    pub fn save_dialogue(&self) -> Result<Vec<u8>, String> {
+        if !matches!(self.pending, Some(Request::Text(_))) {
+            return Err("save requires pending text".into());
+        }
+        let mut w = crate::checkpoint::Writer::default();
+        w.number(self.max_steps as u64);
+        w.number(self.max_depth as u64);
+        w.number(self.steps as u64);
+        w.number(self.stack.len() as u64);
+        for frame in &self.stack {
+            w.bytes(&frame.source.name);
+            w.number(crate::checkpoint::digest(&frame.source.bytes));
+            w.number(frame.pc as u64);
+            w.number(frame.branch_ends.len() as u64);
+            for end in &frame.branch_ends {
+                w.number(*end as u64);
+            }
+        }
+        w.number(self.variables.slots.len() as u64);
+        for ((bank, index), value) in &self.variables.slots {
+            w.number(u64::from(*bank));
+            w.number(u64::from(*index));
+            w.number(u64::from(*value as u32));
+        }
+        w.number(self.variables.names.len() as u64);
+        for (name, value) in &self.variables.names {
+            w.bytes(name);
+            match value {
+                Value::Constant(v) => {
+                    w.number(0);
+                    w.number(u64::from(*v as u32));
+                }
+                Value::Slot(b, i) => {
+                    w.number(u64::from(*b));
+                    w.number(u64::from(*i));
+                }
+            }
+        }
+        if w.0.len() > crate::checkpoint::LIMIT {
+            return Err("machine checkpoint too large".into());
+        }
+        Ok(w.0)
+    }
+    pub fn load_dialogue(
+        bytes: &[u8],
+        scripts: &mut impl Scripts,
+        max_steps: usize,
+        max_depth: usize,
+    ) -> Result<Self, String> {
+        let mut r = crate::checkpoint::Reader::new(bytes)?;
+        let max_steps = r.count(max_steps)?;
+        let max_depth = r.count(max_depth)?;
+        let steps = r.count(max_steps)?;
+        let count = r.count(max_depth)?;
+        if count == 0 {
+            return Err("empty saved call stack".into());
+        }
+        let mut stack = Vec::new();
+        let mut source_bytes = 0usize;
+        for _ in 0..count {
+            let name = r.bytes()?;
+            let source = scripts.load(name)?;
+            source_bytes = source_bytes
+                .checked_add(source.bytes.len())
+                .ok_or("saved script size overflow")?;
+            if source_bytes > crate::checkpoint::LIMIT {
+                return Err("saved scripts exceed memory limit".into());
+            }
+            if source.name != name || crate::checkpoint::digest(&source.bytes) != r.number()? {
+                return Err("saved script differs from mounted game".into());
+            }
+            let mut frame = Frame::new(source);
+            frame.pc = r.count(frame.lines.len())?;
+            let branches = r.count(frame.lines.len())?;
+            let mut outer = frame.lines.len();
+            for _ in 0..branches {
+                let end = r.count(frame.lines.len().saturating_sub(1))?;
+                if end < frame.pc || end >= outer || frame.lines[end].1 != b".end" {
+                    return Err("invalid saved map boundary".into());
+                }
+                outer = end;
+                frame.branch_ends.push(end);
+            }
+            stack.push(frame);
+        }
+        let mut variables = Variables::default();
+        for _ in 0..r.count(65536)? {
+            let bank = u8::try_from(r.number()?).map_err(|_| "invalid slot bank")?;
+            let index = u32::try_from(r.number()?).map_err(|_| "invalid slot index")?;
+            let value = u32::try_from(r.number()?).map_err(|_| "invalid slot value")? as i32;
+            if !matches!(bank, b'G' | b'L' | b'F')
+                || variables.slots.insert((bank, index), value).is_some()
+            {
+                return Err("invalid or duplicate saved slot".into());
+            }
+        }
+        for _ in 0..r.count(65536)? {
+            let name = r.bytes()?.to_vec();
+            let bank = u8::try_from(r.number()?).map_err(|_| "invalid alias bank")?;
+            let index = u32::try_from(r.number()?).map_err(|_| "invalid alias value")?;
+            let value = if bank == 0 {
+                Value::Constant(index as i32)
+            } else {
+                if !variables.slots.contains_key(&(bank, index)) {
+                    return Err("saved alias has no slot".into());
+                }
+                Value::Slot(bank, index)
+            };
+            if name.is_empty() || name.contains(&0) || variables.names.insert(name, value).is_some()
+            {
+                return Err("invalid saved name".into());
+            }
+        }
+        r.finish()?;
+        let frame = stack.last().unwrap();
+        let text = frame
+            .lines
+            .get(frame.pc)
+            .ok_or("saved dialogue past script end")?
+            .1
+            .clone();
+        if text.is_empty()
+            || matches!(
+                text[0],
+                b'.' | b':' | b'@' | b'#' | b'*' | b'!' | b';' | b'?'
+            )
+        {
+            return Err("saved location is not dialogue".into());
+        }
+        Ok(Self {
+            variables,
+            stack,
+            pending: Some(Request::Text(text)),
+            steps,
+            max_steps,
+            dialogue: true,
+            max_depth,
+        })
+    }
     pub fn new(source: Source, max_steps: usize, max_depth: usize) -> Self {
         Self {
             variables: Variables::default(),
@@ -387,6 +527,62 @@ fn charge(steps: &mut usize, limit: usize) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn saved_nested_calls_maps_variables_and_budget_resume_without_reexecution() {
+        struct SavedScripts;
+        impl Scripts for SavedScripts {
+            fn load(&mut self, name: &[u8]) -> Result<Source, String> {
+                let bytes = match name {
+                    b"root" => b".var G0 x\n? x = 3\n.call child".as_slice(),
+                    b"child" => b".map m\n.case 1\n.map n\n.case 2\none\n? x = 9\ntwo\n.end\n.end",
+                    _ => return Err("missing".into()),
+                };
+                Ok(Source {
+                    name: name.to_vec(),
+                    bytes: bytes.to_vec(),
+                })
+            }
+        }
+        let mut store = SavedScripts;
+        let mut original = Machine::new(store.load(b"root").unwrap(), 60, 4);
+        original.enable_dialogue();
+        assert!(matches!(
+            original.advance(&mut store).unwrap(),
+            Step::Request(Request::Command { .. })
+        ));
+        original.complete(Some(1)).unwrap();
+        original.advance(&mut store).unwrap();
+        original.complete(Some(2)).unwrap();
+        assert_eq!(
+            original.advance(&mut store).unwrap(),
+            Step::Request(Request::Text(b"one".to_vec()))
+        );
+        let bytes = original.save_dialogue().unwrap();
+        let mut restored = Machine::load_dialogue(&bytes, &mut store, 10000, 64).unwrap();
+        assert_eq!(restored.steps(), original.steps());
+        assert_eq!(restored.max_steps, 60);
+        assert_eq!(restored.max_depth, 4);
+        assert_eq!(restored.variables.get(b"x"), Ok(3));
+        assert_eq!(restored.depth(), 2);
+        assert_eq!(restored.save_dialogue().unwrap(), bytes);
+        for vm in [&mut original, &mut restored] {
+            vm.complete(None).unwrap();
+            assert_eq!(
+                vm.advance(&mut store).unwrap(),
+                Step::Request(Request::Text(b"two".to_vec()))
+            );
+            assert_eq!(vm.variables.get(b"x"), Ok(9));
+            vm.complete(None).unwrap();
+            assert_eq!(vm.advance(&mut store).unwrap(), Step::Finished);
+        }
+        for n in 0..bytes.len() {
+            assert!(Machine::load_dialogue(&bytes[..n], &mut store, 10000, 64).is_err());
+        }
+        let mut trailing = bytes.clone();
+        trailing.push(0);
+        assert!(Machine::load_dialogue(&trailing, &mut store, 10000, 64).is_err());
+        assert!(Machine::load_dialogue(&bytes, &mut store, 1, 64).is_err());
+    }
     struct Store;
     impl Scripts for Store {
         fn load(&mut self, name: &[u8]) -> Result<Source, String> {

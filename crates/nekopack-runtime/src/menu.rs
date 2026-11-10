@@ -159,7 +159,10 @@ impl Menu {
     }
 }
 pub(crate) fn supported(name: &str) -> bool {
-    matches!(name, "CONFIG" | "QUIT" | "RESET")
+    matches!(
+        name,
+        "CONFIG" | "QUIT" | "RESET" | "SAVE" | "LOAD" | "QSAVE" | "QLOAD"
+    )
 }
 
 #[cfg(test)]
@@ -173,7 +176,7 @@ impl Menu {
                 position: [0, 0],
             },
         );
-        let buttons = ["SAVE", "CONFIG", "QUIT", "RESET"]
+        let buttons = ["LOG", "CONFIG", "QUIT", "RESET"]
             .iter()
             .enumerate()
             .map(|(i, name)| {

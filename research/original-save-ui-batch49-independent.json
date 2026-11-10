@@ -1,0 +1,51 @@
+{
+  "ui_report_sha256": "b9078315df7053500c92221ff08678d0872e9bdab26382d07ab25a395d1862b3",
+  "execution": "translated ARM64 on x86_64",
+  "apk_sha256": "390063a0e4280509f99e6c9e7bccc75534a12ddf9aaecb1d11a740a47d23aaa9",
+  "sessions": [
+    {
+      "run": "story_saves_5412f6e3ddf84290a443dc50538dbe24",
+      "text_events": 22,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_86c22d67eb3e47a8bdea2ba21d9efe46",
+      "text_events": 14,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_c6c6d724d62643ada3672b590e7cc9c4",
+      "text_events": 456,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    },
+    {
+      "run": "story_saves_6c9e3b012c3749ddbee5e3f92ab64048",
+      "text_events": 7,
+      "monotonic_page_tokens": true,
+      "closed_vm_live_bytes": 0,
+      "audio_cache_files": 0
+    }
+  ],
+  "audio": {
+    "bgm": {
+      "original_token": 9,
+      "restored_token": 29,
+      "sha256": "5805686cffa82cbddb4f48508af1fc33b5f103413aadd4c6c0f01e7e95bd1576",
+      "resource_identity_equal": true
+    },
+    "voice": {
+      "original_token": 27,
+      "restored_token": 30,
+      "sha256": "4f896acd370ab76c161533a91a311e819aed78a6c33d484eeb758b5db0b61eb6",
+      "resource_identity_equal": true
+    }
+  },
+  "no_old_audio_callbacks": true,
+  "corruption_error_then_cancel": true
+}

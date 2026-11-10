@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-10",
+  "record_kind": "Manual live observation using computer-use @oai/sky, not an automated test result",
+  "game": "BLESS",
+  "steps": [
+    "Start from the original title into the initial ordinary dialogue",
+    "F2 menu -> Save shows ten slots per page and ten ordinary pages",
+    "Click the visibly empty slot 001; thumbnail, timestamp and labels appear without leaving the Save page",
+    "Return to the same dialogue and advance to the next ordinary text",
+    "F2 menu -> Load -> slot 001 returns to the saved dialogue and actor scene without an observed confirmation popup",
+    "Close the original test process"
+  ],
+  "original_slot_written": "001 was visibly empty before this test; this observation created an original-game test save",
+  "static_extracted_script_evidence": {
+    "saveload.nut_sha256": "43aebe919f6a8497470e3801ba0190ea4deba96f08257ac85dcf38bda5cfd4f4",
+    "system.nut_sha256": "4691bef4a9692d5ea8658c6da6a778f8acf02ddacbb853de693c6da30b1a1cce",
+    "SaveData": "SaveInfo metadata then native SaveState",
+    "LoadData": "Restore StoryTitle and StoryRoute, UpdateCaption, then native LoadState; success sleeps and throws null",
+    "NormalSave": "Requires InRoute",
+    "ViewSavePage": "100 ordinary slots, empty load slots disabled; successful save refreshes the current page"
+  },
+  "limitations": [
+    "One installed original BLESS build and its current settings",
+    "Some Windows text is garbled by the current encoding; state transitions and menu art were identifiable",
+    "No native .sav format compatibility or Squirrel heap serialization was established",
+    "No original waveform, playback sample offset or partial-text restore timing was measured",
+    "No CG or recollection page was opened"
+  ]
+}

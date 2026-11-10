@@ -168,6 +168,13 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         .put("pending_start",pendingStart.size).put("paused_players",focusPaused.size).put("gains",gains.size).put("tokens",audioTokens.size)
         .put("focused",focused).put("motion_active",motionSequence!=0L).put("animator",animator!=null).put("bgm_animator",bgmAnimator!=null)
         .put("audio_cache_files",root.listFiles()!!.count{it.name.startsWith("audio-")&&it.extension=="ogg"})
+    fun resetForLoad(){
+        check(!closed)
+        stopMotion();animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
+        for(kind in players.keys.toList())release(kind)
+        check(players.isEmpty()&&pendingStart.isEmpty()&&focusPaused.isEmpty())
+        log("load_released","all",0,players.size.toLong())
+    }
     fun close(){
         if(closed)return
         stopMotion();closed=true;timeline.close();animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
