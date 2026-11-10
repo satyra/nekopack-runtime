@@ -184,6 +184,9 @@ pub struct StorySession<R: Read + Seek> {
     host_mode: bool,
     interactive_text: bool,
     auto_mode: bool,
+    skip_mode: bool,
+    page_read: bool,
+    history: crate::read_history::History,
     text_reveal: Option<crate::dialogue::Reveal>,
     text_renderer: Option<crate::text_render::DialogueRenderer>,
     settings: Option<crate::settings::Settings>,
@@ -206,6 +209,7 @@ impl<R: Read + Seek> StorySession<R> {
             return Err("settings require a live, unadvanced dialogue".into());
         }
         self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
+        self.skip_mode = false;
         self.settings_sequence += 1;
         self.settings_packet()
     }
@@ -362,6 +366,9 @@ impl<R: Read + Seek> StorySession<R> {
             host_mode: false,
             interactive_text: false,
             auto_mode: false,
+            skip_mode: false,
+            page_read: false,
+            history: crate::read_history::History::default(),
             text_reveal: None,
             text_renderer: None,
             settings: None,
@@ -497,6 +504,63 @@ impl<R: Read + Seek> StorySession<R> {
     ) -> Result<Vec<u8>, Box<dyn Error>> {
         self.text_frame_with_voice(sequence, elapsed, click, false)
     }
+    fn read_key(&self) -> Option<Vec<u8>> {
+        self.machine
+            .dialogue_location()
+            .map(|(source, line, text)| crate::read_history::key(source, line, text))
+    }
+    fn skip_unread_allowed(&mut self) -> Result<bool, Box<dyn Error>> {
+        self.system
+            .eval("skip-unread", "return Config.SkipNoRead.tostring()")?;
+        match self.system.result().as_str() {
+            "0" => Ok(false),
+            "1" => Ok(true),
+            _ => Err("invalid SkipNoRead".into()),
+        }
+    }
+    fn enter_skip_page(&mut self) -> Result<(), Box<dyn Error>> {
+        self.page_read = self.read_key().is_some_and(|k| self.history.contains(&k));
+        if self.skip_mode && !self.page_read && !self.skip_unread_allowed()? {
+            self.skip_mode = false;
+        }
+        Ok(())
+    }
+    pub fn export_read_history(&self) -> Vec<u8> {
+        self.history.export()
+    }
+    pub fn import_read_history(&mut self, bytes: &[u8]) -> Result<(), Box<dyn Error>> {
+        if self.text_reveal.is_some() || self.sequence > 1 {
+            return Err("read history import requires a fresh session".into());
+        }
+        self.history = crate::read_history::History::decode(bytes)?;
+        self.page_read = self.read_key().is_some_and(|k| self.history.contains(&k));
+        Ok(())
+    }
+    pub fn set_skip_mode(
+        &mut self,
+        sequence: u64,
+        enabled: bool,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed || self.settings.is_some() {
+            return Err("skip unavailable while stopped or in settings".into());
+        }
+        if enabled {
+            if self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+                || self.text_reveal.as_ref().is_none_or(|r| r.advance)
+            {
+                return Err("skip requires active dialogue".into());
+            }
+            self.skip_mode = true;
+            self.auto_mode = false;
+        } else {
+            self.skip_mode = false;
+        }
+        Ok(format!(
+            "{{\"skip\":{},\"auto\":{}}}",
+            self.skip_mode, self.auto_mode
+        )
+        .into_bytes())
+    }
     pub fn set_auto_mode(
         &mut self,
         sequence: u64,
@@ -510,6 +574,9 @@ impl<R: Read + Seek> StorySession<R> {
             return Err("auto mode requires an active dialogue".into());
         }
         self.auto_mode = enabled;
+        if enabled {
+            self.skip_mode = false;
+        }
         Ok(format!("{{\"auto\":{enabled}}}").into_bytes())
     }
     /// Host reports completion for the current page; only the core grants progression.
@@ -531,7 +598,17 @@ impl<R: Read + Seek> StorySession<R> {
             if elapsed != 0 || click {
                 return Err("dialogue must begin with a zero-time frame".into());
             }
-            let (speed, keep) = self.read_text_config()?;
+            let (mut speed, keep) = self.read_text_config()?;
+            self.system
+                .eval("read-fast", "return Config.ReadedFast.tostring()")?;
+            let fast = match self.system.result().as_str() {
+                "0" => false,
+                "1" => true,
+                _ => return Err("invalid ReadedFast".into()),
+            };
+            if self.skip_mode || (fast && self.page_read) {
+                speed = 100;
+            }
             if let Some(renderer) = &mut self.text_renderer {
                 let page = self.page.as_ref().unwrap();
                 renderer.prepare(sequence, &page.speaker, &page.text)?;
@@ -547,23 +624,38 @@ impl<R: Read + Seek> StorySession<R> {
             self.text_reveal = Some(reveal);
         }
         // The original reads KeepVoice at NEXT, while TextSpeed is captured on entry.
-        let keep = if click || self.auto_mode {
+        let keep = if click || self.auto_mode || self.skip_mode {
             Some(self.read_text_config()?.1 == 1)
         } else {
             None
         };
+        if click {
+            self.skip_mode = false;
+        }
         let state = self.text_reveal.as_mut().unwrap();
         if let Some(keep) = keep {
             state.keep_voice = keep;
         }
-        let advance = state.auto_frame(
-            elapsed,
-            click,
-            self.auto_mode,
-            !self.page.as_ref().unwrap().voice.is_empty(),
-            voice_finished,
-        )?;
-        Ok(format!("{{\"sequence\":{sequence},\"auto\":{},\"voice_finished\":{voice_finished},\"elapsed_ms\":{elapsed},\"visible\":{},\"text\":{},\"complete\":{},\"advance\":{advance},\"stop_voice\":{}}}",self.auto_mode,state.count(),quote(state.visible().as_bytes())?,state.complete(),advance&&!state.keep_voice&&!self.page.as_ref().unwrap().voice.is_empty()).into_bytes())
+        let advance = if self.skip_mode {
+            state.auto_frame(elapsed, true, false, false, false)?
+        } else {
+            state.auto_frame(
+                elapsed,
+                click,
+                self.auto_mode,
+                !self.page.as_ref().unwrap().voice.is_empty(),
+                voice_finished,
+            )?
+        };
+        if advance {
+            let page = self.page.as_ref().unwrap();
+            self.history.insert(crate::read_history::key(
+                page.source.as_bytes(),
+                page.line,
+                page.text.as_bytes(),
+            ))?;
+        }
+        Ok(format!("{{\"sequence\":{sequence},\"skip\":{},\"read\":{},\"auto\":{},\"voice_finished\":{voice_finished},\"elapsed_ms\":{elapsed},\"visible\":{},\"text\":{},\"complete\":{},\"advance\":{advance},\"stop_voice\":{}}}",self.skip_mode,self.page_read,self.auto_mode,state.count(),quote(state.visible().as_bytes())?,state.complete(),advance&&!state.keep_voice&&!self.page.as_ref().unwrap().voice.is_empty()).into_bytes())
     }
     pub fn poll_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed {
@@ -891,13 +983,15 @@ impl<R: Read + Seek> StorySession<R> {
                 Step::Request(Request::Speaker(fields)) => {
                     self.speaker = String::from_utf8(fields[0].clone())?;
                     self.voice = String::from_utf8(fields[1].clone())?;
-                    if self.host_mode && !self.voice.is_empty() {
+                    self.enter_skip_page()?;
+                    if self.host_mode && !self.voice.is_empty() && !self.skip_mode {
                         self.emit("voice", &self.voice.clone())?;
                         return Ok(());
                     }
                     self.machine.complete(None)?;
                 }
                 Step::Request(Request::Text(text)) => {
+                    self.enter_skip_page()?;
                     let png = self.render()?;
                     let (source, line) = self.machine.location().unwrap();
                     self.sequence += 1;
@@ -1397,6 +1491,9 @@ mod tests {
             host_mode: false,
             interactive_text: false,
             auto_mode: false,
+            skip_mode: false,
+            page_read: false,
+            history: crate::read_history::History::default(),
             text_reveal: None,
             text_renderer: None,
             settings: None,
@@ -1410,12 +1507,89 @@ mod tests {
     }
 
     #[test]
+    fn skip_stops_at_next_unread_and_history_survives_restart() {
+        fn make() -> StorySession<std::io::Cursor<Vec<u8>>> {
+            let mut s = session(b"one\ntwo\nthree");
+            s.system
+                .eval(
+                    "config",
+                    "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=0}",
+                )
+                .unwrap();
+            s.enable_interactive_text();
+            s.poll_packet().unwrap();
+            s
+        }
+        let mut first = make();
+        first.text_frame(1, 0, false).unwrap();
+        assert_eq!(first.export_read_history(), b"NKRD\x01");
+        first.set_skip_mode(1, true).unwrap();
+        first.text_frame(1, 0, false).unwrap();
+        first.text_frame(1, 1, false).unwrap();
+        let history = first.export_read_history();
+        first.acknowledge_text(1).unwrap();
+        assert!(!first.skip_mode);
+        assert!(!first.page_read);
+        let mut second = make();
+        second.import_read_history(&history).unwrap();
+        assert!(second.page_read);
+        second.text_frame(1, 0, false).unwrap();
+        second.set_skip_mode(1, true).unwrap();
+        second.text_frame(1, 0, false).unwrap();
+        second.text_frame(1, 1, false).unwrap();
+        second.acknowledge_text(1).unwrap();
+        assert!(!second.skip_mode);
+        assert!(!second.page_read);
+        second.text_frame(2, 0, false).unwrap();
+        second.system.eval("force", "Config.SkipNoRead=1").unwrap();
+        second.set_skip_mode(2, true).unwrap();
+        second.text_frame(2, 0, false).unwrap();
+        second.text_frame(2, 1, false).unwrap();
+        second.acknowledge_text(2).unwrap();
+        assert!(second.skip_mode);
+        assert!(!second.page_read);
+        assert!(second.set_skip_mode(2, true).is_err());
+        second.set_skip_mode(0, false).unwrap();
+        assert!(!second.skip_mode);
+        assert!(second.import_read_history(&history).is_err());
+    }
+    #[test]
+    fn read_fast_only_reveals_and_skip_suppresses_next_voice() {
+        let mut s = session(b"one\n:Alice:missing:A\ntwo");
+        s.system
+            .eval(
+                "config",
+                "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=1}",
+            )
+            .unwrap();
+        s.history
+            .insert(crate::read_history::key(b"test", 1, b"one"))
+            .unwrap();
+        s.history
+            .insert(crate::read_history::key(b"test", 3, b"two"))
+            .unwrap();
+        s.enable_interactive_text();
+        s.enable_host_effects();
+        s.poll_packet().unwrap();
+        let frame = String::from_utf8(s.text_frame(1, 0, false).unwrap()).unwrap();
+        assert!(frame.contains("\"complete\":true,\"advance\":false"));
+        s.set_skip_mode(1, true).unwrap();
+        s.text_frame(1, 1, false).unwrap();
+        s.acknowledge_text(1).unwrap();
+        assert!(s.pending_effect.is_none());
+        assert_eq!(s.page.as_ref().unwrap().voice, "missing");
+        assert!(s.skip_mode);
+        assert!(s.page_read);
+        s.text_frame(2, 0, false).unwrap();
+        assert!(s.text_reveal.as_ref().unwrap().advance);
+    }
+    #[test]
     fn invalid_auto_speed_does_not_leave_an_initialized_page() {
         let mut s = session(b"one");
         s.system
             .eval(
                 "config",
-                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=101}",
+                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=101,SkipNoRead=0,ReadedFast=0}",
             )
             .unwrap();
         s.enable_interactive_text();
@@ -1430,7 +1604,7 @@ mod tests {
         s.system
             .eval(
                 "config",
-                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=100}",
+                "Config <- {TextSpeed=100,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0}",
             )
             .unwrap();
         s.enable_interactive_text();
@@ -1459,7 +1633,10 @@ mod tests {
     fn interactive_text_requires_two_phase_input_and_preserves_cached_page() {
         let mut s = session("一二三四五六\nnext".as_bytes());
         s.system
-            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50}")
+            .eval(
+                "config",
+                "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=0}",
+            )
             .unwrap();
         s.enable_interactive_text();
         let packet = s.page().unwrap().packet().unwrap();
@@ -1493,7 +1670,10 @@ mod tests {
     fn settings_reject_invalid_entry_without_consuming_dialogue() {
         let mut s = session(b"first\nsecond");
         s.system
-            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50}")
+            .eval(
+                "config",
+                "Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=50,SkipNoRead=0,ReadedFast=0}",
+            )
             .unwrap();
         s.enable_interactive_text();
         assert!(s.open_settings(1).is_err());

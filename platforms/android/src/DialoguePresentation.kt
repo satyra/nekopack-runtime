@@ -39,7 +39,7 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
                 else {
                     ready(true)
                     if(pendingClick){pendingClick=false;this.click()}
-                    else if(!state.getBoolean("complete") || state.getBoolean("auto"))timeline.post(33){if(active&&epoch==generation&&!busy)send(false,timeline.now()-started)}
+                    else if(!state.getBoolean("complete") || state.getBoolean("auto") || state.getBoolean("skip"))timeline.post(33){if(active&&epoch==generation&&!busy)send(false,timeline.now()-started)}
                 }
             }else bitmap.recycle()
         }

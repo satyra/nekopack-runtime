@@ -363,6 +363,29 @@ pub unsafe extern "C" fn neko_probe_story(
                 }
                 1 => state.as_mut().ok_or("no story session")?.poll_packet(),
                 9 => state.as_mut().ok_or("no story session")?.audio_config(),
+                29 | 30 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .set_skip_mode(sequence, operation == 30),
+                31 => Ok(state
+                    .as_ref()
+                    .ok_or("no story session")?
+                    .export_read_history()),
+                32 => {
+                    if count > 8 * 1024 * 1024 + 5 {
+                        return Err("read history too large".into());
+                    }
+                    let values = unsafe { std::slice::from_raw_parts(fds, count) };
+                    let bytes = values
+                        .iter()
+                        .map(|v| u8::try_from(*v))
+                        .collect::<Result<Vec<_>, _>>()?;
+                    state
+                        .as_mut()
+                        .ok_or("no story session")?
+                        .import_read_history(&bytes)?;
+                    Ok(b"{\"imported\":true}".to_vec())
+                }
                 25 | 26 => state
                     .as_mut()
                     .ok_or("no story session")?

@@ -176,6 +176,7 @@ class MainActivity : Activity() {
         val textSettings=Button(this);textSettings.text="文字";textSettings.isEnabled=false;controls.addView(textSettings,LinearLayout.LayoutParams(0,-2,1f))
         val originalSettings=Button(this);originalSettings.text="原版设置";originalSettings.isEnabled=false;controls.addView(originalSettings,LinearLayout.LayoutParams(0,-2,1f))
         val auto=Button(this);auto.text="自动：关";auto.isEnabled=false;controls.addView(auto,LinearLayout.LayoutParams(0,-2,1f))
+        val skip=Button(this);skip.text="快进：关";skip.isEnabled=false;controls.addView(skip,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -183,9 +184,12 @@ class MainActivity : Activity() {
         fun persistConfig(){
             if(!titleFirst)return
             val bytes=story(intArrayOf(),20,0)
-            check(bytes.size==26 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,5))){String(bytes,Charsets.UTF_8)}
+            check(bytes.size==27 && bytes.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,67,70,6))){String(bytes,Charsets.UTF_8)}
             check(getPreferences(MODE_PRIVATE).edit().putString(preferenceKey,android.util.Base64.encodeToString(bytes,android.util.Base64.NO_WRAP)).commit()){"configuration save failed"}
         }
+        val readKey="runtime_read_v1_${tree}_${game}"+intent.getStringExtra("read_history_probe").let{if(it==null)"" else "_probe_$it"}
+        var skipEnabled=false
+        var autoEnabled=false
         var sequence=0L
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
@@ -217,15 +221,20 @@ class MainActivity : Activity() {
             val frameOp=if(storyEffects!!.voiceFinished())op+16 else op
             worker.execute{try{if(!storyClosing){
                 val state=JSONObject(String(story(intArrayOf(),frameOp,token,elapsed),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
+                if(state.getBoolean("advance")){
+                    val history=story(intArrayOf(),31,0)
+                    check(history.size>=5 && history.copyOfRange(0,5).contentEquals(byteArrayOf(78,75,82,68,1))){String(history,Charsets.UTF_8)}
+                    check(getPreferences(MODE_PRIVATE).edit().putString(readKey,android.util.Base64.encodeToString(history,android.util.Base64.NO_WRAP)).commit()){"read history save failed"}
+                }
                 val frame=story(intArrayOf(),16,token);val split=frame.indexOf(10.toByte());check(split>=0){String(frame,Charsets.UTF_8)}
                 val geometry=JSONObject(String(frame,0,split,Charsets.UTF_8));val png=frame.copyOfRange(split+1,frame.size)
                 val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid dialogue overlay")
                 File(root,"dialogue-$token.json").writeText(geometry.toString())
                 if(state.getLong("visible")==0L)File(root,"dialogue-$token-empty.png").writeBytes(png)
                 if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
-                runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;done(state,bitmap,geometry)}else bitmap.recycle()}}
+                runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
-        },{enabled->auto.isEnabled=enabled&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
+        },{enabled->skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=enabled&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
             if(originalSettings.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("settings_probe_sequence",-1)&&!intent.getBooleanExtra("settings_probe_used",false)){
                 intent.putExtra("settings_probe_used",true);originalSettings.performClick()
             }
@@ -233,7 +242,6 @@ class MainActivity : Activity() {
             storyEffects?.stopMotion();storyEffects?.finishDialogue(sequence,stopVoice);val token=sequence
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         })
-        var autoEnabled=false
         auto.setOnClickListener {
             dialogue.suspend();auto.isEnabled=false;next.isEnabled=false;originalSettings.isEnabled=false
             val token=sequence;val enabled=!autoEnabled
@@ -241,6 +249,17 @@ class MainActivity : Activity() {
                 val state=JSONObject(String(story(intArrayOf(),if(enabled)26 else 25,token),Charsets.UTF_8))
                 check(!state.has("error")){state.optString("error")}
                 runOnUiThread{timeline.post{if(!storyClosing){autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";dialogue.resume()}}}
+            }catch(error:Throwable){fail(error)}}
+        }
+        skip.setOnClickListener {
+            val enabled=!skipEnabled;val token=sequence
+            if(enabled)dialogue.suspend()
+            skip.isEnabled=false;auto.isEnabled=false;next.isEnabled=false;originalSettings.isEnabled=false
+            worker.execute{try{
+                val state=JSONObject(String(story(intArrayOf(),if(enabled)30 else 29,token),Charsets.UTF_8))
+                check(!state.has("error")){state.optString("error")}
+                File(root,"skip-controls.jsonl").appendText(state.toString()+"\n")
+                runOnUiThread{timeline.post{if(!storyClosing){skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";if(enabled)dialogue.resume()}}}
             }catch(error:Throwable){fail(error)}}
         }
         storyEffects=StoryEffects(this,image,overlay,root,timeline,{kind,token,elapsed,ready->
@@ -327,6 +346,12 @@ class MainActivity : Activity() {
             }
         }
         fun enterStory(packet:ByteArray){
+                val savedRead=getPreferences(MODE_PRIVATE).getString(readKey,null)
+                if(savedRead!=null){
+                    val bytes=android.util.Base64.decode(savedRead,android.util.Base64.NO_WRAP)
+                    val state=JSONObject(String(story(bytes.map{it.toInt() and 255}.toIntArray(),32,0),Charsets.UTF_8))
+                    check(state.optBoolean("imported")){state.toString()}
+                }
                 applyAudioConfig(story(intArrayOf(),9,0))
                 applyTextConfig(story(intArrayOf(),13,0))
                 val font=File("/system/fonts/NotoSansCJK-Regular.ttc")

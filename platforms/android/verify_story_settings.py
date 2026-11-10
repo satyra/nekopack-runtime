@@ -10,8 +10,9 @@ def main():
     for key in ('adb','serial','reference','work','output'):p.add_argument('--'+key,required=True)
     p.add_argument('--text-style-check',action='store_true')
     p.add_argument('--auto-check',action='store_true')
+    p.add_argument('--skip-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
-    pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[]
+    pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[];history_profile=''
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
     def read(name):
         try:return adb('exec-out','run-as',pkg,'cat',f'files/{run}/{name}')
@@ -63,7 +64,7 @@ def main():
     def launch(probe,title_settings=False):
         nonlocal run
         run='story_settings_'+uuid.uuid4().hex;runs.append(run)
-        adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--ez','lifecycle_probe','true','--es','run_id',run)
+        adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--ez','lifecycle_probe','true','--es','run_id',run,*(['--es','read_history_probe',history_profile] if history_profile else []))
         title=wait(lambda:obj('title-presented.json'));x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==(3 if title_settings else 1))
         adb('shell','input','tap',*point(x+w/2,y+h/2,'游戏标题菜单'))
     def open_menu():
@@ -92,6 +93,42 @@ def main():
     assert machine=='x86_64' and bridge not in ('','0')
     apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:');sha=adb('shell','sha256sum',apk).decode().split()[0]
     assert sha==json.loads(Path('.local/android-probe/build.json').read_text())['sha256']['nekopack-arm64-probe.apk']
+    skip_results={}
+    if a.skip_check:
+        history_profile=uuid.uuid4().hex
+        launch(-1);wait(lambda:obj('text-1.json'))
+        assert not obj('text-1.json')['read']
+        control('快进：关');wait(lambda:obj('text-2.json'))
+        assert obj('text-1.json')['advance'] and obj('text-1.json')['skip']
+        assert not obj('text-2.json')['skip'] and not obj('text-2.json')['read']
+        for n in range(2,6):
+            wait(lambda:obj(f'text-{n}.json') and obj(f'text-{n}.json')['complete']);control('继续')
+        wait(lambda:obj('text-6.json'));assert not obj('text-6.json')['read'];finish()
+        launch(-1);wait(lambda:obj('text-1.json'));assert obj('text-1.json')['read']
+        control('快进：关');wait(lambda:obj('text-6.json'))
+        events=lines('text-events.jsonl');advances=[x for x in events if x['advance']]
+        assert [x['sequence'] for x in advances]==[1,2,3,4,5]
+        assert all(x['read'] and x['skip'] and not x['click'] for x in advances)
+        assert not obj('text-6.json')['skip'] and not obj('text-6.json')['read']
+        voice_starts=[x for x in lines('host-events.jsonl') if x['event']=='playing' and x['kind']=='voice']
+        assert len(voice_starts)==1,'read pages 4 and 5 must not start voice during skip'
+        control('原版设置');wait(state);page(1);old_skip=state()['config']['SkipNoRead'];area('= SkipNoRead#1')
+        assert state()['config']['SkipNoRead']==1;close_menu()
+        wait(lambda:obj('text-6.json')['complete'])
+        l,t,r,b=bounds('快进：关');point_skip=(str((l+r)//2),str((t+b)//2))
+        adb('shell','input','tap',*point_skip)
+        wait(lambda:obj('text-7.json') and obj('text-7.json')['advance'])
+        assert obj('text-7.json')['skip'] and not obj('text-7.json')['read']
+        adb('shell','input','tap',*point_skip)
+        wait(lambda:lines('skip-controls.jsonl') and not lines('skip-controls.jsonl')[-1]['skip'])
+        time.sleep(.5);count=len([x for x in lines('text-events.jsonl') if x['advance']]);time.sleep(2)
+        assert len([x for x in lines('text-events.jsonl') if x['advance']])==count
+        finish()
+        launch(1);wait(state);assert state()['config']['SkipNoRead']==1
+        page(1);area('= SkipNoRead#'+str(old_skip));close_menu();finish()
+        skip_results=dict(profile=history_profile,current_unread_toggle_advances_once=True,read_pages_after_restart=5,stops_on_unread_page=6,skipped_voice_pages=[4,5],voice_starts_during_read_run=1,force_unread_page=7,manual_cancel=True,skip_preference_restart=True,original_skip_preference=old_skip)
+        history_profile=''
+        print('skip read-history restart, unread boundary, voice suppression and cancellation passed',flush=True)
     text_styles={}
     if a.text_style_check:
         def preview(label):
@@ -254,6 +291,6 @@ def main():
         launch(1);wait(state);assert state()['config']==auto_original;close_menu();finish()
         auto_results=dict(auto_only_advances=55,voice_completion_callbacks=len(completions),voiced_pages=voiced,unvoiced_pages=unvoiced,unvoiced_delay_min_ms=502,background_freezes=True,settings_freezes=True,auto_speed_saved_and_restored=True,manual_cancel_stops_progress=True,motion_checkpoint=auto_frozen)
         print('auto playback, voice completion, settings and cancellation passed',flush=True)
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

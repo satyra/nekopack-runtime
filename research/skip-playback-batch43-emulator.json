@@ -1,0 +1,110 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "f3a0ad7e099091e808d60d8b2a61d77efd1b11f99bd621b7d068dfb6b5671151",
+  "runs": [
+    "story_settings_4ae1f816baf345a594ad307b92ffa891",
+    "story_settings_768c103f585c43099cf550e0d343b894",
+    "story_settings_fdc3f78fe2154f8fa95cf6d042653bff",
+    "story_settings_dc615d8582ac422c8d5e6dff95a3e1ec",
+    "story_settings_008aa13a7c484da38f1a5eb7db636efa",
+    "story_settings_130b7a30a9824127a75b89c95123db78",
+    "story_settings_0ee917a6bd984c7f912229215b73ebb0",
+    "story_settings_bdbff37beb8f44bd844d0c5c5a8d7bd0",
+    "story_settings_a9f14bce3ecb4d338ac6662dca99fb0d"
+  ],
+  "partial_dialogue": {
+    "story_sequence": 1,
+    "story_visible": 7,
+    "story_elapsed_ms": 123,
+    "motion_elapsed_ms": 0,
+    "story_steps": 142
+  },
+  "resumed_dialogue": {
+    "sequence": 1,
+    "skip": false,
+    "read": false,
+    "auto": false,
+    "voice_finished": false,
+    "elapsed_ms": 202,
+    "visible": 12,
+    "complete": false,
+    "advance": false,
+    "stop_voice": false,
+    "click": false
+  },
+  "settings_time_excluded": true,
+  "opacity_applies_to_current_page": true,
+  "text_speed_applies_next_page": true,
+  "other_settings_restored": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191,
+    "Bold": 0,
+    "Border": 1,
+    "AutoSpeed": 50,
+    "SkipNoRead": 0
+  },
+  "background_keeps_modal_paused": true,
+  "bgm_pause_resume": true,
+  "motion_checkpoint": {
+    "story_sequence": 56,
+    "story_visible": 6,
+    "story_elapsed_ms": 102,
+    "motion_elapsed_ms": 41,
+    "story_steps": 412
+  },
+  "motion_finishes_after_return": true,
+  "story_pages_verified": 57,
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [
+    "ERROR: null root node returned by UiTestAutomationBridge.\r\n"
+  ],
+  "read_transport_retries": [],
+  "back_keeps_activity_alive": true,
+  "back_cancels_popup_before_leaving_settings": true,
+  "back_returns_to_same_dialogue": true,
+  "bgm_same_player_resumed": true,
+  "new_gain_applied_before_resume": true,
+  "intro_return_button_used": true,
+  "text_styles": {},
+  "auto_playback": {
+    "auto_only_advances": 55,
+    "voice_completion_callbacks": 19,
+    "voiced_pages": 19,
+    "unvoiced_pages": 36,
+    "unvoiced_delay_min_ms": 502,
+    "background_freezes": true,
+    "settings_freezes": true,
+    "auto_speed_saved_and_restored": true,
+    "manual_cancel_stops_progress": true,
+    "motion_checkpoint": {
+      "story_sequence": 56,
+      "story_visible": 6,
+      "story_elapsed_ms": 102,
+      "motion_elapsed_ms": 24,
+      "story_steps": 412
+    }
+  },
+  "skip_playback": {
+    "profile": "e11a41d0662e4282b42091f8cfefc619",
+    "current_unread_toggle_advances_once": true,
+    "read_pages_after_restart": 5,
+    "stops_on_unread_page": 6,
+    "skipped_voice_pages": [
+      4,
+      5
+    ],
+    "voice_starts_during_read_run": 1,
+    "force_unread_page": 7,
+    "manual_cancel": true,
+    "skip_preference_restart": true,
+    "original_skip_preference": 0
+  }
+}

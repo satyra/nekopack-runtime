@@ -167,6 +167,21 @@ impl Machine {
             )
         })
     }
+    /// Current text, or the next physical text after a pending speaker marker.
+    /// Commands are never scanned through or executed by this inspection.
+    pub fn dialogue_location(&self) -> Option<(&[u8], usize, &[u8])> {
+        let frame = self.stack.last()?;
+        let offset = usize::from(matches!(self.pending, Some(Request::Speaker(_))));
+        let (line, raw) = frame
+            .lines
+            .iter()
+            .skip(frame.pc + offset)
+            .find(|(_, raw)| !raw.is_empty() && !raw.starts_with(b";"))?;
+        if matches!(raw[0], b'.' | b':' | b'@' | b'#' | b'*' | b'!') {
+            return None;
+        }
+        Some((&frame.source.name, *line, raw))
+    }
     pub fn depth(&self) -> usize {
         self.stack.len()
     }

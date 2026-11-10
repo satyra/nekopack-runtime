@@ -5,6 +5,7 @@ mod filter;
 pub mod flash;
 mod motion;
 mod preferences;
+mod read_history;
 mod scene;
 mod settings;
 pub mod shake;

@@ -1,0 +1,28 @@
+{
+  "rust_top_level_tests": 145,
+  "isolated_host_native_probes": 7,
+  "python_tests": 17,
+  "cargo_fmt": "passed",
+  "clippy_workspace_all_targets_deny_warnings": "passed",
+  "android_target": "aarch64-linux-android",
+  "ndk": "r27d",
+  "api": 23,
+  "sha256": {
+    "libnekopack_probe.so": "af3d8aca01a919a3fdd203e440d8afa45ddef9d999133e4bc53e506ba8c0226f",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "f3a0ad7e099091e808d60d8b2a61d77efd1b11f99bd621b7d068dfb6b5671151"
+  },
+  "device_report": "skip-playback-batch43-emulator.json",
+  "device_execution": "translated ARM64 on x86_64",
+  "first_attempt": "Test selected settings page 4 for SkipNoRead and failed with KeyError. Corrected to original page 1 and reran entire suite without changing runtime or assertions.",
+  "ui_dump_retries": 1,
+  "read_transport_retries": 0,
+  "logs_sha256": {
+    "batch43-tests.log": "ac24be665f5e37079f11683626b9701ebec90561fef24000b0fc1d3bae5d6edc",
+    "batch43-clippy.log": "934010e598c577e48f0f46ea133ad0c7f93a86169f2b205a76c286bc65900830",
+    "batch43-python.log": "040641c935acd02beee97ac8bc3dcbec1b01871ee5e943ae41ceef27c4f3992f",
+    "batch43-build.log": "5e2f54b563671c7965873acb34d72dcec7d66c4472c90ac2208d939c73b575fa",
+    "batch43-emulator-final.log": "d9abd3f1d843fbb32514b2b9998ea38e1c805a8251c9e708107e7d711c5a06cc"
+  }
+}
