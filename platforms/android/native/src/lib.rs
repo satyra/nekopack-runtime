@@ -363,6 +363,10 @@ pub unsafe extern "C" fn neko_probe_story(
                 }
                 1 => state.as_mut().ok_or("no story session")?.poll_packet(),
                 9 => state.as_mut().ok_or("no story session")?.audio_config(),
+                34 | 35 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .hide_dialogue(sequence, operation == 34),
                 33 => state
                     .as_mut()
                     .ok_or("no story session")?

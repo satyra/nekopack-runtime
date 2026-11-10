@@ -1,0 +1,100 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "9a75eca093f7d933967f8e449f661595ebc8eb82a81067a4d95c6309d6bff11f",
+  "runs": [
+    "story_settings_6aab42e7e7d34366895dc10d7ddfbdff",
+    "story_settings_daf572f82c7241aabc15bf5ab9716600",
+    "story_settings_95489efc740d45af8da0dd29d878dbd9",
+    "story_settings_67af8cd9ad114c08a4b9da4a0dc33772",
+    "story_settings_285405e6b2514bb2bd3fdcb8843ba823",
+    "story_settings_e42acf1d2ba1446bb22d6a55d2ef8733",
+    "story_settings_9cb3f240c41f4330bc10d59edcb80151",
+    "story_settings_f3b457f9a1ed4bccb946b252a24e4110",
+    "story_settings_b22594afc43646409ec9b779ff8a062b",
+    "story_settings_927fac5d4b394ec8910ab3dddfe91a3b",
+    "story_settings_73adc2a0709f4daea75b38446e22cf5c",
+    "story_settings_1b28630d32b64d7aa4087abc39bb18e7"
+  ],
+  "auto_playback": {
+    "auto_only_advances": 55,
+    "voice_completion_callbacks": 19,
+    "voiced_pages": 19,
+    "unvoiced_pages": 36,
+    "unvoiced_delay_min_ms": 502,
+    "background_freezes": true,
+    "settings_freezes": true,
+    "auto_speed_saved_and_restored": true,
+    "manual_cancel_stops_progress": true,
+    "motion_checkpoint": {
+      "story_sequence": 56,
+      "story_visible": 5,
+      "story_elapsed_ms": 92,
+      "motion_elapsed_ms": 24,
+      "story_steps": 412
+    }
+  },
+  "skip_playback": {
+    "profile": "86283dfc088a48e3b2849b7cf47604d3",
+    "current_unread_toggle_advances_once": true,
+    "read_pages_after_restart": 5,
+    "stops_on_unread_page": 6,
+    "skipped_voice_pages": [
+      4,
+      5
+    ],
+    "voice_starts_during_read_run": 1,
+    "force_unread_page": 7,
+    "manual_cancel": true,
+    "skip_preference_restart": true,
+    "original_skip_preference": 0
+  },
+  "shortcut_execution": {
+    "original_bindings": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ],
+    "restored_bindings": [
+      "RESET",
+      "QUIT",
+      "SAVE",
+      "LOAD",
+      "QSAVE",
+      "QLOAD",
+      "LOG",
+      "HIDE",
+      "AUTO",
+      "SKIP"
+    ],
+    "current_binding_auto": true,
+    "current_binding_skip": true,
+    "cancel_skip_while_running": true,
+    "f1_opens_settings": true,
+    "modal_blocks_quit": true,
+    "unsupported_save_no_advance": true,
+    "unbound_no_advance": true,
+    "quit_vm_live_bytes": 0,
+    "bindings_survive_restart": true,
+    "original_bindings_restored": true
+  },
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [
+    "ERROR: null root node returned by UiTestAutomationBridge.\r\n"
+  ],
+  "read_transport_retries": [
+    {
+      "run": "story_settings_73adc2a0709f4daea75b38446e22cf5c",
+      "file": "page-25.png"
+    }
+  ],
+  "report_scope": "Mode regression from the first completed run; partial_dialogue was overwritten by a diagnostic variable, so unrelated fields are omitted. The corrected final verifier reruns hide + 57-page settings regression on the same APK."
+}

@@ -1,0 +1,44 @@
+{
+  "rust_top_level_tests": 148,
+  "isolated_host_native_probes": 7,
+  "python_tests": 17,
+  "verifier_py_compile": "passed",
+  "cargo_fmt": "passed",
+  "clippy_workspace_all_targets_deny_warnings": "passed",
+  "target": "aarch64-linux-android",
+  "ndk": "r27d",
+  "api": 23,
+  "sha256": {
+    "libnekopack_probe.so": "440fffb92ec641338b0ea7f75479d832f13bedd72e2d23b21d4bd5d8d9c6eec5",
+    "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "nekopack-arm64-probe.apk": "9a75eca093f7d933967f8e449f661595ebc8eb82a81067a4d95c6309d6bff11f"
+  },
+  "device_reports": [
+    "hide-dialogue-batch45-emulator.json",
+    "hide-dialogue-batch45-modes.json"
+  ],
+  "execution": "translated ARM64 on x86_64",
+  "independent_binding_readback": [
+    "RESET",
+    "QUIT",
+    "SAVE",
+    "LOAD",
+    "QSAVE",
+    "QLOAD",
+    "LOG",
+    "HIDE",
+    "AUTO",
+    "SKIP"
+  ],
+  "initial_failure": "Settings reopen read an old snapshot; fixed wait, restored original bindings, then reran.",
+  "report_fix": "Renamed hide snapshot locals that overwrote partial_dialogue. Preserved validated mode results separately; reran final hide/Enter and 57-page regression on unchanged APK.",
+  "log_sha256": {
+    "batch45-tests.log": "e7d8e812095439d57997ca344fd40b1031e4299480781248a706116882df970d",
+    "batch45-clippy.log": "b695dd1ab6a1b81de07a0ea27696240554c42610e3c68ddf1704d7045c536b63",
+    "batch45-python.log": "135e8f361321a74610ef35808ac3fb289d33fa1d1d0d874bae2d76124060e95a",
+    "batch45-build.log": "491f929aae613f3dc888852bd6cb9589c1894bd92f7eddf9f89d7cb8ac547a70",
+    "batch45-emulator-modes.log": "aa2cc23214ba8ed46c0972da85a992cc052b5fbc3660145ee16ec85f5a99f97c",
+    "batch45-emulator.log": "2598895cc7168e4f2165063f07cf483a9ee32cadf1d5f536c11978e3341e5145"
+  }
+}

@@ -12,6 +12,7 @@ def main():
     p.add_argument('--auto-check',action='store_true')
     p.add_argument('--skip-check',action='store_true')
     p.add_argument('--shortcut-check',action='store_true')
+    p.add_argument('--hide-check',action='store_true')
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True)
     pkg='org.nekopack.probe';run='';runs=[];retries=[];transport_retries=[];history_profile=''
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -62,10 +63,10 @@ def main():
             adb('shell','input','tap',*point(x+w*(value+.5)/maximum,y+h/2))
             wait(lambda:state()['input_sequence']>=s['input_sequence']+2)
         assert state()['config'][name]==value,(name,state()['config'])
-    def launch(probe,title_settings=False):
+    def launch(probe,title_settings=False,hide_probe=-1):
         nonlocal run
         run='story_settings_'+uuid.uuid4().hex;runs.append(run)
-        adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--ez','lifecycle_probe','true','--es','run_id',run,*(['--es','read_history_probe',history_profile] if history_profile else []))
+        adb('shell','am','start','-W','-S','-n',pkg+'/.MainActivity','--ei','title_game','0','--el','settings_probe_sequence',str(probe),'--el','hide_probe_sequence',str(hide_probe),'--ez','lifecycle_probe','true','--es','run_id',run,*(['--es','read_history_probe',history_profile] if history_profile else []))
         title=wait(lambda:obj('title-presented.json'));x,y,w,h=next(b['bounds'] for b in title['buttons'] if b['id']==(3 if title_settings else 1))
         adb('shell','input','tap',*point(x+w/2,y+h/2,'游戏标题菜单'))
     def open_menu():
@@ -94,6 +95,51 @@ def main():
     assert machine=='x86_64' and bridge not in ('','0')
     apk=adb('shell','pm','path',pkg).decode().strip().removeprefix('package:');sha=adb('shell','sha256sum',apk).decode().split()[0]
     assert sha==json.loads(Path('.local/android-probe/build.json').read_text())['sha256']['nekopack-arm64-probe.apk']
+    hide_results={}
+    hidden_label='隐藏对话框；点击恢复'
+    def hide_state():return obj('hide-state.json')
+    def hidden_pixels():
+        l,t,r,b=bounds(hidden_label,'content-desc')
+        actual=Image.open(io.BytesIO(adb('exec-out','screencap','-p'))).convert('RGB').crop((l,t,r,b))
+        raw=Image.open(io.BytesIO(read('hide-base.png'))).convert('RGBA')
+        expected=Image.new('RGBA',raw.size,(0,0,0,255));expected.alpha_composite(raw)
+        x=np.array(actual).astype(int);y=np.array(expected.convert('RGB')).astype(int)
+        assert x.shape==y.shape and np.abs(x-y).max()<=1,'hidden viewport differs from frozen scene snapshot'
+        return hashlib.sha256(actual.tobytes()).hexdigest()
+    def hide_restore(method):
+        before=hide_state();assert before['hidden'];events=len(lines('text-events.jsonl'))
+        if method=='tap':
+            l,t,r,b=bounds(hidden_label,'content-desc');adb('shell','input','tap',str((l+r)//2),str((t+b)//2))
+        else:adb('shell','input','keyevent',method)
+        wait(lambda:hide_state() and not hide_state()['hidden'])
+        after=hide_state();assert all(before[k]==after[k] for k in ('sequence','steps','visible','elapsed_ms'))
+        wait(lambda:len(lines('text-events.jsonl'))>events)
+        resumed=lines('text-events.jsonl')[events]
+        assert resumed['sequence']==before['sequence'] and not resumed['advance'] and not resumed['auto'] and not resumed['skip']
+        assert b'No such file' in read('lifecycle-closed.json')
+        return resumed
+    if a.hide_check:
+        launch(-1,hide_probe=1);wait(lambda:hide_state() and hide_state()['hidden'])
+        initial=hide_state();assert initial['visible']>0 and not obj('text-1.json')['complete']
+        events=len(lines('text-events.jsonl'));first_hash=hidden_pixels();time.sleep(2)
+        assert hidden_pixels()==first_hash and len(lines('text-events.jsonl'))==events
+        resumed=hide_restore('KEYCODE_BACK');assert resumed['elapsed_ms']-initial['elapsed_ms']>=2000
+        baseline(1);assert obj('text-2.json') is None
+        control('原版设置');wait(state);page(5);bindings=[x['action'] for x in state()['shortcuts']]
+        area('* F3');area('= HIDE');close_menu()
+        old=len(lines('hide-events.jsonl'));adb('shell','input','keyevent','KEYCODE_F3')
+        wait(lambda:len(lines('hide-events.jsonl'))>old and hide_state()['hidden'])
+        key_events=len(lines('shortcut-events.jsonl'));adb('shell','input','keyevent','KEYCODE_F1');time.sleep(.5)
+        assert len(lines('shortcut-events.jsonl'))==key_events and hide_state()['hidden']
+        hide_restore('KEYCODE_SPACE');assert obj('text-2.json') is None
+        control('隐藏对白');wait(lambda:hide_state()['hidden']);hide_restore('tap')
+        control('隐藏对白');wait(lambda:hide_state()['hidden']);hide_restore('KEYCODE_ENTER')
+        assert obj('text-2.json') is None
+        open_menu();page(5);area('* F3');area('= '+(bindings[0] or 'DELETE'))
+        assert [x['action'] for x in state()['shortcuts']]==bindings
+        close_menu();finish()
+        hide_results=dict(partial_text=initial,restored_text=resumed,frozen_viewport_sha256=first_hash,back_space_touch_enter_restore=True,hide_binding_executes=True,function_keys_blocked_while_hidden=True,original_binding_restored=True)
+        print('hidden partial dialogue, frozen scene, Back/Space/touch and HIDE shortcut passed',flush=True)
     shortcut_results={}
     if a.shortcut_check:
         def key(slot,expected):
@@ -249,7 +295,7 @@ def main():
     assert obj('text-3.json')['complete'];full=np.array(Image.open(io.BytesIO(read('dialogue-3.png'))));assert full[-40:,:,3].max()>0
     finish()
     # BGM and concurrent character motion occur later in the same ordinary route.
-    launch(56)
+    launch(56,hide_probe=56 if a.hide_check else -1)
     wait(lambda:obj('text-1.json') and obj('text-1.json')['complete'])
     l,t,r,b=bounds('继续');continue_point=(str((l+r)//2),str((t+b)//2))
     for n in range(1,56):
@@ -262,6 +308,22 @@ def main():
             assert after_bgm['playing'] and before_bgm['player_id']==after_bgm['player_id'] and before_bgm['token']==after_bgm['token']
             assert abs(after_bgm['position']-before_bgm['position'])<200
             print('BGM modal pause/resume passed',flush=True)
+            if a.hide_check:
+                control('隐藏对白');wait(lambda:hide_state() and hide_state()['hidden'])
+                hidden_before=hide_state();before_audio=[x for x in lines('audio-lifecycle.jsonl') if x['event']=='dialogue_hidden'][-1]['channels']['bgm']
+                assert before_audio['playing'];frozen_hash=hidden_pixels();time.sleep(1)
+                adb('shell','input','keyevent','KEYCODE_HOME');time.sleep(2)
+                paused_audio=[x for x in lines('audio-lifecycle.jsonl') if x['event'].startswith('paused_stable_')][-2:]
+                a0,a1=[x['channels']['bgm'] for x in paused_audio]
+                assert not a0['playing'] and not a1['playing'] and abs(a0['position']-a1['position'])<=30
+                adb('shell','am','start','-W','--activity-reorder-to-front','-n',pkg+'/.MainActivity')
+                assert hidden_pixels()==frozen_hash and hide_state()==hidden_before
+                hide_restore('KEYCODE_BACK')
+                after_audio=[x for x in lines('audio-lifecycle.jsonl') if x['event']=='dialogue_restored'][-1]['channels']['bgm']
+                assert after_audio['playing'] and after_audio['player_id']==before_audio['player_id'] and after_audio['token']==before_audio['token']
+                assert after_audio['position']>before_audio['position']+500
+                hide_results.update(bgm_continues_hidden=True,bgm_same_player=True,background_preserves_hidden=True,background_pauses_audio=True)
+
         if n==13:control('继续')
         else:adb('shell','input','tap',*continue_point)
         if n==12:
@@ -271,6 +333,10 @@ def main():
     assert 0<motion_before['motion_elapsed_ms']<250
     background_check();assert snapshot(state())==motion_before
     close_menu();wait(lambda:any(x['event']=='finished' and x['sequence']==56 for x in lines('motion-events.jsonl')))
+    if a.hide_check:
+        wait(lambda:hide_state() and hide_state()['hidden'] and hide_state()['sequence']==56)
+        frozen_motion_view=hidden_pixels();time.sleep(.5);assert hidden_pixels()==frozen_motion_view
+        hide_restore('KEYCODE_BACK');hide_results['motion_continues_behind_frozen_snapshot']=True
     baseline(56);wait(lambda:obj('text-56.json')['complete'])
     control('继续');wait(lambda:obj('text-57.json') and obj('text-57.json')['complete']);baseline(57)
     finish()
@@ -325,6 +391,6 @@ def main():
         launch(1);wait(state);assert state()['config']==auto_original;close_menu();finish()
         auto_results=dict(auto_only_advances=55,voice_completion_callbacks=len(completions),voiced_pages=voiced,unvoiced_pages=unvoiced,unvoiced_delay_min_ms=502,background_freezes=True,settings_freezes=True,auto_speed_saved_and_restored=True,manual_cancel_stops_progress=True,motion_checkpoint=auto_frozen)
         print('auto playback, voice completion, settings and cancellation passed',flush=True)
-    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results)
+    report=dict(execution='translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,partial_dialogue=frozen,resumed_dialogue=resumed,settings_time_excluded=True,opacity_applies_to_current_page=True,text_speed_applies_next_page=True,other_settings_restored=initial,background_keeps_modal_paused=True,bgm_pause_resume=True,motion_checkpoint=motion_before,motion_finishes_after_return=True,story_pages_verified=57,closed_vm_live_bytes=0,ui_retries=retries,read_transport_retries=transport_retries,back_keeps_activity_alive=True,back_cancels_popup_before_leaving_settings=True,back_returns_to_same_dialogue=True,bgm_same_player_resumed=True,new_gain_applied_before_resume=True,intro_return_button_used=True,text_styles=text_styles,auto_playback=auto_results,skip_playback=skip_results,shortcut_execution=shortcut_results,hide_dialogue=hide_results)
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 if __name__=='__main__':main()

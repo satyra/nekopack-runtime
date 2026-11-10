@@ -184,6 +184,7 @@ pub struct StorySession<R: Read + Seek> {
     host_mode: bool,
     interactive_text: bool,
     auto_mode: bool,
+    dialogue_hidden: bool,
     skip_mode: bool,
     page_read: bool,
     history: crate::read_history::History,
@@ -200,7 +201,8 @@ pub struct StorySession<R: Read + Seek> {
 impl<R: Read + Seek> StorySession<R> {
     /// A modal over the current acknowledged presentation, never a new VM.
     pub fn open_settings(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed
+        if self.dialogue_hidden
+            || self.failed
             || self.settings.is_some()
             || self.pending_effect.is_some()
             || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
@@ -366,6 +368,7 @@ impl<R: Read + Seek> StorySession<R> {
             host_mode: false,
             interactive_text: false,
             auto_mode: false,
+            dialogue_hidden: false,
             skip_mode: false,
             page_read: false,
             history: crate::read_history::History::default(),
@@ -541,8 +544,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed || self.settings.is_some() {
-            return Err("skip unavailable while stopped or in settings".into());
+        if self.dialogue_hidden || self.failed || self.settings.is_some() {
+            return Err("skip unavailable while stopped or in a modal".into());
         }
         if enabled {
             if self.page.as_ref().map(|p| p.sequence) != Some(sequence)
@@ -561,10 +564,33 @@ impl<R: Read + Seek> StorySession<R> {
         )
         .into_bytes())
     }
+    /// ViewHide is a presentation modal; restoring is not a dialogue NEXT.
+    pub fn hide_dialogue(
+        &mut self,
+        sequence: u64,
+        hidden: bool,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self.settings.is_some()
+            || self.pending_effect.is_some()
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+            || self.text_reveal.as_ref().is_none_or(|r| r.advance)
+            || self.dialogue_hidden == hidden
+        {
+            return Err("invalid dialogue hide transition".into());
+        }
+        self.dialogue_hidden = hidden;
+        if !hidden {
+            self.auto_mode = false;
+            self.skip_mode = false;
+        }
+        let reveal = self.text_reveal.as_ref().unwrap();
+        Ok(format!("{{\"hidden\":{hidden},\"sequence\":{sequence},\"visible\":{},\"elapsed_ms\":{},\"steps\":{},\"auto\":{},\"skip\":{}}}",reveal.count(),reveal.elapsed(),self.machine.steps(),self.auto_mode,self.skip_mode).into_bytes())
+    }
     /// Platform-neutral function-key input. Cancellation can cross an already granted page ACK.
     pub fn shortcut(&mut self, slot: u64, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         let action = crate::preferences::shortcut_action(&mut self.system, slot)?;
-        let live = !self.failed && self.settings.is_none();
+        let live = !self.failed && self.settings.is_none() && !self.dialogue_hidden;
         let page = live
             && self.page.as_ref().map(|p| p.sequence) == Some(sequence)
             && self.text_reveal.as_ref().is_some_and(|r| !r.advance);
@@ -590,8 +616,8 @@ impl<R: Read + Seek> StorySession<R> {
                     "applied"
                 }
                 "AUTO" | "SKIP" => "busy",
-                "CONFIG" if page => "request",
-                "CONFIG" => "busy",
+                "CONFIG" | "HIDE" if page => "request",
+                "CONFIG" | "HIDE" => "busy",
                 "QUIT" => "request",
                 _ => "unsupported",
             }
@@ -610,8 +636,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         enabled: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.settings.is_some() || self.failed {
-            return Err("auto unavailable while stopped or in settings".into());
+        if self.dialogue_hidden || self.settings.is_some() || self.failed {
+            return Err("auto unavailable while stopped or in a modal".into());
         }
         if enabled
             && (self.page.as_ref().map(|p| p.sequence) != Some(sequence)
@@ -633,7 +659,8 @@ impl<R: Read + Seek> StorySession<R> {
         click: bool,
         voice_finished: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.settings.is_some()
+        if self.dialogue_hidden
+            || self.settings.is_some()
             || self.failed
             || !self.interactive_text
             || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
@@ -779,7 +806,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.poll_packet()
     }
     pub fn acknowledge_text(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.settings.is_some() || self.failed {
+        if self.dialogue_hidden || self.settings.is_some() || self.failed {
             return Err("story session stopped after error".into());
         }
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
@@ -1537,6 +1564,7 @@ mod tests {
             host_mode: false,
             interactive_text: false,
             auto_mode: false,
+            dialogue_hidden: false,
             skip_mode: false,
             page_read: false,
             history: crate::read_history::History::default(),
@@ -1552,6 +1580,43 @@ mod tests {
         }
     }
 
+    #[test]
+    fn hide_preserves_page_and_restore_does_not_advance() {
+        let mut s = session(b"one\ntwo");
+        s.system.eval("config","Config <- {TextSpeed=0,KeepVoice=1,AutoSpeed=100,SkipNoRead=0,ReadedFast=0,ShortCuts=[\"CONFIG\",\"MENU\",\"HIDE\"]}").unwrap();
+        s.enable_interactive_text();
+        let page = s.poll_packet().unwrap();
+        s.text_frame(1, 0, false).unwrap();
+        s.set_auto_mode(1, true).unwrap();
+        assert!(String::from_utf8(s.shortcut(3, 1).unwrap())
+            .unwrap()
+            .contains("request"));
+        s.hide_dialogue(1, true).unwrap();
+        assert!(s.auto_mode);
+        assert_eq!(s.poll_packet().unwrap(), page);
+        assert_eq!(s.export_read_history(), b"NKRD\x01");
+        assert!(s.text_frame(1, 10000, true).is_err());
+        assert!(s.acknowledge_text(1).is_err());
+        assert!(s.open_settings(1).is_err());
+        assert!(s.set_skip_mode(1, true).is_err());
+        assert!(s.set_auto_mode(1, false).is_err());
+        assert!(String::from_utf8(s.shortcut(3, 1).unwrap())
+            .unwrap()
+            .contains("busy"));
+        assert!(s.hide_dialogue(2, false).is_err());
+        assert!(s.hide_dialogue(1, true).is_err());
+        s.hide_dialogue(1, false).unwrap();
+        assert!(!s.auto_mode);
+        assert!(!s.skip_mode);
+        assert_eq!(s.poll_packet().unwrap(), page);
+        let resumed = String::from_utf8(s.text_frame(1, 10000, false).unwrap()).unwrap();
+        assert!(resumed.contains("\"complete\":true,\"advance\":false"));
+        assert!(s.hide_dialogue(1, false).is_err());
+        s.text_frame(1, 10000, true).unwrap();
+        assert!(s.hide_dialogue(1, true).is_err());
+        s.acknowledge_text(1).unwrap();
+        assert!(s.hide_dialogue(1, true).is_err());
+    }
     #[test]
     fn auto_cancel_preserves_granted_ack_and_stops_following_page() {
         let mut s = session(b"one\ntwo");

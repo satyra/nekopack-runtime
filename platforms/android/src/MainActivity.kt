@@ -26,6 +26,7 @@ class MainActivity : Activity() {
     private val menuTimeline=SessionTimeline()
     @Volatile private var storyConfigOpen=false
     private var shortcutKey:((Int)->Unit)?=null
+    private var hiddenBack:(()->Boolean)?=null
     private var settingsBack:(()->Boolean)?=null
     private var lifecycleGeneration=0L
     private val instanceId=java.util.UUID.randomUUID().toString()
@@ -178,6 +179,7 @@ class MainActivity : Activity() {
         val originalSettings=Button(this);originalSettings.text="原版设置";originalSettings.isEnabled=false;controls.addView(originalSettings,LinearLayout.LayoutParams(0,-2,1f))
         val auto=Button(this);auto.text="自动：关";auto.isEnabled=false;controls.addView(auto,LinearLayout.LayoutParams(0,-2,1f))
         val skip=Button(this);skip.text="快进：关";skip.isEnabled=false;controls.addView(skip,LinearLayout.LayoutParams(0,-2,1f))
+        val hide=Button(this);hide.text="隐藏对白";hide.isEnabled=false;controls.addView(hide,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -191,6 +193,8 @@ class MainActivity : Activity() {
         val readKey="runtime_read_v1_${tree}_${game}"+intent.getStringExtra("read_history_probe").let{if(it==null)"" else "_probe_$it"}
         var skipEnabled=false
         var autoEnabled=false
+        var dialogueHidden=false
+        var hideBusy=false
         var sequence=0L
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
@@ -235,9 +239,12 @@ class MainActivity : Activity() {
                 if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
                 runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
-        },{enabled->skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=(enabled||autoEnabled)&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
+        },{enabled->hide.isEnabled=enabled&&!storyConfigOpen&&!hideBusy&&!dialogueHidden;skip.isEnabled=(enabled||skipEnabled)&&!storyConfigOpen;auto.isEnabled=(enabled||autoEnabled)&&!storyConfigOpen;next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
             if(originalSettings.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("settings_probe_sequence",-1)&&!intent.getBooleanExtra("settings_probe_used",false)){
                 intent.putExtra("settings_probe_used",true);originalSettings.performClick()
+            }
+            if(hide.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("hide_probe_sequence",-1)&&!intent.getBooleanExtra("hide_probe_used",false)){
+                intent.putExtra("hide_probe_used",true);hide.performClick()
             }
         },{stopVoice->
             storyEffects?.stopMotion();storyEffects?.finishDialogue(sequence,stopVoice);val token=sequence
@@ -264,9 +271,47 @@ class MainActivity : Activity() {
                 runOnUiThread{timeline.post{if(!storyClosing){skipEnabled=state.getBoolean("skip");skip.text=if(skipEnabled)"快进：开" else "快进：关";autoEnabled=state.getBoolean("auto");auto.text=if(autoEnabled)"自动：开" else "自动：关";if(enabled)dialogue.resume()}}}
             }catch(error:Throwable){fail(error)}}
         }
+        val hiddenView=ImageView(this);hiddenView.scaleType=ImageView.ScaleType.FIT_XY;hiddenView.setBackgroundColor(android.graphics.Color.BLACK)
+        hiddenView.contentDescription="隐藏对话框；点击恢复"
+        fun hiddenState(state:JSONObject){
+            val snapshot=File(root,"hide-state.tmp");snapshot.writeText(state.toString())
+            check(snapshot.renameTo(File(root,"hide-state.json"))){"cannot publish hide state"}
+            File(root,"hide-events.jsonl").appendText(state.toString()+"\n")
+        }
+        fun restoreDialogue(){
+            if(hideBusy||!dialogueHidden||storyClosing)return
+            hideBusy=true;val token=sequence
+            worker.execute{try{
+                val state=JSONObject(String(story(intArrayOf(),35,token),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
+                check(story(intArrayOf(),1,0).contentEquals(File(root,"hide-checkpoint.bin").readBytes())){"hidden dialogue advanced"}
+                runOnUiThread{timeline.post{if(!storyClosing){
+                    stage.removeView(hiddenView);hiddenView.setImageDrawable(null)
+                    dialogueHidden=false;hideBusy=false;autoEnabled=false;skipEnabled=false;auto.text="自动：关";skip.text="快进：关"
+                    dialogueView.visibility=android.view.View.VISIBLE;controls.visibility=android.view.View.VISIBLE
+                    storyEffects!!.lifecycleAudio("dialogue_restored");hiddenState(state);dialogue.resume()
+                }}}
+            }catch(error:Throwable){fail(error)}}
+        }
+        hide.setOnClickListener {
+            hideBusy=true;dialogue.suspend();controls.visibility=android.view.View.INVISIBLE;val token=sequence
+            val snapshot=android.graphics.Bitmap.createBitmap(image.width,image.height,android.graphics.Bitmap.Config.ARGB_8888)
+            image.draw(android.graphics.Canvas(snapshot))
+            worker.execute{try{
+                val state=JSONObject(String(story(intArrayOf(),34,token),Charsets.UTF_8));check(!state.has("error")){state.optString("error")}
+                File(root,"hide-checkpoint.bin").writeBytes(story(intArrayOf(),1,0))
+                File(root,"hide-base.png").outputStream().use{check(snapshot.compress(android.graphics.Bitmap.CompressFormat.PNG,100,it))}
+                runOnUiThread{timeline.post{if(!storyClosing){
+                    dialogueHidden=true;hideBusy=false;dialogueView.visibility=android.view.View.INVISIBLE;controls.visibility=android.view.View.INVISIBLE
+                    hiddenView.setImageBitmap(snapshot);stage.addView(hiddenView,FrameLayout.LayoutParams(-1,-1))
+                    storyEffects!!.lifecycleAudio("dialogue_hidden");hiddenState(state)
+                }}}
+            }catch(error:Throwable){fail(error)}}
+        }
+        hiddenView.setOnClickListener{restoreDialogue()}
+        hiddenBack={if(!storyClosing&&(dialogueHidden||hideBusy)){restoreDialogue();true}else false}
         var shortcutBusy=false
         shortcutKey={slot->
-            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!timeline.paused&&sequence>0){
+            if(!shortcutBusy&&!storyClosing&&!storyConfigOpen&&!dialogueHidden&&!hideBusy&&!timeline.paused&&sequence>0){
                 shortcutBusy=true;val token=sequence
                 worker.execute{try{
                     val result=JSONObject(String(story(intArrayOf(),33,token,slot.toLong()),Charsets.UTF_8))
@@ -280,6 +325,7 @@ class MainActivity : Activity() {
                             dialogue.refresh();result.put("delivery","applied")
                         }else if(status=="request"){
                             if(action=="CONFIG"&&sequence==token&&originalSettings.isEnabled){originalSettings.performClick();result.put("delivery","settings")}
+                            else if(action=="HIDE"&&sequence==token&&hide.isEnabled){hide.performClick();result.put("delivery","hidden")}
                             else if(action=="QUIT"){close.performClick();result.put("delivery","quit")}
                             else result.put("delivery","busy")
                         }else {
@@ -528,6 +574,7 @@ class MainActivity : Activity() {
         return super.onKeyDown(keyCode,event)
     }
     override fun onKeyUp(keyCode:Int,event:android.view.KeyEvent):Boolean {
+        if(!event.isCanceled && (keyCode==android.view.KeyEvent.KEYCODE_SPACE || keyCode==android.view.KeyEvent.KEYCODE_ENTER) && hiddenBack?.invoke()==true)return true
         if(keyCode in android.view.KeyEvent.KEYCODE_F1..android.view.KeyEvent.KEYCODE_F12 && shortcutKey!=null){
             if(!event.isCanceled)shortcutKey!!.invoke(keyCode-android.view.KeyEvent.KEYCODE_F1+1)
             return true
@@ -536,7 +583,7 @@ class MainActivity : Activity() {
     }
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
-        if(settingsBack?.invoke()!=true)super.onBackPressed()
+        if(hiddenBack?.invoke()!=true && settingsBack?.invoke()!=true)super.onBackPressed()
     }
     override fun onPause() {
         lifecycleGeneration++
@@ -558,7 +605,7 @@ class MainActivity : Activity() {
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        settingsBack=null;shortcutKey=null
+        settingsBack=null;shortcutKey=null;hiddenBack=null
         storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()
