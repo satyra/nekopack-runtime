@@ -185,11 +185,88 @@ pub struct StorySession<R: Read + Seek> {
     interactive_text: bool,
     text_reveal: Option<crate::dialogue::Reveal>,
     text_renderer: Option<crate::text_render::DialogueRenderer>,
+    settings: Option<crate::settings::Settings>,
+    settings_sequence: u64,
+    dialogue_opacity: Option<u8>,
     pending_effect: Option<HostEffect>,
     host_sequence: u64,
     effects: Vec<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
+    /// A modal over the current acknowledged presentation, never a new VM.
+    pub fn open_settings(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || self.settings.is_some()
+            || self.pending_effect.is_some()
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+            || !self.text_reveal.as_ref().is_some_and(|r| !r.advance)
+        {
+            return Err("settings require a live, unadvanced dialogue".into());
+        }
+        self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
+        self.settings_sequence += 1;
+        self.settings_packet()
+    }
+    fn settings_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        let settings = self
+            .settings
+            .as_ref()
+            .ok_or("story settings are not open")?;
+        let reveal = self.text_reveal.as_ref().unwrap();
+        let mut packet = format!("{{\"story_sequence\":{},\"story_visible\":{},\"story_elapsed_ms\":{},\"motion_elapsed_ms\":{},\"story_steps\":{},", self.page.as_ref().unwrap().sequence, reveal.count(), reveal.elapsed(), self.motion_elapsed, self.machine.steps()).into_bytes();
+        packet.extend_from_slice(&settings.packet(&mut self.system, self.settings_sequence)?[1..]);
+        Ok(packet)
+    }
+    pub fn settings_pointer(
+        &mut self,
+        kind: i32,
+        x: i32,
+        y: i32,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        let settings = self
+            .settings
+            .as_mut()
+            .ok_or("story settings are not open")?;
+        if let Some(page) = settings.pointer(&mut self.system, kind, x, y)? {
+            self.settings = Some(crate::settings::Settings::open(&mut self.store, page)?);
+        }
+        self.settings_sequence += 1;
+        self.settings_packet()
+    }
+    pub fn settings_command(&mut self, command: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        let settings = self
+            .settings
+            .as_mut()
+            .ok_or("story settings are not open")?;
+        match command {
+            0 => {
+                if !settings.cancel_popup() {
+                    self.system
+                        .eval("dialogue-style", "return Config.BoxOpacity.tostring()")?;
+                    let opacity = self.system.result().parse::<u8>()?;
+                    if self.dialogue_opacity != Some(opacity) {
+                        if let Some(renderer) = &mut self.text_renderer {
+                            let mng = self.store.read("system", "msgbox.mng")?;
+                            renderer.set_box_opacity(&mng, opacity)?;
+                            let page = self.page.as_ref().unwrap();
+                            renderer.prepare(page.sequence, &page.speaker, &page.text)?;
+                        }
+                        self.dialogue_opacity = Some(opacity);
+                    }
+                    self.settings = None;
+                    self.settings_sequence += 1;
+                    return Ok(format!("{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n", self.page.as_ref().unwrap().sequence, self.settings_sequence).into_bytes());
+                }
+            }
+            1 => {
+                settings.cancel_popup();
+                crate::preferences::reset(&mut self.system)?;
+            }
+            _ => return Err("unknown settings command".into()),
+        }
+        self.settings_sequence += 1;
+        self.settings_packet()
+    }
     pub fn export_preferences(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         crate::preferences::export(&mut self.system)
     }
@@ -280,6 +357,9 @@ impl<R: Read + Seek> StorySession<R> {
             interactive_text: false,
             text_reveal: None,
             text_renderer: None,
+            settings: None,
+            settings_sequence: 0,
+            dialogue_opacity: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
@@ -300,7 +380,7 @@ impl<R: Read + Seek> StorySession<R> {
             .ok_or_else(|| "host effect requires acknowledgement".into())
     }
     pub fn next(&mut self, sequence: u64) -> Result<&Page, Box<dyn Error>> {
-        if self.failed {
+        if self.settings.is_some() || self.failed {
             return Err("story session stopped after error".into());
         }
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
@@ -337,6 +417,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.system
             .eval("dialogue-style", "return Config.BoxOpacity.tostring()")?;
         let opacity = self.system.result().parse::<u8>()?;
+        self.dialogue_opacity = Some(opacity);
         self.system
             .eval("dialogue-style", "return Config.Border.tostring()")?;
         let border = self.system.result().parse::<u8>()?;
@@ -413,7 +494,8 @@ impl<R: Read + Seek> StorySession<R> {
         elapsed: u64,
         click: bool,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed
+        if self.settings.is_some()
+            || self.failed
             || !self.interactive_text
             || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
         {
@@ -523,7 +605,7 @@ impl<R: Read + Seek> StorySession<R> {
         self.poll_packet()
     }
     pub fn acknowledge_text(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed {
+        if self.settings.is_some() || self.failed {
             return Err("story session stopped after error".into());
         }
         if self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
@@ -547,7 +629,8 @@ impl<R: Read + Seek> StorySession<R> {
         sequence: u64,
         elapsed_ms: u64,
     ) -> Result<Vec<u8>, Box<dyn Error>> {
-        if self.failed
+        if self.settings.is_some()
+            || self.failed
             || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
             || self.motions.is_empty()
         {
@@ -1279,6 +1362,9 @@ mod tests {
             interactive_text: false,
             text_reveal: None,
             text_renderer: None,
+            settings: None,
+            settings_sequence: 0,
+            dialogue_opacity: None,
             pending_effect: None,
             host_sequence: 0,
             effects: Vec::new(),
@@ -1317,6 +1403,30 @@ mod tests {
         assert!(s.text_frame(n + 1, 1, false).is_ok());
         assert!(s.text_frame(n + 1, 0, false).is_err());
         assert!(s.set_text_config(1, 2).is_err());
+    }
+
+    #[test]
+    fn settings_reject_invalid_entry_without_consuming_dialogue() {
+        let mut s = session(b"first\nsecond");
+        s.system
+            .eval("config", "Config <- {TextSpeed=0,KeepVoice=1}")
+            .unwrap();
+        s.enable_interactive_text();
+        assert!(s.open_settings(1).is_err());
+        let packet = s.poll_packet().unwrap();
+        assert!(s.open_settings(1).is_err()); // no initial text frame yet
+        s.text_frame(1, 0, false).unwrap();
+        assert!(s.open_settings(2).is_err()); // stale token
+        assert!(s.settings_command(0).is_err());
+        assert!(s.settings_pointer(0, 0, 0).is_err());
+        // Missing external settings resources must not consume the page either.
+        assert!(s.open_settings(1).is_err());
+        assert!(s.settings.is_none());
+        assert_eq!(s.poll_packet().unwrap(), packet);
+        s.text_frame(1, 0, true).unwrap();
+        s.text_frame(1, 0, true).unwrap();
+        assert!(s.open_settings(1).is_err()); // advance already granted
+        assert_eq!(s.poll_packet().unwrap(), packet);
     }
 
     #[test]

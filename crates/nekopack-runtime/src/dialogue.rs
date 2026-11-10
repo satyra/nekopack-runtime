@@ -66,6 +66,9 @@ impl Reveal {
     pub fn visible(&self) -> &str {
         &self.text[..self.end]
     }
+    pub fn elapsed(&self) -> u64 {
+        self.elapsed
+    }
     pub fn count(&self) -> usize {
         self.shown
     }

@@ -15,7 +15,11 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
     private var sequence=0L
     private var started=0L
     private var speaker=""
+    var visibleCount=0L
+        private set
     fun stop(){epoch++;active=false;pendingClick=false;view.clear()}
+    fun suspend(){epoch++;active=false;pendingClick=false;ready(false)}
+    fun resume(){check(!active);active=true;busy=false;ready(false);send(false,timeline.now()-started)}
     fun show(token:Long,name:String){
         stop();active=true;busy=false;sequence=token;speaker=name;started=timeline.now()
         ready(false);send(false,0)
@@ -25,7 +29,7 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
         busy=true;val generation=epoch;val token=sequence
         request(if(click)12 else 11,token,elapsed){state,bitmap,geometry->
             if(active&&epoch==generation){
-                busy=false;check(state.getLong("sequence")==token)
+                busy=false;check(state.getLong("sequence")==token);visibleCount=state.getLong("visible")
                 view.show(bitmap,geometry,speaker+"\n"+state.getString("text"))
                 val snapshot=File(root,"text-$token.tmp");snapshot.writeText(state.toString())
                 check(snapshot.renameTo(File(root,"text-$token.json"))){"cannot publish text state"}

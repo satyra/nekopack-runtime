@@ -318,6 +318,25 @@ impl DialogueRenderer {
             );
         }
     }
+    /// Rebuild from original DAT pixels; never multiply an already faded panel.
+    pub(crate) fn set_box_opacity(&mut self, mng: &[u8], opacity: u8) -> Result<()> {
+        let parsed = Mng::parse(mng, 4096)?;
+        let sprites = parsed.sprites()?;
+        let decode = |name: &[u8]| -> Result<RgbaImage> {
+            let sprite = sprites
+                .iter()
+                .find(|s| s.name == name)
+                .ok_or("missing dialogue panel")?;
+            let mut image = parsed.decode_image(sprite.ordinal, BUDGET)?;
+            box_opacity(&mut image, opacity);
+            Ok(image)
+        };
+        let name = decode(b"NAME")?;
+        let text = decode(b"TEXT")?;
+        self.name.image = name;
+        self.text.image = text;
+        Ok(())
+    }
     pub fn prepare(&mut self, sequence: u64, speaker: &str, text: &str) -> Result<()> {
         let name = if speaker.is_empty() {
             None

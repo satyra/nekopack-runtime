@@ -297,18 +297,31 @@ pub unsafe extern "C" fn neko_probe_story(
                         })
                     }
                 }
-                22 => TITLE.with(|t| {
-                    t.borrow_mut()
-                        .as_mut()
-                        .ok_or("no title session")?
-                        .settings_command(sequence)
-                }),
+                23 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .open_settings(sequence),
+                22 => {
+                    if let Some(story) = state.as_mut() {
+                        story.settings_command(sequence)
+                    } else {
+                        TITLE.with(|t| {
+                            t.borrow_mut()
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .settings_command(sequence)
+                        })
+                    }
+                }
                 18 => TITLE.with(|title| {
                     let mut title = title.borrow_mut();
                     if count != 3 {
                         return Err("title pointer requires kind/x/y".into());
                     }
                     let values = unsafe { std::slice::from_raw_parts(fds, count) };
+                    if let Some(story) = state.as_mut() {
+                        return story.settings_pointer(values[0], values[1], values[2]);
+                    }
                     let session = title.as_mut().ok_or("no title session")?;
                     let action = session.pointer(values[0], values[1], values[2])?;
                     if action == Some(1) {

@@ -23,6 +23,8 @@ import java.io.File
 class MainActivity : Activity() {
     private external fun story(descriptors:IntArray,operation:Int,sequence:Long,elapsedMillis:Long=0):ByteArray
     private val timeline=SessionTimeline()
+    private val menuTimeline=SessionTimeline()
+    @Volatile private var storyConfigOpen=false
     private var lifecycleGeneration=0L
     private val instanceId=java.util.UUID.randomUUID().toString()
     private var lifecycleFailure:(Throwable)->Unit={throw it}
@@ -171,6 +173,7 @@ class MainActivity : Activity() {
         val close=Button(this);close.text="结束运行";controls.addView(close,LinearLayout.LayoutParams(0,-2,1f));layout.addView(controls)
         val settings=Button(this);settings.text="音量";settings.isEnabled=false;controls.addView(settings,LinearLayout.LayoutParams(0,-2,1f))
         val textSettings=Button(this);textSettings.text="文字";textSettings.isEnabled=false;controls.addView(textSettings,LinearLayout.LayoutParams(0,-2,1f))
+        val originalSettings=Button(this);originalSettings.text="原版设置";originalSettings.isEnabled=false;controls.addView(originalSettings,LinearLayout.LayoutParams(0,-2,1f))
         setContentView(layout)
         layout.post{File(root,"layout.json").writeText(JSONObject().put("width",layout.width).put("height",layout.height).put("stage_width",stage.width).put("stage_height",stage.height).put("orientation",resources.configuration.orientation).toString())}
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
@@ -187,16 +190,16 @@ class MainActivity : Activity() {
         lateinit var show:(ByteArray)->Unit
         lateinit var dialogue:DialoguePresentation
         var textConfig:JSONObject?=null
-        fun applyTextConfig(bytes:ByteArray){
+        fun applyTextConfig(bytes:ByteArray,scheduler:SessionTimeline=timeline){
             persistConfig()
             val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
-            runOnUiThread{timeline.post{if(!storyClosing){textConfig=config;textSettings.isEnabled=true;File(root,"text-config-events.jsonl").appendText(config.toString()+"\n")}}}
+            runOnUiThread{scheduler.post{if(!storyClosing){textConfig=config;textSettings.isEnabled=true;File(root,"text-config-events.jsonl").appendText(config.toString()+"\n")}}}
         }
         var audioConfig:JSONObject?=null
-        fun applyAudioConfig(bytes:ByteArray) {
+        fun applyAudioConfig(bytes:ByteArray,scheduler:SessionTimeline=timeline) {
             persistConfig()
             val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
-            runOnUiThread{timeline.post{if(!storyClosing){
+            runOnUiThread{scheduler.post{if(!storyClosing){
                 storyEffects!!.configureAudio(config);audioConfig=config;settings.isEnabled=true
                 File(root,"audio-config-events.jsonl").appendText(config.toString()+"\n")
             }}}
@@ -219,7 +222,11 @@ class MainActivity : Activity() {
                 if(state.getBoolean("complete"))File(root,"dialogue-$token.png").writeBytes(png)
                 runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){text.visibility=android.view.View.GONE;done(state,bitmap,geometry)}else bitmap.recycle()}}
             }}catch(error:Throwable){fail(error)}}
-        },{enabled->next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false))},{stopVoice->
+        },{enabled->next.isEnabled=enabled&&!(sequence==13L&&intent.getBooleanExtra("audio_state_probe",false));originalSettings.isEnabled=enabled&&!storyConfigOpen
+            if(originalSettings.isEnabled&&dialogue.visibleCount>0&&sequence==intent.getLongExtra("settings_probe_sequence",-1)&&!intent.getBooleanExtra("settings_probe_used",false)){
+                intent.putExtra("settings_probe_used",true);originalSettings.performClick()
+            }
+        },{stopVoice->
             storyEffects?.stopMotion();storyEffects?.finishDialogue(sequence,stopVoice);val token=sequence
             worker.execute{try{show(story(intArrayOf(),2,token))}catch(error:Throwable){fail(error)}}
         })
@@ -325,6 +332,18 @@ class MainActivity : Activity() {
         fun showTitle(packet:ByteArray,unlock:Boolean){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!metadata.has("error")){metadata.optString("error")}
+            if(metadata.optString("kind")=="story_settings_closed"){
+                check(metadata.getLong("sequence")==sequence){"settings changed dialogue token"}
+                check(story(intArrayOf(),1,0).contentEquals(File(root,"settings-story-checkpoint.bin").readBytes())){"settings advanced the script"}
+                persistConfig();applyAudioConfig(story(intArrayOf(),9,0),menuTimeline);applyTextConfig(story(intArrayOf(),13,0),menuTimeline)
+                runOnUiThread{menuTimeline.post{if(!storyClosing){try{
+                    stage.removeView(titleView);configControls.visibility=android.view.View.GONE
+                    dialogueView.visibility=android.view.View.VISIBLE;controls.visibility=android.view.View.VISIBLE
+                    storyConfigOpen=false;timeline.resume();storyEffects!!.resume();dialogue.resume()
+                    File(root,"story-settings-events.jsonl").appendText(JSONObject(metadata.toString()).put("event","closed").put("active_ms",timeline.now()).toString()+"\n")
+                }catch(error:Throwable){lifecycleFailure(error)}}}}
+                return
+            }
             val isSettings=metadata.optString("kind")=="settings"
             if(metadata.optString("kind")!="title" && !isSettings){
                 File(root,"title-started.json").writeText(metadata.toString())
@@ -336,10 +355,10 @@ class MainActivity : Activity() {
             val png=packet.copyOfRange(split+1,packet.size);File(root,"$prefix.png").writeBytes(png)
             File(root,"$prefix.json").writeText(metadata.toString())
             val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid title PNG")
-            runOnUiThread{timeline.post(cancel={bitmap.recycle()}){
+            runOnUiThread{menuTimeline.post(cancel={bitmap.recycle()}){
                 if(!isDestroyed&&!storyClosing){
                     configBack.isEnabled=true;configReset.isEnabled=metadata.optInt("editing_slot",0)==0
-                    configBack.text=if(metadata.optInt("editing_slot",0)>0)"取消选择" else "返回标题"
+                    configBack.text=if(metadata.optInt("editing_slot",0)>0)"取消选择" else if(storyConfigOpen)"返回剧情" else "返回标题"
                     configControls.visibility=if(isSettings)android.view.View.VISIBLE else android.view.View.GONE
                     titleView.contentDescription=if(isSettings)"原版设置页" else "游戏标题菜单"
                     titleView.present(bitmap);if(unlock)titleView.accepting=true
@@ -356,6 +375,14 @@ class MainActivity : Activity() {
         configReset.setOnClickListener{configBack.isEnabled=false;configReset.isEnabled=false;titleView.cancel();titleView.accepting=false;worker.execute{try{showTitle(story(intArrayOf(),22,1),true)}catch(error:Throwable){fail(error)}}}
         titleView=TitleView(this){kind,x,y->
             if(!storyClosing)worker.execute{try{if(!storyClosing)showTitle(story(intArrayOf(kind,x,y),18,0),kind==2)}catch(error:Throwable){fail(error)}}
+        }
+        originalSettings.setOnClickListener {
+            storyConfigOpen=true;dialogue.suspend();timeline.pause();storyEffects!!.pause()
+            controls.visibility=android.view.View.GONE;dialogueView.visibility=android.view.View.GONE
+            titleView.accepting=false;stage.addView(titleView,FrameLayout.LayoutParams(-1,-1))
+            val token=sequence
+            File(root,"story-settings-events.jsonl").appendText(JSONObject().put("event","opened").put("sequence",token).put("active_ms",timeline.now()).toString()+"\n")
+            worker.execute{try{File(root,"settings-story-checkpoint.bin").writeBytes(story(intArrayOf(),1,0));showTitle(story(intArrayOf(),23,token),true)}catch(error:Throwable){fail(error)}}
         }
         if(titleFirst){dialogueView.visibility=android.view.View.GONE;controls.visibility=android.view.View.GONE;text.visibility=android.view.View.GONE;stage.addView(titleView,FrameLayout.LayoutParams(-1,-1))}
         worker.execute {
@@ -419,7 +446,7 @@ class MainActivity : Activity() {
     }
     override fun onPause() {
         lifecycleGeneration++
-        timeline.pause();storyEffects?.pause();movieHost?.pause()
+        menuTimeline.pause();timeline.pause();storyEffects?.pause();movieHost?.pause()
         if(intent.getBooleanExtra("lifecycle_probe",false)){
             val generation=lifecycleGeneration
             for((delay,label) in listOf(500L to "paused_stable_1",1500L to "paused_stable_2")){
@@ -433,11 +460,11 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         lifecycleGeneration++
-        timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}
+        menuTimeline.resume();if(!storyConfigOpen){timeline.resume();try{storyEffects?.resume();movieHost?.resume()}catch(error:Throwable){lifecycleFailure(error)}}
         storyRunRoot?.let{File(it,"lifecycle-events.jsonl").appendText(JSONObject().put("event","resumed").put("time_ms",android.os.SystemClock.elapsedRealtime()).put("active_ms",timeline.now()).put("instance",instanceId).toString()+"\n")}
     }
     override fun onDestroy() {
-        storyClosing=true;timeline.close();movieHost?.close();storyEffects?.close()
+        storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()
     }

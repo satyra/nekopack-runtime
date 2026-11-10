@@ -1,0 +1,46 @@
+{
+  "batch": 39,
+  "rust": {
+    "command": "cargo test --workspace",
+    "passed": 137,
+    "isolated_native_probe_runs": 7,
+    "status": "passed"
+  },
+  "clippy": {
+    "command": "cargo clippy --workspace --all-targets -- -D warnings",
+    "status": "passed"
+  },
+  "python": {
+    "command": "python -m unittest discover -s research -p test_*.py",
+    "passed": 17
+  },
+  "android_build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "fe0b6ed1731c10977e0465cf453c7754bbb5a795528ecd7f4e756ce6d5005553",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "9661d23efefb5ad6051f028174a6083aef800264dbfdae5836b5abce0d843652"
+    }
+  },
+  "device_result": "story-settings-batch39-emulator.json",
+  "execution": "ARM64 translated on x86_64 emulator via libnb.so; no physical device verification",
+  "log_sha256": {
+    "tests": "dcca81026659dd01905e4d1e143ef63c3f88f146bf11c674acb179ede984f9b4",
+    "clippy": "fd565f1b91ca501eae26592289ff62e57047adb791808c8d74767c318a802aa8",
+    "python": "45518c758bc00c610822d772fb4095e1cfabf1d95b2755f6e7bf15b9c675f3b5",
+    "build": "1b1d8d070c9ec8e83c2735d77c57ad0c320f7a20905d3ef8bc8fd67b48696f0a",
+    "device": "34172cea88687ced3ad40b6bee2c1abd456d3ab98bd9d512c5506e3836e5aeb3",
+    "device-pre-visible": "c2e82dfea0dbe887cacf60f72ec788399902b1633a5d8c8fff55b411aa26113f",
+    "device-pre-gain": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "device-dirty-config": "6baaa547f4c958349abdd114ae9c68c833605560effb651d7d1853a8861d6a44",
+    "device-early-read": "2104e34e553745a8eece091005072577426078e091a9f3508d0323b1fbfc1259",
+    "restore": "43a64563e56d7824d769791a72f7f62eb2e149e51adf73dada49ea58a0e8346c",
+    "device-final": "964762e23f785d9614453cb20761b403d515fc2460615c8c20ad706e0cf6ec56"
+  },
+  "nonfinal_runs": "ADB PNG read timeout; intentional test strengthening; dirty configuration restored through UI; next-page polling None guard fixed. Only the final complete run is counted as passing.",
+  "final_run_retries": 0,
+  "scope": "Original settings through Android host button during dialogue; no CG/recollection details inspected."
+}
