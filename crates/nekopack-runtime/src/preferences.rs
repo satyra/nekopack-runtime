@@ -2,7 +2,7 @@
 use nekopack_script::system::SystemVm;
 use std::{collections::BTreeMap, error::Error};
 pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
-pub(crate) const FIELDS: [&str; 7] = [
+pub(crate) const FIELDS: [&str; 8] = [
     "TextSpeed",
     "KeepVoice",
     "VolBGM",
@@ -10,8 +10,9 @@ pub(crate) const FIELDS: [&str; 7] = [
     "VolSE",
     "VolENV",
     "VolSYS",
+    "BoxOpacity",
 ];
-const MAGIC: &[u8] = b"NKCF\x02";
+const MAGIC: &[u8] = b"NKCF\x03";
 pub(crate) const ACTIONS: [&str; 11] = [
     "", "AUTO", "SKIP", "LOG", "HIDE", "SAVE", "LOAD", "QSAVE", "QLOAD", "RESET", "QUIT",
 ];
@@ -65,11 +66,18 @@ pub(crate) fn values(vm: &mut SystemVm) -> Result<BTreeMap<String, i32>> {
         })
         .collect()
 }
+pub(crate) fn maximum(index: usize) -> i32 {
+    match index {
+        1 => 1,
+        7 => 255,
+        _ => 100,
+    }
+}
 fn validate(v: &[u8]) -> Result<()> {
-    if v.len() != FIELDS.len()
+    if !(7..=FIELDS.len()).contains(&v.len())
         || v.iter()
             .enumerate()
-            .any(|(i, &v)| v > if i == 1 { 1 } else { 100 })
+            .any(|(i, &v)| i32::from(v) > maximum(i))
     {
         return Err("invalid preference values".into());
     }
@@ -85,14 +93,14 @@ pub(crate) fn export(vm: &mut SystemVm) -> Result<Vec<u8>> {
     Ok([MAGIC, v.as_slice(), shortcut_ids(vm)?.as_slice()].concat())
 }
 pub(crate) fn import(vm: &mut SystemVm, bytes: &[u8]) -> Result<()> {
-    let v = decode(bytes)?;
+    let (v, shortcuts) = decode(bytes)?;
     let mut assignments = FIELDS
         .iter()
-        .zip(v.iter().take(7))
+        .zip(v)
         .map(|(k, v)| format!("Config.{k}={v};"))
         .collect::<String>();
-    if v.len() == 17 {
-        for (i, id) in v[7..].iter().enumerate() {
+    if let Some(shortcuts) = shortcuts {
+        for (i, id) in shortcuts.iter().enumerate() {
             assignments += &format!(
                 "Config.ShortCuts[{}]={};",
                 i + 2,
@@ -103,22 +111,26 @@ pub(crate) fn import(vm: &mut SystemVm, bytes: &[u8]) -> Result<()> {
     vm.eval("restore-preferences", &(assignments + "RestoreVolume()"))?;
     Ok(())
 }
-fn decode(bytes: &[u8]) -> Result<&[u8]> {
-    let (version, v) = if let Some(v) = bytes.strip_prefix(b"NKCF\x01") {
-        (1, v)
-    } else if let Some(v) = bytes.strip_prefix(MAGIC) {
-        (2, v)
-    } else {
-        return Err("unknown runtime preferences format/version".into());
+fn decode(bytes: &[u8]) -> Result<(&[u8], Option<&[u8]>)> {
+    let (version, payload) = bytes
+        .strip_prefix(b"NKCF")
+        .and_then(|v| v.split_first())
+        .ok_or("unknown runtime preferences format/version")?;
+    let (fields, length) = match version {
+        1 => (7, 7),
+        2 => (7, 17),
+        3 => (8, 18),
+        _ => return Err("unknown runtime preferences format/version".into()),
     };
-    if v.len() != if version == 1 { 7 } else { 17 } {
+    if payload.len() != length {
         return Err("invalid preferences length".into());
     }
-    validate(&v[..7])?;
-    if version == 2 && v[7..].iter().any(|id| usize::from(*id) >= ACTIONS.len()) {
+    let (v, shortcuts) = payload.split_at(fields);
+    validate(v)?;
+    if shortcuts.iter().any(|id| usize::from(*id) >= ACTIONS.len()) {
         return Err("unknown stored shortcut action".into());
     }
-    Ok(v)
+    Ok((v, if *version == 1 { None } else { Some(shortcuts) }))
 }
 pub(crate) fn set(vm: &mut SystemVm, index: usize, value: i32) -> Result<()> {
     if index >= FIELDS.len() {
@@ -145,22 +157,36 @@ mod tests {
     #[test]
     fn import_is_validated_before_mutation_and_reset_uses_game_defaults() {
         let mut vm = SystemVm::try_new().unwrap();
-        vm.eval("setup", "Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}\nConfigDefault <- clone Config\nConfigDefault.ShortCuts = clone Config.ShortCuts\nApplies <- 0\nfunction RestoreVolume(){Applies++}").unwrap();
+        vm.eval("setup", "Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,BoxOpacity=191,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}\nConfigDefault <- clone Config\nConfigDefault.ShortCuts = clone Config.ShortCuts\nApplies <- 0\nfunction RestoreVolume(){Applies++}").unwrap();
         let original = export(&mut vm).unwrap();
-        assert_eq!(original.len(), 22);
+        assert_eq!(original.len(), 23);
         set_shortcut(&mut vm, 3, 1).unwrap();
         set_shortcut(&mut vm, 12, 0).unwrap();
         let edited = export(&mut vm).unwrap();
-        assert_eq!(edited[12], 1);
-        assert_eq!(edited[21], 0);
+        assert_eq!(edited[13], 1);
+        assert_eq!(edited[22], 0);
         set(&mut vm, 2, 20).unwrap();
         assert_eq!(shortcut_ids(&mut vm).unwrap()[0], 1);
         assert_eq!(shortcut_ids(&mut vm).unwrap()[9], 0);
         let legacy = [b"NKCF\x01".as_slice(), &original[5..12]].concat();
         import(&mut vm, &legacy).unwrap();
         assert_eq!(export(&mut vm).unwrap(), edited);
+        // v2 imports its own shortcuts but preserves the new opacity field.
+        let legacy2 = [b"NKCF\x02".as_slice(), &edited[5..12], &edited[13..]].concat();
+        set(&mut vm, 7, 127).unwrap();
+        import(&mut vm, &legacy2).unwrap();
+        assert_eq!(values(&mut vm).unwrap()["BoxOpacity"], 127);
+        import(&mut vm, &legacy).unwrap();
+        assert_eq!(values(&mut vm).unwrap()["BoxOpacity"], 127);
+        assert_eq!(shortcut_ids(&mut vm).unwrap()[9], 0);
+        for value in [0, 255, 191] {
+            set(&mut vm, 7, value).unwrap();
+        }
+        assert!(set(&mut vm, 7, 256).is_err());
+        assert!(set(&mut vm, 7, -1).is_err());
+        assert_eq!(export(&mut vm).unwrap(), edited);
         let mut corrupt = edited.clone();
-        corrupt[21] = 11;
+        corrupt[22] = 11;
         assert!(import(&mut vm, &corrupt).is_err());
         assert_eq!(export(&mut vm).unwrap(), edited);
         assert!(set_shortcut(&mut vm, 2, 1).is_err());
@@ -186,15 +212,36 @@ mod tests {
     }
     #[test]
     fn version_length_and_ranges_are_strict() {
-        let valid = [MAGIC, &[50, 1, 50, 75, 50, 50, 50], &[0; 10]].concat();
+        let valid = [MAGIC, &[50, 1, 50, 75, 50, 50, 50, 191], &[0; 10]].concat();
         assert!(decode(&valid).is_ok());
         for n in 0..valid.len() {
             assert!(decode(&valid[..n]).is_err())
         }
+        for (version, payload) in [(1, &valid[5..12]), (2, &valid[5..22])] {
+            let legacy = [b"NKCF".as_slice(), &[version], payload].concat();
+            // v2 uses seven values plus ten IDs, not the v3 opacity byte.
+            let legacy = if version == 2 {
+                [b"NKCF\x02".as_slice(), &valid[5..12], &[0; 10]].concat()
+            } else {
+                legacy
+            };
+            assert!(decode(&legacy).is_ok());
+            for length in 0..legacy.len() {
+                assert!(decode(&legacy[..length]).is_err());
+            }
+            let mut overlong = legacy.clone();
+            overlong.push(0);
+            assert!(decode(&overlong).is_err());
+            if version == 2 {
+                let mut bad = legacy;
+                bad[21] = 11;
+                assert!(decode(&bad).is_err());
+            }
+        }
         let mut bad = valid.clone();
         bad.push(0);
         assert!(decode(&bad).is_err());
-        for (i, value) in [(4, 3), (5, 101), (6, 2), (7, 101), (12, 11)] {
+        for (i, value) in [(4, 4), (5, 101), (6, 2), (7, 101), (13, 11)] {
             let mut bad = valid.clone();
             bad[i] = value;
             assert!(decode(&bad).is_err())

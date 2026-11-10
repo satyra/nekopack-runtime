@@ -1,5 +1,6 @@
 """BLESS shortcut editor and all five settings pages on an explicitly identified device.
 
+Optional --opacity-check also validates settings-to-dialogue opacity.
 No CG/recollection contents; original media stay in the local work directory.
 """
 import argparse,hashlib,io,json,re,subprocess,sys,time,uuid
@@ -12,6 +13,7 @@ from verify_shortcut_page import sprites
 def main():
     p=argparse.ArgumentParser()
     for key in ('adb','serial','games','portkit','reference','work','output'):p.add_argument('--'+key,required=True)
+    p.add_argument('--opacity-check',action='store_true')
     p.add_argument('--execution',choices=('native','translated'),required=True)
     a=p.parse_args();work=Path(a.work);work.mkdir(parents=True,exist_ok=True);pkg='org.nekopack.probe';run=''
     def adb(*args):return subprocess.check_output([a.adb,'-s',a.serial,*args],timeout=45)
@@ -83,7 +85,8 @@ def main():
         def draw(item,delta=(0,0)):
             image,(x,y)=item;canvas.alpha_composite(image,(x+delta[0],y+delta[1]))
         draw(common['BASE']);draw(s['BASE'])
-        values=dict(Screen=0,SkipNoRead=0,KeepSkip=0,KeepAuto=0,Movie=1,Popup=1,Effect=1,SysEffect=1,BOLD=0,BORDER=1,CenterKey=0,SpaceKey=0,MuteBGM=1,AutoSpeed=50,BoxOpacity=191,**config)
+        values=dict(Screen=0,SkipNoRead=0,KeepSkip=0,KeepAuto=0,Movie=1,Popup=1,Effect=1,SysEffect=1,BOLD=0,BORDER=1,CenterKey=0,SpaceKey=0,MuteBGM=1,AutoSpeed=50,BoxOpacity=191)
+        values.update(config)
         for key in sorted(s):
             if not key.startswith('= '):continue
             name=key[2:]
@@ -115,6 +118,59 @@ def main():
     for n in range(1,6):
         page(n);checked[str(n)]=pixels('page'+str(n),reference(n,initial,defaults));print('page',n,'pixels verified',flush=True)
     original=[s['action'] for s in state()['shortcuts']];assert original==defaults
+    opacity_checks=[]
+    if a.opacity_check:
+        def set_opacity(value):
+            page(2)
+            if value in (0,255):area('* BoxOpacity'+('--' if value==0 else '++'))
+            else:
+                before=state()['input_sequence'];x,y,w,h=state()['areas']['* BoxOpacity']
+                tap(x+w*(value+0.5)/255,y+h/2)
+                wait(lambda:state()['input_sequence']>=before+2)
+            actual=state()['config']['BoxOpacity']
+            assert abs(actual-value)<=1,(actual,value)
+            pixels('opacity-'+str(actual),reference(2,state()['config'],original))
+            assert {k:v for k,v in state()['config'].items() if k!='BoxOpacity'}=={k:v for k,v in initial.items() if k!='BoxOpacity'}
+            return actual
+        for wanted in (0,127,255):
+            actual=set_opacity(wanted)
+            close_title();launch();runs.append(run)
+            assert state()['config']['BoxOpacity']==actual
+            page(5);assert [s['action'] for s in state()['shortcuts']]==original
+            back();title_button(1)
+            data=wait(lambda:obj('page-1.json'))
+            wait(lambda:obj('text-1.json') and obj('text-1.json')['complete'])
+            assert obj('dialogue-font.json')['opacity']==actual
+            ref=Path(a.reference)/'0.json';assert data==json.loads(ref.read_text(encoding='utf8'))
+            assert read('page-1.png')==ref.with_suffix('.png').read_bytes()
+            geometry=obj('dialogue-1.json');empty=np.array(Image.open(io.BytesIO(read('dialogue-1-empty.png'))));full=np.array(Image.open(io.BytesIO(read('dialogue-1.png'))))
+            # Compare the complete empty body panel against original raw pixels using
+            # the separately established native Clear/Blt channel equation. No OCR.
+            panel,(px,py)=sprites(archive.read('system/msgbox.mng'))['TEXT']
+            expected=np.array(panel).astype(np.uint32)
+            if actual!=255:
+                factor=(expected[:,:,3]*actual)>>8
+                expected=(expected*factor[:,:,None])>>8
+            expected=expected.astype(np.uint8)
+            # Source-over onto transparent output canonicalizes zero-alpha RGB.
+            expected[expected[:,:,3]==0]=0
+            bx,by,_,_=geometry['bounds'];x,y=px-bx,py-by
+            body=empty[y:y+panel.height,x:x+panel.width]
+            # NAME overlaps the first rows of TEXT and already contains the
+            # speaker even at zero body characters. Compare the body below it.
+            _,ny,_,nh=geometry['name_rect'];first=max(0,ny+nh-py)
+            assert np.array_equal(body[first:],expected[first:]),('body opacity',actual)
+            assert np.any(full!=empty),'body text must remain visible independently of opacity'
+            opacity_checks.append(dict(requested=wanted,actual=actual,restart_preserved=True,body_below_name_pixels_equal=True,text_visible=True,scene_unchanged=True))
+            print('opacity',actual,'story pixels verified',flush=True)
+            control('结束运行');wait(lambda:b'VM live bytes=0' in read('closed.txt'))
+            launch();runs.append(run)
+        set_opacity(initial['BoxOpacity'])
+        # Exact restoration via saved initial payload is unnecessary for the
+        # BLESS default 191: choose pixel input whose quantization yields it.
+        assert state()['config']==initial
+        close_title();launch();runs.append(run);page(5)
+        assert state()['config']==initial
     area('* F3');assert state()['editing_slot']==3
     pixels('popup',reference(5,initial,original,True));assert '* F4' not in state()['areas'] and '= PAGE++' not in state()['areas']
     # Drag-out cancels a choice, while keeping the picker open.
@@ -142,10 +198,10 @@ def main():
         if n<3:control('继续')
     control('结束运行');wait(lambda:b'VM live bytes=0' in read('closed.txt'))
     launch();runs.append(run);page(5)
-    # Restore only edited slots, preserving the seven existing preferences.
+    # Restore only edited slots, preserving the other preferences.
     area('* F3');area('= '+original[0]);area('* F12');area('= '+original[-1]);assert state()['config']==initial
     close_title();launch();page(5);assert [s['action'] for s in state()['shortcuts']]==original
-    report=dict(execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,all_five_pages=checked,popup_pixels_equal=True,all_ten_slots_checked=True,all_ten_actions_checked=True,clear_persists=True,cancel_and_drag_out_preserve=True,modal_blocks_underlying_controls=True,home_restores_popup=True,restart_bindings=changed,other_preferences_unchanged=initial,restored_bindings=original,story_pages=pages,closed_vm_live_bytes=0,ui_retries=ui_retries,scope='binding edit/storage only; not a claim of executing all keyboard actions; static sample preview on page2')
+    report=dict(execution='native ARM64' if a.execution=='native' else 'translated ARM64 on x86_64',machine=machine,native_bridge=bridge,apk_sha256=sha,runs=runs,all_five_pages=checked,popup_pixels_equal=True,all_ten_slots_checked=True,all_ten_actions_checked=True,clear_persists=True,cancel_and_drag_out_preserve=True,modal_blocks_underlying_controls=True,home_restores_popup=True,restart_bindings=changed,other_preferences_unchanged=initial,restored_bindings=original,story_pages=pages,closed_vm_live_bytes=0,ui_retries=ui_retries,opacity_checks=opacity_checks,scope='binding edit/storage only; not a claim of executing all keyboard actions; static sample preview on page2')
     Path(a.output).write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8');print(json.dumps(report,ensure_ascii=False))
 
 if __name__=='__main__':main()

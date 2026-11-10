@@ -1,0 +1,41 @@
+{
+  "batch": 38,
+  "rust": {
+    "command": "cargo test --workspace",
+    "passed": 136,
+    "isolated_native_probe_runs": 7,
+    "status": "passed"
+  },
+  "clippy": {
+    "command": "cargo clippy --workspace --all-targets -- -D warnings",
+    "status": "passed"
+  },
+  "python": {
+    "command": "python -m unittest discover -s research -p test_*.py",
+    "passed": 17
+  },
+  "android_build": {
+    "ndk": "Pkg.Desc = Android NDK\nPkg.Revision = 27.3.13750724\nPkg.BaseRevision = 27.3.13750724\nPkg.ReleaseName = r27d\n",
+    "target": "aarch64-linux-android",
+    "api": 23,
+    "sha256": {
+      "libnekopack_probe.so": "57b64e883012de010817c41d1f39eecfd1724f92e3793347287b36100e71ac05",
+      "libnekopack_host.so": "8c887fec3453b5f7ee4208f1f5954bb67049816c30a055b4edd073f86a31245d",
+      "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+      "nekopack-arm64-probe.apk": "8ba99e0b090e5811a993f29bb834bbcc42701ff4c19b92691cb6d1bc496bcb9b"
+    }
+  },
+  "device_result": "opacity-batch38-emulator.json",
+  "execution": "ARM64 translated on x86_64 emulator via libnb.so; no physical device verification",
+  "log_sha256": {
+    "tests": "1c5991be36788b3f780cb4b05b1135103e01800fcbafd2522ad1ced59e6b1bba",
+    "clippy": "d81ec47a7299eb1c6f1e926d4246c304d368400a65b19337ad76f9165b67be69",
+    "python": "c0f395f7c75902b064cb21fcc1f86fa753cfa45656703a7aa0ea2d52155f6331",
+    "build": "b600d74a3bfd8a5c4eea9737997e035b6f29acdb7e804430652630a9fea00303",
+    "device": "75f5e4a0916faf645e7a92e8a00e80bad66985c1e4910a46c4f1c73c012e5939",
+    "device-final": "af9bc8b00220f857265c9adda2f7489eece7263a5612926ac1fec21d8194ba44"
+  },
+  "initial_device_attempt": "failed: test incorrectly included NAME overlap in empty TEXT background; corrected geometry and full rerun passed",
+  "ui_automation": "four bounded retries for null root node in final run; final assertions all executed",
+  "apk_source_note": "Only unit-test assertions and verifier/docs changed after APK build; production sources unchanged."
+}

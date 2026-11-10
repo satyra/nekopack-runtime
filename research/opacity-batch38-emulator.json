@@ -1,0 +1,105 @@
+{
+  "execution": "translated ARM64 on x86_64",
+  "machine": "x86_64",
+  "native_bridge": "libnb.so",
+  "apk_sha256": "8ba99e0b090e5811a993f29bb834bbcc42701ff4c19b92691cb6d1bc496bcb9b",
+  "runs": [
+    "edit_0fbf4742769e44b68d3272dc19a49a5c",
+    "edit_e8cb2f9eb7434ec2b1857fcd9f92c047",
+    "edit_877f2777c3c44cdcb885be060d29efe4",
+    "edit_68b0e671819e4e9e9cf76a9490d805d1",
+    "edit_e4855fbac9a14db5b48158c60db3c704",
+    "edit_926c77cae7764df3b0aceca9f2f8a683",
+    "edit_ceea2dd54cc645be8843ed314c36aab2",
+    "edit_8406af9bbfbd44a29cfa4e1287bce5e0",
+    "edit_ef155b2b48454ad9b8ecdc834e22f4f2",
+    "edit_f8c8f4a93b864a98819c9ea9bfad3b0a"
+  ],
+  "all_five_pages": {
+    "1": "b397ef0ccac332ff845500ebaaad5e76ae6415500ad56cc018410a3169b237dc",
+    "2": "35e916e04b48c31adb51f0b6ec2ae6433f521b17e1562143d9bdb569807e476a",
+    "3": "e4e21a6eb3b7ccfa63b88ba7544ba161f2facd9a45f2c670acad1e0cc4e70d29",
+    "4": "43b8aa59c00a0d566466124913c920aa2d7174c9ecd16f618785e53e19939b63",
+    "5": "418020641679051e21f20f4267ca60ba00c5dcc71d6d371c608af0dec840a64c"
+  },
+  "popup_pixels_equal": true,
+  "all_ten_slots_checked": true,
+  "all_ten_actions_checked": true,
+  "clear_persists": true,
+  "cancel_and_drag_out_preserve": true,
+  "modal_blocks_underlying_controls": true,
+  "home_restores_popup": true,
+  "restart_bindings": [
+    "AUTO",
+    "QUIT",
+    "SAVE",
+    "LOAD",
+    "QSAVE",
+    "QLOAD",
+    "LOG",
+    "HIDE",
+    "AUTO",
+    ""
+  ],
+  "other_preferences_unchanged": {
+    "TextSpeed": 50,
+    "KeepVoice": 1,
+    "VolBGM": 50,
+    "VolVO": 75,
+    "VolSE": 50,
+    "VolENV": 50,
+    "VolSYS": 50,
+    "BoxOpacity": 191
+  },
+  "restored_bindings": [
+    "RESET",
+    "QUIT",
+    "SAVE",
+    "LOAD",
+    "QSAVE",
+    "QLOAD",
+    "LOG",
+    "HIDE",
+    "AUTO",
+    "SKIP"
+  ],
+  "story_pages": [
+    1,
+    2,
+    3
+  ],
+  "closed_vm_live_bytes": 0,
+  "ui_retries": [
+    "",
+    "",
+    "",
+    ""
+  ],
+  "opacity_checks": [
+    {
+      "requested": 0,
+      "actual": 0,
+      "restart_preserved": true,
+      "body_below_name_pixels_equal": true,
+      "text_visible": true,
+      "scene_unchanged": true
+    },
+    {
+      "requested": 127,
+      "actual": 127,
+      "restart_preserved": true,
+      "body_below_name_pixels_equal": true,
+      "text_visible": true,
+      "scene_unchanged": true
+    },
+    {
+      "requested": 255,
+      "actual": 255,
+      "restart_preserved": true,
+      "body_below_name_pixels_equal": true,
+      "text_visible": true,
+      "scene_unchanged": true
+    }
+  ],
+  "scope": "binding edit/storage only; not a claim of executing all keyboard actions; static sample preview on page2"
+}

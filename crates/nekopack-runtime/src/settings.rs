@@ -134,7 +134,7 @@ impl Settings {
                     }
                 }
             } else {
-                for (suffix, value) in [("--", 0), ("++", 100)] {
+                for (suffix, value) in [("--", 0), ("++", preferences::maximum(i))] {
                     if self.hit_image(&format!("* {name}{suffix}"), x, y) {
                         return Some(Control::Edge(i, value));
                     }
@@ -156,7 +156,12 @@ impl Settings {
         preferences::set(
             vm,
             i,
-            slider_value(x, area.position[0], area.pixels.width()),
+            slider_value(
+                x,
+                area.position[0],
+                area.pixels.width(),
+                preferences::maximum(i),
+            ),
         )
     }
     /// Returns a requested page; page resource replacement is owned by the session.
@@ -387,8 +392,9 @@ fn normalize(raw: &str) -> String {
         raw.into()
     }
 }
-fn slider_value(x: i32, left: i32, width: u32) -> i32 {
-    ((i64::from(x) - i64::from(left)) * 100 / i64::from(width)).clamp(0, 100) as i32
+fn slider_value(x: i32, left: i32, width: u32, maximum: i32) -> i32 {
+    ((i64::from(x) - i64::from(left)) * i64::from(maximum) / i64::from(width))
+        .clamp(0, i64::from(maximum)) as i32
 }
 #[cfg(test)]
 mod tests {
@@ -468,10 +474,12 @@ mod tests {
     }
     #[test]
     fn original_slider_range_and_clamping() {
-        assert_eq!(slider_value(640, 215, 850), 50);
-        assert_eq!(slider_value(-1, 215, 850), 0);
-        assert_eq!(slider_value(2000, 215, 850), 100);
-        assert_eq!(slider_value(i32::MAX, i32::MIN, 850), 100)
+        assert_eq!(slider_value(640, 215, 850, 100), 50);
+        assert_eq!(slider_value(640, 215, 850, 255), 127);
+        assert_eq!(slider_value(2000, 215, 850, 255), 255);
+        assert_eq!(slider_value(-1, 215, 850, 100), 0);
+        assert_eq!(slider_value(2000, 215, 850, 100), 100);
+        assert_eq!(slider_value(i32::MAX, i32::MIN, 850, 100), 100)
     }
     #[test]
     fn sprite_prefix_spacing_is_optional() {
