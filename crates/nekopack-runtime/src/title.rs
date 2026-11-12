@@ -1,9 +1,12 @@
 //! Interactive presentation of the observed normal-map title profile.
 //! The scenario remains pending until Start; the same machine/VM enters the story.
+mod room;
+use room::{Frame as RoomFrame, Room};
+
 use crate::{array, bootstrap_begin, bootstrap_continue, dat::DatGame, quote, story::StorySession};
 use nekopack_image::{Mng, RgbaImage};
 use nekopack_script::{
-    runtime::{Machine, Request, Step},
+    runtime::{Machine, Request, Scripts, Step},
     system::SystemVm,
 };
 use std::{
@@ -33,6 +36,10 @@ pub struct TitleSession<R: Read + Seek> {
     bases: Vec<usize>,
     buttons: Vec<Button>,
     pressed: Option<i32>,
+    room: Option<Room>,
+    room_destinations: BTreeMap<i32, String>,
+    quit_action: Option<i32>,
+    room_replay: Option<String>,
     sound_cues: Vec<crate::message_log::Cue>,
     input_sequence: u64,
     settings: Option<crate::settings::Settings>,
@@ -101,6 +108,10 @@ impl<R: Read + Seek> TitleSession<R> {
         )?);
         Ok(b"{\"prepared\":true}".to_vec())
     }
+    pub fn validate_resume(&mut self, bytes: &[u8]) -> Result<()> {
+        crate::story::saves::Saved::decode(bytes, &mut self.store, self.size, true)?;
+        Ok(())
+    }
     pub fn cancel_save(&mut self) -> Result<Vec<u8>> {
         self.save_ui = None;
         self.prepared_save = None;
@@ -114,15 +125,39 @@ impl<R: Read + Seek> TitleSession<R> {
         story.apply_saved(saved)?;
         Ok(story)
     }
-    pub fn open(mut store: DatGame<R>) -> Result<Self> {
+    pub fn open(store: DatGame<R>) -> Result<Self> {
+        Self::open_with_clear(store, false)
+    }
+    pub fn open_with_clear(store: DatGame<R>, cleared: bool) -> Result<Self> {
+        Self::open_with_progress(store, cleared, &[])
+    }
+    pub fn open_with_progress(
+        mut store: DatGame<R>,
+        cleared: bool,
+        progress: &[u8],
+    ) -> Result<Self> {
         let (mut machine, mut system) = bootstrap_begin(&mut store, 1, &mut std::io::sink(), true)?;
         let Step::Request(Request::Command { name, args, rows }) = machine.advance(&mut store)?
         else {
             return Err("title requires pending map".into());
         };
-        if name != b"map" || args.len() != 1 || args[0] != b"title" {
-            return Err("unsupported title map profile".into());
+        if name != b"map" || args.first().is_none_or(|arg| arg != b"title") {
+            return Err(format!("unsupported title map profile: {:?} {:?}", name, args).into());
         }
+        if cleared {
+            let flag = if machine.variables.get("全クリア".as_bytes()).is_ok() {
+                "全クリア"
+            } else {
+                "クリア"
+            };
+            machine.variables.set(flag.as_bytes(), 1)?;
+        }
+        if !progress.is_empty() {
+            crate::unlocks::Unlocks::decode(progress)?.apply(&mut machine.variables);
+        }
+        let (source, map_line) = machine.location().ok_or("title location missing")?;
+        let (room_destinations, quit_action) =
+            room::destinations(&store.load(source)?.bytes, map_line)?;
         system.eval_with_resources(
             "title-plan",
             &format!(
@@ -208,6 +243,10 @@ impl<R: Read + Seek> TitleSession<R> {
             bases,
             buttons,
             pressed: None,
+            room: None,
+            room_destinations,
+            quit_action,
+            room_replay: None,
             sound_cues: Vec::new(),
             input_sequence: 0,
             settings: None,
@@ -234,10 +273,11 @@ impl<R: Read + Seek> TitleSession<R> {
     pub fn pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Option<i32>> {
         self.input_sequence += 1;
         if let Some(settings) = self.settings.as_mut() {
-            let (page, cues) = settings.pointer(&mut self.system, kind, x, y)?;
-            self.sound_cues = cues;
-            if let Some(page) = page {
-                self.settings = Some(crate::settings::Settings::open(&mut self.store, page)?)
+            self.sound_cues = settings.script_input(&mut self.store, &mut self.system, kind, x, y)?;
+            if settings.take_close_request() {
+                self.settings = None;
+                self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
+                return Ok(None);
             }
             return Ok(None);
         }
@@ -245,20 +285,25 @@ impl<R: Read + Seek> TitleSession<R> {
         let action = update_pointer(&mut self.pressed, kind, hit)?;
         if action == Some(3) {
             self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
-            self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
+            self.settings = Some(crate::settings::Settings::open(&mut self.store, &mut self.system, 1)?);
             return Ok(None);
         }
         Ok(action)
     }
     pub fn packet(&mut self, action: Option<i32>) -> Result<Vec<u8>> {
+        self.packet_with_settings_format(action, false)
+    }
+
+    pub fn packet_with_settings_format(&mut self, action: Option<i32>, raw: bool) -> Result<Vec<u8>> {
         let cues = std::mem::take(&mut self.sound_cues);
         if let Some(settings) = &self.settings {
             let packet = settings.packet(
                 &mut self.system,
                 self.input_sequence,
                 self.preview_font.as_ref(),
+                raw,
             )?;
-            return Ok(crate::message_log::with_sounds(packet, &cues));
+            return crate::message_log::with_available_sounds(&mut self.store, packet, &cues);
         }
         let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
         for &i in &self.bases {
@@ -297,28 +342,31 @@ impl<R: Read + Seek> TitleSession<R> {
             .collect::<Vec<_>>()
             .join(",");
         let (source, line) = self.machine.location().ok_or("title location missing")?;
-        let mut result=format!("{{\"kind\":\"title\",\"input_sequence\":{},\"width\":{},\"height\":{},\"source\":{},\"line\":{},\"steps\":{},\"pressed\":{},\"action\":{},\"buttons\":[{}]}}\n",self.input_sequence,self.size[0],self.size[1],quote(source)?,line,self.machine.steps(),self.pressed.unwrap_or(0),action.unwrap_or(0),buttons).into_bytes();
+        let presentation = crate::preferences::presentation(&mut self.system)?;
+        let mut result=format!("{{\"kind\":\"title\",\"input_sequence\":{},\"width\":{},\"height\":{},\"source\":{},\"line\":{},\"steps\":{},\"pressed\":{},\"action\":{},\"chinese_scenario\":{},\"quit_action\":{},\"room_action\":{},\"replay_action\":{},\"buttons\":[{}]{presentation}}}\n",self.input_sequence,self.size[0],self.size[1],quote(source)?,line,self.machine.steps(),self.pressed.unwrap_or(0),action.unwrap_or(0),
+            self.store.has_chinese_scenario_patch(),
+            self.quit_action.unwrap_or(0),
+            action.is_some_and(|id| self.room_destinations.contains_key(&id)),
+            self.room_destinations.iter().find_map(|(id, name)| (name == "scene").then_some(*id)).unwrap_or(0),
+            buttons).into_bytes();
         canvas.write_png(&mut result)?;
         Ok(crate::message_log::with_sounds(result, &cues))
     }
     pub fn settings_command(&mut self, command: u64) -> Result<Vec<u8>> {
-        if self.settings.is_none() {
-            return Err("settings are not open".into());
-        }
-        match command {
-            0 => {
-                if !self.settings.as_mut().unwrap().cancel_popup() {
-                    self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
-                    self.settings = None
-                }
-            }
-            1 => {
-                self.settings.as_mut().unwrap().cancel_popup();
-                crate::preferences::reset(&mut self.system)?
-            }
-            _ => return Err("unknown settings command".into()),
+        let settings = self.settings.as_mut().ok_or("settings are not open")?;
+        self.sound_cues = settings.script_command(&mut self.store, &mut self.system, command)?;
+        if settings.take_close_request() {
+            self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
+            self.settings = None;
         }
         self.input_sequence += 1;
+        self.packet(None)
+    }
+    pub fn settings_tick(&mut self, elapsed: u64) -> Result<Vec<u8>> {
+        let Some(settings) = self.settings.as_mut().filter(|settings| settings.tick_delay() > 0) else {
+            return Ok(Vec::new());
+        };
+        self.sound_cues = settings.tick(&mut self.store, &mut self.system, elapsed)?;
         self.packet(None)
     }
     pub fn install_settings_font(&mut self, bytes: Vec<u8>, index: u32) -> Result<()> {
@@ -330,6 +378,77 @@ impl<R: Read + Seek> TitleSession<R> {
     }
     pub fn import_preferences(&mut self, bytes: &[u8]) -> Result<()> {
         crate::preferences::import(&mut self.system, bytes)
+    }
+    fn require_room(&self, action: i32) -> Result<()> {
+        if self
+            .buttons
+            .iter()
+            .any(|button| button.id == action && button.enabled)
+        {
+            Ok(())
+        } else {
+            Err("room is locked".into())
+        }
+    }
+    pub fn open_room(&mut self, id: u64) -> Result<Vec<u8>> {
+        let id = i32::try_from(id)?;
+        self.require_room(id)?;
+        let name = self
+            .room_destinations
+            .get(&id)
+            .ok_or("missing room destination")?;
+        let (room, frame) = Room::open(
+            &mut self.system,
+            &mut self.machine.variables,
+            &mut self.store,
+            name,
+            self.size,
+        )?;
+        self.room = Some(room);
+        Ok(self.room_frame(frame))
+    }
+    pub fn room_input(&mut self, kind: i32, x: i32, y: i32) -> Result<Vec<u8>> {
+        let frame = self.room.as_mut().ok_or("no open room")?.input(
+            &mut self.system,
+            &mut self.machine.variables,
+            &mut self.store,
+            kind,
+            [x, y],
+        )?;
+        Ok(self.room_frame(frame))
+    }
+    fn room_frame(&mut self, outcome: room::Outcome) -> Vec<u8> {
+        let mut packet = match outcome.frame {
+            RoomFrame::Packet(packet) => packet,
+            RoomFrame::Closed => {
+                self.room = None;
+                br#"{"kind":"room_closed"}"#.to_vec()
+            }
+            RoomFrame::Replay(name) => {
+                self.room = None;
+                self.room_replay = Some(name);
+                br#"{"kind":"room_replay"}"#.to_vec()
+            }
+        };
+        if outcome.stop_music {
+            let mut with_stop = br#"{"stop_music":true,"#.to_vec();
+            with_stop.extend_from_slice(&packet[1..]);
+            packet = with_stop;
+        }
+        if outcome.sounds.is_empty() {
+            packet
+        } else {
+            crate::message_log::with_sounds(packet, &outcome.sounds)
+        }
+    }
+    pub fn replay(mut self) -> Result<StorySession<R>> {
+        let name = self.room_replay.take().ok_or("no pending room replay")?;
+        let source = self.store.load(name.as_bytes())?;
+        let mut machine = Machine::new(source, 100_000, 32);
+        machine.variables = self.machine.variables;
+        let mut story = StorySession::from_bootstrap(self.store, machine, self.system)?;
+        story.mark_replay();
+        Ok(story)
     }
     pub fn start(mut self) -> Result<StorySession<R>> {
         // Dispatch the real .map handler with ID 1; no manual PC/branch manipulation.

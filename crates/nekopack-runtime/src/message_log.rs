@@ -304,6 +304,33 @@ pub(crate) fn with_sounds(packet: Vec<u8>, cues: &[Cue]) -> Vec<u8> {
     out.extend_from_slice(&packet[1..]);
     out
 }
+pub(crate) fn available_ui_sound<R: Read + Seek>(
+    store: &mut DatGame<R>,
+    id: u8,
+) -> Result<Option<u8>> {
+    let file = format!("{}.ogg", ui_sound_name(u64::from(id))?);
+    if store.has_resource("sound/se", &file)? {
+        return Ok(Some(id));
+    }
+    if matches!(id, 3 | 4) && store.has_resource("sound/se", "se_CLICK.ogg")? {
+        return Ok(Some(2));
+    }
+    Ok(None)
+}
+
+pub(crate) fn with_available_sounds<R: Read + Seek>(
+    store: &mut DatGame<R>,
+    packet: Vec<u8>,
+    cues: &[Cue],
+) -> Result<Vec<u8>> {
+    let mut available = Vec::new();
+    for &(id, volume) in cues {
+        if let Some(id) = available_ui_sound(store, id)? {
+            available.push((id, volume));
+        }
+    }
+    Ok(with_sounds(packet, &available))
+}
 pub(crate) fn sound_at<R: Read + Seek>(
     store: &mut DatGame<R>,
     id: u64,
@@ -312,13 +339,23 @@ pub(crate) fn sound_at<R: Read + Seek>(
     if !(0..=100).contains(&volume) {
         return Err("invalid UI sound volume".into());
     }
-    let name = match id {
-        1 => "se_PAGE",
-        2 => "se_CLICK",
-        3 => "se_OK",
-        _ => return Err("unknown UI sound".into()),
-    };
-    audio_packet(store, "system", "sound/se", name, volume as u32)
+    audio_packet(
+        store,
+        "system",
+        "sound/se",
+        ui_sound_name(id)?,
+        volume as u32,
+    )
+}
+
+pub(crate) fn ui_sound_name(id: u64) -> Result<&'static str> {
+    match id {
+        1 => Ok("se_PAGE"),
+        2 => Ok("se_CLICK"),
+        3 => Ok("se_OK"),
+        4 => Ok("se_SELECT"),
+        _ => Err("unknown UI sound".into()),
+    }
 }
 
 #[cfg(test)]

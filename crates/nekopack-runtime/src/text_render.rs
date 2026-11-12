@@ -1,6 +1,6 @@
 //! Ordinary Unicode dialogue overlay. Resource geometry and font bytes are host-independent.
 //! Includes the evidenced NekoPack punctuation wrapping rules, not a general kinsoku engine.
-use ab_glyph::{point, Font, FontVec};
+use ab_glyph::{Font, FontVec, point};
 use nekopack_image::{Mng, RgbaImage};
 use std::{error::Error, sync::Arc};
 const BUDGET: usize = 16 * 1024 * 1024;
@@ -176,6 +176,7 @@ pub struct DialogueRenderer {
     bounds: [i32; 4],
     name: Panel,
     text: Panel,
+    shared_box: bool,
     border: bool,
     bold: bool,
     page: Option<Prepared>,
@@ -275,30 +276,23 @@ impl DialogueRenderer {
         let size = [parsed.header[0], parsed.header[1]];
         RgbaImage::transparent(size[0], size[1], BUDGET)?;
         let sprites = parsed.sprites()?;
-        let panel = |name: &[u8], anchor: &[u8]| -> Result<Panel> {
-            let find = |key: &[u8]| -> Result<usize> {
-                let found: Vec<_> = sprites
-                    .iter()
-                    .enumerate()
-                    .filter(|(_, s)| s.name == key)
-                    .map(|(i, _)| i)
-                    .collect();
-                if found.len() != 1 {
-                    return Err("missing or ambiguous dialogue sprite".into());
-                }
-                Ok(found[0])
-            };
-            let i = find(name)?;
+        let find = |key: &[u8]| -> Result<usize> {
+            let mut matches = sprites.iter().enumerate().filter(|(_, s)| s.name == key);
+            match (matches.next(), matches.next()) {
+                (Some((i, _)), None) => Ok(i),
+                _ => Err("missing or ambiguous dialogue sprite".into()),
+            }
+        };
+        let decode = |i: usize| parsed.decode_image(sprites[i].ordinal, BUDGET);
+        let panel = |image: RgbaImage, position: [i32; 2], anchor: &[u8]| -> Result<Panel> {
             let j = find(anchor)?;
-            let mut image = parsed.decode_image(sprites[i].ordinal, BUDGET)?;
-            box_opacity(&mut image, opacity);
-            let area = parsed.decode_image(sprites[j].ordinal, BUDGET)?;
+            let area = decode(j)?;
             let origin = [
                 sprites[j].position[0]
-                    .checked_sub(sprites[i].position[0])
+                    .checked_sub(position[0])
                     .ok_or("dialogue anchor x overflow")?,
                 sprites[j].position[1]
-                    .checked_sub(sprites[i].position[1])
+                    .checked_sub(position[1])
                     .ok_or("dialogue anchor y overflow")?,
             ];
             if origin[0] < 0
@@ -311,13 +305,50 @@ impl DialogueRenderer {
             }
             Ok(Panel {
                 image,
-                position: sprites[i].position,
+                position,
                 origin,
                 width: area.width() as i32,
             })
         };
-        let name = panel(b"NAME", b"*NAME")?;
-        let text = panel(b"TEXT", b"*TEXT")?;
+        let shared_box = sprites.iter().any(|sprite| sprite.name == b"BASE");
+        let (name, text) = if shared_box {
+            let base = find(b"BASE")?;
+            let frame = find(b"FRAME")?;
+            let name = find(b"*NAME")?;
+            let [bx, by] = sprites[base].position;
+            let [fx, fy] = sprites[frame].position;
+            let [x, y] = [bx.min(fx), by.min(fy)];
+            let mut base_image = decode(base)?;
+            let frame_image = decode(frame)?;
+            let right = (i64::from(bx) + i64::from(base_image.width()))
+                .max(i64::from(fx) + i64::from(frame_image.width()))
+                .min(i64::from(size[0]));
+            let bottom = (i64::from(by) + i64::from(base_image.height()))
+                .max(i64::from(fy) + i64::from(frame_image.height()))
+                .min(i64::from(size[1]));
+            if x < 0 || y < 0 || right <= i64::from(x) || bottom <= i64::from(y) {
+                return Err("invalid shared dialogue box bounds".into());
+            }
+            let mut box_image =
+                RgbaImage::transparent(right as u32 - x as u32, bottom as u32 - y as u32, BUDGET)?;
+            box_opacity(&mut base_image, opacity);
+            box_image.draw(&base_image, [bx - x, by - y]);
+            box_image.draw(&frame_image, [fx - x, fy - y]);
+            let area = decode(name)?;
+            let name_image = RgbaImage::transparent(area.width(), area.height(), BUDGET)?;
+            (
+                panel(name_image, sprites[name].position, b"*NAME")?,
+                panel(box_image, [x, y], b"*TEXT")?,
+            )
+        } else {
+            let classic = |key: &[u8], anchor: &[u8]| {
+                let i = find(key)?;
+                let mut image = decode(i)?;
+                box_opacity(&mut image, opacity);
+                panel(image, sprites[i].position, anchor)
+            };
+            (classic(b"NAME", b"*NAME")?, classic(b"TEXT", b"*TEXT")?)
+        };
         let x = name.position[0].min(text.position[0]);
         let y = name.position[1].min(text.position[1]);
         let edge = |position: i32, extent: u32| {
@@ -338,6 +369,7 @@ impl DialogueRenderer {
             bounds: [x, y, right - x, bottom - y],
             name,
             text,
+            shared_box,
             border,
             bold,
             page: None,
@@ -354,7 +386,11 @@ impl DialogueRenderer {
         let scale = font.height_unscaled() * factor;
         let baseline = font.ascent_unscaled() * factor;
         let mut advances = Vec::new();
-        for ch in text.chars() {
+        let display_chars: Vec<_> = text
+            .chars()
+            .map(|ch| if ch == '\t' { ' ' } else { ch })
+            .collect();
+        for &ch in &display_chars {
             if ch == '\n' {
                 advances.push(None);
                 continue;
@@ -368,10 +404,10 @@ impl DialogueRenderer {
             }
             advances.push(Some((font.h_advance_unscaled(id) * factor).round() as i32));
         }
-        let locations = positions(&text.chars().collect::<Vec<_>>(), &advances, width, 30)?;
+        let locations = positions(&display_chars, &advances, width, 30)?;
         let mut used = 0usize;
-        let glyphs = text
-            .chars()
+        let glyphs = display_chars
+            .into_iter()
             .zip(locations.iter().copied())
             .map(|(ch, [x, y])| {
                 if ch == '\n' {
@@ -466,22 +502,9 @@ impl DialogueRenderer {
     }
     /// Rebuild from original DAT pixels; never multiply an already faded panel.
     pub(crate) fn set_style(&mut self, mng: &[u8], style: TextStyle) -> Result<()> {
-        let opacity = style.opacity;
-        let parsed = Mng::parse(mng, 4096)?;
-        let sprites = parsed.sprites()?;
-        let decode = |name: &[u8]| -> Result<RgbaImage> {
-            let sprite = sprites
-                .iter()
-                .find(|s| s.name == name)
-                .ok_or("missing dialogue panel")?;
-            let mut image = parsed.decode_image(sprite.ordinal, BUDGET)?;
-            box_opacity(&mut image, opacity);
-            Ok(image)
-        };
-        let name = decode(b"NAME")?;
-        let text = decode(b"TEXT")?;
-        self.name.image = name;
-        self.text.image = text;
+        let updated = Self::with_font(self.font.clone(), mng, style)?;
+        self.name = updated.name;
+        self.text = updated.text;
         self.bold = style.bold;
         self.border = style.border;
         Ok(())
@@ -550,26 +573,26 @@ impl DialogueRenderer {
         });
         Ok(())
     }
-    pub fn frame(&mut self, sequence: u64, visible: usize) -> Result<Vec<u8>> {
-        let page = self.page.as_mut().ok_or("no prepared dialogue image")?;
+    pub(crate) fn frame_pixels(&self, sequence: u64, visible: usize) -> Result<RgbaImage> {
+        let page = self.page.as_ref().ok_or("no prepared dialogue image")?;
         if page.sequence != sequence || visible > page.glyphs.len() {
             return Err("stale or invalid dialogue image frame".into());
         }
-        if page.visible != Some(visible) {
-            let mut image =
-                RgbaImage::transparent(self.bounds[2] as u32, self.bounds[3] as u32, BUDGET)?;
-            let mut text = RgbaImage::from_rgba(
-                self.text.image.width(),
-                self.text.image.height(),
-                self.text.image.pixels().to_vec(),
-                BUDGET,
-            )?;
-            Self::draw_glyphs(
-                &mut text,
-                &page.glyphs[..visible],
-                self.text.origin,
-                self.border,
-            );
+        let mut image =
+            RgbaImage::transparent(self.bounds[2] as u32, self.bounds[3] as u32, BUDGET)?;
+        let mut text = RgbaImage::from_rgba(
+            self.text.image.width(),
+            self.text.image.height(),
+            self.text.image.pixels().to_vec(),
+            BUDGET,
+        )?;
+        Self::draw_glyphs(
+            &mut text,
+            &page.glyphs[..visible],
+            self.text.origin,
+            self.border,
+        );
+        let draw_name = |image: &mut RgbaImage| {
             if let Some(name) = &page.name {
                 image.draw(
                     name,
@@ -579,22 +602,57 @@ impl DialogueRenderer {
                     ],
                 );
             }
-            image.draw(
-                &text,
-                [
-                    self.text.position[0] - self.bounds[0],
-                    self.text.position[1] - self.bounds[1],
-                ],
-            );
+        };
+        if !self.shared_box {
+            draw_name(&mut image);
+        }
+        image.draw(
+            &text,
+            [
+                self.text.position[0] - self.bounds[0],
+                self.text.position[1] - self.bounds[1],
+            ],
+        );
+        if self.shared_box {
+            draw_name(&mut image);
+        }
+        Ok(image)
+    }
+
+    pub fn frame(&mut self, sequence: u64, visible: usize) -> Result<Vec<u8>> {
+        let page = self.page.as_ref().ok_or("no prepared dialogue image")?;
+        if page.sequence != sequence || page.visible != Some(visible) {
+            let image = self.frame_pixels(sequence, visible)?;
+            let page = self.page.as_mut().unwrap();
             page.png.clear();
             image.write_png(&mut page.png)?;
             page.visible = Some(visible);
         }
-        Ok(page.png.clone())
+        Ok(self.page.as_ref().unwrap().png.clone())
     }
     pub fn metadata(&self) -> Result<String> {
         let p = self.page.as_ref().ok_or("no prepared dialogue image")?;
-        Ok(format!("{{\"sequence\":{},\"size\":[{},{}],\"bounds\":[{},{},{},{}],\"font_size\":22,\"line_span\":8,\"lines\":{},\"clipped\":{},\"origins\":{:?},\"text_rect\":[{},{},{},{}],\"name_rect\":[{},{},{},{}]}}",p.sequence,self.size[0],self.size[1],self.bounds[0],self.bounds[1],self.bounds[2],self.bounds[3],p.lines,p.clipped,p.origins,self.text.position[0],self.text.position[1],self.text.image.width(),self.text.image.height(),self.name.position[0],self.name.position[1],self.name.image.width(),self.name.image.height()))
+        Ok(format!(
+            "{{\"sequence\":{},\"size\":[{},{}],\"bounds\":[{},{},{},{}],\"font_size\":22,\"line_span\":8,\"lines\":{},\"clipped\":{},\"origins\":{:?},\"text_rect\":[{},{},{},{}],\"name_rect\":[{},{},{},{}]}}",
+            p.sequence,
+            self.size[0],
+            self.size[1],
+            self.bounds[0],
+            self.bounds[1],
+            self.bounds[2],
+            self.bounds[3],
+            p.lines,
+            p.clipped,
+            p.origins,
+            self.text.position[0],
+            self.text.position[1],
+            self.text.image.width(),
+            self.text.image.height(),
+            self.name.position[0],
+            self.name.position[1],
+            self.name.image.width(),
+            self.name.image.height()
+        ))
     }
 }
 

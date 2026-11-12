@@ -8,8 +8,9 @@ foreach(i,item in TitleRows){
     local name=p[0]
     local enabled=p.len()>1 ? FlagCheck(p[1]) : true
     local active=p.len()>2 ? FlagCheck(p[2]) : false
-    if(name[0]==64){if(enabled)bases.append(images[name]);continue}
-    if(!spots.Bind(name,i+1))throw "title button asset missing"
+    if(name[0]==64){if(enabled && name in images)bases.append(images[name]);continue}
+    if(name=="デバッグ" && !(name in spots.items))continue
+    if(!spots.Bind(name,i+1))throw "title button asset missing: "+name
     spots.Enable(i+1,enabled)
     spots.Active(i+1,active)
 }

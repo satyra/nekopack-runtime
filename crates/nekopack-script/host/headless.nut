@@ -17,6 +17,11 @@ function title(text) { Host.caption=text }
 function ini(name) { return Ini[name] }
 function data(name) { return Data[name] }
 function SavePath(name) { return name }
+// The script filesystem contains no Windows-format saves. Android slots are managed by the host.
+function EnumFiles(path, pattern) {
+    if(path=="" && pattern=="save*.sav")return []
+    throw "unsupported script file enumeration"
+}
 function file(name,mode) { throw "headless profile is empty; file IO is unavailable" }
 function RestoreVolume() { Host.volumes <- [Config.VolBGM,Config.VolVO,Config.VolSE,Config.VolENV,Config.VolSYS] }
 function RestoreScreen() { Host.screen=Config.Screen }
@@ -25,6 +30,19 @@ function CancelAuto() { Host.auto_mode=false }
 function InSkip() { return Host.skip }
 function InAuto() { return Host.auto_mode }
 function InRestore() { return false }
+// The Rust scenario machine owns script state across system calls.
+function ScriptReset() {}
+function ImageAction(words) { Host.actor_action <- words }
+function replace(text,needle,value) {
+    if(!needle.len())throw "empty replacement pattern"
+    local result="", start=0
+    while(true){
+        local next=text.find(needle,start)
+        if(next==null)return result+text.slice(start)
+        result+=text.slice(start,next)+value
+        start=next+needle.len()
+    }
+}
 function sound(name) { Host.sounds.append(name) }
 function wait(time) {
     if(time<0)throw "headless input exhausted"
@@ -35,6 +53,7 @@ function event() { return ID_OK }
 function NativeCommand(name,args) {
     if(name=="img")Host.image <- clone args
     else if(name=="bgm")Host.bgm <- clone args
+    else if(name=="se" || name=="env"){}
     else if(name=="wait" || name=="fade") {
         if(args.len()!=1)throw "timing command requires one duration"
         Host.clock+=args[0].tointeger()
@@ -130,6 +149,14 @@ class Spots {
             return false }
         items[name].id=id
         return true
+    }
+    function BindR(name,id) {
+        local key=name.tolower()
+        foreach(label,spot in items){
+            if(label.tolower()==key){spot.id=id;return true}
+        }
+        Host.missing_spots.append(name)
+        return false
     }
     function Enable(id,value) { foreach(spot in items)if(spot.id==id)spot.enabled=value }
     function Active(id,value=true) { foreach(spot in items)if(spot.id==id)spot.selected=value }

@@ -15,6 +15,10 @@ const BUDGET: usize = 32 * 1024 * 1024;
 const ACTIONS: [&str; 8] = [
     "QSAVE", "QLOAD", "SAVE", "LOAD", "AUTO", "SKIP", "LOG", "CONFIG",
 ];
+const INLINE_ACTIONS: [&str; 12] = [
+    "SAVE", "LOAD", "QSAVE", "QLOAD", "AUTO", "SKIP", "LOG", "VOICE", "CONFIG", "RESET", "HIDE",
+    "QUIT",
+];
 struct Sprite {
     image: RgbaImage,
     position: [i32; 2],
@@ -24,13 +28,24 @@ pub(crate) struct SideMenu {
     images: BTreeMap<String, Sprite>,
     size: [u32; 2],
     quick: bool,
+    inline: bool,
+    in_route: bool,
+    voice: bool,
     popup: bool,
+    keep_icon: bool,
     pressed: Option<i32>,
     hover: Option<i32>,
     sequence: u64,
 }
 impl SideMenu {
-    pub fn open<R: Read + Seek>(store: &mut DatGame<R>, quick: bool, popup: bool) -> Result<Self> {
+    pub fn open<R: Read + Seek>(
+        store: &mut DatGame<R>,
+        quick: bool,
+        popup: bool,
+        keep_icon: bool,
+        in_route: bool,
+        voice: bool,
+    ) -> Result<Self> {
         let bytes = store.read("system", "shortcut.mng")?;
         let mng = Mng::parse(&bytes, 100000)?;
         let size = [mng.header[0], mng.header[1]];
@@ -42,7 +57,8 @@ impl SideMenu {
             let name = crate::dat::decode(sprite.name)?
                 .split_whitespace()
                 .collect::<Vec<_>>()
-                .join(" ");
+                .join(" ")
+                .to_ascii_uppercase();
             let image = mng.decode_image(sprite.ordinal, BUDGET - retained)?;
             retained += image.pixels().len();
             images.insert(
@@ -53,31 +69,65 @@ impl SideMenu {
                 },
             );
         }
-        for name in ["* BASE".to_string(), "- QLOAD".into()].into_iter().chain(
-            ACTIONS
-                .iter()
-                .enumerate()
-                .flat_map(|(i, a)| [format!("= {a}"), format!("SLOT{i}"), a.to_string()]),
-        ) {
-            if !images.contains_key(&name) {
-                return Err(format!("missing side menu sprite {name}").into());
+        let inline = images.contains_key("*HOTSPOT");
+        if inline {
+            for action in INLINE_ACTIONS {
+                for prefix in ["=", "+", "-"] {
+                    let name = format!("{prefix} {action}");
+                    if !images.contains_key(&name) {
+                        return Err(format!("missing shortcut sprite {name}").into());
+                    }
+                }
+            }
+        } else {
+            for name in ["* BASE".to_string(), "- QLOAD".into()].into_iter().chain(
+                ACTIONS
+                    .iter()
+                    .enumerate()
+                    .flat_map(|(i, a)| [format!("= {a}"), format!("SLOT{i}"), a.to_string()]),
+            ) {
+                if !images.contains_key(&name) {
+                    return Err(format!("missing side menu sprite {name}").into());
+                }
             }
         }
         Ok(Self {
             images,
             size,
             quick,
+            inline,
+            in_route,
+            voice,
             popup,
+            keep_icon,
             pressed: None,
             hover: None,
             sequence: 0,
         })
     }
+    fn actions(&self) -> &[&str] {
+        if self.inline {
+            &INLINE_ACTIONS
+        } else {
+            &ACTIONS
+        }
+    }
     fn enabled(&self, i: usize) -> bool {
-        i != 1 || self.quick
+        let action = self.actions()[i];
+        match action {
+            "QLOAD" => self.quick,
+            "SAVE" | "QSAVE" if self.inline => self.in_route,
+            "VOICE" => self.voice,
+            _ => true,
+        }
     }
     fn bounds(&self, i: usize) -> [i32; 4] {
-        let s = &self.images[&format!("SLOT{i}")];
+        let key = if self.inline {
+            format!("= {}", self.actions()[i])
+        } else {
+            format!("SLOT{i}")
+        };
+        let s = &self.images[&key];
         [
             s.position[0],
             s.position[1],
@@ -86,7 +136,7 @@ impl SideMenu {
         ]
     }
     pub fn pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Vec<u8>> {
-        let hit = (0..8)
+        let hit = (0..self.actions().len())
             .find(|i| {
                 let b = self.bounds(*i);
                 self.enabled(*i) && contains([b[0], b[1]], [b[2] as u32, b[3] as u32], [x, y])
@@ -99,19 +149,28 @@ impl SideMenu {
             update_pointer(&mut self.pressed, kind, hit)?
         };
         self.sequence += 1;
-        self.packet(action.map(|i| ACTIONS[i as usize]).unwrap_or(""))
+        self.packet(action.map(|i| self.actions()[i as usize]).unwrap_or(""))
     }
     pub fn packet(&self, action: &str) -> Result<Vec<u8>> {
         let mut image = RgbaImage::transparent(self.size[0], self.size[1], BUDGET)?;
         let mut buttons = Vec::new();
-        for (i, name) in ACTIONS.iter().enumerate() {
+        for (i, name) in self.actions().iter().enumerate() {
             let b = self.bounds(i);
             let enabled = self.enabled(i);
-            let sprite = &self.images[&format!("{} {name}", if enabled { "=" } else { "-" })];
-            image.draw(
-                &sprite.image,
-                [b[0] + sprite.position[0], b[1] + sprite.position[1]],
-            );
+            let prefix = if !enabled {
+                "-"
+            } else if self.inline && self.hover == Some(i as i32) {
+                "+"
+            } else {
+                "="
+            };
+            let sprite = &self.images[&format!("{prefix} {name}")];
+            let position = if self.inline {
+                sprite.position
+            } else {
+                [b[0] + sprite.position[0], b[1] + sprite.position[1]]
+            };
+            image.draw(&sprite.image, position);
             buttons.push(format!(
                 "{{\"action\":{},\"enabled\":{enabled},\"supported\":{},\"bounds\":[{},{},{},{}]}}",
                 quote(name.as_bytes())?,
@@ -122,15 +181,25 @@ impl SideMenu {
                 b[3]
             ));
         }
-        if self.popup {
-            if let Some(i) = self.hover {
-                let b = self.bounds(i as usize);
-                let p = &self.images[ACTIONS[i as usize]];
-                image.draw(&p.image, [b[0] + p.position[0], b[1] + p.position[1]]);
+        let mut tooltip = "";
+        if let Some(i) = self.hover.filter(|_| self.popup) {
+            let i = i as usize;
+            let action = self.actions()[i];
+            if self.inline {
+                if let Some(sprite) = self.images.get(&format!("? {action}")) {
+                    image.draw(&sprite.image, sprite.position);
+                    tooltip = action;
+                }
+            } else {
+                let b = self.bounds(i);
+                let sprite = &self.images[action];
+                image.draw(&sprite.image, [b[0] + sprite.position[0], b[1] + sprite.position[1]]);
+                tooltip = action;
             }
         }
-        let base = &self.images["* BASE"];
-        let mut out=format!("{{\"kind\":\"side_menu\",\"size\":[{},{}],\"bounds\":[{},{},{},{}],\"input_sequence\":{},\"action\":{},\"buttons\":[{}]}}\n",self.size[0],self.size[1],base.position[0],base.position[1],base.image.width(),base.image.height(),self.sequence,quote(action.as_bytes())?,buttons.join(",")).into_bytes();
+        let keep_icon = self.inline && self.keep_icon;
+        let base = &self.images[if self.inline { "*HOTSPOT" } else { "* BASE" }];
+        let mut out=format!("{{\"kind\":\"side_menu\",\"size\":[{},{}],\"bounds\":[{},{},{},{}],\"input_sequence\":{},\"action\":{},\"buttons\":[{}],\"keep_icon\":{keep_icon},\"tooltip\":\"{tooltip}\"}}\n",self.size[0],self.size[1],base.position[0],base.position[1],base.image.width(),base.image.height(),self.sequence,quote(action.as_bytes())?,buttons.join(",")).into_bytes();
         image.write_png(&mut out)?;
         Ok(out)
     }
@@ -162,7 +231,11 @@ mod tests {
             images,
             size: [200, 100],
             quick: false,
+            inline: false,
+            in_route: true,
+            voice: false,
             popup: true,
+            keep_icon: false,
             pressed: None,
             hover: None,
             sequence: 0,

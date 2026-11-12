@@ -1,5 +1,5 @@
 //! Cooperative script state. Host effects are acknowledged before the PC advances.
-use crate::{parse_bootstrap, Statement};
+use crate::{Statement, parse_bootstrap};
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -15,6 +15,37 @@ pub struct Variables {
 impl Variables {
     pub fn slots(&self) -> &BTreeMap<(u8, u32), i32> {
         &self.slots
+    }
+    pub fn unlock_slots(&self) -> impl Iterator<Item = (u8, u32)> + '_ {
+        self.names.iter().filter_map(|(name, value)| match value {
+            Value::Slot(b'F', index) => Some((b'F', *index)),
+            Value::Slot(b'G', index) if (900..=904).contains(index) || name.starts_with(b"_") => {
+                Some((b'G', *index))
+            }
+            _ => None,
+        })
+    }
+    pub fn restore_unlock(&mut self, bank: u8, index: u32) {
+        if let Some(value) = self.slots.get_mut(&(bank, index)) {
+            if *value == 0 {
+                *value = 1;
+            }
+        }
+    }
+    pub fn unlock_visual(&mut self, visual: &[u8]) {
+        let slot = self.names.iter().find_map(|(name, value)| match value {
+            Value::Slot(b'F', index)
+                if name
+                    .strip_prefix(b"@")
+                    .is_some_and(|name| name.eq_ignore_ascii_case(visual)) =>
+            {
+                Some(*index)
+            }
+            _ => None,
+        });
+        if let Some(index) = slot {
+            self.restore_unlock(b'F', index);
+        }
     }
     pub fn define_constant(&mut self, name: &[u8], value: i32) -> Result<(), String> {
         if name.is_empty() || name.contains(&0) {
@@ -332,6 +363,9 @@ impl Machine {
     pub fn depth(&self) -> usize {
         self.stack.len()
     }
+    pub fn set_step_budget(&mut self, max_steps: usize) {
+        self.max_steps = max_steps;
+    }
     pub fn steps(&self) -> usize {
         self.steps
     }
@@ -356,7 +390,102 @@ impl Machine {
                 frame.pc += 1;
                 continue;
             }
+            if let Some(name) = raw
+                .strip_prefix(b"?")
+                .map(<[u8]>::trim_ascii)
+                .filter(|name| {
+                    !name.is_empty()
+                        && !name
+                            .iter()
+                            .any(|byte| byte.is_ascii_whitespace() || *byte == b'=')
+                })
+            {
+                self.variables.get(name)?;
+                frame.pc += 1;
+                continue;
+            }
+            if self.dialogue {
+                if let Some(assignment) = raw.strip_prefix(b"?") {
+                    let tokens = assignment
+                        .split(|b| b.is_ascii_whitespace())
+                        .filter(|token| !token.is_empty())
+                        .collect::<Vec<_>>();
+                    if let [target, b"=", source, b"|", comparison] = tokens.as_slice() {
+                        let comparison = std::str::from_utf8(comparison)
+                            .map_err(|_| "assignment comparison requires decoded UTF-8")?;
+                        let (left, right) = comparison
+                            .strip_prefix('(')
+                            .and_then(|group| group.strip_suffix(')'))
+                            .and_then(|group| group.split_once("=="))
+                            .ok_or("expected parenthesized equality after assignment OR")?;
+                        let source = self.variables.get(source)?;
+                        let left = self.variables.get(left.as_bytes())?;
+                        let right = self.variables.get(right.as_bytes())?;
+                        self.variables.set(target, source | i32::from(left == right))?;
+                        frame.pc += 1;
+                        continue;
+                    }
+                    if let [target, b"=", source] = tokens.as_slice() {
+                        if !source
+                            .strip_prefix(b"-")
+                            .unwrap_or(source)
+                            .iter()
+                            .all(u8::is_ascii_digit)
+                        {
+                            let value = self.variables.get(source)?;
+                            self.variables.set(target, value)?;
+                            frame.pc += 1;
+                            continue;
+                        }
+                    }
+                }
+            }
+            let mut raw = raw;
+            if matches!(
+                raw.split(|b| b.is_ascii_whitespace()).next().unwrap(),
+                b".load" | b".call"
+            ) {
+                let tokens = raw
+                    .split(|b| b.is_ascii_whitespace())
+                    .filter(|t| !t.is_empty())
+                    .collect::<Vec<_>>();
+                if tokens.len() > 2 {
+                    if tokens.len() != 4 || tokens[2] != b"if" {
+                        return Err("unsupported conditional resource command".into());
+                    }
+                    let condition = tokens[3];
+                    let (negated, name) = if condition.starts_with(b"!") {
+                        (true, &condition[1..])
+                    } else {
+                        (false, condition)
+                    };
+                    let enabled = self.variables.get(name)? != 0;
+                    if enabled == negated {
+                        frame.pc += 1;
+                        continue;
+                    }
+                    raw = [tokens[0], b" ", tokens[1]].concat();
+                }
+            }
             let word = raw.split(|b| b.is_ascii_whitespace()).next().unwrap();
+            if self.dialogue && word == b".switch" {
+                let mut tokens = raw
+                    .split(|b| b.is_ascii_whitespace())
+                    .filter(|token| !token.is_empty());
+                tokens.next();
+                let variable = tokens.next().ok_or("missing switch variable")?;
+                if tokens.next().is_some() {
+                    return Err("switch requires one variable".into());
+                }
+                let choice = self.variables.get(variable)?;
+                self.pending = Some(Request::Command {
+                    name: b"switch".to_vec(),
+                    args: Vec::new(),
+                    rows: Vec::new(),
+                });
+                self.complete(Some(choice))?;
+                continue;
+            }
             if word == b".case" || raw == b".end" {
                 let end = frame
                     .branch_ends
@@ -415,14 +544,15 @@ impl Machine {
                     }
                 }
                 self.stack.last_mut().unwrap().pc += 1;
-            } else if word.starts_with(b".") {
+            } else if word.starts_with(b".") || self.dialogue && word == b"@" {
                 let mut parts = raw
                     .split(|b| b.is_ascii_whitespace())
                     .filter(|p| !p.is_empty());
-                let name = parts.next().unwrap()[1..].to_vec();
+                let marker = parts.next().unwrap();
+                let name = if marker == b"@" { marker } else { &marker[1..] }.to_vec();
                 let args = parts.map(|p| p.to_vec()).collect();
                 let mut rows = Vec::new();
-                if name == b"map" {
+                if matches!(name.as_slice(), b"map" | b"select") {
                     for (_, row) in &frame.lines[frame.pc + 1..] {
                         charge(&mut self.steps, self.max_steps)?;
                         if row.starts_with(b".") {
@@ -470,8 +600,17 @@ impl Machine {
     pub fn complete(&mut self, result: Option<i32>) -> Result<(), String> {
         let request = self.pending.as_ref().ok_or("no pending request")?;
         let frame = self.stack.last_mut().unwrap();
-        if matches!(request,Request::Command{name,..} if name==b"map") {
-            let choice = result.ok_or("map requires integer result")?;
+        if matches!(request, Request::Command { name, .. } if matches!(name.as_slice(), b"map" | b"select" | b"switch"))
+        {
+            let Request::Command { name, rows, .. } = request else {
+                unreachable!()
+            };
+            let choice = result.ok_or("branch command requires integer result")?;
+            if name == b"select"
+                && !usize::try_from(choice).is_ok_and(|id| (1..=rows.len()).contains(&id))
+            {
+                return Err("selection result is outside the option list".into());
+            }
             let mut selected = None;
             let mut end = None;
             let mut nesting = 0usize;
@@ -481,7 +620,7 @@ impl Machine {
                     .split(|b| b.is_ascii_whitespace())
                     .next()
                     .unwrap_or_default();
-                if word == b".map" {
+                if matches!(word, b".map" | b".select" | b".switch") {
                     nesting += 1;
                     continue;
                 }
@@ -495,11 +634,15 @@ impl Machine {
                 }
                 if nesting == 0 && word == b".case" {
                     let value = &line[word.len()..];
-                    let id = std::str::from_utf8(value)
-                        .map_err(|_| "non-ASCII case")?
-                        .trim()
+                    let value = value.trim_ascii();
+                    let id = match std::str::from_utf8(value)
+                        .map_err(|_| "invalid case encoding")?
                         .parse::<i32>()
-                        .map_err(|_| "invalid case")?;
+                    {
+                        Ok(id) => id,
+                        Err(_) if name == b"switch" => self.variables.get(value)?,
+                        Err(_) => return Err("invalid case".into()),
+                    };
                     if id == choice {
                         if selected.is_some() {
                             return Err("duplicate selected case".into());
@@ -508,10 +651,15 @@ impl Machine {
                     }
                 }
             }
-            let end = end.ok_or("unterminated map cases")?;
-            let pc = selected.ok_or("map result has no matching case")?;
-            frame.pc = pc;
-            frame.branch_ends.push(end);
+            let end = end.ok_or("unterminated branch cases")?;
+            if let Some(pc) = selected {
+                frame.pc = pc;
+                frame.branch_ends.push(end);
+            } else if matches!(name.as_slice(), b"select" | b"switch") {
+                frame.pc = end + 1;
+            } else {
+                return Err("map result has no matching case".into());
+            }
         } else {
             if result.is_some() {
                 return Err("unexpected host result".into());
@@ -603,6 +751,42 @@ mod tests {
                 bytes: text.to_vec(),
             })
         }
+    }
+    #[test]
+    fn conditional_resource_commands_follow_variables() {
+        for (condition, expected) in [("x", 0), ("!x", 7)] {
+            let mut vm = Machine::new(
+                Source {
+                    name: b"start".to_vec(),
+                    bytes: format!(".var L1 x\n.call patch if {condition}\n?x\n.done").into_bytes(),
+                },
+                100,
+                8,
+            );
+            assert!(matches!(
+                vm.advance(&mut Store).unwrap(),
+                Step::Request(Request::Command { .. })
+            ));
+            assert_eq!(vm.variables.get(b"x").unwrap(), expected);
+        }
+    }
+    #[test]
+    fn dialogue_assignment_accumulates_matching_flags() {
+        let mut vm = Machine::new(
+            Source {
+                name: b"start".to_vec(),
+                bytes: b".def expected 4\n.var G1 flags other current\n?flags = 2\n?current = 4\n?flags = flags | (current==expected)\n?current = 0\n?other = other | (current==expected)\n.done".to_vec(),
+            },
+            100,
+            8,
+        );
+        vm.enable_dialogue();
+        assert!(matches!(
+            vm.advance(&mut Store).unwrap(),
+            Step::Request(Request::Command { .. })
+        ));
+        assert_eq!(vm.variables.get(b"flags"), Ok(3));
+        assert_eq!(vm.variables.get(b"other"), Ok(0));
     }
     #[test]
     fn calls_return_load_replaces_and_menu_resumes() {
@@ -698,6 +882,30 @@ mod tests {
         assert_eq!(vm.variables.get(b"x").unwrap(), 7);
         vm.complete(None).unwrap();
         assert_eq!(vm.advance(&mut store).unwrap(), Step::Finished);
+    }
+    #[test]
+    fn select_allows_an_option_without_a_case() {
+        for (choice, expected) in [(1, 7), (2, 0)] {
+            let mut vm = Machine::new(
+                Source {
+                    name: b"choice".to_vec(),
+                    bytes: b".var L1 x\n.select\nfirst\nsecond\n.case 1\n? x = 7\n.end\n.done"
+                        .to_vec(),
+                },
+                100,
+                4,
+            );
+            let mut store = Store;
+            assert!(
+                matches!(vm.advance(&mut store).unwrap(), Step::Request(Request::Command { name, rows, .. }) if name == b"select" && rows == [b"first".to_vec(), b"second".to_vec()])
+            );
+            assert!(vm.complete(Some(3)).is_err());
+            vm.complete(Some(choice)).unwrap();
+            assert!(
+                matches!(vm.advance(&mut store).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"done")
+            );
+            assert_eq!(vm.variables.get(b"x").unwrap(), expected);
+        }
     }
     #[test]
     fn malformed_maps_and_scan_budget_do_not_acknowledge_requests() {

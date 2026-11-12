@@ -2,7 +2,7 @@
 use crate::{
     dat::DatGame,
     quote,
-    text_render::{draw_save_label, SharedFont},
+    text_render::{SharedFont, draw_save_label},
     title::{contains, update_pointer},
 };
 use nekopack_image::{Mng, RgbaImage};
@@ -25,6 +25,7 @@ pub struct Slot {
 }
 pub struct SaveUi {
     images: BTreeMap<String, Image>,
+    load_images: Option<BTreeMap<String, Image>>,
     size: [u32; 2],
     slots: BTreeMap<usize, Slot>,
     errors: BTreeMap<usize, String>,
@@ -43,8 +44,38 @@ impl SaveUi {
         if saving && from_title {
             return Err("cannot save from title".into());
         }
-        let bytes = store.read("system", "saveload.mng")?;
-        let mng = Mng::parse(&bytes, 100000)?;
+        let (size, images, load_images) =
+            if let Some(bytes) = store.read_optional("system", "saveload.mng")? {
+                let (size, images) = Self::decode_images(&bytes)?;
+                (size, images, None)
+            } else {
+                let (size, images) = Self::decode_images(&store.read("system", "save.mng")?)?;
+                let (load_size, load) = Self::decode_images(&store.read("system", "load.mng")?)?;
+                if size != load_size {
+                    return Err("save and load canvas sizes differ".into());
+                }
+                (size, images, Some(load))
+            };
+        for key in ["BASE", "DATA=", "DATA+", "= CLOSE"] {
+            if !images.contains_key(key) {
+                return Err(format!("missing save UI sprite {key}").into());
+            }
+        }
+        Ok(Self {
+            images,
+            load_images,
+            size,
+            slots: BTreeMap::new(),
+            errors: BTreeMap::new(),
+            saving,
+            page: 0,
+            from_title,
+            pressed: None,
+            input_sequence: 0,
+        })
+    }
+    fn decode_images(bytes: &[u8]) -> Result<([u32; 2], BTreeMap<String, Image>)> {
+        let mng = Mng::parse(bytes, 100000)?;
         let size = [mng.header[0], mng.header[1]];
         let mut retained = RgbaImage::transparent(size[0], size[1], BUDGET)?
             .pixels()
@@ -67,22 +98,14 @@ impl SaveUi {
                 retained -= old.pixels.pixels().len();
             }
         }
-        for key in ["BASE", "SBASE", "LBASE", "DATA=", "DATA+", "= CLOSE"] {
-            if !images.contains_key(key) {
-                return Err(format!("missing save UI sprite {key}").into());
-            }
+        Ok((size, images))
+    }
+    fn images(&self) -> &BTreeMap<String, Image> {
+        if self.saving {
+            &self.images
+        } else {
+            self.load_images.as_ref().unwrap_or(&self.images)
         }
-        Ok(Self {
-            images,
-            size,
-            slots: BTreeMap::new(),
-            errors: BTreeMap::new(),
-            saving,
-            page: 0,
-            from_title,
-            pressed: None,
-            input_sequence: 0,
-        })
     }
     pub fn set_slot(
         &mut self,
@@ -107,7 +130,7 @@ impl SaveUi {
     }
     fn bounds(&self, key: &str) -> Result<[i32; 4]> {
         let i = self
-            .images
+            .images()
             .get(key)
             .ok_or_else(|| format!("missing save sprite {key}"))?;
         Ok([
@@ -162,14 +185,16 @@ impl SaveUi {
         let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
         let draw = |canvas: &mut RgbaImage, key: &str| -> Result<()> {
             let i = self
-                .images
+                .images()
                 .get(key)
                 .ok_or_else(|| format!("missing save sprite {key}"))?;
             canvas.draw(&i.pixels, i.position);
             Ok(())
         };
         draw(&mut canvas, "BASE")?;
-        draw(&mut canvas, if self.saving { "SBASE" } else { "LBASE" })?;
+        if self.load_images.is_none() {
+            draw(&mut canvas, if self.saving { "SBASE" } else { "LBASE" })?;
+        }
         for p in 0..if self.saving { 10 } else { 11 } {
             let prefix = if self.pressed == Some(200 + p) {
                 "+"
@@ -203,8 +228,8 @@ impl SaveUi {
             let id = self.page * 10 + i + 1;
             let base = self.bounds(&format!("DATA{i}"))?;
             let hover = self.pressed == Some(id as i32);
-            let normal = &self.images["DATA="];
-            let frame = &self.images[if hover { "DATA+" } else { "DATA=" }];
+            let normal = &self.images()["DATA="];
+            let frame = &self.images()[if hover { "DATA+" } else { "DATA=" }];
             let shift = [
                 frame.position[0] - normal.position[0],
                 frame.position[1] - normal.position[1],
@@ -335,6 +360,7 @@ mod tests {
         }
         SaveUi {
             images,
+            load_images: None,
             size: [320, 200],
             slots: BTreeMap::new(),
             errors: BTreeMap::new(),
@@ -373,19 +399,23 @@ mod tests {
         let input = RgbaImage::filled(256, 144, [10, 20, 30, 255], 256 * 144 * 4).unwrap();
         let output = thumbnail(&input).unwrap();
         assert_eq!([output.width(), output.height()], [128, 72]);
-        assert!(output
-            .pixels()
-            .as_chunks::<4>()
-            .0
-            .iter()
-            .all(|p| *p == [10, 20, 30, 255]));
+        assert!(
+            output
+                .pixels()
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .all(|p| *p == [10, 20, 30, 255])
+        );
         let tiny = RgbaImage::filled(1, 1, [1, 2, 3, 255], 4).unwrap();
-        assert!(thumbnail(&tiny)
-            .unwrap()
-            .pixels()
-            .as_chunks::<4>()
-            .0
-            .iter()
-            .all(|p| *p == [1, 2, 3, 255]));
+        assert!(
+            thumbnail(&tiny)
+                .unwrap()
+                .pixels()
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .all(|p| *p == [1, 2, 3, 255])
+        );
     }
 }

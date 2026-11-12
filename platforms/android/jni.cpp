@@ -58,6 +58,10 @@ Java_org_nekopack_probe_MainActivity_story(JNIEnv* env,jobject,jintArray descrip
 
 extern "C" uint8_t* neko_probe_movie(int32_t,int32_t,size_t*);
 extern "C" JNIEXPORT jbyteArray JNICALL
+Java_org_nekopack_probe_LibraryActivity_inspect(JNIEnv* env,jobject obj,jintArray descriptors,jlong hasSave,jlong original){
+ return Java_org_nekopack_probe_MainActivity_story(env,obj,descriptors,67,hasSave,original);
+}
+extern "C" JNIEXPORT jbyteArray JNICALL
 Java_org_nekopack_probe_MovieHost_nativeMovie(JNIEnv* env,jobject,jint fd,jint operation){
  size_t length=0;uint8_t* output=neko_probe_movie(fd,operation,&length);
  if(length>INT_MAX){neko_probe_free(output,length);env->ThrowNew(env->FindClass("java/lang/IllegalStateException"),"movie packet too large");return nullptr;}

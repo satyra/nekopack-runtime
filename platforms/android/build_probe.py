@@ -59,7 +59,9 @@ def main():
     run(java,'-cp',build/'lib/d8.jar','com.android.tools.r8.D8','--min-api','23',
         '--lib',android,'--output',dex,classes,kotlin)
     unsigned=out/'unsigned.apk'
-    run(build/'aapt2.exe','link','-o',unsigned,'--manifest',ROOT/'platforms/android/AndroidManifest.xml','-I',android)
+    resources=out/'resources.zip'
+    run(build/'aapt2.exe','compile','--dir',ROOT/'platforms/android/res','-o',resources)
+    run(build/'aapt2.exe','link','-o',unsigned,'--manifest',ROOT/'platforms/android/AndroidManifest.xml','-I',android,resources)
     with zipfile.ZipFile(unsigned,'a',compression=zipfile.ZIP_DEFLATED) as apk:
         apk.write(dex/'classes.dex','classes.dex')
         for license_file in sorted((ROOT/'crates/nekopack-runtime/licenses').iterdir()):

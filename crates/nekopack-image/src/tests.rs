@@ -237,3 +237,21 @@ fn requires_header_first_and_balanced_images() {
     extra.extend(chunk(b"IEND", &[]));
     assert!(Mng::parse(&image(&extra), 10).is_ok()); // metadata only, not a zlib validator
 }
+
+
+#[test]
+fn localized_static_frames_keep_names_and_validate_the_original_crc() {
+    let mut extra = chunk(b"FRAM", b"\x02BASE\0ASE\0editor trailer");
+    extra.extend(chunk(b"DEFI", &[0; 12]));
+    extra.extend(&RGBA[8..]);
+    let raw = image(&extra);
+    assert!(Mng::parse(&raw, 30).is_err());
+    let normalized = crate::normalize_localized_ui_frames(&raw, Some([1280, 720])).unwrap();
+    let mng = Mng::parse(&normalized, 30).unwrap();
+    assert_eq!(&mng.header[..2], &[1280, 720]);
+    assert_eq!(mng.sprites().unwrap()[0].name, b"BASE");
+    let mut broken = raw;
+    let name = broken.windows(4).position(|part| part == b"BASE").unwrap();
+    broken[name] ^= 1;
+    assert!(crate::normalize_localized_ui_frames(&broken, None).is_err());
+}

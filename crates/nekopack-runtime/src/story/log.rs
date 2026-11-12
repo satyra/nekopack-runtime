@@ -65,6 +65,20 @@ impl<R: Read + Seek> StorySession<R> {
             crate::message_log::Audio::Voice(&e.voice),
         )
     }
+    pub fn shortcut_voice(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        let voice = self
+            .message_history
+            .entries
+            .iter()
+            .rev()
+            .find(|entry| !entry.voice.is_empty())
+            .ok_or("no voice to replay")?;
+        crate::message_log::audio(
+            &mut self.store,
+            &mut self.system,
+            crate::message_log::Audio::Voice(&voice.voice),
+        )
+    }
     pub fn ui_sound(&mut self, id: u64, volume: i32) -> Result<Vec<u8>, Box<dyn Error>> {
         crate::message_log::sound_at(&mut self.store, id, volume)
     }

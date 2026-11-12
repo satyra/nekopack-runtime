@@ -1,12 +1,11 @@
 //! Cooperative story presentation. Explicit host mode waits for effect acknowledgements.
 use crate::{
-    array, bootstrap,
+    GameResources, array, bootstrap,
     dat::DatGame,
     quote,
-    scene::{plan, Layer, Scene},
-    GameResources,
+    scene::{Layer, Scene, plan},
 };
-use nekopack_image::{decode_png, Mng};
+use nekopack_image::{Mng, decode_png};
 use nekopack_script::{
     runtime::{Machine, Request, Step},
     system::SystemVm,
@@ -16,9 +15,12 @@ use std::{
     error::Error,
     io::{Read, Seek},
 };
+mod credits;
 mod log;
+pub(crate) mod mapped_actor;
 pub(crate) mod saves;
 const PIXELS: usize = 64 * 1024 * 1024;
+const STORY_STEP_BUDGET: usize = 1_000_000;
 const AUDIO_CONFIG_FIELDS: [(&str, &str); 5] = [
     ("bgm", "VolBGM"),
     ("voice", "VolVO"),
@@ -87,7 +89,27 @@ impl Page {
             .as_ref()
             .map(|m| format!(",\"motion\":{m}"))
             .unwrap_or_default();
-        Ok(format!("{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}],\"labels\":{}{motion}}}",self.sequence,quote(self.source.as_bytes())?,self.line,quote(self.speaker.as_bytes())?,quote(self.voice.as_bytes())?,quote(self.text.as_bytes())?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,self.scene,self.depth,self.steps,slots,self.labels.metadata()?))
+        Ok(format!(
+            "{{\"sequence\":{},\"source\":{},\"line\":{},\"speaker\":{},\"voice\":{},\"text\":{},\"effects\":{},\"scene\":{},\"depth\":{},\"steps\":{},\"slots\":[{}],\"labels\":{}{motion}}}",
+            self.sequence,
+            quote(self.source.as_bytes())?,
+            self.line,
+            quote(self.speaker.as_bytes())?,
+            quote(self.voice.as_bytes())?,
+            quote(self.text.as_bytes())?,
+            array(
+                &self
+                    .effects
+                    .iter()
+                    .map(|s| s.as_bytes().to_vec())
+                    .collect::<Vec<_>>()
+            )?,
+            self.scene,
+            self.depth,
+            self.steps,
+            slots,
+            self.labels.metadata()?
+        ))
     }
     pub fn packet(&self) -> Result<Vec<u8>, String> {
         let mut bytes = self.metadata()?.into_bytes();
@@ -108,12 +130,19 @@ pub struct HostEffect {
 }
 impl HostEffect {
     pub fn packet(&self) -> Result<Vec<u8>, String> {
-        self.packet_checkpoint(None)
+        self.packet_checkpoint(None, false)
     }
-    fn packet_checkpoint(&self, checkpoint: Option<&str>) -> Result<Vec<u8>, String> {
+    fn packet_checkpoint(
+        &self,
+        checkpoint: Option<&str>,
+        focus_first: bool,
+    ) -> Result<Vec<u8>, String> {
         let mut extra = checkpoint
             .map(|c| format!(",\"checkpoint\":{c}"))
             .unwrap_or_default();
+        if self.kind == "select" {
+            extra.push_str(&format!(",\"focus_first\":{focus_first}"));
+        }
         if matches!(self.kind.as_str(), "bgm" | "env") {
             extra.push_str(&format!(
                 ",\"loop\":{},\"volume_percent\":50",
@@ -166,6 +195,8 @@ fn duration_ms(text: &str) -> Result<u64, String> {
         .ok_or("duration overflow".into())
 }
 pub struct StorySession<R: Read + Seek> {
+    replay: bool,
+    unlocks: crate::unlocks::Unlocks,
     store: DatGame<R>,
     machine: Machine,
     system: SystemVm,
@@ -182,7 +213,12 @@ pub struct StorySession<R: Read + Seek> {
     restoring: bool,
     persistent_audio: BTreeMap<String, (String, bool)>,
     presented: Option<Vec<u8>>,
+    presented_raw: Option<nekopack_image::RgbaImage>,
+    batch_render: bool,
+    dialogue_scene_png: Option<Vec<u8>>,
     wipe: Option<crate::transition::Wipe>,
+    credits: Option<credits::Credits>,
+    last_wipe_mask: Option<String>,
     shake: Option<crate::shake::Frames>,
     flash: Option<crate::flash::Frames>,
     image_macros: BTreeMap<String, Vec<String>>,
@@ -196,6 +232,8 @@ pub struct StorySession<R: Read + Seek> {
     sequence: u64,
     failed: bool,
     host_mode: bool,
+    metadata_only: bool,
+    preview_choices: std::collections::VecDeque<i32>,
     interactive_text: bool,
     auto_mode: bool,
     dialogue_hidden: bool,
@@ -205,6 +243,7 @@ pub struct StorySession<R: Read + Seek> {
     page_read: bool,
     history: crate::read_history::History,
     text_reveal: Option<crate::dialogue::Reveal>,
+    host_text_speed: Option<u64>,
     text_renderer: Option<crate::text_render::DialogueRenderer>,
     settings: Option<crate::settings::Settings>,
     settings_sequence: u64,
@@ -215,6 +254,23 @@ pub struct StorySession<R: Read + Seek> {
     effects: Vec<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
+    pub fn can_close_to_title(&self) -> bool {
+        self.replay || self.return_title_requested
+    }
+    pub fn request_shortcut_reset(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.dialogue_modal
+            || self.failed
+            || self.menu.is_some()
+            || self.settings.is_some()
+            || self.pending_effect.is_some()
+            || self.page.as_ref().map(|p| p.sequence) != Some(sequence)
+            || self.text_reveal.as_ref().is_none_or(|r| r.advance)
+        {
+            return Err("reset requires a live unadvanced dialogue".into());
+        }
+        self.return_title_requested = true;
+        Ok(b"{\"reset\":true}".to_vec())
+    }
     pub fn return_title_requested(&self) -> bool {
         self.return_title_requested
     }
@@ -326,14 +382,14 @@ impl<R: Read + Seek> StorySession<R> {
         {
             return Err("settings require a live, unadvanced dialogue".into());
         }
-        self.settings = Some(crate::settings::Settings::open(&mut self.store, 1)?);
+        self.settings = Some(crate::settings::Settings::open(&mut self.store, &mut self.system, 1)?);
         self.skip_mode = false;
         self.settings_sequence += 1;
         let cues = crate::message_log::page_cue(&mut self.system)?;
-        let packet = self.settings_packet()?;
+        let packet = self.settings_packet(false)?;
         Ok(crate::message_log::with_sounds(packet, &cues))
     }
-    fn settings_packet(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+    fn settings_packet(&mut self, raw: bool) -> Result<Vec<u8>, Box<dyn Error>> {
         let settings = self
             .settings
             .as_ref()
@@ -345,6 +401,7 @@ impl<R: Read + Seek> StorySession<R> {
                 &mut self.system,
                 self.settings_sequence,
                 self.preview_font.as_ref(),
+                raw,
             )?[1..],
         );
         Ok(packet)
@@ -359,47 +416,54 @@ impl<R: Read + Seek> StorySession<R> {
             .settings
             .as_mut()
             .ok_or("story settings are not open")?;
-        let (page, cues) = settings.pointer(&mut self.system, kind, x, y)?;
-        if let Some(page) = page {
-            self.settings = Some(crate::settings::Settings::open(&mut self.store, page)?);
+        let cues = settings.script_input(&mut self.store, &mut self.system, kind, x, y)?;
+        if settings.take_close_request() {
+            return self.close_script_settings();
         }
         self.settings_sequence += 1;
-        let packet = self.settings_packet()?;
-        Ok(crate::message_log::with_sounds(packet, &cues))
+        let packet = self.settings_packet(kind == 1)?;
+        crate::message_log::with_available_sounds(&mut self.store, packet, &cues)
     }
     pub fn settings_command(&mut self, command: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         let settings = self
             .settings
             .as_mut()
             .ok_or("story settings are not open")?;
-        match command {
-            0 => {
-                if !settings.cancel_popup() {
-                    let style = crate::preferences::style(&mut self.system)?;
-                    if self.dialogue_style != Some(style) {
-                        if let Some(renderer) = &mut self.text_renderer {
-                            let mng = self.store.read("system", "msgbox.mng")?;
-                            renderer.set_style(&mng, style)?;
-                            let page = self.page.as_ref().unwrap();
-                            renderer.prepare(page.sequence, &page.speaker, &page.text)?;
-                        }
-                        self.dialogue_style = Some(style);
-                    }
-                    self.settings = None;
-                    self.settings_sequence += 1;
-                    let packet = format!("{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n", self.page.as_ref().unwrap().sequence, self.settings_sequence).into_bytes();
-                    let cues = crate::message_log::page_cue(&mut self.system)?;
-                    return Ok(crate::message_log::with_sounds(packet, &cues));
-                }
-            }
-            1 => {
-                settings.cancel_popup();
-                crate::preferences::reset(&mut self.system)?;
-            }
-            _ => return Err("unknown settings command".into()),
+        let cues = settings.script_command(&mut self.store, &mut self.system, command)?;
+        if settings.take_close_request() {
+            return self.close_script_settings();
         }
         self.settings_sequence += 1;
-        self.settings_packet()
+        let packet = self.settings_packet(false)?;
+        crate::message_log::with_available_sounds(&mut self.store, packet, &cues)
+    }
+
+    pub fn settings_tick(&mut self, elapsed: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        let Some(settings) = self.settings.as_mut().filter(|settings| settings.tick_delay() > 0) else {
+            return Ok(Vec::new());
+        };
+        let cues = settings.tick(&mut self.store, &mut self.system, elapsed)?;
+        let packet = self.settings_packet(false)?;
+        crate::message_log::with_available_sounds(&mut self.store, packet, &cues)
+    }
+
+    fn close_script_settings(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        let style = crate::preferences::style(&mut self.system)?;
+        if self.dialogue_style != Some(style) {
+            if let Some(renderer) = &mut self.text_renderer {
+                let mng = self.store.read("system", "msgbox.mng")?;
+                renderer.set_style(&mng, style)?;
+                let page = self.page.as_ref().unwrap();
+                renderer.prepare(page.sequence, &page.speaker, &page.text)?;
+            }
+            self.dialogue_style = Some(style);
+        }
+        self.settings = None;
+        self.settings_sequence += 1;
+        let packet = format!("{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n",
+            self.page.as_ref().unwrap().sequence, self.settings_sequence).into_bytes();
+        let cues = crate::message_log::page_cue(&mut self.system)?;
+        crate::message_log::with_available_sounds(&mut self.store, packet, &cues)
     }
     pub fn export_preferences(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         crate::preferences::export(&mut self.system)
@@ -418,6 +482,15 @@ impl<R: Read + Seek> StorySession<R> {
                 return Err(format!("invalid Config.{field}: {value}").into());
             }
             fields.push(format!("\"{key}\":{value}"));
+        }
+        self.system.eval(
+            "voice-duck-config",
+            r#"return ("MuteBGM" in Config ? Config.MuteBGM : -1).tostring()"#,
+        )?;
+        match self.system.result().as_str() {
+            "0" => fields.push("\"voice_duck\":false".into()),
+            "1" => fields.push("\"voice_duck\":true".into()),
+            _ => {}
         }
         Ok(format!("{{{}}}", fields.join(",")).into_bytes())
     }
@@ -470,6 +543,8 @@ impl<R: Read + Seek> StorySession<R> {
             }
         }
         Ok(Self {
+            replay: false,
+            unlocks: Default::default(),
             store,
             machine,
             system,
@@ -486,7 +561,12 @@ impl<R: Read + Seek> StorySession<R> {
             restoring: false,
             persistent_audio: BTreeMap::new(),
             presented: None,
+            presented_raw: None,
+            batch_render: false,
+            dialogue_scene_png: None,
             wipe: None,
+            credits: None,
+            last_wipe_mask: None,
             shake: None,
             flash: None,
             image_macros,
@@ -500,6 +580,8 @@ impl<R: Read + Seek> StorySession<R> {
             sequence: 0,
             failed: false,
             host_mode: false,
+            metadata_only: false,
+            preview_choices: Default::default(),
             interactive_text: false,
             auto_mode: false,
             dialogue_hidden: false,
@@ -509,6 +591,7 @@ impl<R: Read + Seek> StorySession<R> {
             page_read: false,
             history: crate::read_history::History::default(),
             text_reveal: None,
+            host_text_speed: None,
             text_renderer: None,
             settings: None,
             settings_sequence: 0,
@@ -559,9 +642,25 @@ impl<R: Read + Seek> StorySession<R> {
         self.page()
     }
 
+    /// Explicit branch decisions for desktop route verification.
+    pub(crate) fn mark_replay(&mut self) {
+        self.replay = true;
+    }
+    pub fn set_preview_choices(&mut self, choices: Vec<i32>, metadata_only: bool) {
+        self.preview_choices = choices.into();
+        self.metadata_only = metadata_only;
+        self.batch_render = !metadata_only;
+        self.machine.set_step_budget(STORY_STEP_BUDGET);
+    }
+    pub fn enable_route_preview_rendering(&mut self) {
+        self.metadata_only = false;
+        self.batch_render = true;
+    }
+
     /// Enable once before polling; headless fixtures retain their explicit static profile.
     pub fn enable_host_effects(&mut self) {
         self.host_mode = true;
+        self.machine.set_step_budget(STORY_STEP_BUDGET);
     }
     pub fn enable_interactive_text(&mut self) {
         self.interactive_text = true;
@@ -591,7 +690,7 @@ impl<R: Read + Seek> StorySession<R> {
         )?);
         Ok(format!("{{\"requested_font\":{requested},\"host_font_override\":true,\"opacity\":{opacity},\"border\":{},\"bold\":{},\"font_size\":22,\"line_span\":8}}",u8::from(border),u8::from(bold)).into_bytes())
     }
-    pub fn dialogue_image(&mut self, sequence: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+    pub fn dialogue_image(&mut self, sequence: u64, raw: bool) -> Result<Vec<u8>, Box<dyn Error>> {
         if self.failed || self.page.as_ref().map(|p| p.sequence) != Some(sequence) {
             return Err("stale dialogue image request".into());
         }
@@ -606,12 +705,27 @@ impl<R: Read + Seek> StorySession<R> {
             .ok_or("dialogue font not installed")?;
         let mut packet = renderer.metadata()?.into_bytes();
         packet.push(b'\n');
-        packet.extend(renderer.frame(sequence, count)?);
+        if raw {
+            packet.extend_from_slice(renderer.frame_pixels(sequence, count)?.pixels());
+        } else {
+            packet.extend(renderer.frame(sequence, count)?);
+        }
         Ok(packet)
     }
     pub fn text_config(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         let (speed, keep) = self.read_text_config()?;
-        Ok(format!("{{\"speed\":{speed},\"keep_voice\":{keep}}}").into_bytes())
+        self.system.eval(
+            "input-config",
+            r#"return ("CenterKey" in Config ? Config.CenterKey : 0).tostring()+","+("SpaceKey" in Config ? Config.SpaceKey : 0).tostring()"#,
+        )?;
+        let input = self.system.result();
+        let (right, space) = input.split_once(',').ok_or("invalid input config")?;
+        let (right, space) = (right.parse::<u8>()?, space.parse::<u8>()?);
+        if right > 2 || space > 2 {
+            return Err("invalid input config".into());
+        }
+        let presentation = crate::preferences::presentation(&mut self.system)?;
+        Ok(format!("{{\"speed\":{speed},\"keep_voice\":{keep},\"right_mouse\":{right},\"space_key\":{space}{presentation}}}").into_bytes())
     }
     fn read_text_config(&mut self) -> Result<(u64, u64), Box<dyn Error>> {
         if self.failed {
@@ -627,7 +741,14 @@ impl<R: Read + Seek> StorySession<R> {
                 "unsupported TextSpeed/KeepVoice; supported ranges are 0..100 and 0..1".into(),
             );
         }
-        Ok((values[0], values[1]))
+        Ok((self.host_text_speed.unwrap_or(values[0]), values[1]))
+    }
+    pub fn override_text_speed(&mut self, speed: u64) -> Result<Vec<u8>, Box<dyn Error>> {
+        if speed > 100 {
+            return Err("invalid host text speed".into());
+        }
+        self.host_text_speed = Some(speed);
+        self.text_config()
     }
     pub fn set_text_config(&mut self, field: u64, value: u64) -> Result<Vec<u8>, Box<dyn Error>> {
         let name = match field {
@@ -767,12 +888,18 @@ impl<R: Read + Seek> StorySession<R> {
                     self.set_auto_mode(sequence, true)?;
                     "applied"
                 }
+                "SKIP" if page && crate::preferences::enabled(&mut self.system, "Dialog")? => "request",
                 "SKIP" if page => {
                     self.set_skip_mode(sequence, true)?;
                     "applied"
                 }
                 "AUTO" | "SKIP" => "busy",
-                "CONFIG" | "HIDE" | "MENU" | "QSAVE" | "QLOAD" | "LOG" if page => "request",
+                "CONFIG" | "HIDE" | "MENU" | "QSAVE" | "QLOAD" | "LOG" | "SAVE" | "LOAD"
+                | "RESET"
+                    if page =>
+                {
+                    "request"
+                }
                 "CONFIG" | "HIDE" | "MENU" | "QSAVE" | "QLOAD" | "LOG" => "busy",
                 "QUIT" => "request",
                 _ => "unsupported",
@@ -899,10 +1026,17 @@ impl<R: Read + Seek> StorySession<R> {
         if self.failed {
             return Err("story session stopped after error".into());
         }
-        if self.page.is_none() && self.pending_effect.is_none() {
+        if self.page.is_none() && self.pending_effect.is_none() && !self.return_title_requested {
             if let Err(e) = self.advance() {
                 return Err(self.stop(e));
             }
+        }
+        if self.return_title_requested && self.page.is_none() {
+            return Ok(format!(
+                "{{\"kind\":\"story_return_title\",\"checkpoint\":{}}}\n",
+                self.checkpoint()?
+            )
+            .into_bytes());
         }
         if let Some(effect) = &self.pending_effect {
             let checkpoint = if matches!(effect.kind.as_str(), "shake" | "wipe" | "fade" | "flash")
@@ -911,7 +1045,9 @@ impl<R: Read + Seek> StorySession<R> {
             } else {
                 None
             };
-            Ok(effect.packet_checkpoint(checkpoint.as_deref())?)
+            let focus = effect.kind == "select"
+                && crate::preferences::enabled(&mut self.system, "AutoSelect")?;
+            Ok(effect.packet_checkpoint(checkpoint.as_deref(), focus)?)
         } else {
             Ok(self
                 .page
@@ -924,11 +1060,35 @@ impl<R: Read + Seek> StorySession<R> {
         if self
             .pending_effect
             .as_ref()
+            .is_some_and(|e| e.kind == "select")
+        {
+            return Err("selection requires an explicit option".into());
+        }
+        if self
+            .pending_effect
+            .as_ref()
             .is_some_and(|e| e.kind == "movie")
         {
             return Err("movie requires completion or explicit skip reason".into());
         }
         self.complete_effect(token)
+    }
+    pub fn acknowledge_selection(
+        &mut self,
+        token: u64,
+        choice: u64,
+    ) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.failed
+            || !self
+                .pending_effect
+                .as_ref()
+                .is_some_and(|e| e.kind == "select" && e.token == token)
+        {
+            return Err("stale or missing selection request".into());
+        }
+        self.machine.complete(Some(i32::try_from(choice)?))?;
+        self.pending_effect = None;
+        self.poll_packet()
     }
     pub fn acknowledge_movie(
         &mut self,
@@ -956,7 +1116,10 @@ impl<R: Read + Seek> StorySession<R> {
             return Err("shake acknowledged before final frame".into());
         }
         if self.flash.as_ref().is_some_and(|f| !f.finished()) {
-            return Err("flash acknowledged before final phase".into());
+            self.system.eval("visual-effects-disabled", r#"return ("Config" in getroottable() && "Effect" in Config && Config.Effect==0).tostring()"#)?;
+            if self.system.result() != "true" {
+                return Err("flash acknowledged before final phase".into());
+            }
         }
         if self.restoring {
             self.pending_effect = self.restore_audio.pop_front();
@@ -973,7 +1136,7 @@ impl<R: Read + Seek> StorySession<R> {
                     self.persistent_audio.remove(&effect_ref.kind);
                 }
             }
-            "bgm_stop" | "bgm_fade" => {
+            "bgm_stop" | "bgm_fade" | "staffroll" => {
                 self.persistent_audio.remove("bgm");
             }
             "env_stop" => {
@@ -987,12 +1150,19 @@ impl<R: Read + Seek> StorySession<R> {
         }
         self.machine.complete(None)?;
         let effect = self.pending_effect.take().unwrap();
+        self.credits = None;
+        if effect.kind == "staffroll" {
+            self.presented = None;
+            self.presented_raw = None;
+        }
         self.flash = None;
         if let Some(shake) = self.shake.take() {
             self.presented = Some(shake.into_png()?);
+            self.presented_raw = None;
         }
         if matches!(effect.kind.as_str(), "fade" | "wipe" | "flash") {
             self.presented = Some(effect.payload);
+            self.presented_raw = None;
         }
         self.wipe = None;
         self.poll_packet()
@@ -1023,6 +1193,51 @@ impl<R: Read + Seek> StorySession<R> {
         self.log_face.clear();
         self.voice.clear();
         self.poll_packet()
+    }
+
+    /// Device route replay. Effects and motion still require their normal host calls.
+    pub fn replay_dialogue_batch(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        self.batch_render = true;
+        let pages = self.replay_dialogue_pages();
+        self.batch_render = false;
+        let pages = pages?;
+        if self.page.as_ref().is_some_and(|page| page.png.is_empty()) {
+            let mut png = Vec::new();
+            if let Some(frame) = self.presented_raw.take() {
+                frame.write_png(&mut png)?;
+            } else {
+                png = self.render()?;
+            }
+            self.presented = Some(png.clone());
+            self.dialogue_scene_png = Some(png.clone());
+            self.page.as_mut().unwrap().png = png;
+        }
+        let mut result = format!("{{\"pages\":[{}]}}\n", pages.join(",")).into_bytes();
+        result.extend(self.poll_packet()?);
+        Ok(result)
+    }
+
+    fn replay_dialogue_pages(&mut self) -> Result<Vec<String>, Box<dyn Error>> {
+        let mut pages = Vec::new();
+        if self.page.is_none() && self.pending_effect.is_none() {
+            self.poll_packet()?;
+        }
+        for _ in 0..16 {
+            let Some(page) = &self.page else {
+                break;
+            };
+            if !self.skip_mode || self.pending_effect.is_some() || page.motion.is_some() {
+                break;
+            }
+            let sequence = page.sequence;
+            pages.push(page.metadata()?);
+            self.text_frame_with_voice(sequence, 0, false, true)?;
+            if !self.text_reveal.as_ref().unwrap().advance {
+                self.text_frame_with_voice(sequence, 1, false, true)?;
+            }
+            self.acknowledge_text(sequence)?;
+        }
+        Ok(pages)
     }
     /// Concurrent dialogue animation: never completes a script request or changes the cached page.
     pub fn page_frame(
@@ -1077,7 +1292,12 @@ impl<R: Read + Seek> StorySession<R> {
         if self.failed || self.pending_effect.as_ref().map(|e| e.token) != Some(token) {
             return Err("stale or missing effect frame request".into());
         }
-        if let Some(shake) = &mut self.shake {
+        if let Some(credits) = &self.credits {
+            let frame = credits.frame(elapsed_ms)?;
+            let mut packet = format!("{{\"frame_kind\":\"staffroll\",\"token\":{token},\"width\":{},\"height\":{},\"format\":\"RGBA8\"}}\n", frame.width(), frame.height()).into_bytes();
+            packet.extend_from_slice(frame.pixels());
+            Ok(packet)
+        } else if let Some(shake) = &mut self.shake {
             let (width, height) = shake.dimensions();
             let pixels = shake.frame(elapsed_ms)?;
             let mut packet=format!("{{\"frame_kind\":\"shake\",\"token\":{token},\"elapsed_ms\":{elapsed_ms},\"width\":{width},\"height\":{height},\"format\":\"RGBA8\"}}\n").into_bytes();
@@ -1147,6 +1367,17 @@ impl<R: Read + Seek> StorySession<R> {
         )
         .into()
     }
+    pub fn has_classic_story_menu(&self) -> Result<bool, String> {
+        self.store.has_resource("system", "menu.mng")
+    }
+
+    pub fn export_unlocks(&mut self) -> Vec<u8> {
+        if !self.replay {
+            self.unlocks.capture(&self.machine.variables);
+        }
+        self.unlocks.encode()
+    }
+
     /// Read-only execution evidence, including commands since the last text page.
     pub fn checkpoint(&self) -> Result<String, String> {
         let (source, line) = self.machine.location().unwrap_or((b"<finished>", 0));
@@ -1158,10 +1389,39 @@ impl<R: Read + Seek> StorySession<R> {
             .map(|((b, i), v)| format!("[{b},{i},{v}]"))
             .collect::<Vec<_>>()
             .join(",");
-        Ok(format!("{{\"source\":{},\"line\":{line},\"depth\":{},\"steps\":{},\"slots\":[{slots}],\"scene\":{},\"effects\":{},\"voice\":{},\"labels\":{}}}",quote(source)?,self.machine.depth(),self.machine.steps(),self.scene.metadata()?,array(&self.effects.iter().map(|s|s.as_bytes().to_vec()).collect::<Vec<_>>())?,quote(self.voice.as_bytes())?,self.labels.metadata()?))
+        Ok(format!(
+            "{{\"source\":{},\"line\":{line},\"depth\":{},\"steps\":{},\"slots\":[{slots}],\"scene\":{},\"effects\":{},\"voice\":{},\"labels\":{}}}",
+            quote(source)?,
+            self.machine.depth(),
+            self.machine.steps(),
+            self.scene.metadata()?,
+            array(
+                &self
+                    .effects
+                    .iter()
+                    .map(|s| s.as_bytes().to_vec())
+                    .collect::<Vec<_>>()
+            )?,
+            quote(self.voice.as_bytes())?,
+            self.labels.metadata()?
+        ))
     }
     fn render(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
         self.scene.render()
+    }
+    fn previous_frame(&mut self) -> Result<nekopack_image::RgbaImage, Box<dyn Error>> {
+        if let Some(frame) = self.presented_raw.take() {
+            return Ok(frame);
+        }
+        match &self.presented {
+            Some(png) => Ok(decode_png(png, PIXELS)?),
+            None => Ok(nekopack_image::RgbaImage::filled(
+                self.scene.dimensions[0],
+                self.scene.dimensions[1],
+                [0, 0, 0, 255],
+                PIXELS,
+            )?),
+        }
     }
     fn actor(&mut self, slot: u8, args: &[Vec<u8>]) -> Result<(), Box<dyn Error>> {
         let center = [
@@ -1169,16 +1429,27 @@ impl<R: Read + Seek> StorySession<R> {
             i32::try_from(self.scene.dimensions[1] / 2)?,
         ];
         let p = plan(args, &self.image_macros, center[0])?;
-        if self.motions.iter().any(|m| m.slot == slot) {
+        let queued = self.motions.iter().position(|m| m.slot == slot);
+        if queued.is_some() && p.x.is_some() {
             return Err(
                 "multiple operations on a moving actor before dialogue are unsupported".into(),
             );
         }
         if p.clear {
             self.scene.actors.retain(|l| l.slot != slot);
+            self.motions.retain(|m| m.slot != slot);
             return Ok(());
         }
         let old = self.scene.actors.iter().find(|l| l.slot == slot);
+        if old.is_none()
+            && p.name.is_none()
+            && p.folder.is_some()
+            && p.x.is_none()
+            && p.motions.is_empty()
+        {
+            // A size/order modifier alone cannot install a sprite in an empty slot.
+            return Ok(());
+        }
         let name = p
             .name
             .clone()
@@ -1200,7 +1471,14 @@ impl<R: Read + Seek> StorySession<R> {
             use crate::{motion::Motion, scene::MotionKind};
             let segment = match kind {
                 MotionKind::Horizontal(dx) => Motion::new(slot, anchor, *dx, center)?,
-                MotionKind::Dip => Motion::dip(slot, anchor, center)?,
+                MotionKind::To(x) => Motion::new(
+                    slot,
+                    anchor,
+                    x.checked_sub(anchor[0]).ok_or("actor target overflow")?,
+                    center,
+                )?,
+                MotionKind::Vertical(dy) => Motion::vertical(slot, anchor, *dy, center)?,
+                MotionKind::Dip(amplitude) => Motion::dip(slot, anchor, *amplitude, center)?,
                 MotionKind::Stationary => Motion::stationary(slot, anchor, center)?,
                 MotionKind::Excursion(dx) => {
                     Motion::horizontal_excursion(slot, anchor, *dx, center)?
@@ -1210,6 +1488,9 @@ impl<R: Read + Seek> StorySession<R> {
             segments.push(segment);
         }
         let motion = if segments.is_empty() {
+            None
+        } else if let Some(index) = queued {
+            self.motions[index].append(segments)?;
             None
         } else {
             Some(crate::motion::Queue::new(slot, segments))
@@ -1255,6 +1536,10 @@ impl<R: Read + Seek> StorySession<R> {
     fn advance(&mut self) -> Result<(), Box<dyn Error>> {
         loop {
             match self.machine.advance(&mut self.store)? {
+                Step::Finished if self.replay => {
+                    self.return_title_requested = true;
+                    return Ok(());
+                }
                 Step::Finished => return Err("story ended".into()),
                 Step::Request(Request::Speaker(fields)) => {
                     self.speaker = String::from_utf8(fields[0].clone())?;
@@ -1276,6 +1561,20 @@ impl<R: Read + Seek> StorySession<R> {
                     } else {
                         face.chars().take(2).collect()
                     };
+                    if !self.voice.is_empty() {
+                        let tags = if mask.is_empty() {
+                            self.log_face.clone()
+                        } else {
+                            mask.join(" ")
+                        };
+                        self.system.eval("dialogue-voice-mask", &format!(
+                            "return (!(\"IsAvailVoice\" in getroottable()) || IsAvailVoice({})).tostring()",
+                            quote(tags.as_bytes())?
+                        ))?;
+                        if self.system.result() == "false" {
+                            self.voice.clear();
+                        }
+                    }
                     self.enter_skip_page()?;
                     if self.host_mode && !self.voice.is_empty() && !self.skip_mode {
                         self.emit("voice", &self.voice.clone())?;
@@ -1285,10 +1584,25 @@ impl<R: Read + Seek> StorySession<R> {
                 }
                 Step::Request(Request::Text(text)) => {
                     self.enter_skip_page()?;
-                    let png = self.render()?;
+                    let png = if self.metadata_only {
+                        Vec::new()
+                    } else if self.batch_render {
+                        self.presented_raw = Some(self.scene.render_pixels(&[])?);
+                        self.presented = None;
+                        Vec::new()
+                    } else if let Some(png) = &self.dialogue_scene_png {
+                        png.clone()
+                    } else {
+                        let png = self.render()?;
+                        self.dialogue_scene_png = Some(png.clone());
+                        png
+                    };
                     let (source, line) = self.machine.location().unwrap();
                     self.sequence += 1;
-                    self.presented = Some(png.clone());
+                    if !self.metadata_only && !self.batch_render {
+                        self.presented = Some(png.clone());
+                        self.presented_raw = None;
+                    }
                     let motion = if self.motions.is_empty() {
                         None
                     } else {
@@ -1335,15 +1649,74 @@ impl<R: Read + Seek> StorySession<R> {
                     }
                     return Ok(());
                 }
-                Step::Request(Request::Command { name, args, .. }) => {
+                Step::Request(Request::Command { name, args, rows }) => {
                     let command = std::str::from_utf8(&name)?;
+                    if matches!(
+                        command,
+                        "img"
+                            | "img0"
+                            | "img1"
+                            | "img2"
+                            | "img3"
+                            | "img4"
+                            | "img5"
+                            | "img6"
+                            | "img7"
+                            | "img8"
+                            | "img9"
+                            | "imgx"
+                            | "page"
+                            | "filter"
+                            | "frame"
+                            | "@"
+                    ) {
+                        self.dialogue_scene_png = None;
+                    }
+                    // The route trace executes scenario control flow. These known
+                    // presentation commands are recorded without rendering or timing.
+                    if self.metadata_only
+                        && matches!(
+                            command,
+                            "img"
+                                | "img0"
+                                | "img1"
+                                | "img2"
+                                | "img3"
+                                | "img4"
+                                | "img5"
+                                | "img6"
+                                | "img7"
+                                | "img8"
+                                | "img9"
+                                | "imgx"
+                                | "page"
+                                | "filter"
+                                | "wipe"
+                                | "fade"
+                                | "shake"
+                                | "flash"
+                                | "staffroll"
+                                | "@"
+                        )
+                    {
+                        self.effects.push(format!("presentation {command}"));
+                        if command == "img" && !self.replay {
+                            if let [name] = args.as_slice() {
+                                self.machine.variables.unlock_visual(name);
+                            }
+                        }
+                        self.machine.complete(None)?;
+                        continue;
+                    }
                     if !self.motions.is_empty()
-                        // Named BGM switches return before dialogue rendering in the original.
-                        // Keep the queued motion across the host's audio-start acknowledgement.
-                        && !(command == "bgm" && args.len() == 1)
+                        // Audio starts and immediate BGM stops don't consume actor motion.
+                        && !(command == "bgm" && args.len() <= 1 || command == "se" && args.len() == 1)
                         && !matches!(
                             command,
-                            "img1"
+                            "img"
+                                | "wipe"
+                                | "shake"
+                                | "img1"
                                 | "img2"
                                 | "img3"
                                 | "img4"
@@ -1360,7 +1733,89 @@ impl<R: Read + Seek> StorySession<R> {
                         .into());
                     }
                     match command {
-                        "title" | "route" => {
+                        // BLESS contains a bare command marker between dialogue lines.
+                        "" if args.is_empty() => {}
+                        "map"
+                            if self.host_mode
+                                && (matches!(args.as_slice(), [title] if title == b"title")
+                                    || matches!(args.as_slice(), [title, fade] if title == b"title" && fade == b"fade"))
+                                && self
+                                    .machine
+                                    .location()
+                                    .is_some_and(|(source, _)| source == b"title") =>
+                        {
+                            self.return_title_requested = true;
+                            return Ok(());
+                        }
+                        "staffroll" if args.is_empty() => {
+                            let credits = credits::Credits::load(&mut self.store)?;
+                            let payload = self.store.read("sound/bgm", "BGM_ED.ogg")?;
+                            if !payload.starts_with(b"OggS") {
+                                return Err("invalid credits music resource".into());
+                            }
+                            self.scene.clear();
+                            self.dialogue_scene_png = None;
+                            self.effects.push("presentation staffroll".into());
+                            if self.host_mode {
+                                let duration_ms = credits.duration();
+                                self.credits = Some(credits);
+                                self.host_sequence += 1;
+                                self.pending_effect = Some(HostEffect {
+                                    token: self.host_sequence,
+                                    kind: "staffroll".into(),
+                                    name: "BGM_ED".into(),
+                                    duration_ms,
+                                    movie_left_skip: false,
+                                    audio_loop: false,
+                                    payload,
+                                });
+                                return Ok(());
+                            }
+                        }
+                        "select" => {
+                            if !self.host_mode {
+                                let choice = self
+                                    .preview_choices
+                                    .pop_front()
+                                    .ok_or("story selection requires an explicit option")?;
+                                self.machine.complete(Some(choice))?;
+                                continue;
+                            }
+                            if rows.is_empty() || args.len() > 1 {
+                                return Err("invalid story selection".into());
+                            }
+                            if self.skip_mode {
+                                self.system.eval(
+                                    "select-keep-skip",
+                                    "return Config.KeepSkip.tostring()",
+                                )?;
+                                self.skip_mode = self.system.result() == "1";
+                            }
+                            if self.auto_mode {
+                                self.system.eval(
+                                    "select-keep-auto",
+                                    "return Config.KeepAuto.tostring()",
+                                )?;
+                                self.auto_mode = self.system.result() == "1";
+                            }
+                            self.host_sequence += 1;
+                            self.pending_effect = Some(HostEffect {
+                                token: self.host_sequence,
+                                kind: "select".into(),
+                                name: args
+                                    .first()
+                                    .map(|name| std::str::from_utf8(name))
+                                    .transpose()?
+                                    .unwrap_or("select")
+                                    .into(),
+                                duration_ms: 0,
+                                movie_left_skip: false,
+                                audio_loop: false,
+                                payload: array(&rows)?.into_bytes(),
+                            });
+                            return Ok(());
+                        }
+                        "title" | "route" | "CompleteCG" | "CompleteScene" => {
                             self.system.eval_with_resources(
                                 "story-label-command",
                                 &format!(
@@ -1373,16 +1828,44 @@ impl<R: Read + Seek> StorySession<R> {
                             )?;
                             self.labels = StoryLabels::capture(&mut self.system)?;
                         }
+                        "@" => self.mapped_actor(&args)?,
+                        "frame" => {
+                            self.scene.cinema_frame = match args.as_slice() {
+                                [] => false,
+                                [name] if name == "シネスコ".as_bytes() => true,
+                                _ => return Err("unsupported scene frame".into()),
+                            };
+                        }
                         "filter" => {
                             self.scene.filter = crate::filter::Filter::parse(&args)?;
                         }
                         "img0" => {
+                            if !self.scene.mapped_actors.is_empty() {
+                                self.scene.actors.clear();
+                                self.motions.clear();
+                                self.scene.overlay = None;
+                            }
                             if args.is_empty() {
                                 self.scene.background = None;
                                 self.scene.background_name = None;
                                 self.scene.background_color = None;
                             } else if args.len() == 1 {
                                 let name = std::str::from_utf8(&args[0])?;
+                                let name = match self.image_macros.get(name).map(Vec::as_slice) {
+                                    Some([resource]) => resource.as_str(),
+                                    _ => name,
+                                };
+                                // This BLESS scene refers to the same background as its opening.
+                                let name = if name == "401b"
+                                    && self
+                                        .machine
+                                        .location()
+                                        .is_some_and(|(source, _)| source == b"035902")
+                                {
+                                    "BG401b"
+                                } else {
+                                    name
+                                };
                                 if let Some(color) = solid(name) {
                                     self.scene.background = None;
                                     self.scene.background_name = None;
@@ -1405,6 +1888,10 @@ impl<R: Read + Seek> StorySession<R> {
                         "img" | "page" => {
                             if args.is_empty() {
                                 self.scene.clear();
+                                self.motions.clear();
+                                if command == "page" {
+                                    self.scene.cinema_frame = false;
+                                }
                             } else if command == "img" && args.len() == 1 {
                                 let name = std::str::from_utf8(&args[0])?;
                                 if let Some(color) = solid(name) {
@@ -1418,6 +1905,9 @@ impl<R: Read + Seek> StorySession<R> {
                                     }
                                     self.scene
                                         .set_visual(name.into(), decode_png(&bytes, PIXELS)?)?;
+                                    if !self.replay {
+                                        self.machine.variables.unlock_visual(name.as_bytes());
+                                    }
                                 }
                             } else {
                                 return Err("unsupported clear/overlay arguments".into());
@@ -1438,6 +1928,14 @@ impl<R: Read + Seek> StorySession<R> {
                                 || !name.to_ascii_lowercase().ends_with(".mpg")
                             {
                                 return Err("unsupported movie resource name".into());
+                            }
+                            self.system.eval(
+                                "movie-enabled",
+                                r#"return ("Config" in getroottable() && "Movie" in Config && Config.Movie==0) ? "0" : "1""#,
+                            )?;
+                            if self.system.result() == "0" {
+                                self.machine.complete(None)?;
+                                continue;
                             }
                             self.effects.push(format!("movie {name}"));
                             if self.host_mode {
@@ -1533,6 +2031,7 @@ impl<R: Read + Seek> StorySession<R> {
                                 return Ok(());
                             }
                             self.presented = Some(target);
+                            self.presented_raw = None;
                         }
                         "shake" => {
                             let options = args
@@ -1548,17 +2047,10 @@ impl<R: Read + Seek> StorySession<R> {
                                     format!(" {}", options.join(" "))
                                 }
                             ));
+                            self.motions.clear();
                             if self.host_mode {
                                 let target = self.render()?;
-                                let old = match &self.presented {
-                                    Some(png) => decode_png(png, PIXELS)?,
-                                    None => nekopack_image::RgbaImage::filled(
-                                        self.scene.dimensions[0],
-                                        self.scene.dimensions[1],
-                                        [0, 0, 0, 255],
-                                        PIXELS,
-                                    )?,
-                                };
+                                let old = self.previous_frame()?;
                                 self.shake = Some(crate::shake::Frames::new(
                                     motion,
                                     decode_png(&target, PIXELS)?,
@@ -1600,21 +2092,26 @@ impl<R: Read + Seek> StorySession<R> {
                             if duration == 0 {
                                 duration = 500;
                             }
-                            let bytes = self.store.read("image/mask", &format!("{name}.png"))?;
+                            let requested = format!("{name}.png");
+                            let (resolved, bytes) = match self
+                                .store
+                                .read_optional("image/mask", &requested)?
+                            {
+                                Some(bytes) => (requested, bytes),
+                                None => {
+                                    let previous =
+                                        self.last_wipe_mask.as_ref().ok_or_else(|| {
+                                            format!("missing DAT resource image/mask/{requested}")
+                                        })?;
+                                    (previous.clone(), self.store.read("image/mask", previous)?)
+                                }
+                            };
                             if png_position(&bytes)? != [0, 0] {
                                 return Err("unsupported wipe mask offsets".into());
                             }
                             let mask = decode_png(&bytes, PIXELS)?;
                             let target = self.render()?;
-                            let old = match &self.presented {
-                                Some(png) => decode_png(png, PIXELS)?,
-                                None => nekopack_image::RgbaImage::filled(
-                                    self.scene.dimensions[0],
-                                    self.scene.dimensions[1],
-                                    [0, 0, 0, 255],
-                                    PIXELS,
-                                )?,
-                            };
+                            let old = self.previous_frame()?;
                             let wipe = crate::transition::Wipe::new(
                                 old,
                                 decode_png(&target, PIXELS)?,
@@ -1622,6 +2119,10 @@ impl<R: Read + Seek> StorySession<R> {
                                 soft,
                                 duration,
                             )?;
+                            self.last_wipe_mask = Some(resolved);
+                            // The wipe presents a snapshot at the actors' final positions.
+                            // Its target consumes the queued movements before later edits.
+                            self.motions.clear();
                             self.effects.push(format!(
                                 "wipe {name} {duration}{}",
                                 if soft { " fade" } else { "" }
@@ -1661,6 +2162,7 @@ impl<R: Read + Seek> StorySession<R> {
                                 return Ok(());
                             }
                             self.presented = Some(self.render()?);
+                            self.presented_raw = None;
                         }
                         "se" => {
                             if args.is_empty() {
@@ -1693,6 +2195,22 @@ impl<R: Read + Seek> StorySession<R> {
                                 }
                             }
                         }
+                        "delay" if args.is_empty() => {
+                            self.effects.push("delay".into());
+                            if self.host_mode {
+                                self.emit("fade", "0")?;
+                                return Ok(());
+                            }
+                        }
+                        "bgm" if matches!(args.as_slice(), [_, mode] if mode == b"fade") => {
+                            let name = std::str::from_utf8(&args[0])?;
+                            self.effects.push(format!("bgm {name} fade"));
+                            if self.host_mode {
+                                self.emit("bgm", name)?;
+                                self.pending_effect.as_mut().unwrap().duration_ms = 4000;
+                                return Ok(());
+                            }
+                        }
                         "bgm" | "wait" => {
                             if args.len() != 1 {
                                 return Err("preview effect requires one argument".into());
@@ -1707,13 +2225,13 @@ impl<R: Read + Seek> StorySession<R> {
                         _ => {
                             return Err(
                                 format!("unsupported story preview command {command}").into()
-                            )
+                            );
                         }
                     }
                     self.machine.complete(None)?;
                 }
                 Step::Request(Request::System(_)) => {
-                    return Err("unexpected system module in story preview".into())
+                    return Err("unexpected system module in story preview".into());
                 }
             }
         }
@@ -1727,7 +2245,7 @@ fn solid(name: &str) -> Option<[u8; 4]> {
     }
 }
 /// PNG pixel offsets are the observed actor placement contract, not MNG timing.
-fn png_position(bytes: &[u8]) -> Result<[i32; 2], Box<dyn Error>> {
+pub(crate) fn png_position(bytes: &[u8]) -> Result<[i32; 2], Box<dyn Error>> {
     let mut at = 8;
     let mut position = [0, 0];
     while at < bytes.len() {
@@ -1773,6 +2291,8 @@ mod tests {
         );
         machine.enable_dialogue();
         StorySession {
+            replay: false,
+            unlocks: Default::default(),
             store,
             machine,
             system: SystemVm::new(),
@@ -1789,7 +2309,12 @@ mod tests {
             restoring: false,
             persistent_audio: BTreeMap::new(),
             presented: None,
+            presented_raw: None,
+            batch_render: false,
+            dialogue_scene_png: None,
             wipe: None,
+            credits: None,
+            last_wipe_mask: None,
             shake: None,
             flash: None,
             image_macros: BTreeMap::new(),
@@ -1803,6 +2328,8 @@ mod tests {
             sequence: 0,
             failed: false,
             host_mode: false,
+            metadata_only: false,
+            preview_choices: Default::default(),
             interactive_text: false,
             auto_mode: false,
             dialogue_hidden: false,
@@ -1812,6 +2339,7 @@ mod tests {
             page_read: false,
             history: crate::read_history::History::default(),
             text_reveal: None,
+            host_text_speed: None,
             text_renderer: None,
             settings: None,
             settings_sequence: 0,
@@ -1824,6 +2352,105 @@ mod tests {
     }
 
     #[test]
+    fn route_batch_preserves_previous_scene_for_wipe() {
+        let mut story =
+            session(".img 白\nfirst\nsecond\n.img 黒\n.wipe MASK 100\nthird".as_bytes());
+        let mut mask = Vec::new();
+        RgbaImage::filled(1, 1, [128, 128, 128, 255], PIXELS)
+            .unwrap()
+            .write_png(&mut mask)
+            .unwrap();
+        story.store = DatGame::mount([resource_pack(b"image/mask", b"MASK.png", &mask)]).unwrap();
+        story
+            .system
+            .eval(
+                "config",
+                "Config <- {TextSpeed=100,KeepVoice=0,AutoSpeed=50,SkipNoRead=1,ReadedFast=0}",
+            )
+            .unwrap();
+        story.enable_host_effects();
+        story.enable_interactive_text();
+        story.skip_mode = true;
+        story.replay_dialogue_batch().unwrap();
+        let old = story.wipe_frame(1, 0).unwrap();
+        let target = story.wipe_frame(1, 100).unwrap();
+        assert_eq!(&old[old.len() - 4..], &[255; 4]);
+        assert_eq!(&target[target.len() - 4..], &[0, 0, 0, 255]);
+    }
+
+    #[test]
+    fn route_batch_runs_dialogue_but_stops_at_selection() {
+        let mut story = session(b"first\nsecond\n.select\none\n.case 1\n.end\nlast");
+        story.system.eval("config", "Config <- {TextSpeed=100,KeepVoice=0,AutoSpeed=50,SkipNoRead=1,ReadedFast=0,KeepSkip=0}").unwrap();
+        story.enable_host_effects();
+        story.enable_interactive_text();
+        story.skip_mode = true;
+        let packet = story.replay_dialogue_batch().unwrap();
+        let metadata = String::from_utf8(packet).unwrap();
+        assert!(metadata.contains("\"sequence\":1"));
+        assert!(metadata.contains("\"sequence\":2"));
+        assert!(metadata.contains("\"host_effect\":\"select\""));
+        assert!(!story.skip_mode);
+        assert!(story.acknowledge_effect(1).is_err());
+    }
+
+    #[test]
+    fn selection_obeys_keep_mode_and_requires_an_explicit_choice() {
+        for (skip, auto) in [(true, false), (false, true)] {
+            for keep in [0, 1] {
+                let mut story = session(b".select\none\ntwo\n.case 1\nchosen\n.end\nafter");
+                story
+                    .system
+                    .eval(
+                        "config",
+                        &format!("Config <- {{KeepSkip={keep},KeepAuto={keep},SkipNoRead=1}}"),
+                    )
+                    .unwrap();
+                story.enable_host_effects();
+                story.skip_mode = skip;
+                story.auto_mode = auto;
+                story.poll_packet().unwrap();
+                assert_eq!(story.skip_mode, skip && keep == 1);
+                assert_eq!(story.auto_mode, auto && keep == 1);
+                assert!(story.acknowledge_effect(1).is_err());
+                assert!(story.acknowledge_selection(1, 3).is_err());
+                story.acknowledge_selection(1, 1).unwrap();
+                assert_eq!(story.page().unwrap().text, "chosen");
+            }
+        }
+    }
+
+    #[test]
+    fn dialogue_scene_is_reused_until_a_scene_command_changes_it() {
+        let mut story = session(".img 白\nfirst\nsecond\n.img 黒\nthird".as_bytes());
+        let white = story.page().unwrap().png.clone();
+        assert_eq!(story.next(1).unwrap().png, white);
+        let black = &story.next(2).unwrap().png;
+        assert_ne!(black, &white);
+        assert_eq!(decode_png(black, 4).unwrap().pixels(), &[0, 0, 0, 255]);
+    }
+
+    #[test]
+    fn host_skips_bare_command_marker_between_dialogue_lines() {
+        let mut story = session(b"first\n.\nsecond");
+        story.enable_host_effects();
+        assert_eq!(story.page().unwrap().text, "first");
+        let second = story.next(1).unwrap();
+        assert_eq!(second.text, "second");
+        assert_eq!(second.steps, 3);
+    }
+
+    #[test]
+    fn host_story_can_advance_past_the_bootstrap_step_limit() {
+        let mut text = b"; scenario comment\n".repeat(10_000);
+        text.extend_from_slice(b"first\nsecond");
+        let mut story = session(&text);
+        story.enable_host_effects();
+        assert_eq!(story.page().unwrap().steps, 10_001);
+        assert_eq!(story.next(1).unwrap().text, "second");
+    }
+
+    #[test]
     fn rebuilding_pending_page_does_not_duplicate_message_log() {
         let mut s = session(b"one\ntwo");
         s.poll_packet().unwrap();
@@ -1833,6 +2460,65 @@ mod tests {
         s.rebuilding_page = false;
         assert_eq!(s.message_history.entries.len(), 1);
         assert_eq!(s.message_history.entries[0].text, "one");
+    }
+
+    #[test]
+    #[ignore = "requires the four original BLESS DAT archives"]
+    fn bless_original_credits_assets_render_and_release_to_title() {
+        let dir = std::path::PathBuf::from(std::env::var_os("NEKO_BLESS_DAT_DIR").unwrap());
+        let files = ["image.dat", "voice.dat", "sound.dat", "system.dat"]
+            .map(|name| std::fs::File::open(dir.join(name)).unwrap());
+        let mut story = StorySession::open(DatGame::mount(files).unwrap(), 1).unwrap();
+        story.machine = Machine::new(
+            Source {
+                name: b"title".to_vec(),
+                bytes: b".staffroll\n.map title\nstart\n.case 1\n.end".to_vec(),
+            },
+            100,
+            4,
+        );
+        story.enable_host_effects();
+        story.poll_packet().unwrap();
+        let pending = story.pending_effect.as_ref().unwrap();
+        assert_eq!(pending.kind, "staffroll");
+        assert!(pending.payload.starts_with(b"OggS"));
+        let token = pending.token;
+        for ms in [0, 60_000, 130_000] {
+            let packet = story.effect_frame(token, ms).unwrap();
+            let header = packet.iter().position(|b| *b == b'\n').unwrap();
+            assert_eq!(packet.len() - header - 1, 1280 * 720 * 4);
+        }
+        story.acknowledge_effect(token).unwrap();
+        assert!(story.return_title_requested());
+        assert!(story.credits.is_none());
+    }
+
+    #[test]
+    fn script_title_map_emits_repeatable_terminal_checkpoint() {
+        let mut story = session(b"");
+        story.machine = Machine::new(
+            Source {
+                name: b"title".to_vec(),
+                bytes: b".var G904 clear\n?clear = 1\n.map title\nstart\n.case 1\n.end".to_vec(),
+            },
+            100,
+            4,
+        );
+        story.enable_host_effects();
+        let result = story.poll_packet().unwrap();
+        let metadata = String::from_utf8(result.clone()).unwrap();
+        assert!(metadata.contains("\"kind\":\"story_return_title\""));
+        assert!(metadata.contains("[71,904,1]"));
+        assert_eq!(story.poll_packet().unwrap(), result);
+    }
+
+    #[test]
+    fn replay_completion_returns_without_consuming_the_title() {
+        let mut story = session(b"");
+        story.mark_replay();
+        let result = story.poll_packet().unwrap();
+        assert!(String::from_utf8_lossy(&result).contains(r#""kind":"story_return_title""#));
+        assert_eq!(story.poll_packet().unwrap(), result);
     }
 
     #[test]
@@ -1858,9 +2544,11 @@ mod tests {
         assert!(s.set_skip_mode(1, true).is_err());
         assert!(s.cancel_menu(1).is_err());
         assert!(s.menu_pointer(1, 2, 3, 0).is_err());
-        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
-            .unwrap()
-            .contains("busy"));
+        assert!(
+            String::from_utf8(s.shortcut(2, 1).unwrap())
+                .unwrap()
+                .contains("busy")
+        );
     }
 
     #[test]
@@ -1884,11 +2572,12 @@ mod tests {
         assert!(s.open_menu(1).is_err());
         let mut damaged = save.clone();
         *damaged.last_mut().unwrap() ^= 1;
-        assert!(s
-            .prepare_save(&damaged)
-            .unwrap_err()
-            .to_string()
-            .contains("checksum"));
+        assert!(
+            s.prepare_save(&damaged)
+                .unwrap_err()
+                .to_string()
+                .contains("checksum")
+        );
         assert!(s.prepare_save(b"NKSV").is_err());
         assert!(s.commit_save().is_err());
         assert_eq!(s.poll_packet().unwrap(), original);
@@ -1896,9 +2585,11 @@ mod tests {
         s.cancel_save().unwrap();
         assert!(s.export_save().is_err());
         let resumed = s.text_frame(1, 0, true).unwrap();
-        assert!(String::from_utf8(resumed)
-            .unwrap()
-            .contains("\"advance\":true"));
+        assert!(
+            String::from_utf8(resumed)
+                .unwrap()
+                .contains("\"advance\":true")
+        );
         assert!(s.text_frame(1, 0, true).is_err());
         assert_eq!(s.acknowledge_text(1).unwrap(), s.poll_packet().unwrap());
         assert_eq!(s.page.as_ref().unwrap().text, "two");
@@ -1911,21 +2602,27 @@ mod tests {
         s.enable_interactive_text();
         let before = s.poll_packet().unwrap();
         s.text_frame(1, 0, false).unwrap();
-        assert!(String::from_utf8(s.shortcut(1, 1).unwrap())
-            .unwrap()
-            .contains("request"));
-        assert!(String::from_utf8(s.shortcut(2, 0).unwrap())
-            .unwrap()
-            .contains("busy"));
+        assert!(
+            String::from_utf8(s.shortcut(1, 1).unwrap())
+                .unwrap()
+                .contains("request")
+        );
+        assert!(
+            String::from_utf8(s.shortcut(2, 0).unwrap())
+                .unwrap()
+                .contains("busy")
+        );
         assert!(s.begin_save(2).is_err());
         assert!(!s.dialogue_modal);
         s.set_auto_mode(1, true).unwrap();
         s.begin_save(1).unwrap();
         assert!(!s.auto_mode && !s.skip_mode);
         assert!(s.text_frame(1, 50, true).is_err());
-        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
-            .unwrap()
-            .contains("busy"));
+        assert!(
+            String::from_utf8(s.shortcut(2, 1).unwrap())
+                .unwrap()
+                .contains("busy")
+        );
         assert_eq!(s.poll_packet().unwrap(), before);
         s.cancel_save().unwrap();
         assert_eq!(s.poll_packet().unwrap(), before);
@@ -1941,9 +2638,11 @@ mod tests {
         s.enable_interactive_text();
         let packet = s.poll_packet().unwrap();
         s.text_frame(1, 0, false).unwrap();
-        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
-            .unwrap()
-            .contains("request"));
+        assert!(
+            String::from_utf8(s.shortcut(2, 1).unwrap())
+                .unwrap()
+                .contains("request")
+        );
         s.set_auto_mode(1, true).unwrap();
         s.menu = Some(crate::menu::Menu::fixture());
         assert!(s.text_frame(1, 50, true).is_err());
@@ -1953,9 +2652,11 @@ mod tests {
         assert!(s.open_menu(1).is_err());
         assert!(s.set_auto_mode(1, false).is_err());
         assert!(s.set_skip_mode(1, true).is_err());
-        assert!(String::from_utf8(s.shortcut(2, 1).unwrap())
-            .unwrap()
-            .contains("busy"));
+        assert!(
+            String::from_utf8(s.shortcut(2, 1).unwrap())
+                .unwrap()
+                .contains("busy")
+        );
         assert!(s.menu_pointer(2, 0, 0, 0).is_err());
         assert!(s.cancel_menu(2).is_err());
         s.menu_pointer(1, 0, 0, 0).unwrap();
@@ -1973,9 +2674,11 @@ mod tests {
         assert!(!s.auto_mode && !s.skip_mode);
         assert!(s.cancel_menu(1).is_err());
         assert_eq!(s.poll_packet().unwrap(), packet);
-        assert!(!String::from_utf8(s.text_frame(1, 10000, false).unwrap())
-            .unwrap()
-            .contains("\"advance\":true"));
+        assert!(
+            !String::from_utf8(s.text_frame(1, 10000, false).unwrap())
+                .unwrap()
+                .contains("\"advance\":true")
+        );
         for (x, action) in [(1, "CONFIG"), (2, "QUIT")] {
             s.menu = Some(crate::menu::Menu::fixture());
             s.menu_pointer(1, 0, x, 0).unwrap();
@@ -1995,9 +2698,11 @@ mod tests {
         let page = s.poll_packet().unwrap();
         s.text_frame(1, 0, false).unwrap();
         s.set_auto_mode(1, true).unwrap();
-        assert!(String::from_utf8(s.shortcut(3, 1).unwrap())
-            .unwrap()
-            .contains("request"));
+        assert!(
+            String::from_utf8(s.shortcut(3, 1).unwrap())
+                .unwrap()
+                .contains("request")
+        );
         s.hide_dialogue(1, true).unwrap();
         assert!(s.auto_mode);
         assert_eq!(s.poll_packet().unwrap(), page);
@@ -2007,9 +2712,11 @@ mod tests {
         assert!(s.open_settings(1).is_err());
         assert!(s.set_skip_mode(1, true).is_err());
         assert!(s.set_auto_mode(1, false).is_err());
-        assert!(String::from_utf8(s.shortcut(3, 1).unwrap())
-            .unwrap()
-            .contains("busy"));
+        assert!(
+            String::from_utf8(s.shortcut(3, 1).unwrap())
+                .unwrap()
+                .contains("busy")
+        );
         assert!(s.hide_dialogue(2, false).is_err());
         assert!(s.hide_dialogue(1, true).is_err());
         s.hide_dialogue(1, false).unwrap();
@@ -2057,9 +2764,11 @@ mod tests {
         s.text_frame(1, 0, false).unwrap();
         assert!(s.shortcut(0, 1).is_err());
         assert!(s.shortcut(13, 1).is_err());
-        assert!(String::from_utf8(s.shortcut(5, 1).unwrap())
-            .unwrap()
-            .contains("unsupported"));
+        assert!(
+            String::from_utf8(s.shortcut(5, 1).unwrap())
+                .unwrap()
+                .contains("\"status\":\"request\"")
+        );
         assert_eq!(s.poll_packet().unwrap(), original);
         s.shortcut(3, 1).unwrap();
         assert!(s.auto_mode);
@@ -2073,19 +2782,25 @@ mod tests {
         assert!(s.text_reveal.as_ref().unwrap().advance);
         s.shortcut(3, 0).unwrap();
         assert!(!s.skip_mode);
-        assert!(String::from_utf8(s.shortcut(3, 0).unwrap())
-            .unwrap()
-            .contains("busy"));
+        assert!(
+            String::from_utf8(s.shortcut(3, 0).unwrap())
+                .unwrap()
+                .contains("busy")
+        );
         s.acknowledge_text(1).unwrap();
         s.text_frame(2, 0, false).unwrap();
         assert!(!s.skip_mode);
         s.system.eval("unbind", "Config.ShortCuts[2]=\"\"").unwrap();
-        assert!(String::from_utf8(s.shortcut(3, 2).unwrap())
-            .unwrap()
-            .contains("unbound"));
-        assert!(String::from_utf8(s.shortcut(1, 2).unwrap())
-            .unwrap()
-            .contains("request"));
+        assert!(
+            String::from_utf8(s.shortcut(3, 2).unwrap())
+                .unwrap()
+                .contains("unbound")
+        );
+        assert!(
+            String::from_utf8(s.shortcut(1, 2).unwrap())
+                .unwrap()
+                .contains("request")
+        );
     }
     #[test]
     fn skip_stops_at_next_unread_and_history_survives_restart() {
@@ -2432,9 +3147,11 @@ mod tests {
         let mut s = session(b".wait 0.125\nfirst\n.wait 0\nsecond");
         s.enable_host_effects();
         let pending = s.poll_packet().unwrap();
-        assert!(String::from_utf8(pending.clone())
-            .unwrap()
-            .contains("\"duration_ms\":125"));
+        assert!(
+            String::from_utf8(pending.clone())
+                .unwrap()
+                .contains("\"duration_ms\":125")
+        );
         let location = s.machine.location().unwrap().1;
         let budget = s.machine.steps();
         assert_eq!(s.poll_packet().unwrap(), pending);
@@ -2446,9 +3163,11 @@ mod tests {
         assert_eq!(s.poll_packet().unwrap(), page);
         assert!(s.acknowledge_effect(1).is_err());
         let second = s.acknowledge_text(1).unwrap();
-        assert!(String::from_utf8(second)
-            .unwrap()
-            .contains("\"host_effect\":\"wait\""));
+        assert!(
+            String::from_utf8(second)
+                .unwrap()
+                .contains("\"host_effect\":\"wait\"")
+        );
         let text = s.acknowledge_effect(2).unwrap();
         assert!(String::from_utf8_lossy(&text).contains("second"));
     }
@@ -2475,6 +3194,16 @@ mod tests {
         s.next(1).unwrap();
         assert!(s.scene.actors.is_empty());
     }
+    #[test]
+    fn movie_preference_off_advances_without_opening_video() {
+        let mut s = session(b".movie op.mpg\ntext");
+        s.system.eval("setup", "Config <- {Movie=0}").unwrap();
+        s.enable_host_effects();
+        s.poll_packet().unwrap();
+        assert!(s.pending_effect.is_none());
+        assert_eq!(s.page.as_ref().unwrap().text, "text");
+    }
+
     #[test]
     fn movie_waits_and_validates_skip_reason_without_loading_dat_audio() {
         for (script, primary) in [
@@ -2568,8 +3297,10 @@ mod tests {
         let mut s = session(b".fade\n.fade 2.5\ntext");
         s.enable_host_effects();
         assert!(String::from_utf8_lossy(&s.poll_packet().unwrap()).contains("\"duration_ms\":500"));
-        assert!(String::from_utf8_lossy(&s.acknowledge_effect(1).unwrap())
-            .contains("\"duration_ms\":2000"));
+        assert!(
+            String::from_utf8_lossy(&s.acknowledge_effect(1).unwrap())
+                .contains("\"duration_ms\":2000")
+        );
         let mut s = session(b".wipe MASK 100\ntext");
         s.enable_host_effects();
         s.machine.advance(&mut s.store).unwrap();
@@ -2623,12 +3354,13 @@ mod tests {
         assert_eq!(p.voice, "");
         assert!(s.next(1).is_err());
         assert_eq!(s.page().unwrap().sequence, 2);
-        assert!(s
-            .next(2)
-            .err()
-            .unwrap()
-            .to_string()
-            .contains("unsupported story preview command"));
+        assert!(
+            s.next(2)
+                .err()
+                .unwrap()
+                .to_string()
+                .contains("unsupported story preview command")
+        );
         assert!(s.page().err().unwrap().to_string().contains("stopped"));
     }
     fn moving_session(text: &[u8]) -> StorySession<std::io::Cursor<Vec<u8>>> {
@@ -2664,9 +3396,11 @@ mod tests {
         for (time, finished) in [(0, false), (270, false), (500, false), (520, true)] {
             let frame = s.page_frame(1, time).unwrap();
             let split = frame.iter().position(|b| *b == b'\n').unwrap();
-            assert!(std::str::from_utf8(&frame[..split])
-                .unwrap()
-                .contains(&format!("\"finished\":{finished}")));
+            assert!(
+                std::str::from_utf8(&frame[..split])
+                    .unwrap()
+                    .contains(&format!("\"finished\":{finished}"))
+            );
             assert_eq!(&frame[split + 1 + 40..split + 1 + 44], [255, 0, 0, 255]);
             assert_eq!(s.motions[1].finished(), time >= 250);
         }
@@ -2806,7 +3540,7 @@ mod tests {
     }
     #[test]
     fn spaced_brackets_queue_two_excursions_without_moving_the_anchor() {
-        let mut s = moving_session(b".img6 [ ]\nfirst\nsecond");
+        let mut s = moving_session(b".img6 [\n.img6 ]\nfirst\nsecond");
         s.scene.actors[0].anchor[0] = 200;
         let packet = s.poll_packet().unwrap();
         let steps = s.machine.steps();
@@ -2887,14 +3621,15 @@ mod tests {
         let mut s = moving_session(b".img6 []\nfirst\nsecond");
         let page = s.poll_packet().unwrap();
         let steps = s.machine.steps();
-        assert!(s
-            .page
-            .as_ref()
-            .unwrap()
-            .motion
-            .as_ref()
-            .unwrap()
-            .contains("stationary"));
+        assert!(
+            s.page
+                .as_ref()
+                .unwrap()
+                .motion
+                .as_ref()
+                .unwrap()
+                .contains("stationary")
+        );
         assert!(s.pending_effect.is_none());
         let first = s.page_frame(1, 0).unwrap();
         let split = first.iter().position(|b| *b == b'\n').unwrap();
@@ -2925,10 +3660,9 @@ mod tests {
         assert_eq!(s.scene.actors[0].anchor, [450, 0]);
         assert!(s.page_frame(1, 50).is_err());
         for text in [
-            b".img6 >\n.img6 >\ntext".as_slice(),
+            b".img6 >\n.img6 center\ntext".as_slice(),
             b".img6 >\n.fade\ntext",
             b".img6 []\n.wait 1\ntext",
-            b".img6 []\n.bgm\ntext",
         ] {
             let mut s = moving_session(text);
             assert!(s.poll_packet().is_err());
@@ -2937,6 +3671,11 @@ mod tests {
     }
     fn audio_pack(directory: &[u8], name: &[u8]) -> std::io::Cursor<Vec<u8>> {
         // Minimal archive payload tests dispatch, not Ogg decoding (covered on device).
+        resource_pack(directory, name, b"OggS")
+    }
+
+    fn resource_pack(directory: &[u8], name: &[u8], payload: &[u8]) -> std::io::Cursor<Vec<u8>> {
+        let length = u32::try_from(payload.len()).unwrap();
         let mut bytes = b"NEKOPACK".to_vec();
         for word in [
             1,
@@ -2946,14 +3685,83 @@ mod tests {
             nekopack_archive::name_hash(1, directory),
             1,
             nekopack_archive::name_hash(1, name),
-            4,
+            length,
             0,
-            4,
+            length,
         ] {
             bytes.extend(word.to_le_bytes());
         }
-        bytes.extend(b"OggS");
+        bytes.extend(payload);
         std::io::Cursor::new(bytes)
+    }
+
+    #[test]
+    fn bgm_stop_preserves_queued_motion() {
+        let mut story = moving_session(b".img6 []\n.bgm\ntext");
+        story.poll_packet().unwrap();
+        assert_eq!(story.pending_effect.as_ref().unwrap().kind, "bgm_stop");
+        story.acknowledge_effect(1).unwrap();
+        assert!(story.page().unwrap().motion.is_some());
+    }
+
+    #[test]
+    fn absolute_and_vertical_motion_preserve_segment_order() {
+        let mut story = moving_session(b".img6 to right + -\ntext");
+        story.poll_packet().unwrap();
+        let q = &mut story.motions[0];
+        assert_eq!(q.duration(), 750);
+        assert_eq!(q.position(0), [400, 0]);
+        assert_eq!(q.position(250), [560, 0]);
+        assert_eq!(q.position(500), [560, -50]);
+        assert_eq!(q.position(750), [560, 0]);
+    }
+
+    #[test]
+    fn clearing_an_actor_removes_its_queued_motion() {
+        let mut story = moving_session(b".img6 _\n.img6\ntext");
+        assert!(story.page().unwrap().motion.is_none());
+        assert!(story.scene.actors.is_empty());
+        assert!(story.motions.is_empty());
+    }
+
+    #[test]
+    fn actor_replacement_keeps_queued_motion() {
+        let mut story = moving_session(b".img6 _\n.img6 replacement front\ntext");
+        let mut png = Vec::new();
+        RgbaImage::filled(1, 1, [255; 4], PIXELS)
+            .unwrap()
+            .write_png(&mut png)
+            .unwrap();
+        story.store =
+            DatGame::mount([resource_pack(b"image/actor", b"replacement.png", &png)]).unwrap();
+        story.poll_packet().unwrap();
+        assert_eq!(story.scene.actors[0].name, "replacement");
+        assert_eq!(story.motions.len(), 1);
+        assert_eq!(story.motions[0].slot, 6);
+        assert!(story.page().unwrap().motion.is_some());
+    }
+
+    #[test]
+    fn wipe_commits_queued_actor_position_before_following_scene_edits() {
+        let mut story = moving_session(
+            ".img6 >\n.img 白\n.wipe MASK 100\n.img6 center\n.wipe missing 10\ntext".as_bytes(),
+        );
+        let mut png = Vec::new();
+        RgbaImage::filled(800, 1, [255; 4], PIXELS)
+            .unwrap()
+            .write_png(&mut png)
+            .unwrap();
+        story.store = DatGame::mount([resource_pack(b"image/mask", b"MASK.png", &png)]).unwrap();
+        story.poll_packet().unwrap();
+        assert_eq!(story.pending_effect.as_ref().unwrap().kind, "wipe");
+        assert_eq!(story.scene.actors[0].anchor, [450, 0]);
+        assert!(story.motions.is_empty());
+        story.acknowledge_effect(1).unwrap();
+        assert_eq!(story.scene.actors[0].anchor, [400, 0]);
+        assert_eq!(story.pending_effect.as_ref().unwrap().name, "missing");
+        assert_eq!(story.last_wipe_mask.as_deref(), Some("MASK.png"));
+        story.acknowledge_effect(2).unwrap();
+        assert_eq!(story.page().unwrap().text, "text");
     }
 
     #[test]
@@ -2968,8 +3776,10 @@ mod tests {
             assert_eq!(e.kind, "se");
             assert_eq!(e.payload, b"OggS");
             assert_eq!(e.audio_loop, looping);
-            assert!(String::from_utf8_lossy(&packet)
-                .contains(&format!("\"loop\":{looping},\"volume_percent\":100")));
+            assert!(
+                String::from_utf8_lossy(&packet)
+                    .contains(&format!("\"loop\":{looping},\"volume_percent\":100"))
+            );
             let steps = s.machine.steps();
             assert_eq!(s.poll_packet().unwrap(), packet);
             assert!(s.acknowledge_effect(token + 1).is_err());
@@ -3032,8 +3842,10 @@ mod tests {
             let effect = s.pending_effect.as_ref().unwrap();
             assert_eq!(effect.kind, kind);
             if matches!(kind, "bgm" | "env") {
-                assert!(String::from_utf8_lossy(&packet)
-                    .contains("\"loop\":true,\"volume_percent\":50"));
+                assert!(
+                    String::from_utf8_lossy(&packet)
+                        .contains("\"loop\":true,\"volume_percent\":50")
+                );
             }
             assert_eq!(effect.payload, b"OggS");
             let steps = s.machine.steps();
@@ -3086,19 +3898,26 @@ mod tests {
         assert!(missing.pending_effect.is_none());
     }
     #[test]
-    fn queued_motion_survives_bgm_and_voice_acknowledgements_exactly_once() {
-        for modifier in ["[]", ">", "_", "[[[["] {
-            let text = format!(".img6 {modifier}\n.bgm music\n:name:line:actor\nfirst\nsecond");
+    fn queued_motion_survives_audio_start_and_voice_acknowledgements_exactly_once() {
+        for (modifier, channel) in [
+            ("[]", "bgm"),
+            (">", "bgm"),
+            ("_", "bgm"),
+            ("[[[[", "bgm"),
+            ("<<<", "se"),
+        ] {
+            let effect = format!("{channel} sound");
+            let text = format!(".img6 {modifier}\n.{effect}\n:name:line:actor\nfirst\nsecond");
             let mut s = moving_session(text.as_bytes());
             s.store = DatGame::mount([
-                audio_pack(b"sound/bgm", b"music.ogg"),
+                audio_pack(format!("sound/{channel}").as_bytes(), b"sound.ogg"),
                 audio_pack(b"voice", b"line.ogg"),
             ])
             .unwrap();
-            let bgm = s.poll_packet().unwrap();
-            assert_eq!(s.pending_effect.as_ref().unwrap().kind, "bgm");
+            let audio = s.poll_packet().unwrap();
+            assert_eq!(s.pending_effect.as_ref().unwrap().kind, channel);
             let steps = s.machine.steps();
-            assert_eq!(s.poll_packet().unwrap(), bgm);
+            assert_eq!(s.poll_packet().unwrap(), audio);
             assert!(s.acknowledge_effect(2).is_err());
             assert_eq!(s.machine.steps(), steps);
             assert_eq!(s.motions.len(), 1);
@@ -3110,7 +3929,7 @@ mod tests {
             assert_eq!(s.motions.len(), 1);
             s.acknowledge_effect(2).unwrap();
             assert!(s.pending_effect.is_none());
-            assert_eq!(s.page.as_ref().unwrap().effects, ["bgm music"]);
+            assert_eq!(s.page.as_ref().unwrap().effects, [effect]);
             assert_eq!(s.page.as_ref().unwrap().voice, "line");
             assert!(s.page.as_ref().unwrap().motion.is_some());
             assert_eq!(s.host_sequence, 2);
@@ -3126,11 +3945,13 @@ mod tests {
             assert!(s.page.as_ref().unwrap().effects.is_empty());
         }
         let mut missing = moving_session(b".img6 []\n.bgm missing\ntext");
-        assert!(missing
-            .poll_packet()
-            .unwrap_err()
-            .to_string()
-            .contains("missing"));
+        assert!(
+            missing
+                .poll_packet()
+                .unwrap_err()
+                .to_string()
+                .contains("missing")
+        );
         assert!(missing.failed);
         assert!(missing.pending_effect.is_none());
         assert!(missing.poll_packet().is_err());

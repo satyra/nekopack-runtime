@@ -7,6 +7,7 @@ pub(crate) enum Filter {
     None,
     Night,
     Sunset,
+    Dark,
 }
 impl Filter {
     pub fn parse(args: &[Vec<u8>]) -> Result<Self, String> {
@@ -14,6 +15,7 @@ impl Filter {
             [] => Ok(Self::None),
             [name] if name == "夜".as_bytes() => Ok(Self::Night),
             [name] if name == "夕".as_bytes() => Ok(Self::Sunset),
+            [name] if name == "闇".as_bytes() => Ok(Self::Dark),
             _ => Err("unsupported actor filter arguments".into()),
         }
     }
@@ -22,6 +24,7 @@ impl Filter {
             Self::None => "null",
             Self::Night => "\"night\"",
             Self::Sunset => "\"sunset\"",
+            Self::Dark => "\"dark\"",
         }
     }
     pub fn apply(self, image: &mut RgbaImage) {
@@ -30,6 +33,7 @@ impl Filter {
             Self::None => return,
             Self::Night => ([0, 0, 17], [17, 22, 0]),
             Self::Sunset => ([34, 0, 0], [0, 16, 34]),
+            Self::Dark => ([0, 0, 0], [68, 68, 68]),
         };
         for pixel in image.pixels_mut().as_chunks_mut::<4>().0 {
             for channel in 0..3 {
@@ -44,6 +48,7 @@ impl Filter {
             Self::None => 0,
             Self::Night => 1,
             Self::Sunset => 2,
+            Self::Dark => 3,
         }
     }
 }
@@ -51,6 +56,15 @@ impl Filter {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn dark_filter_saturates_rgb_and_preserves_alpha() {
+        let mut image = RgbaImage::from_rgba(1, 1, vec![44, 68, 200, 17], 4).unwrap();
+        Filter::parse(&["闇".as_bytes().to_vec()])
+            .unwrap()
+            .apply(&mut image);
+        assert_eq!(image.pixels(), &[0, 0, 132, 17]);
+    }
+
     #[test]
     fn sunset_uses_original_rgb_operands_and_preserves_alpha() {
         let mut image =

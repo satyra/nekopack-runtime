@@ -8,11 +8,7 @@ use std::{error::Error, fmt::Write, path::Path};
 mod title;
 
 fn check(ok: bool, message: &str) -> Result<(), Box<dyn Error>> {
-    if ok {
-        Ok(())
-    } else {
-        Err(message.into())
-    }
+    if ok { Ok(()) } else { Err(message.into()) }
 }
 
 fn run(root: &Path) -> Result<String, Box<dyn Error>> {
@@ -274,6 +270,54 @@ pub unsafe extern "C" fn neko_probe_story(
         STORY.with(|cell| -> Result<Vec<u8>, Box<dyn Error>> {
             let mut state = cell.borrow_mut();
             match operation {
+                67 => {
+                    use nekopack_script::runtime::Scripts;
+                    use std::io::Read;
+                    let mut files = unsafe { std::slice::from_raw_parts(fds, count) }
+                        .iter()
+                        .map(|&fd| {
+                            unsafe { BorrowedFd::borrow_raw(fd) }
+                                .try_clone_to_owned()
+                                .map(std::fs::File::from)
+                        })
+                        .collect::<Result<Vec<_>, _>>()?;
+                    let save = if sequence == 1 {
+                        if files.len() < 2 {
+                            return Err("save and DAT descriptors required".into());
+                        }
+                        let mut bytes = Vec::new();
+                        files
+                            .remove(0)
+                            .take((nekopack_script::checkpoint::LIMIT + 1) as u64)
+                            .read_to_end(&mut bytes)?;
+                        Some(bytes)
+                    } else {
+                        None
+                    };
+                    let mut store =
+                        nekopack_runtime::dat::DatGame::mount_version(files, elapsed_ms != 0)?;
+                    let chinese = store.has_chinese_scenario_patch();
+                    let patches = store.recognized_chinese_archives();
+                    if !store.has_resource("system", "title.mng")? {
+                        return Err("missing system/title.mng".into());
+                    }
+                    store.load(b"start")?;
+                    let valid = if let Some(bytes) = save {
+                        nekopack_runtime::title::TitleSession::open(store)?
+                            .validate_resume(&bytes)
+                            .is_ok()
+                    } else {
+                        false
+                    };
+                    Ok(format!(
+                        "{{\"chinese\":{chinese},\"valid\":{valid},\"patches\":{patches:?}}}"
+                    )
+                    .into_bytes())
+                }
+                69 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .override_text_speed(sequence),
                 19 => TITLE.with(|title| {
                     let values = unsafe { std::slice::from_raw_parts(fds, count) };
                     let bytes = values
@@ -301,6 +345,16 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .open_settings(sequence),
+                70 => {
+                    if let Some(story) = state.as_mut() {
+                        story.settings_tick(sequence)
+                    } else {
+                        TITLE.with(|title| {
+                            title.borrow_mut().as_mut().ok_or("no title session")?
+                                .settings_tick(sequence)
+                        })
+                    }
+                }
                 22 => {
                     if let Some(story) = state.as_mut() {
                         story.settings_command(sequence)
@@ -331,9 +385,48 @@ pub unsafe extern "C" fn neko_probe_story(
                         *state = Some(session);
                         state.as_mut().unwrap().poll_packet()
                     } else {
-                        session.packet(action)
+                        session.packet_with_settings_format(action, values[0] == 1)
                     }
                 }),
+                59 | 60 | 61 => TITLE.with(|title| {
+                    let mut title = title.borrow_mut();
+                    match operation {
+                        59 => title
+                            .as_mut()
+                            .ok_or("no title session")?
+                            .open_room(sequence),
+                        60 => {
+                            if count != 3 {
+                                return Err("room pointer requires kind/x/y".into());
+                            }
+                            let indexes = unsafe { std::slice::from_raw_parts(fds, count) };
+                            title
+                                .as_mut()
+                                .ok_or("no title session")?
+                                .room_input(indexes[0], indexes[1], indexes[2])
+                        }
+                        _ => {
+                            let mut session = title.take().ok_or("no title session")?.replay()?;
+                            session.enable_host_effects();
+                            session.enable_interactive_text();
+                            *state = Some(session);
+                            state.as_mut().unwrap().poll_packet()
+                        }
+                    }
+                }),
+                62 => Ok(state.as_mut().ok_or("no story session")?.export_unlocks()),
+                64 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .request_shortcut_reset(sequence),
+                65 => state.as_mut().ok_or("no story session")?.shortcut_voice(),
+                63 => {
+                    let classic = state
+                        .as_ref()
+                        .ok_or("no story session")?
+                        .has_classic_story_menu()?;
+                    Ok(format!(r#"{{"classic_story_menu":{classic}}}"#).into_bytes())
+                }
                 0 | 17 => {
                     if state.is_some() || TITLE.with(|t| t.borrow().is_some()) {
                         return Err("story session already open".into());
@@ -345,11 +438,28 @@ pub unsafe extern "C" fn neko_probe_story(
                         ));
                     }
                     if operation == 17 {
+                        use std::io::Read;
+                        let mut progress = Vec::new();
+                        if elapsed_ms & 1 != 0 {
+                            if files.len() < 2 {
+                                return Err("progress and DAT descriptors required".into());
+                            }
+                            files.remove(0).take(65537).read_to_end(&mut progress)?;
+                            if progress.len() > 65536 {
+                                return Err("unlock progress exceeds size limit".into());
+                            }
+                        }
                         return TITLE.with(|title| {
                             let mut title = title.borrow_mut();
-                            *title = Some(nekopack_runtime::title::TitleSession::open(
-                                nekopack_runtime::dat::DatGame::mount(files)?,
-                            )?);
+                            *title =
+                                Some(nekopack_runtime::title::TitleSession::open_with_progress(
+                                    nekopack_runtime::dat::DatGame::mount_version(
+                                        files,
+                                        elapsed_ms & 2 != 0,
+                                    )?,
+                                    sequence != 0,
+                                    &progress,
+                                )?);
                             title.as_mut().unwrap().packet(None)
                         });
                     }
@@ -361,7 +471,15 @@ pub unsafe extern "C" fn neko_probe_story(
                     state.as_mut().unwrap().enable_interactive_text();
                     state.as_mut().unwrap().poll_packet()
                 }
-                40 | 41 | 46 => {
+                66 if count == 0 => {
+                    let ready = if let Some(session) = state.as_mut() {
+                        session.quit_autosave_ready()?
+                    } else {
+                        false
+                    };
+                    Ok(format!("{{\"ready\":{ready}}}").into_bytes())
+                }
+                40 | 41 | 46 | 66 => {
                     use std::io::{Read, Write};
                     if operation == 46 && count == 0 {
                         if let Some(session) = state.as_mut() {
@@ -383,8 +501,13 @@ pub unsafe extern "C" fn neko_probe_story(
                     let mut file = std::fs::File::from(
                         unsafe { BorrowedFd::borrow_raw(values[0]) }.try_clone_to_owned()?,
                     );
-                    if operation == 40 {
-                        let bytes = state.as_ref().ok_or("no story session")?.export_save()?;
+                    if matches!(operation, 40 | 66) {
+                        let session = state.as_mut().ok_or("no story session")?;
+                        let bytes = if operation == 66 {
+                            session.export_quit_autosave()?
+                        } else {
+                            session.export_save()?
+                        };
                         file.write_all(&bytes)?;
                         file.sync_all()?;
                         Ok(format!("{{\"saved\":true,\"bytes\":{}}}", bytes.len()).into_bytes())
@@ -666,7 +789,7 @@ pub unsafe extern "C" fn neko_probe_story(
                 16 => state
                     .as_mut()
                     .ok_or("no story session")?
-                    .dialogue_image(sequence),
+                    .dialogue_image(sequence, elapsed_ms != 0),
                 14 => state
                     .as_mut()
                     .ok_or("no story session")?
@@ -691,6 +814,14 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .acknowledge_movie(sequence, elapsed_ms),
+                57 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .acknowledge_selection(sequence, elapsed_ms),
+                58 => state
+                    .as_mut()
+                    .ok_or("no story session")?
+                    .replay_dialogue_batch(),
                 6 => state
                     .as_mut()
                     .ok_or("no story session")?
@@ -704,7 +835,7 @@ pub unsafe extern "C" fn neko_probe_story(
                         && !state
                             .as_ref()
                             .ok_or("no story session")?
-                            .return_title_requested()
+                            .can_close_to_title()
                     {
                         return Err("return title was not requested".into());
                     }

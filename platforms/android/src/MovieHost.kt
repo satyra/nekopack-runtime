@@ -12,7 +12,6 @@ import android.net.Uri
 import android.os.SystemClock
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.widget.Button
 import android.widget.FrameLayout
 import org.json.JSONObject
 import java.io.File
@@ -27,6 +26,7 @@ class MovieHost(private val activity:Activity,private val stage:FrameLayout,priv
     private val reason=AtomicInteger(-1)
     private var launched=false
     @Volatile private var closed=false
+    val isActive get() = !closed
     private val gate=Object()
     private val clock=ActiveClock{SystemClock.elapsedRealtime()}
     private var background=false
@@ -69,7 +69,6 @@ class MovieHost(private val activity:Activity,private val stage:FrameLayout,priv
     }
     private fun activeNow():Long=synchronized(gate){clock.now()}
     private val surface=SurfaceView(activity).apply{keepScreenOn=true}
-    private val skip=Button(activity)
     private val audio=activity.getSystemService(Activity.AUDIO_SERVICE) as AudioManager
     private val focus=AudioManager.OnAudioFocusChangeListener {change->synchronized(gate){
         if(!closed){
@@ -92,7 +91,6 @@ class MovieHost(private val activity:Activity,private val stage:FrameLayout,priv
         fun log(event:String,meta:JSONObject=JSONObject()) {synchronized(gate){events.appendText(meta.put("event",event).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")}}
         eventLog={event,meta->log(event,meta)}
         resume()
-        skip.text="返回剧情";skip.setOnClickListener{synchronized(gate){reason.compareAndSet(-1,2);gate.notifyAll()}}
         surface.setOnClickListener{if(leftSkip)synchronized(gate){reason.compareAndSet(-1,1);gate.notifyAll()}}
         surface.holder.addCallback(object:SurfaceHolder.Callback{
             override fun surfaceChanged(holder:SurfaceHolder,format:Int,width:Int,height:Int){}
@@ -170,18 +168,17 @@ class MovieHost(private val activity:Activity,private val stage:FrameLayout,priv
                         worker.shutdown()
                     }
                     activity.runOnUiThread {
-                        stage.removeView(skip);stage.removeView(surface)
+                        stage.removeView(surface)
                         if(!closed){closed=true;if(error!=null)failure(error)else if(reason.get() in 0..2)complete(reason.get())else failure(IllegalStateException("movie surface lost before completion"))}
                     }
                 }
             }
         })
         stage.addView(surface,FrameLayout.LayoutParams(-1,-1))
-        stage.addView(skip,FrameLayout.LayoutParams(-2,-2,android.view.Gravity.TOP or android.view.Gravity.END))
     }
     fun close(){
         synchronized(gate){if(closed)return;closed=true;reason.compareAndSet(-1,3);if(trackPlaying){activeTrack!!.pause();trackPlaying=false};gate.notifyAll()}
         audio.abandonAudioFocus(focus)
-        if(!launched){worker.shutdown();stage.removeView(skip);stage.removeView(surface)}
+        if(!launched){worker.shutdown();stage.removeView(surface)}
     }
 }

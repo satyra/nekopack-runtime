@@ -1,6 +1,6 @@
 //! Runtime-owned saves; intentionally incompatible with original .sav files.
 use super::*;
-use nekopack_script::checkpoint::{digest, Reader, Writer, LIMIT};
+use nekopack_script::checkpoint::{LIMIT, Reader, Writer, digest};
 
 pub(crate) struct Saved {
     machine: Machine,
@@ -14,18 +14,30 @@ pub(crate) struct Saved {
     audio_effects: std::collections::VecDeque<HostEffect>,
     page_effects: Vec<String>,
     history: Option<crate::message_log::History>,
+    last_wipe_mask: Option<String>,
 }
 impl<R: Read + Seek> StorySession<R> {
+    pub fn restore_route_preview(&mut self, bytes: &[u8]) -> Result<(), Box<dyn Error>> {
+        let saved = Saved::decode(bytes, &mut self.store, self.scene.dimensions, false)?;
+        self.apply_saved(saved)?;
+        Ok(())
+    }
+
     pub fn side_menu(&mut self, quick: Option<&[u8]>) -> Result<Vec<u8>, Box<dyn Error>> {
         let available = quick.is_some_and(|b| {
             Saved::decode(b, &mut self.store, self.scene.dimensions, false).is_ok()
         });
-        self.system.eval("side-options", "return Config.Popup")?;
-        let popup = self.system.result().trim() != "0";
+        let popup = crate::preferences::enabled(&mut self.system, "Popup")?;
         self.side_menu = Some(crate::side_menu::SideMenu::open(
             &mut self.store,
             available,
             popup,
+            crate::preferences::enabled(&mut self.system, "KeepIcon")?,
+            self.labels.in_route,
+            self.message_history
+                .entries
+                .iter()
+                .any(|entry| !entry.voice.is_empty()),
         )?);
         self.side_menu.as_ref().unwrap().packet("")
     }
@@ -124,6 +136,37 @@ impl<R: Read + Seek> StorySession<R> {
     }
     pub fn export_save(&self) -> Result<Vec<u8>, Box<dyn Error>> {
         self.save_boundary()?;
+        self.serialize_dialogue_save()
+    }
+
+    pub fn quit_autosave_ready(&mut self) -> Result<bool, Box<dyn Error>> {
+        Ok(!self.replay
+            && self.labels.in_route
+            && !self.failed
+            && self.pending_effect.is_none()
+            && self.page.is_some()
+            && self
+                .text_reveal
+                .as_ref()
+                .is_none_or(|reveal| !reveal.advance)
+            && crate::preferences::enabled(&mut self.system, "AutoSave")?)
+    }
+
+    pub fn export_quit_autosave(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+        if !self.quit_autosave_ready()? {
+            return Err("no dialogue available for exit quicksave".into());
+        }
+        self.serialize_dialogue_save()
+    }
+
+    pub fn export_route_preview(&self) -> Result<Vec<u8>, Box<dyn Error>> {
+        if self.host_mode || self.metadata_only || self.page.is_none() {
+            return Err("route checkpoint requires a rendered preview dialogue".into());
+        }
+        self.serialize_dialogue_save()
+    }
+
+    fn serialize_dialogue_save(&self) -> Result<Vec<u8>, Box<dyn Error>> {
         if !self.labels.in_route {
             return Err("save unavailable outside a route".into());
         }
@@ -153,10 +196,29 @@ impl<R: Read + Seek> StorySession<R> {
             w.number(u64::from(*looping));
         }
         self.message_history.save(&mut w);
+        w.text(self.last_wipe_mask.as_deref().unwrap_or(""));
+        w.number(u64::from(self.scene.cinema_frame));
+        w.number(self.scene.mapped_actors.len() as u64);
+        for (slot, actor) in &self.scene.mapped_actors {
+            w.number((*slot).into());
+            w.text(&actor.containers.join("#"));
+            w.text(&actor.expression);
+            w.number(actor.extras.len() as u64);
+            for (book, title) in &actor.extras {
+                w.text(book);
+                w.text(title);
+            }
+            w.number(u64::from(actor.anchor.is_some()));
+            if let Some(anchor) = actor.anchor {
+                for coordinate in anchor {
+                    w.number(u64::from(coordinate as u32));
+                }
+            }
+        }
         if w.0.len() > LIMIT - 13 {
             return Err("runtime save exceeds limit".into());
         }
-        let mut out = b"NKSV\x02".to_vec();
+        let mut out = b"NKSV\x05".to_vec();
         out.extend(digest(&w.0).to_le_bytes());
         out.extend(w.0);
         Ok(out)
@@ -201,8 +263,15 @@ impl<R: Read + Seek> StorySession<R> {
             .last()
             .map(|e| e.face.clone())
             .unwrap_or_default();
+        self.unlocks.capture(&self.machine.variables);
         self.machine = saved.machine;
+        self.unlocks.apply(&mut self.machine.variables);
+        if self.host_mode {
+            self.machine.set_step_budget(super::STORY_STEP_BUDGET);
+        }
         self.scene = saved.scene;
+        self.dialogue_scene_png = None;
+        self.last_wipe_mask = saved.last_wipe_mask;
         self.labels = saved.labels;
         self.speaker = saved.speaker;
         self.voice = saved.voice;
@@ -244,7 +313,7 @@ impl Saved {
         if bytes.len() > LIMIT
             || bytes.len() < 13
             || &bytes[..4] != b"NKSV"
-            || !matches!(bytes[4], 1 | 2)
+            || !matches!(bytes[4], 1..=5)
         {
             return Err("unknown runtime save format".into());
         }
@@ -255,7 +324,7 @@ impl Saved {
         if r.number()? != store.save_identity() {
             return Err("save belongs to a different DAT mount".into());
         }
-        let machine = Machine::load_dialogue(r.bytes()?, store, 10000, 64)?;
+        let machine = Machine::load_dialogue(r.bytes()?, store, super::STORY_STEP_BUDGET, 64)?;
         let title = r.text()?;
         let route = r.text()?;
         let caption = r.text()?;
@@ -278,7 +347,7 @@ impl Saved {
         for _ in 0..r.count(10000)? {
             page_effects.push(r.text()?);
         }
-        let scene = Scene::load(&mut r, dimensions)?;
+        let mut scene = Scene::load(&mut r, dimensions)?;
         let elapsed = r.number()?;
         let mut motions = Vec::new();
         for _ in 0..r.count(9)? {
@@ -304,11 +373,65 @@ impl Saved {
                 return Err("invalid saved audio".into());
             }
         }
-        let history = if bytes[4] == 2 {
+        let history = if bytes[4] >= 2 {
             Some(crate::message_log::History::load(&mut r)?)
         } else {
             None
         };
+        let last_wipe_mask = if bytes[4] >= 3 {
+            let mask = r.text()?;
+            if mask.is_empty() {
+                None
+            } else {
+                store.read("image/mask", &mask)?;
+                Some(mask)
+            }
+        } else {
+            None
+        };
+        if bytes[4] >= 4 {
+            scene.cinema_frame = r.count(1)? == 1;
+        }
+        if bytes[4] >= 5 {
+            for _ in 0..r.count(64)? {
+                let slot = u8::try_from(r.number()?)?;
+                let containers = r
+                    .text()?
+                    .split('#')
+                    .filter(|s| !s.is_empty())
+                    .map(str::to_owned)
+                    .collect();
+                let expression = r.text()?;
+                let mut extras = Vec::new();
+                for _ in 0..r.count(32)? {
+                    extras.push((r.text()?, r.text()?));
+                }
+                let anchor = if r.count(1)? == 1 {
+                    Some([
+                        u32::try_from(r.number()?)? as i32,
+                        u32::try_from(r.number()?)? as i32,
+                    ])
+                } else {
+                    None
+                };
+                if slot == 0
+                    || scene
+                        .mapped_actors
+                        .insert(
+                            slot,
+                            super::mapped_actor::Actor {
+                                containers,
+                                expression,
+                                extras,
+                                anchor,
+                            },
+                        )
+                        .is_some()
+                {
+                    return Err("invalid mapped actor slot".into());
+                }
+            }
+        }
         if let Some(h) = &history {
             let last = h.entries.last().ok_or("empty saved message log")?;
             if last.name != speaker
@@ -348,6 +471,7 @@ impl Saved {
         // Validate rendering before the destructive commit, including saved positions.
         let mut saved = Saved {
             history,
+            last_wipe_mask,
             page_effects,
             machine,
             scene,

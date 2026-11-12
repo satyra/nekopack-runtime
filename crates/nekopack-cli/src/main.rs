@@ -1,6 +1,6 @@
 use nekopack_archive::Archive;
-use nekopack_image::{decode_png, Mng, RgbaImage};
-use nekopack_resource::{resolve, Catalog, Resolution};
+use nekopack_image::{Mng, RgbaImage, decode_png};
+use nekopack_resource::{Catalog, Resolution, resolve};
 use std::error::Error;
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Write};
@@ -136,8 +136,54 @@ fn run() -> Result<(), Box<dyn Error>> {
     }
     let command = args[0].to_str().ok_or("invalid command encoding")?;
     match (command, args.len()) {
-        ("preview-story" | "preview-title-story", n) if n >= 4 => {
-            let files = args[3..]
+        ("preview-story" | "preview-title-story" | "preview-route", n)
+            if n >= 4 && (command != "preview-route" || n >= 5) =>
+        {
+            let route = command == "preview-route";
+            let render_route = route && args[4] == "--render";
+            let mut file_start = if render_route {
+                5
+            } else if route {
+                4
+            } else {
+                3
+            };
+            let resume = if route && args.get(file_start).is_some_and(|arg| arg == "--save") {
+                let path = args.get(file_start + 1).ok_or("--save requires a file")?;
+                file_start += 2;
+                Some(path)
+            } else {
+                None
+            };
+            let render_from = if route
+                && args
+                    .get(file_start)
+                    .is_some_and(|arg| arg == "--render-from")
+            {
+                let page = args
+                    .get(file_start + 1)
+                    .and_then(|arg| arg.to_str())
+                    .ok_or("--render-from requires a page number")?
+                    .parse::<usize>()?;
+                file_start += 2;
+                Some(page)
+            } else {
+                None
+            };
+            let checkpoint = if route
+                && args
+                    .get(file_start)
+                    .is_some_and(|arg| arg == "--checkpoint")
+            {
+                let path = args
+                    .get(file_start + 1)
+                    .ok_or("--checkpoint requires a file")?;
+                file_start += 2;
+                Some(path)
+            } else {
+                None
+            };
+            let files = args[file_start..]
                 .iter()
                 .map(File::open)
                 .collect::<Result<Vec<_>, _>>()?;
@@ -153,9 +199,26 @@ fn run() -> Result<(), Box<dyn Error>> {
             } else {
                 nekopack_runtime::story::StorySession::open(store, 1)?
             };
+            if route {
+                session.set_preview_choices(
+                    args[3]
+                        .to_str()
+                        .ok_or("invalid choices")?
+                        .split(',')
+                        .map(str::parse)
+                        .collect::<Result<Vec<i32>, _>>()?,
+                    !render_route,
+                );
+            }
+            if let Some(path) = resume {
+                session.restore_route_preview(&bounded_file(path)?)?;
+            }
             let count: usize = args[2].to_str().ok_or("invalid count")?.parse()?;
             std::fs::create_dir_all(&args[1])?;
             for i in 0..count {
+                if render_from == Some(i) {
+                    session.enable_route_preview_rendering();
+                }
                 let result = if i == 0 {
                     session.page()
                 } else {
@@ -172,6 +235,12 @@ fn run() -> Result<(), Box<dyn Error>> {
                             Path::new(&args[1]).join("boundary.txt"),
                             error.to_string(),
                         )?;
+                        if route {
+                            std::fs::write(
+                                Path::new(&args[1]).join("unlocks.bin"),
+                                session.export_unlocks(),
+                            )?;
+                        }
                         return Err(error);
                     }
                 };
@@ -179,7 +248,12 @@ fn run() -> Result<(), Box<dyn Error>> {
                     Path::new(&args[1]).join(format!("{i}.json")),
                     page.metadata()?,
                 )?;
-                std::fs::write(Path::new(&args[1]).join(format!("{i}.png")), &page.png)?;
+                if !route {
+                    std::fs::write(Path::new(&args[1]).join(format!("{i}.png")), &page.png)?;
+                }
+            }
+            if let Some(path) = checkpoint {
+                std::fs::write(path, session.export_route_preview()?)?;
             }
         }
         ("run-dat-title", 3) => {

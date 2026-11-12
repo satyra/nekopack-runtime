@@ -1,0 +1,14 @@
+{
+  "ending": "full",
+  "pages": 12355,
+  "steps": 60323,
+  "title_line": 9,
+  "chapter_clear": [
+    1,
+    1,
+    1,
+    1
+  ],
+  "all_clear": 1,
+  "control_flow_sha256": "2633af49204ed45347128ae5908c3bdf5eba141839ec999ef3abb093587e74dd"
+}

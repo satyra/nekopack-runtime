@@ -3,7 +3,8 @@ pub(crate) const DURATION_MS: u64 = 250;
 #[derive(Clone, Debug)]
 enum Kind {
     Horizontal,
-    Dip,
+    Vertical,
+    Dip(i32),
     Stationary,
     HorizontalExcursion(i32),
 }
@@ -39,13 +40,39 @@ impl Motion {
             kind: Kind::Horizontal,
         })
     }
-    pub fn dip(slot: u8, start: [i32; 2], center: [i32; 2]) -> Result<Self, String> {
+    pub fn dip(
+        slot: u8,
+        start: [i32; 2],
+        amplitude: i32,
+        center: [i32; 2],
+    ) -> Result<Self, String> {
+        if amplitude == 0 {
+            return Err("invalid actor dip amplitude".into());
+        }
         let mut motion = Self::new(slot, start, 0, center)?;
-        start[1].checked_add(50).ok_or("actor dip peak overflow")?;
+        start[1]
+            .checked_add(amplitude)
+            .ok_or("actor dip peak overflow")?;
         (start[1] - center[1])
-            .checked_add(50)
+            .checked_add(amplitude)
             .ok_or("actor dip relative peak overflow")?;
-        motion.kind = Kind::Dip;
+        motion.kind = Kind::Dip(amplitude);
+        Ok(motion)
+    }
+    pub fn vertical(
+        slot: u8,
+        start: [i32; 2],
+        delta: i32,
+        center: [i32; 2],
+    ) -> Result<Self, String> {
+        let mut motion = Self::new(slot, start, 0, center)?;
+        motion.end[1] = start[1]
+            .checked_add(delta)
+            .ok_or("actor vertical target overflow")?;
+        motion.end[1]
+            .checked_sub(center[1])
+            .ok_or("actor vertical target overflow")?;
+        motion.kind = Kind::Vertical;
         Ok(motion)
     }
     pub fn stationary(slot: u8, start: [i32; 2], center: [i32; 2]) -> Result<Self, String> {
@@ -84,15 +111,18 @@ impl Motion {
                     + f64::from(amplitude) * (t * std::f64::consts::PI).sin();
                 [self.center[0] + relative as i32, self.start[1]]
             }
-            Kind::Horizontal => {
+            Kind::Horizontal | Kind::Vertical => {
                 let weight = (((t - 0.5) * std::f64::consts::PI).sin() + 1.0) * 0.5;
-                let relative = f64::from(self.start[0] - self.center[0])
-                    + (f64::from(self.end[0]) - f64::from(self.start[0])) * weight;
-                [self.center[0] + relative as i32, self.start[1]]
+                let axis = usize::from(matches!(self.kind, Kind::Vertical));
+                let relative = f64::from(self.start[axis] - self.center[axis])
+                    + (f64::from(self.end[axis]) - f64::from(self.start[axis])) * weight;
+                let mut position = self.start;
+                position[axis] = self.center[axis] + relative as i32;
+                position
             }
-            Kind::Dip => {
+            Kind::Dip(amplitude) => {
                 let relative = f64::from(self.start[1] - self.center[1])
-                    + 50.0 * (t * std::f64::consts::PI).sin();
+                    + f64::from(amplitude) * (t * std::f64::consts::PI).sin();
                 [self.start[0], self.center[1] + relative as i32]
             }
         }
@@ -100,10 +130,11 @@ impl Motion {
     pub fn metadata(&self) -> String {
         let vertical = match self.kind {
             Kind::Horizontal => String::new(),
+            Kind::Vertical => format!(",\"kind\":\"vertical\",\"start_y\":{},\"end_y\":{},\"center_y\":{}", self.start[1], self.end[1], self.center[1]),
             Kind::HorizontalExcursion(amplitude) => format!(",\"kind\":\"horizontal_excursion\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":{amplitude}",self.start[1],self.end[1],self.center[1]),
             Kind::Stationary => format!(",\"kind\":\"stationary\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_x\":0",self.start[1],self.end[1],self.center[1]),
-            Kind::Dip => format!(
-                ",\"kind\":\"dip\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_y\":50",
+            Kind::Dip(amplitude) => format!(
+                ",\"kind\":\"dip\",\"start_y\":{},\"end_y\":{},\"center_y\":{},\"amplitude_y\":{amplitude}",
                 self.start[1], self.end[1], self.center[1]
             ),
         };
@@ -130,7 +161,9 @@ impl Queue {
         for m in &self.segments {
             let (kind, delta) = match m.kind {
                 Kind::Horizontal => (0, m.end[0] - m.start[0]),
-                Kind::Dip => (1, 0),
+                Kind::Vertical => (5, m.end[1] - m.start[1]),
+                Kind::Dip(50) => (1, 0),
+                Kind::Dip(amplitude) => (4, amplitude),
                 Kind::Stationary => (2, 0),
                 Kind::HorizontalExcursion(d) => (3, d),
             };
@@ -167,7 +200,9 @@ impl Queue {
             let center = [c[2], c[3]];
             segments.push(match kind {
                 0 => Motion::new(slot, start, delta, center)?,
-                1 => Motion::dip(slot, start, center)?,
+                1 => Motion::dip(slot, start, 50, center)?,
+                4 => Motion::dip(slot, start, delta, center)?,
+                5 => Motion::vertical(slot, start, delta, center)?,
                 2 => Motion::stationary(slot, start, center)?,
                 3 => Motion::horizontal_excursion(slot, start, delta, center)?,
                 _ => return Err("invalid motion kind".into()),
@@ -191,6 +226,13 @@ impl Queue {
     }
     pub fn duration(&self) -> u64 {
         self.segments.len() as u64 * DURATION_MS
+    }
+    pub fn append(&mut self, segments: Vec<Motion>) -> Result<(), String> {
+        if self.segments.len() + segments.len() > 1024 {
+            return Err("actor motion queue exceeds segment limit".into());
+        }
+        self.segments.extend(segments);
+        Ok(())
     }
     pub fn finished(&self) -> bool {
         self.current == self.segments.len()
@@ -229,7 +271,7 @@ mod tests {
         let mut q = Queue::new(
             1,
             vec![
-                Motion::dip(1, [640, 360], [640, 360]).unwrap(),
+                Motion::dip(1, [640, 360], 50, [640, 360]).unwrap(),
                 Motion::new(1, [640, 360], 350, [640, 360]).unwrap(),
             ],
         );
@@ -252,7 +294,7 @@ mod tests {
         let mut queue = Queue::new(
             2,
             vec![
-                Motion::dip(2, center, center).unwrap(),
+                Motion::dip(2, center, 50, center).unwrap(),
                 Motion::new(2, center, 200, center).unwrap(),
             ],
         );
@@ -272,7 +314,7 @@ mod tests {
         let mut late = Queue::new(
             2,
             vec![
-                Motion::dip(2, center, center).unwrap(),
+                Motion::dip(2, center, 50, center).unwrap(),
                 Motion::new(2, center, 200, center).unwrap(),
             ],
         );
@@ -331,7 +373,7 @@ mod tests {
     }
     #[test]
     fn dip_is_positive_y_sine_with_no_persistent_displacement() {
-        let m = Motion::dip(6, [990, 360], [640, 360]).unwrap();
+        let m = Motion::dip(6, [990, 360], 50, [640, 360]).unwrap();
         assert_eq!(
             [0, 50, 125, 200, 250, 999].map(|t| m.position(t)),
             [
@@ -343,9 +385,12 @@ mod tests {
                 [990, 360]
             ]
         );
-        let negative = Motion::dip(2, [20, 50], [20, 100]).unwrap();
+        let negative = Motion::dip(2, [20, 50], 50, [20, 100]).unwrap();
         assert_eq!(negative.position(50), [20, 80]); // centered truncation, not absolute 79
-        assert!(Motion::dip(1, [0, i32::MAX - 49], [0, 0]).is_err());
-        assert!(Motion::dip(1, [0, i32::MIN], [0, 1]).is_err());
+        let hop = Motion::dip(2, [20, 100], -50, [20, 100]).unwrap();
+        assert_eq!(hop.position(125), [20, 50]);
+        assert_eq!(hop.position(250), [20, 100]);
+        assert!(Motion::dip(1, [0, i32::MAX - 49], 50, [0, 0]).is_err());
+        assert!(Motion::dip(1, [0, i32::MIN], 50, [0, 1]).is_err());
     }
 }

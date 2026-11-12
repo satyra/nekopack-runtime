@@ -1,6 +1,6 @@
 # NekoPack Cross-Platform Runtime 开发路线
 
-状态：2026-11-06 战略与实施次序已获用户审核通过，Android 为第一交付目标。下方“当前所处位置”保留审核时快照；第一阶段最新进展见 [标题执行链路](docs/Phase2_Title_Runtime.md)。
+状态：Android 为第一交付目标。当前实现与实测见 [Android 开发进度](docs/Android_Development_Progress.md)，BLESS 完整通关证据见 [剧情路线执行验收](docs/Route_Execution_Progress.md)。下方“当前所处位置”保留 2026-11-06 路线审核时的快照。
 
 ## 1. 当前所处位置
 

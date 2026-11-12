@@ -14,13 +14,18 @@ import org.json.JSONObject
 import java.io.File
 
 /** Main-looper adapter; Rust owns sequencing, this class owns devices and completion. */
-class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val timeline:SessionTimeline,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val audioTimeline:SessionTimeline=timeline,private val failure:(Throwable)->Unit) {
+class StoryEffects(private val context:Context,private val image:ImageView,private val overlay:ImageView,private val root:File,private val timeline:SessionTimeline,private val wipeFrame:(String,Long,Long,(Bitmap,Boolean)->Unit)->Unit,private val audioTimeline:SessionTimeline=timeline,private val diagnostics:Boolean=true,private val failure:(Throwable)->Unit) {
     private val players=mutableMapOf<String,Pair<ChannelPlayer,File>>()
+    var sceneEffects = true
     private var animator:ValueAnimator?=null
     private var bgmAnimator:ValueAnimator?=null
     private val gains=mutableMapOf<String,AudioGain>()
     private val categoryVolumes=mutableMapOf<String,Int>()
+    private var voiceDuck=false
+    private var masterGain=1f
     fun configureAudio(config:JSONObject) {
+        voiceDuck=config.optBoolean("voice_duck")
+        masterGain=config.optInt("host_master",100)/100f
         for(kind in listOf("bgm","voice","se","env","system")){
             val percent=config.getInt(kind);check(percent in 0..100)
             categoryVolumes[kind]=percent
@@ -36,19 +41,30 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private var focusSuspended=false
     private var ducked=false
     private var closed=false
+    private var finishCredits:(()->Unit)?=null
+    fun cancelCredits(){finishCredits?.invoke()}
     @Volatile private var motionSequence=0L
     private var motionFinished=false
     fun isMotionActive(sequence:Long)=!closed && motionSequence==sequence
     private fun motionLog(event:String,sequence:Long,elapsed:Long,finished:Boolean=false) {
-        File(root,"motion-events.jsonl").appendText(JSONObject().put("event",event).put("sequence",sequence).put("elapsed_ms",elapsed).put("finished",finished).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
+        if(diagnostics)File(root,"motion-events.jsonl").appendText(JSONObject().put("event",event).put("sequence",sequence).put("elapsed_ms",elapsed).put("finished",finished).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
     }
     fun stopMotion(){
         val old=motionSequence;motionSequence=0
         if(old!=0L&&!motionFinished)motionLog("cancelled",old,0)
     }
     // Runs alongside the visible dialogue and voice; no host-effect ACK or script advancement.
-    fun runMotion(sequence:Long){
+    fun runMotion(sequence:Long,duration:Long){
         stopMotion();motionSequence=sequence;motionFinished=false
+        if(!sceneEffects){
+            wipeFrame("motion",sequence,duration){value,finished->
+                if(isMotionActive(sequence)){
+                    image.setImageBitmap(value);motionFinished=finished
+                    motionLog("suppressed",sequence,duration,finished)
+                }else value.recycle()
+            }
+            return
+        }
         wipeFrame("motion",sequence,0){initial,_->
             if(isMotionActive(sequence)){
                 image.setImageBitmap(initial)
@@ -74,10 +90,10 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private var focused=false
     private fun applyGain(kind:String) {
         val gain=gains.getValue(kind)
-        gain.category=categoryVolumes.getValue(kind)/100f
-        gain.duck=if(ducked).2f else 1f
+        gain.category=categoryVolumes.getValue(kind)/100f*masterGain
+        gain.duck=if(ducked || kind=="bgm" && voiceDuck && players["voice"]?.first?.isPlaying==true).2f else 1f
         players.getValue(kind).first.setVolume(gain.output,gain.output)
-        File(root,"audio-gain-events.jsonl").appendText(JSONObject().put("kind",kind).put("token",audioTokens.getValue(kind)).put("category_percent",categoryVolumes.getValue(kind)).put("output",gain.output).put("fade",gain.fade).put("duck",gain.duck).put("player",System.identityHashCode(players.getValue(kind).first)).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
+        if(diagnostics)File(root,"audio-gain-events.jsonl").appendText(JSONObject().put("kind",kind).put("token",audioTokens.getValue(kind)).put("category_percent",categoryVolumes.getValue(kind)).put("output",gain.output).put("fade",gain.fade).put("duck",gain.duck).put("player",System.identityHashCode(players.getValue(kind).first)).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
     }
     private fun regainFocus() {
         if(audioPaused){focused=false;return}
@@ -116,7 +132,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         }
     }
     private fun log(event:String,kind:String,token:Long,extra:Long=0,observedAt:Long=SystemClock.elapsedRealtime()) {
-        File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",observedAt).put("value",extra).toString()+"\n")
+        if(diagnostics)File(root,"host-events.jsonl").appendText(JSONObject().put("event",event).put("kind",kind).put("token",token).put("time_ms",observedAt).put("value",extra).toString()+"\n")
     }
     internal fun lifecycleAudio(event:String){
         val channels=JSONObject()
@@ -124,7 +140,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             val player=players.getValue(kind).first
             channels.put(kind,JSONObject().put("token",audioTokens.getValue(kind)).put("player_id",System.identityHashCode(player)).put("playing",player.isPlaying).put("position",player.currentPosition).put("gain",gains.getValue(kind).output))
         }
-        File(root,"audio-lifecycle.jsonl").appendText(JSONObject().put("event",event).put("time_ms",SystemClock.elapsedRealtime()).put("channels",channels).toString()+"\n")
+        if(diagnostics)File(root,"audio-lifecycle.jsonl").appendText(JSONObject().put("event",event).put("time_ms",SystemClock.elapsedRealtime()).put("channels",channels).toString()+"\n")
     }
     fun pauseStory(){
         check(!closed);storyAudioPaused=true
@@ -171,6 +187,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     // Completed players are released; a focus-paused player remains owned and unfinished.
     fun voiceFinished() = !players.containsKey("voice")
     fun stopVoice(){ release("voice") }
+    fun stopMusic(){ release("bgm") }
     fun finishDialogue(sequence:Long,stop:Boolean){
         val player=players["voice"]?.first
         val event=JSONObject().put("sequence",sequence).put("stop",stop).put("voice_token",audioTokens["voice"] ?: -1)
@@ -178,9 +195,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             .put("position_before",player?.currentPosition ?: -1)
         if(stop)stopVoice()
         event.put("retained",player!=null && players["voice"]?.first===player).put("playing_after",players["voice"]?.first?.isPlaying ?: false)
-        File(root,"voice-next-events.jsonl").appendText(event.toString()+"\n")
+        if(diagnostics)File(root,"voice-next-events.jsonl").appendText(event.toString()+"\n")
     }
-    private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"}}}
+    private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"};if(kind=="voice"&&gains.containsKey("bgm"))applyGain("bgm")}}
     internal fun cleanupState():JSONObject = JSONObject().put("closed",closed).put("players",players.size)
         .put("pending_start",pendingStart.size).put("paused_players",focusPaused.size).put("gains",gains.size).put("tokens",audioTokens.size)
         .put("focused",focused).put("motion_active",motionSequence!=0L).put("animator",animator!=null).put("bgm_animator",bgmAnimator!=null)
@@ -214,8 +231,45 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         val started=timeline.now();log("begin",kind,token,duration)
         fun done(){(if(meta.optBoolean("ui_audio"))audioTimeline else timeline).post{if(!closed){log("ack",kind,token,timeline.now()-started);complete()}}}
         try {
+            if(!sceneEffects && kind in listOf("fade","wipe","shake","flash")){
+                log("suppressed",kind,token,duration)
+                if(kind=="shake"){
+                    wipeFrame(kind,token,duration){value,_->
+                        if(!closed){image.setImageBitmap(value);done()}else value.recycle()
+                    }
+                }else{
+                    image.setImageBitmap(requireNotNull(bitmap))
+                    done()
+                }
+                return
+            }
             when(kind){
                 "wait"->timeline.post(duration){done()}
+                "staffroll"->{
+                    check(file!=null)
+                    var running=true
+                    fun finish(){
+                        if(!running || closed)return
+                        running=false;finishCredits=null;release("bgm");done()
+                    }
+                    finishCredits={finish()}
+                    val music=JSONObject(meta.toString()).put("host_effect","bgm")
+                        .put("loop",false).put("volume_percent",categoryVolumes.getValue("bgm"))
+                    run(music,null,file){
+                        val first=timeline.now()
+                        fun frame(){
+                            if(!running || closed)return
+                            val elapsed=(timeline.now()-first).coerceAtMost(duration)
+                            wipeFrame(kind,token,elapsed){value,_->
+                                if(running && !closed){
+                                    image.setImageBitmap(value)
+                                    if(elapsed==duration)finish() else timeline.post(33){frame()}
+                                }else value.recycle()
+                            }
+                        }
+                        frame()
+                    }
+                }
                 "env_stop","se_stop"->{
                     val channel=kind.removeSuffix("_stop")
                     release(channel)
@@ -236,7 +290,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                         val from=gain.fade
                         log("fade_start_gain","bgm",token,(gain.output*1000).toLong())
                         val animation=ValueAnimator.ofFloat(from,0f);bgmAnimator=animation
-                        animation.duration=duration;animation.interpolator=LinearInterpolator()
+                        animation.duration=timeline.wallDelay(duration);animation.interpolator=LinearInterpolator()
                         var cancelled=false;var sampled=false
                         animation.addUpdateListener{
                             val volume=it.animatedValue as Float
@@ -285,7 +339,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                 "fade"->{
                     check(bitmap!=null);overlay.setImageBitmap(bitmap);overlay.alpha=0f
                     val animation=ValueAnimator.ofFloat(0f,1f);animator=animation
-                    animation.duration=duration;animation.interpolator=LinearInterpolator()
+                    animation.duration=timeline.wallDelay(duration);animation.interpolator=LinearInterpolator()
                     var sampled=false
                     animation.addUpdateListener{val alpha=it.animatedValue as Float;overlay.alpha=alpha
                         if(!sampled && alpha>=0.25f && alpha<=0.75f){sampled=true;log("frame",kind,token,(alpha*1000).toLong())}
@@ -315,6 +369,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                     it.isLooping=meta.getBoolean("loop")
                                     val percent=meta.getInt("volume_percent")
                                     val gain=AudioGain(percent/100f);gains[kind]=gain
+                                    if(kind=="bgm" && duration>0)gain.fade=0f
                                     it.setVolume(gain.output,gain.output);log("gain",kind,token,percent.toLong())
                                 }else {it.isLooping=false;gains[kind]=AudioGain(1f)}
                                 fun startAudio(){
@@ -322,6 +377,18 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                     if(meta.optBoolean("ui_audio"))categoryVolumes[kind]=meta.getInt("category_percent")
                                     applyGain(kind)
                                     it.start();val playbackStarted=SystemClock.elapsedRealtime();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong(),playbackStarted)
+                                    if(kind=="voice"&&gains.containsKey("bgm"))applyGain("bgm")
+                                    if(kind=="bgm" && duration>0){
+                                        val gain=gains.getValue(kind)
+                                        val ramp=ValueAnimator.ofFloat(0f,1f)
+                                        bgmAnimator=ramp
+                                        ramp.duration=timeline.wallDelay(duration)
+                                        ramp.interpolator=LinearInterpolator()
+                                        ramp.addUpdateListener{anim->
+                                            if(players[kind]?.first===player){gain.fade=anim.animatedValue as Float;applyGain(kind)}
+                                        }
+                                        ramp.start()
+                                    }
                                     if(meta.has("restore_category_percent"))configureCategory(kind,meta.getInt("restore_category_percent"))
                                     done()
                                 }

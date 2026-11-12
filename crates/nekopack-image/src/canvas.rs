@@ -16,7 +16,8 @@ impl Mng<'_> {
         self.embedded_images()?;
         let mut position = [0, 0];
         let mut name = &b""[..];
-        let mut result = Vec::new();
+        let mut result: Vec<Sprite<'_>> = Vec::new();
+        let mut image_open = false;
         for chunk in &self.chunks {
             match &chunk.metadata {
                 Metadata::Definition(d) => {
@@ -36,11 +37,21 @@ impl Mng<'_> {
                     }
                     name = f.name;
                 }
-                Metadata::ImageHeader { .. } => result.push(Sprite {
-                    ordinal: result.len(),
-                    name,
-                    position,
-                }),
+                Metadata::ImageHeader { .. } => {
+                    image_open = true;
+                    result.push(Sprite {
+                        ordinal: result.len(),
+                        name,
+                        position,
+                    });
+                }
+                Metadata::Text {
+                    keyword: b"Title",
+                    text,
+                } if image_open => {
+                    result.last_mut().unwrap().name = text;
+                }
+                Metadata::ImageEnd => image_open = false,
                 _ => {}
             }
         }

@@ -25,15 +25,6 @@ impl Wipe {
         if (old.width(), old.height()) != size || (mask.width(), mask.height()) != size {
             return Err("wipe image dimensions mismatch".into());
         }
-        if mask
-            .pixels()
-            .as_chunks::<4>()
-            .0
-            .iter()
-            .any(|p| p[0] != p[1] || p[1] != p[2] || p[3] != 255)
-        {
-            return Err("unsupported non-grayscale wipe mask".into());
-        }
         Ok(Self {
             old,
             target,
@@ -48,27 +39,26 @@ impl Wipe {
         } else {
             (elapsed_ms * 256 / self.duration_ms) as i32
         };
-        let pixels = self
-            .old
-            .pixels()
-            .iter()
-            .zip(self.target.pixels())
-            .zip(self.mask.pixels())
-            .map(|((&a, &b), &m)| {
-                if q == 0 {
-                    a
-                } else if q >= 255 {
-                    b
-                } else if self.soft {
-                    let alpha = (i32::from(m) + 2 * q - 255).clamp(0, 255);
-                    (i32::from(a) + ((i32::from(b) - i32::from(a)) * alpha).div_euclid(256)) as u8
-                } else if i32::from(m) + q >= 255 {
-                    b
-                } else {
-                    a
+        let mut pixels = self.old.pixels().to_vec();
+        for ((out, target), mask) in pixels
+            .as_chunks_mut::<4>()
+            .0
+            .iter_mut()
+            .zip(self.target.pixels().as_chunks::<4>().0)
+            .zip(self.mask.pixels().as_chunks::<4>().0)
+        {
+            let threshold = i32::from(mask[0]);
+            if q >= 255 || (q > 0 && !self.soft && threshold + q >= 255) {
+                *out = *target;
+            } else if q > 0 && self.soft {
+                let alpha = (threshold + 2 * q - 255).clamp(0, 255);
+                for (sample, next) in out.iter_mut().zip(target) {
+                    *sample = (i32::from(*sample)
+                        + ((i32::from(*next) - i32::from(*sample)) * alpha).div_euclid(256))
+                        as u8;
                 }
-            })
-            .collect();
+            }
+        }
         RgbaImage::from_rgba(
             self.target.width(),
             self.target.height(),

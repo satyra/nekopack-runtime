@@ -15,6 +15,7 @@ pub mod story;
 pub mod text_render;
 pub mod title;
 pub mod transition;
+mod unlocks;
 use nekopack_script::{
     runtime::{Machine, Request, Scripts, Step},
     system::{ResourceProvider, SystemVm},
@@ -153,7 +154,8 @@ fn bootstrap_continue(
                             args.len(),
                             rows.len()
                         )?;
-                        if [b"img".as_slice(), b"bgm", b"wait", b"fade"].contains(&name.as_slice())
+                        if [b"img".as_slice(), b"bgm", b"wait", b"fade", b"se", b"env"]
+                            .contains(&name.as_slice())
                         {
                             system.eval_with_resources(
                                 "native-effect",

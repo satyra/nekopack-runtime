@@ -299,6 +299,86 @@ fn crc32(bytes: &[u8]) -> u32 {
     }
     !crc
 }
+/// The verified PC localization exports static UI sprites with FRAM trailers
+/// emitted by its editor. Keep the sprite name and discard frame timing.
+pub fn normalize_localized_ui_frames(data: &[u8], canvas: Option<[u32; 2]>) -> Result<Vec<u8>> {
+    if !data.starts_with(b"\x8aMNG\r\n\x1a\n") {
+        return Err(error(0, "invalid signature"));
+    }
+    let mut out = Vec::with_capacity(data.len());
+    out.extend_from_slice(&data[..8]);
+    let mut pos = 8;
+    while pos < data.len() {
+        if data.len() - pos < 12 {
+            return Err(error(pos, "truncated chunk"));
+        }
+        let length = u32::from_be_bytes(data[pos..pos + 4].try_into().unwrap()) as usize;
+        if length > data.len() - pos - 12 {
+            return Err(error(pos, "invalid chunk length"));
+        }
+        let end = pos + length + 12;
+        let kind = &data[pos + 4..pos + 8];
+        if kind == b"FRAM" {
+            let crc = u32::from_be_bytes(data[end - 4..end].try_into().unwrap());
+            if crc32(&data[pos + 4..end - 4]) != crc {
+                return Err(error(pos, "CRC mismatch"));
+            }
+            let payload = &data[pos + 8..end - 4];
+            let (mode, tail) = payload
+                .split_first()
+                .ok_or_else(|| error(pos, "missing sprite mode"))?;
+            if !matches!(mode, 0 | 2) {
+                return Err(error(pos, "unsupported localized sprite mode"));
+            }
+            let name_end = tail
+                .iter()
+                .position(|&byte| byte == 0)
+                .unwrap_or(tail.len());
+            let name = &tail[..name_end];
+            if name.is_empty() {
+                return Err(error(pos, "missing localized sprite name"));
+            }
+            out.extend_from_slice(&((name.len() + 1) as u32).to_be_bytes());
+            let start = out.len();
+            out.extend_from_slice(kind);
+            out.push(2);
+            out.extend_from_slice(name);
+            let normalized_crc = crc32(&out[start..]);
+            out.extend_from_slice(&normalized_crc.to_be_bytes());
+        } else if pos == 8 && kind == b"MHDR" && canvas.is_some() {
+            mng_canvas(data)?;
+            let [width, height] = canvas.unwrap();
+            let start = out.len();
+            out.extend_from_slice(&data[pos..end]);
+            out[start + 8..start + 12].copy_from_slice(&width.to_be_bytes());
+            out[start + 12..start + 16].copy_from_slice(&height.to_be_bytes());
+            let crc = crc32(&out[start + 4..start + length + 8]);
+            out[start + length + 8..start + length + 12].copy_from_slice(&crc.to_be_bytes());
+        } else {
+            out.extend_from_slice(&data[pos..end]);
+        }
+        pos = end;
+    }
+    Ok(out)
+}
+
+pub fn mng_canvas(data: &[u8]) -> Result<[u32; 2]> {
+    let header = data
+        .get(..48)
+        .ok_or_else(|| error(0, "truncated MNG header"))?;
+    if !header.starts_with(b"\x8aMNG\r\n\x1a\n\0\0\0\x1cMHDR") {
+        return Err(error(0, "invalid MNG header"));
+    }
+    let crc = u32::from_be_bytes(header[44..48].try_into().unwrap());
+    if crc32(&header[12..44]) != crc {
+        return Err(error(8, "CRC mismatch"));
+    }
+    match metadata(b"MHDR", &header[16..44], 16)? {
+        Metadata::Header(h) => Ok([h[0], h[1]]),
+        _ => unreachable!(),
+    }
+}
+
 impl<'a> Mng<'a> {
     /// Checks framing, CRC, supported metadata lengths and basic image boundaries.
     /// Not a full MNG/PNG semantic validator; no pixel data is decompressed.

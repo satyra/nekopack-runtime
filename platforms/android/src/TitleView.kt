@@ -16,6 +16,8 @@ class TitleView(context:Context,private val pointer:(Int,Int,Int)->Unit):View(co
     private var tracking=false
     var accepting=true
     init { contentDescription="游戏标题菜单"; isClickable=true }
+    val hasFrame get() = bitmap != null
+    val isTracking get() = tracking
     fun present(next:Bitmap){val previous=bitmap;bitmap=next;previous?.recycle();invalidate()}
     private fun bounds(){
         val image=bitmap ?: return

@@ -55,6 +55,15 @@ mod tests {
             .to_vec()
     }
     #[test]
+    fn opaque_visual_taller_than_the_canvas_is_clipped() {
+        let mut scene = Scene::new([1, 1]);
+        let mut visual = RgbaImage::filled(1, 2, [255, 0, 0, 255], 8).unwrap();
+        visual.pixels_mut()[4..].copy_from_slice(&[0, 0, 255, 255]);
+        scene.set_visual("oversize".into(), visual).unwrap();
+        assert_eq!(pixel(&mut scene), [255, 0, 0, 255]);
+    }
+
+    #[test]
     fn overlapping_layers_respect_order_replacement_and_pruning() {
         let mut s = Scene::new([1, 1]);
         s.put(layer(1, [255, 0, 0, 255]), Order::Front).unwrap();
@@ -115,7 +124,11 @@ mod tests {
         assert_eq!(positioned.x, Some(1120));
         assert_eq!(positioned.motions, [MotionKind::Horizontal(-450)]);
         let dip = plan(&[b"_".to_vec()], &macros, 640).unwrap();
-        assert_eq!(dip.motions, [MotionKind::Dip]);
+        assert_eq!(dip.motions, [MotionKind::Dip(50)]);
+        let deep_dip = plan(&[b"___".to_vec()], &macros, 640).unwrap();
+        assert_eq!(deep_dip.motions, [MotionKind::Dip(150)]);
+        let hop = plan(&[b"^".to_vec()], &macros, 640).unwrap();
+        assert_eq!(hop.motions, [MotionKind::Dip(-50)]);
         assert_eq!(dip.order, Order::Keep);
         let stationary = plan(&[b"[]".to_vec()], &macros, 640).unwrap();
         assert_eq!(stationary.motions, [MotionKind::Stationary]);
@@ -149,7 +162,7 @@ mod tests {
             vec![b"<2".to_vec()],
             vec![b"<>".to_vec()],
             vec![b">".to_vec(), b"face".to_vec()],
-            vec![b"__".to_vec()],
+            vec![b"_2".to_vec()],
             vec![b"[2".to_vec()],
             vec![b"[[".to_vec(), b"face".to_vec()],
             vec![b"][".to_vec()],
@@ -165,7 +178,9 @@ mod tests {
 #[derive(Debug, PartialEq, Eq)]
 pub(crate) enum MotionKind {
     Horizontal(i32),
-    Dip,
+    To(i32),
+    Vertical(i32),
+    Dip(i32),
     Stationary,
     Excursion(i32),
 }
@@ -203,22 +218,39 @@ pub(crate) fn plan(
         order: Order::Front,
         clear: words.is_empty(),
     };
+    let mut animate_position = false;
     for word in &words {
         if macros.contains_key(word) {
             return Err("nested image macros are unsupported".into());
         }
-        if matches!(word.as_str(), "_" | "[]")
+        if animate_position
+            && word != "center"
+            && !word.starts_with("left")
+            && !word.starts_with("right")
+        {
+            return Err("to requires an actor position".into());
+        }
+        if word == "[]"
+            || (!word.is_empty() && word.bytes().all(|b| b == b'_'))
+            || (!word.is_empty() && word.bytes().all(|b| b == b'^'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'>'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'<'))
             || (!word.is_empty() && word.bytes().all(|b| b == b'['))
             || (!word.is_empty() && word.bytes().all(|b| b == b']'))
+            || (!word.is_empty() && word.bytes().all(|b| b == b'+'))
+            || (!word.is_empty() && word.bytes().all(|b| b == b'-'))
         {
             if word == "[]" {
                 p.motions.push(MotionKind::Stationary);
                 continue;
             }
-            if word == "_" {
-                p.motions.push(MotionKind::Dip);
+            if word.starts_with(['_', '^']) {
+                let pixels_per_symbol = if word.starts_with('^') { -50 } else { 50 };
+                let amplitude = i32::try_from(word.len())
+                    .ok()
+                    .and_then(|count| count.checked_mul(pixels_per_symbol))
+                    .ok_or("actor dip amplitude overflow")?;
+                p.motions.push(MotionKind::Dip(amplitude));
                 continue;
             }
             if word.starts_with(['[', ']']) {
@@ -231,6 +263,15 @@ pub(crate) fn plan(
                 ));
                 continue;
             }
+            if word.starts_with(['+', '-']) {
+                let pixels_per_symbol = if word.starts_with('+') { -50 } else { 50 };
+                let delta = i32::try_from(word.len())
+                    .ok()
+                    .and_then(|n| n.checked_mul(pixels_per_symbol))
+                    .ok_or("actor vertical motion overflow")?;
+                p.motions.push(MotionKind::Vertical(delta));
+                continue;
+            }
             p.motions.push(MotionKind::Horizontal(
                 i32::try_from(word.len())
                     .ok()
@@ -239,10 +280,16 @@ pub(crate) fn plan(
             ));
             continue;
         }
-        if !p.motions.is_empty() {
+        if !p.motions.is_empty()
+            && !matches!(word.as_str(), "front" | "back" | "keep" | "/" | "/big")
+        {
             return Err("only motion tokens may follow a motion".into());
         }
         match word.as_str() {
+            "to" => {
+                animate_position = true;
+                continue;
+            }
             "front" => p.order = Order::Front,
             "back" => p.order = Order::Back,
             "keep" => p.order = Order::Keep,
@@ -276,7 +323,7 @@ pub(crate) fn plan(
                             .ok_or("actor position overflow")?,
                     );
                 } else {
-                    if ["to", "if", "normal", "flat", "accel", "decel"].contains(&word.as_str())
+                    if ["if", "normal", "flat", "accel", "decel"].contains(&word.as_str())
                         || word.starts_with("slow")
                         || word.starts_with("fast")
                         || word.starts_with([
@@ -291,6 +338,13 @@ pub(crate) fn plan(
                 }
             }
         }
+        if animate_position {
+            p.motions.push(MotionKind::To(p.x.take().unwrap()));
+            animate_position = false;
+        }
+    }
+    if animate_position {
+        return Err("to requires an actor position".into());
     }
     if !p.motions.is_empty()
         && p.name.is_none()
@@ -319,8 +373,10 @@ pub(crate) struct Scene {
     pub background_name: Option<String>,
     pub background_color: Option<[u8; 4]>,
     pub overlay: Option<[u8; 4]>,
+    pub cinema_frame: bool,
     pub visual: Option<(String, RgbaImage)>,
     pub actors: Vec<Layer>,
+    pub mapped_actors: BTreeMap<u8, crate::story::mapped_actor::Actor>,
 }
 impl Scene {
     pub fn save(
@@ -395,6 +451,7 @@ impl Scene {
                 0 => Ok(crate::filter::Filter::None),
                 1 => Ok(crate::filter::Filter::Night),
                 2 => Ok(crate::filter::Filter::Sunset),
+                3 => Ok(crate::filter::Filter::Dark),
                 _ => Err("invalid saved filter".into()),
             }
         }
@@ -415,9 +472,9 @@ impl Scene {
         if !name.is_empty() {
             s.visual = Some((name, image(r, &mut budget)?));
         }
-        for _ in 0..r.count(9)? {
+        for _ in 0..r.count(64)? {
             let slot = u8::try_from(r.number()?)?;
-            if !(1..=9).contains(&slot) || s.actors.iter().any(|a| a.slot == slot) {
+            if slot == 0 || s.actors.iter().any(|a| a.slot == slot) {
                 return Err("invalid saved actor slot".into());
             }
             let name = r.text()?;
@@ -449,8 +506,10 @@ impl Scene {
             background_name: None,
             background_color: None,
             overlay: None,
+            cinema_frame: false,
             visual: None,
             actors: Vec::new(),
+            mapped_actors: BTreeMap::new(),
         }
     }
     pub fn clear(&mut self) {
@@ -484,7 +543,8 @@ impl Scene {
         Ok(())
     }
     pub fn set_visual(&mut self, name: String, image: RgbaImage) -> Result<(), String> {
-        if [image.width(), image.height()] != self.dimensions
+        if image.width() < self.dimensions[0]
+            || image.height() < self.dimensions[1]
             || image
                 .pixels()
                 .as_chunks::<4>()
@@ -554,6 +614,16 @@ impl Scene {
             if let Some(bg) = &self.background {
                 canvas.draw(bg, [0, 0]);
             }
+            if self.cinema_frame {
+                // The native scope frame darkens the top and bottom sixth behind actors.
+                let [width, height] = self.dimensions;
+                let bar = height / 6;
+                if bar > 0 {
+                    let strip = RgbaImage::filled(width, bar, [0, 0, 0, 230], RETAINED_BUDGET)?;
+                    canvas.draw(&strip, [0, 0]);
+                    canvas.draw(&strip, [0, (height - bar) as i32]);
+                }
+            }
             for l in &mut self.actors {
                 if l.filter_pending {
                     self.filter.apply(&mut l.image);
@@ -587,6 +657,24 @@ impl Scene {
                 format!("[{},{},{},{}]", c[0], c[1], c[2], c[3])
             })
         };
-        Ok(format!("{{\"size\":[{},{}],\"background\":{},\"background_color\":{},\"overlay\":{},\"visual\":{},\"actors\":[{}],\"filter\":{}}}",self.dimensions[0],self.dimensions[1],self.background_name.as_ref().map(|s|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),color(self.background_color),color(self.overlay),self.visual.as_ref().map(|(s,_)|quote(s.as_bytes())).transpose()?.unwrap_or("null".into()),actors.join(","),self.filter.metadata()))
+        Ok(format!(
+            "{{\"size\":[{},{}],\"background\":{},\"background_color\":{},\"overlay\":{},\"visual\":{},\"actors\":[{}],\"filter\":{}}}",
+            self.dimensions[0],
+            self.dimensions[1],
+            self.background_name
+                .as_ref()
+                .map(|s| quote(s.as_bytes()))
+                .transpose()?
+                .unwrap_or("null".into()),
+            color(self.background_color),
+            color(self.overlay),
+            self.visual
+                .as_ref()
+                .map(|(s, _)| quote(s.as_bytes()))
+                .transpose()?
+                .unwrap_or("null".into()),
+            actors.join(","),
+            self.filter.metadata()
+        ))
     }
 }
