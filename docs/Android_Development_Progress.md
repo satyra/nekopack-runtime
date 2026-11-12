@@ -18,6 +18,12 @@
 
 ## 交付边界
 
+发布准备补充（2026-11-12）：新增独立 release 构建、版本号、关闭调试及外部 MainActivity 入口，并将完整许可快照打入 APK；原创源码采用 GPL-3.0-only。共用运行时本轮未修改。沿用原证书，密钥重新加密并在仓库外备份。签名候选 `0.1.0-preview.1` 位于 `.local/android-release/nekopack-arm64-preview.apk`，SHA-256 为 `c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78`。
+
+该候选在 PGKM10／Android 15 覆盖安装成功，游戏库可见条目和最近游玩记录一致；`run-as` 及外部启动 MainActivity 被拒绝，游戏库内部启动 Endless Dungeon 原版标题、切后台返回、右侧菜单通过。包内 45 份许可／来源文件哈希一致。此轮是发布打包和正常入口冒烟测试，不等于重测五款中文剧情、存读档和全部设置；下述 `9f784e…` 的深度回归仍属于旧调试包。记录见 `research/android-preview-release-verification.json`，正式发布前完整核对项见 [发布指南](RELEASING.md)。没有创建公开 Release 或版本标签。
+
+介绍视频为原创功能示意，生成工具位于 `tools/promo/`，成片 `.local/promo/nekopack-intro-zh.mp4` 为 77.67 秒、1080p／30fps、中文系统配音与字幕，全片解码及字幕安全区检查通过；不含游戏图片或正文。
+
 最新本地 APK 位于 `.local/android-probe/nekopack-translated-speaker-fix-arm64.apk`，SHA-256 为 `9f784ea0063783643be6386a890bfb863e2eca5aba42b82af357637d13723a7c`。本版修复汉化姓名渲染被强制转成 CP932 导致中断的问题。129 项运行时测试通过、7 项忽略，另有真实字体／消息框的合成中文姓名渲染测试通过。五款汉化版的实际非 CP932 姓名页、存档重启读取、Bold 修改重绘与恢复均通过；五款原版另通过 5 次冷启动和 10 次后台恢复。
 
 上一构建 `b9d41aa7…91e97cf6` 在 emulator-5572 完成五款 86 个控件、172 个播放／静音状态的语音矩阵，全部通过。每组原版设置修改后强制停止并重启，播放检查实际进度、非零输出增益与资源哈希，静音检查无语音请求；8 个测试进程及配置还原均正常结束。本轮未复现启动超时。完整结果见 `research/android-five-game-voice-matrix-final.json`，原始日志位于 `.local/android-probe/voice-matrix-source-adapter-final/`。该轮没有重测五款所有设置；此前设置和启动器验收保留各自构建的边界。BIRTH KA 的借用录音缺口已由同 APK 的原录音补测闭合；前一矩阵报告保留当时的缺口标记，补充证据见 `research/birth-original-voice-device-verification.json`。滑块延迟数据来自模拟器，真机帧率仍待测。本轮验证没有查看游戏图片或回想正文。

@@ -1,0 +1,40 @@
+NekoPack Android project license and third-party notices
+
+This directory retains complete third-party license/notice texts and provenance.
+index.json records component versions, original sources, file hashes and scope.
+All Rust registry packages in Cargo.lock are inventoried, including alternative
+license texts supplied by their publishers. This inventory does not assert that
+every package, feature or file is linked into every APK. Gradle's aggregate
+LICENSE/NOTICE are build-tool provenance; the NDK aggregate NOTICE is preserved
+in full and also describes components beyond the packaged libc++ runtime.
+Kotlin's original upstream NOTICE describes the Kotlin Compiler distribution.
+
+NekoPack uses modified Squirrel 2.2.5 and pl_mpeg source; the included change logs
+identify modifications. NekoPack's original source is GPL-3.0-only (GNU GPL
+version 3 only); the complete official text is in project/LICENSE. Third-party
+components retain their own notices. These licenses do not cover external game
+data or patches. License texts do not replace corresponding source delivery.
+
+Component inventory:
+- NekoPack Runtime 0.1.0: GPL-3.0-only
+- ab_glyph 0.2.32: Apache-2.0
+- ab_glyph_rasterizer 0.1.10: Apache-2.0
+- adler2 2.0.1: 0BSD OR MIT OR Apache-2.0
+- bitflags 2.13.2: MIT OR Apache-2.0
+- cfg-if 1.0.5: MIT OR Apache-2.0
+- crc32fast 1.5.4: MIT OR Apache-2.0
+- encoding_rs 0.8.35: (Apache-2.0 OR MIT) AND BSD-3-Clause
+- fdeflate 0.3.7: MIT OR Apache-2.0
+- flate2 1.1.10: MIT OR Apache-2.0
+- miniz_oxide 0.8.9: MIT OR Zlib OR Apache-2.0
+- miniz_oxide 0.9.1: MIT OR Zlib OR Apache-2.0
+- owned_ttf_parser 0.25.1: Apache-2.0
+- png 0.18.1: MIT OR Apache-2.0
+- simd-adler32 0.3.10: MIT
+- ttf-parser 0.25.1: MIT OR Apache-2.0
+- zlib-rs 0.6.8: Zlib
+- kotlin-stdlib 1.9.22: Apache-2.0
+- Android NDK libc++_shared (including libc++abi) r27d / 27.3.13750724: See complete NDK toolchain NOTICE (LLVM, libc++, libc++abi and accompanying notices)
+- Gradle distribution 8.7: Apache-2.0 and distribution third-party terms (see original LICENSE)
+- Squirrel 2.2.5 stable (modified subset): Original zlib-style terms in COPYRIGHT
+- pl_mpeg c871f2be022ece7ef4f64230b4fb8e1fb9eb6023: MIT

@@ -10,3 +10,6 @@ __pycache__/
 *.ogg
 /games/
 /samples/
+*.keystore
+*.jks
+*.p12

@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0-preview.1",
+  "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+  "signer_certificate_sha256": "368417ca4a7b7e7fc56aa0eb9c61a3d2dbb121ab59ddcd9f3a43a18fb69296d3",
+  "license": "GPL-3.0-only",
+  "license_files_verified": 45,
+  "device": {
+    "model": "PGKM10",
+    "android": "15"
+  },
+  "checks": {
+    "signed_apk_verified": true,
+    "upgrade_install": true,
+    "library_rows_and_recent_game_unchanged": true,
+    "run_as_rejected": true,
+    "external_MainActivity_rejected": true,
+    "library_internal_launch_Endless_Dungeon_title": true,
+    "home_and_launcher_resume_to_title": true,
+    "right_drawer_opened": true
+  },
+  "scope": "Release packaging and normal launcher smoke test only. Prior debug APK full game/Chinese/save/settings regressions are separate evidence. No game images or narrative inspected.",
+  "video": {
+    "sha256": "e161c4640144eb389ac1ec882329672b09ab056961ea4bcc55e81d0791a5119a",
+    "seconds": 77.67,
+    "format": "1920x1080 H.264 AAC, Chinese TTS and subtitles"
+  }
+}

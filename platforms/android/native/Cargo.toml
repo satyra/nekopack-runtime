@@ -2,6 +2,7 @@
 name = "nekopack-android-probe"
 version.workspace = true
 edition.workspace = true
+license.workspace = true
 
 [lib]
 name = "nekopack_probe"

@@ -1,7 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.nekopack.probe">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="org.nekopack.probe" android:versionCode="1" android:versionName="0.1.0-preview.1">
     <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="28" />
-    <application android:label="NekoPack 模拟器" android:icon="@drawable/neko_mark" android:debuggable="true" android:allowBackup="false" android:extractNativeLibs="true" android:theme="@android:style/Theme.Material.Light.NoActionBar">
-        <activity android:name=".MainActivity" android:exported="true" android:screenOrientation="sensorLandscape" />
+    <application android:label="NekoPack 模拟器" android:icon="@drawable/neko_mark" android:debuggable="false" android:allowBackup="false" android:extractNativeLibs="true" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        <activity android:name=".MainActivity" android:exported="false" android:screenOrientation="sensorLandscape" />
         <activity android:name=".LibraryActivity" android:exported="true" android:screenOrientation="fullUser" android:configChanges="orientation|screenSize" android:theme="@android:style/Theme.Material.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

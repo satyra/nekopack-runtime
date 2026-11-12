@@ -2,6 +2,7 @@
 name = "nekopack-runtime"
 version.workspace = true
 edition.workspace = true
+license.workspace = true
 [dependencies]
 nekopack-archive = { path = "../nekopack-archive" }
 nekopack-resource = { path = "../nekopack-resource" }

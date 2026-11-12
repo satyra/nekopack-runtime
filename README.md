@@ -1,77 +1,74 @@
-# NekoPack Cross-Platform Runtime
+# NekoPack Runtime
 
-目标：共享 Rust 核心与独立平台宿主。Android ARM64（Kotlin + JNI）仍是首个交付目标，Android MVP 后验证 Windows，再推进 Linux/Steam Deck、macOS。跨平台方案已获审核。当前已有 Android 横屏验证壳及 APK，通过 SAF 读取原始 DAT 和 MPEG 视频；尚未形成完整游戏应用。
+在 Android 上运行 NekoPack 游戏资源的兼容运行时。共享 Rust 核心负责封包、脚本和演出语义，Android 宿主负责游戏库、输入、显示、音频与目录授权。原版系统脚本用于驱动标题、设置、存读档等界面。
 
-当前四部曲支持标题到有界剧情执行，`def` 和 `.nut` 变量访问共用 Rust 状态。Android 已验证图像、音频、部分演出与 movie 播放/跳过/恢复；BLESS 已接通电影后的章节对白、`.filter 夜`、`>>>>>>>` 默认角色右移、`_` 纵向往返与 `[]` 抵消位移但保留计时的动作，并接通具名 BGM 与角色动作的交错调度，支持 `[[[[` 左向临时往返及每角色动作队列，Rust 判定完成、Android 持续取帧；`.img2 _ >>>>` 已接通，新增独立循环环境音 `.env`（默认命令音量 50%、无参立即停止），已接通绝对位置后接重复 `<` 的角色左移，新增 SE 显式循环/单次与无参停止，真机有界验证到 793 页；本次只验证 BLESS，其他三部保留此前结果。这不代表完整游戏兼容，最新音效循环与真机结果见 [SE 增量](docs/Phase2_SE_Loop_Batch25.md)，此前见 [左移动作增量](docs/Phase2_Leftward_Motion_Batch24.md)，此前见 [环境音增量](docs/Phase2_Environment_Audio_Batch23.md)，此前见 [角色动作队列](docs/Phase2_Motion_Queue_Batch22.md)，此前见 [左向往返增量](docs/Phase2_Left_Excursion_Batch21.md)，此前见 [动作/BGM 交错增量](docs/Phase2_Interleave_Batch20.md)，此前见 [括号动作增量](docs/Phase2_Brackets_Batch19.md)，此前见 [纵向往返增量](docs/Phase2_Dip_Batch18.md)，右移实现见 [角色移动增量](docs/Phase2_Motion_Batch17.md)，夜色滤镜结果见 [filter 增量](docs/Phase2_Filter_Batch16.md)，路线状态与存档元信息语义见 [route 增量](docs/Phase2_Route_Batch15.md)，此前真机/翻译执行结果见 [movie 增量](docs/Phase2_Movie_Batch14.md)，早期标题链路见 [执行链路验收](docs/Phase2_Title_Runtime.md)。目标架构、依赖审计、最小迁移与路线分别见根目录 [架构](CROSS_PLATFORM_ARCHITECTURE.md)、[审计](PLATFORM_DEPENDENCY_AUDIT.md)、[迁移](MIGRATION_PLAN.md)、[路线](DEVELOPMENT_ROADMAP.md)。
+**当前阶段：Android ARM64 预览版准备中。** 这是持续开发的兼容项目，不代表所有同引擎游戏均可运行，也不是原游戏或其厂商的官方产品。
 
-2026-11-06：完成公开源码调查后，新增无外部 crate 依赖的 `nekopack-archive` 和 `nekopack-cli`。Rust 资源层通过四部曲 22 个 DAT、51,201 个条目的差分验证；索引、全部条目元数据和前 16 字节与旧 Python 参考解码器一致。完整资源仅分层抽样，不代表所有图像/音频都已解码或游戏可运行。结果见 [Phase 1 验收](docs/Phase1_Archive_Increment.md)。
+## 主要功能
 
-后续增量新增名称字节哈希、`nekopack-resource` 来源/覆盖分析和 `nekopack-image` MNG 元数据解析。四部曲全部 84 个 MNG、27,712 个块核对通过；第三部 32 对补丁资源均确认内容变化，第一部一组同优先级候选明确报告歧义。使用与验收见 [名称与 MNG 增量](docs/Phase1_Metadata_Increment.md)。
+- 游戏库、最近游玩、搜索、扫描导入和单游戏详情。
+- 原版菜单与设置、存读档、自动播放、快进、语音／BGM／环境音控制。
+- 右侧快捷菜单、鼠标与手势设置；独立快捷面板默认关闭。
+- 已验证汉化档的加载、中文姓名显示、原版／汉化版存档区分。
+- 目录重新授权和存档**导出备份**；目前不宣称已实现完整备份导入流程。
 
-像素增量加入 PNG/RGBA 解码与单图导出：四部曲 MNG 内全部 3,072 张图像、约 528 MB RGBA 与 Pillow 一致，84 次 PNG 导出复核通过。图像模块使用 `png` crate。见 [像素解码验收](docs/Phase1_Pixel_Increment.md)。最新增量支持素材坐标与指定图层画布合成，尚未实现动画播放或通过原版显示一致验收，见 [画布增量](docs/Phase1_Canvas_Increment.md)。
+项目不提供游戏、汉化补丁、CG、语音或字体文件。请自行准备有权使用的资源。
 
-## 使用
+## 安装与导入
 
-静态入口 `parse-bootstrap FILE ENTRY` 保留原有字节与来源信息；历史 12 份启动/补丁脚本、91 条语句、53 次直接依赖验证见 [启动脚本增量](docs/Phase2_Bootstrap_Parser.md)。执行入口 `run-title DECODED_FIXTURE_ROOT CHOICE` 使用私有预处理样本树；构建新增 C++ 工具链要求，见下方链接。
+1. 使用 ARM64 Android 设备，最低 API 23。当前验证包含 Android 9 模拟器及 Android 15 真机，不代表所有设备均已覆盖。
+2. 从项目 [Releases](https://github.com/satyra/nekopack-runtime/releases) 获取明确标注版本和 SHA-256 的安装包。发布准备期间，开发记录中的验证包不能自动视为正式发布包。
+3. 在游戏库选择“添加游戏”，通过系统目录选择器授权游戏目录。
+4. 核对扫描结果和补丁识别情况，再启动。保留原始文件结构，不要把多个游戏的 DAT 混在同一目录。
 
-```text
-cargo run -p nekopack-cli -- inspect-archive path/to/system.dat
+升级前建议从游戏详情页导出存档备份。相同包名、相同签名的更新可以覆盖安装；**不要先卸载旧版**。本项目存档为 `.nksv`，不是原作 `.sav`；更换资源或补丁可能影响存档身份校验。
+
+## 已验证范围
+
+样本包括 Tiny Dungeon 的 BLACK（黑白羽翼）、BLESS、BIRTH、BRAVE，以及 Endless Dungeon。
+
+- BLESS 在一次已记录的构建中完成一条主线；不能由此推断其他四款均已通关。
+- 已记录五款角色语音矩阵、原版设置及重启恢复测试；BIRTH KA 原录音的缺口已另行补测。
+- 最新姓名修复构建验证了五款汉化版的实际中文姓名页、存档重启和文字样式重绘；BLACK 中文新游戏还通过 PGKM10／Android 15 真机复测。
+- 不同构建的结果分开记录。历史 50 次冷启动／100 次恢复、86 个语音控件／172 个状态，不能移用为以后每个 APK 的验收结论。
+
+版本、APK 哈希和限制见 [Android 开发记录](docs/Android_Development_Progress.md)。测试脚本与资源前置条件见 [Android 回归说明](platforms/android/regression/README.md)。
+
+## 当前限制
+
+- 仅交付 Android ARM64；Windows、Linux／Steam Deck、macOS 属于后续方向。
+- 当前 target SDK 为 28，编译 SDK 为 35。尚未按应用商店要求完成 target 升级和渠道验收；这次准备面向直接分发的预览版本。
+- 汉化识别仅覆盖已有证据的补丁格式，不保证任意补丁或任意游戏自动兼容。
+- 真实样本测试需要本地资源和参考工具，仓库不会附带这些内容。
+- 历史一次启动超时缺少原始启动日志，根因仍未确认；后续批次未复现，不将其描述为已定位修复。
+
+## 构建与测试
+
+需要 Rust、C++ 编译／归档工具。Android 还需 NDK、SDK、JDK 和 Kotlin 编译器。当前 Android 构建脚本使用 Windows 工具路径，不能把命令原样当作 Linux 构建步骤。
+
+```powershell
 cargo test --workspace
-cargo fmt --all --check
-cargo clippy --workspace --all-targets -- -D warnings
-cargo build --release --workspace
+python -m unittest discover -s research -p 'test_*.py'
+python -m unittest discover -s platforms/android -p 'test_build_variants.py'
 ```
 
-`inspect-archive` 输出 TSV：第一行是 name seed、priority、索引长度、条目数和尾随字节数；后续行列出条目序号、目录/文件哈希、块头偏移、长度、key 和解密前缀。`read-entry FILE ORDINAL` 与 `read-index FILE` 向 stdout 输出原始二进制，供程序调用；错误走 stderr 并返回非零状态。二进制输出不要经过会转码的文本管道。
+发布预览构建与可调试验证构建已分开。发布构建关闭调试和外部测试 Activity 入口，不会自动生成发布签名。命令、签名与交付核对步骤见 [发布指南](docs/RELEASING.md)。
 
-库使用 `Archive::open(Read + Seek, max_index_bytes)`；资源通过 `copy_entry(ordinal, Write)` 用 64 KiB 缓冲流式读取。CLI 的索引预算是 16 MiB，不是 DAT 格式的固有限制。打开后源文件必须保持不变。重复哈希保留原始序号，不做隐式覆盖。此版本显式面向 /1 布局，不实现 /2、/3 自动探测、未知名称自动还原或原版动态挂载模拟。
-
-新增命令：`hash-name SEED_HEX NAME_BYTES_HEX`、`lookup-name DIR_BYTES_HEX NAME_BYTES_HEX FILE...`、`inspect-overlays FILE...`、`inspect-mng FILE`、`inspect-mng-archive FILE`。名称由调用方按实际编码提供 hex 字节，包的 source ID 对应参数列表顺序；最高 priority 并列时返回歧义。MNG inspect 命令只检查元数据，未知块不会被当成已经支持的动画命令。
-
-像素命令：`decode-png FILE`、`decode-mng-archive FILE` 输出二进制 RGBA 记录流；`export-mng-image FILE ENTRY IMAGE` 输出单图 PNG。详细协议及支持范围见像素验收文档。批量输出必须检查进程退出码；导出图不含原始 MNG 引擎元数据。
-
-画布命令：`inspect-sprites FILE ENTRY` 输出名称与坐标；`compose-mng FILE ENTRY:IMAGE [ENTRY:IMAGE ...]` 按给定顺序合成透明 PNG；`compose-mng-on FILE RRGGBB ENTRY:IMAGE [ENTRY:IMAGE ...]` 从指定不透明底色开始合成。它不自动播放 MNG，也不自动选择界面状态。
-
-本机 Rust 工具链位于用户目录，必要时在当前 PowerShell 会话设置：
+资源检查示例：
 
 ```powershell
-$env:RUSTUP_HOME="$env:LOCALAPPDATA/RustGNU/rustup"
-$env:CARGO_HOME="$env:LOCALAPPDATA/RustGNU/cargo"
-$env:Path="$env:CARGO_HOME/bin;$env:Path"
+cargo run -p nekopack-cli -- inspect-archive path/to/system.dat
+cargo run -p nekopack-cli -- inspect-overlays path/to/system.dat path/to/patch.dat
 ```
 
-其他已安装 Rust 的环境使用自己的工具链即可。当前系统解释器桥还需要 C++ 编译器/归档器；已验证 Windows GNU + Zig 0.14.1，参数和复现步骤见 [构建与验证](docs/Phase2_Title_Runtime.md)。Android ARM64 使用 NDK r27d 交叉编译；PGKM10 真机与 x86_64/libnb 翻译执行模拟器的结果分别记录，见上述 movie 增量。
+`read-entry` 等命令输出原始二进制，不应经过会转码的文本管道。研究记录保留在 [封包规格](docs/NekoPack_Archive_Specification.md)、[脚本分析](docs/NekoPack_Script_Analysis.md) 和 [架构](CROSS_PLATFORM_ARCHITECTURE.md) 中。
 
-## 调查文档
+## 反馈问题
 
-- [技术研究](docs/NekoPack_Technical_Research.md)
-- [封包规格](docs/NekoPack_Archive_Specification.md)
-- [脚本分析](docs/NekoPack_Script_Analysis.md)
-- [运行时架构](docs/NekoPack_Runtime_Architecture.md)
-- [兼容性矩阵](docs/NekoPack_Compatibility_Matrix.md)
-- [开发路线](docs/NekoPack_Development_Roadmap.md)
-- [证据与版本](docs/Sources.md)
-- [本地样本元数据](research/sample-audit.json)
-- [Phase 1 实施与验收](docs/Phase1_Archive_Increment.md)
-- [名称、覆盖关系与 MNG 验收](docs/Phase1_Metadata_Increment.md)
-- [PNG/RGBA 像素解码验收](docs/Phase1_Pixel_Increment.md)
-- [素材坐标与画布合成验收](docs/Phase1_Canvas_Increment.md)
-- [原版显示差异定位与修正](docs/Phase1_Display_Correction.md)
-- [启动脚本 AST 与依赖验证](docs/Phase2_Bootstrap_Parser.md)
-- [第三方算法来源声明](THIRD_PARTY_NOTICES.md)
+请提供安装包版本／SHA-256、设备与 Android 版本、游戏及补丁版本、新游戏或读档、触发步骤、错误文字。不要上传完整游戏资源、个人存档或整段剧情。可使用 [问题模板](https://github.com/satyra/nekopack-runtime/issues/new/choose)。
 
-## 调查复现
+## 许可与第三方组件
 
-Rust 库与 CLI 可独立编译。只有真实样本研究/差分脚本依赖本机旧移植项目的 `inspect_neko.py`、`ArcNEKO.cs` 和 `TDED_analysis/GARbro/nekopack.lst`。这些研究依赖没有复制进本仓库；其他机器需自行提供样本和参考工具才能重跑真实数据差分。输出记录了解码器 SHA-256。
+项目原创源码采用 **GNU GPL v3，仅第 3 版（`GPL-3.0-only`）**，完整条款见 [LICENSE](LICENSE)。第三方组件保留各自的许可与声明；此许可不涵盖外部游戏资源或汉化补丁。分发 APK 时，应同时提供该版本的完整对应源码、构建脚本及依赖说明，具体交付步骤见 [发布指南](docs/RELEASING.md)。
 
-```powershell
-python research/audit_samples.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --output research/sample-audit.json
-python -m unittest discover -s research -p 'test_*.py' -v
-python research/verify_rust_archive.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --cli target/release/nekopack-cli.exe --output research/rust-archive-verification.json
-python research/verify_metadata.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --cli target/release/nekopack-cli.exe --output research/metadata-verification.json
-python research/verify_pixels.py --games 'D:\codex\电脑移植安卓\游戏' --decoder-dir 'D:\codex\电脑移植安卓\research' --cli target/release/nekopack-cli.exe --output research/pixel-verification.json
-```
-
-脚本只读取游戏文件，输出文件哈希、计数和格式元数据，不导出剧情、图像、音频或引擎二进制。文件名中的汉化版本标记不等于已确认的原版版本号。完整资源解码、字符编码、脚本语义、启动流程、原版行为对照及真机测试仍待验证。
-
-资源与显示增量已完成素材坐标、显式图层合成及主要对照错误修正，逐像素原版一致性仍待无损帧验证。当前工作优先推进脚本执行主线：启动 AST、变量/调用状态、`.nut` 系统命令注册与标题菜单调用链。不继续围绕有损截图拟合颜色，也不提前搭建空壳 VM 或臆造指令；未知指令必须报告，不能静默跳过。
+第三方来源和修改说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。Android 包内附对应第三方许可快照，不包含商业游戏资源。介绍视频使用原创功能示意动画，与实际游戏录屏区分。
