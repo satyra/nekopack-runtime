@@ -57,3 +57,13 @@ python platforms/android/regression/build-isolated-audio-fixtures.py --games BIR
 `research/birth-original-voice-device-verification.json` 是同一 APK SHA 下的独立补测：BIRTH FO/MY/KA 的原作音频、每次设置后的进程重启、静音/播放和非零增益；KA cue 为 `KA_EP02_0000`，音频 SHA256 为 `a4ec2d6cc1bf1abff0089d82574d8789e6ecdffae5b456e01906b5823f8cf21e`。原作来源证据见 `research/birth-ka-original-resource-evidence.json`。补测补充历史矩阵，不回写历史结论。
 
 本次脚本迁移只进行静态编译和两个 `--plan-only` 检查，未因此重新执行设备测试。已有设备验证以对应 research 记录为准。
+
+## 汉化姓名编码回归
+
+`verify-translated-speaker.py` 验证真实汉化脚本中无法编码成 CP932 的姓名，设备端仅提取姓名、源脚本和行号，不传回正文或图片。`--phase all` 另外检查存档重启读取、Bold 修改后的重绘和恢复。测试补丁只在缺失时添加；已有同名档必须哈希匹配，结束只删除本次添加的文件。
+
+```powershell
+python platforms/android/regression/verify-translated-speaker.py --serial emulator-5572 --game BLESS --max-pages 40 --phase all
+```
+
+`--game` 支持 BLESS、BIRTH、BRAVE、BLACK、ENDLESS，补丁位置可用 `--patch-root` 和 `--endless-root` 指定。本项已在新姓名修复 APK `9f784ea0063783643be6386a890bfb863e2eca5aba42b82af357637d13723a7c` 上完成五款测试，详见 `research/translated-speaker-render-verification.json`；顶部历史语音矩阵的固定 APK 不因此更改。

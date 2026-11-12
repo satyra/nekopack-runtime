@@ -1,0 +1,109 @@
+{
+  "apk": ".local\\android-probe\\nekopack-translated-speaker-fix-arm64.apk",
+  "sha256": "9f784ea0063783643be6386a890bfb863e2eca5aba42b82af357637d13723a7c",
+  "serial": "emulator-5572",
+  "reported_error": "speaker not encodable in active CP932 profile",
+  "cause": "The Unicode name renderer re-encoded every speaker as CP932 solely to reconstruct the original byte-count centering formula.",
+  "fix": "Select the dialogue encoding from the actual mounted script resource, then pass the encoded name byte count to the Unicode renderer. Use the same path when rebuilding after original settings close.",
+  "runtime_tests": {
+    "passed": 129,
+    "ignored": 7
+  },
+  "font_render_test": {
+    "passed": 1,
+    "synthetic_names_only": true
+  },
+  "translated_games": [
+    {
+      "game": "BLESS",
+      "source": "P01",
+      "line": 35,
+      "page": 6,
+      "speaker_codepoints": [
+        "U+59EC"
+      ],
+      "source_gb18030_bytes": 2,
+      "rendered": true,
+      "restart_load": true,
+      "bold_rebuild_and_restore": true,
+      "log": ".local\\android-probe\\translated-speaker-bless-final.log",
+      "log_sha256": "d344b4980017a649516b9b66330b4d81171a867c0ac2b9a851c326c3072be7cb"
+    },
+    {
+      "game": "BIRTH",
+      "source": "012401",
+      "line": 45,
+      "page": 7,
+      "speaker_codepoints": [
+        "U+59EC"
+      ],
+      "source_gb18030_bytes": 2,
+      "rendered": true,
+      "restart_load": true,
+      "bold_rebuild_and_restore": true,
+      "log": ".local\\android-probe\\translated-speaker-birth-final.log",
+      "log_sha256": "bf3de1fec29a85966c026495515fba28ecdf5da62e3ef973c77e5219ccd30a8f"
+    },
+    {
+      "game": "BRAVE",
+      "source": "010901",
+      "line": 60,
+      "page": 15,
+      "speaker_codepoints": [
+        "U+7EA2"
+      ],
+      "source_gb18030_bytes": 2,
+      "rendered": true,
+      "restart_load": true,
+      "bold_rebuild_and_restore": true,
+      "log": ".local\\android-probe\\translated-speaker-brave-final.log",
+      "log_sha256": "2aadb598ca9577dc8b8d96dd5a94c720e99aa973b0c91fd70d05276bf14298b4"
+    },
+    {
+      "game": "BLACK",
+      "source": "P01",
+      "line": 102,
+      "page": 21,
+      "speaker_codepoints": [
+        "U+7EA2"
+      ],
+      "source_gb18030_bytes": 2,
+      "rendered": true,
+      "restart_load": true,
+      "bold_rebuild_and_restore": true,
+      "log": ".local\\android-probe\\translated-speaker-black-final.log",
+      "log_sha256": "8b1a4ac9f92225682544642be26c62d3e02855c1d3e7788414c632a9c3ecb303"
+    },
+    {
+      "game": "ENDLESS",
+      "source": "010100",
+      "line": 71,
+      "page": 12,
+      "speaker_codepoints": [
+        "U+59AE",
+        "U+53EF"
+      ],
+      "source_gb18030_bytes": 4,
+      "rendered": true,
+      "restart_load": true,
+      "bold_rebuild_and_restore": true,
+      "log": ".local\\android-probe\\translated-speaker-endless-final.log",
+      "log_sha256": "a5a9662f5f7675be338f3cf8ea9d4fd8faf1dfe8e9977328173ea8fb082801a6"
+    }
+  ],
+  "original_regression": {
+    "cold_starts": 5,
+    "resumes": 10,
+    "status": "passed",
+    "audio_progress_coverage": {
+      "BLESS": 2,
+      "BIRTH": 2,
+      "BRAVE": 2,
+      "BLACK": 2,
+      "Endless Dungeon": 2
+    },
+    "report": ".local\\android-probe\\translated-speaker-original-lifecycle.json",
+    "sha256": "93b40ad4a57755a505ff479f9c86fe4c2bb79dc749bc918ea90dc3824fffbd7f"
+  },
+  "content_policy": "Only code, speaker names/page coordinates and audio/runtime metadata inspected; no game images or story/recollection body read."
+}

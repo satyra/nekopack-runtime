@@ -462,7 +462,8 @@ impl<R: Read + Seek> StorySession<R> {
                 let mng = self.store.read("system", "msgbox.mng")?;
                 renderer.set_style(&mng, style)?;
                 let page = self.page.as_ref().unwrap();
-                renderer.prepare(page.sequence, &page.speaker, &page.text)?;
+                let name_bytes = self.store.speaker_byte_len(&page.source, &page.speaker)?;
+                renderer.prepare(page.sequence, &page.speaker, name_bytes, &page.text)?;
             }
             self.dialogue_style = Some(style);
         }
@@ -990,7 +991,8 @@ impl<R: Read + Seek> StorySession<R> {
             }
             if let Some(renderer) = &mut self.text_renderer {
                 let page = self.page.as_ref().unwrap();
-                renderer.prepare(sequence, &page.speaker, &page.text)?;
+                let name_bytes = self.store.speaker_byte_len(&page.source, &page.speaker)?;
+                renderer.prepare(sequence, &page.speaker, name_bytes, &page.text)?;
             }
             self.system
                 .eval("auto-speed", "return Config.AutoSpeed.tostring()")?;

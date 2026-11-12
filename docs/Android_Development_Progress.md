@@ -18,9 +18,9 @@
 
 ## 交付边界
 
-最新本地 APK 位于 `.local/android-probe/nekopack-core-redirect-voice-arm64.apk`，SHA-256 为 `b9d41aa7699b10409bb552e404ede12fdbf92e32f1e35a96a2dbcc2d91e97cf6`。本版已完成 Endless Dungeon 整档汉化的启动、设置、存档重启读取和切回原版，以及游戏库具名扫描识别、移除补丁后恢复原版验证。运行时测试 128 项通过、6 项忽略，五款原始 message 脚本的三项专项测试通过。
+最新本地 APK 位于 `.local/android-probe/nekopack-translated-speaker-fix-arm64.apk`，SHA-256 为 `9f784ea0063783643be6386a890bfb863e2eca5aba42b82af357637d13723a7c`。本版修复汉化姓名渲染被强制转成 CP932 导致中断的问题。129 项运行时测试通过、7 项忽略，另有真实字体／消息框的合成中文姓名渲染测试通过。五款汉化版的实际非 CP932 姓名页、存档重启读取、Bold 修改重绘与恢复均通过；五款原版另通过 5 次冷启动和 10 次后台恢复。
 
-同一最终 APK 在 emulator-5572 完成五款 86 个控件、172 个播放／静音状态的语音矩阵，全部通过。每组原版设置修改后强制停止并重启，播放检查实际进度、非零输出增益与资源哈希，静音检查无语音请求；8 个测试进程及配置还原均正常结束。本轮未复现启动超时。完整结果见 `research/android-five-game-voice-matrix-final.json`，原始日志位于 `.local/android-probe/voice-matrix-source-adapter-final/`。本轮没有在最新 APK 上重测五款所有设置；此前设置和启动器验收保留各自构建的边界。BIRTH KA 的借用录音缺口已由同 APK 的原录音补测闭合；前一矩阵报告保留当时的缺口标记，补充证据见 `research/birth-original-voice-device-verification.json`。滑块延迟数据来自模拟器，真机帧率仍待测。本轮验证没有查看游戏图片或回想正文。
+上一构建 `b9d41aa7…91e97cf6` 在 emulator-5572 完成五款 86 个控件、172 个播放／静音状态的语音矩阵，全部通过。每组原版设置修改后强制停止并重启，播放检查实际进度、非零输出增益与资源哈希，静音检查无语音请求；8 个测试进程及配置还原均正常结束。本轮未复现启动超时。完整结果见 `research/android-five-game-voice-matrix-final.json`，原始日志位于 `.local/android-probe/voice-matrix-source-adapter-final/`。该轮没有重测五款所有设置；此前设置和启动器验收保留各自构建的边界。BIRTH KA 的借用录音缺口已由同 APK 的原录音补测闭合；前一矩阵报告保留当时的缺口标记，补充证据见 `research/birth-original-voice-device-verification.json`。滑块延迟数据来自模拟器，真机帧率仍待测。本轮验证没有查看游戏图片或回想正文。
 
 ## 核心语义复核（2026-11-12）
 
@@ -64,16 +64,16 @@ Endless Dungeon 汉化 DLL 的 CreateFileA/W 钩子已按整档重定向接入�
 
 原始脚本的语音开关表达式存在差异：BLESS、BIRTH、BRAVE、BLACK 调用 `IsAvailVoice(m.voice)`，Endless Dungeon 调用 `IsAvailVoice(m.mask)`。最新 `message_adapter` 执行各档原始 parser 与原始 voice 表达式，沿用脚本本身的数据关系，不按游戏名建立分支，也不再统一改为按音频文件名判断。五款原始 message 脚本的三项专项测试通过；运行时测试共 128 项通过、6 项忽略。
 
-最新 APK 已完成顶部所列 Endless Dungeon 整档重定向及游戏库验证。五款矩阵全部通过：Endless Dungeon 18 个开关／36 个状态，BLESS 16／32，BIRTH 18／36，BRAVE 18／36，BLACK 16／32。每个测试进程开始前核对安装 APK 与锁定文件的 SHA-256，未混用构建。BIRTH KA 录音借用缺口已在下述补测闭合；旧混合中文存档身份不迁移的边界保持不变。
+当时的 `b9d41aa7…91e97cf6` APK 已完成 Endless Dungeon 整档重定向及游戏库验证。五款矩阵全部通过：Endless Dungeon 18 个开关／36 个状态，BLESS 16／32，BIRTH 18／36，BRAVE 18／36，BLACK 16／32。每个测试进程开始前核对安装 APK 与锁定文件的 SHA-256，未混用构建。BIRTH KA 录音借用缺口已在下述补测闭合；旧混合中文存档身份不迁移的边界保持不变。
 
 
 ## BIRTH KA 原录音与连续启动／后台恢复复测（2026-11-12）
 
 BIRTH 原版 `system.dat` 的 `script/EP02.txt` 中有 21 条连续 KA speaker 引用，和原版 `system/voicemap.txt` 的 KA 角色映射一致。原 `voice.dat` 存在 `KA_EP02_0000.ogg` 至 `KA_EP02_0020.ogg`；此前数字场景前缀扫描遗漏了 EP02。仅扫描命令、角色头和音频容器元数据，没有阅读剧情／回想正文或查看图片。
 
-选择的原录音 `KA_EP02_0000.ogg` 为 34,055 字节、单声道 44,100 Hz、约 3.1465 秒，SHA-256 为 `a4ec2d6cc1bf1abff0089d82574d8789e6ecdffae5b456e01906b5823f8cf21e`。隔离场景替换为这条本作录音，仍使用顶部同一 APK；KA 开关关闭时无语音请求，开启时实际播放器前进、输出增益 0.79、播放字节 SHA 与原档一致，两组均在修改原版设置后强制停止并重启。FO/MY 同时重测通过，结束后恢复设置。原资源可用 `research/verify_birth_ka_original.py` 复验；结果见 `research/birth-ka-original-resource-evidence.json` 和 `research/birth-original-voice-device-verification.json`。未覆写旧矩阵的历史证据。
+选择的原录音 `KA_EP02_0000.ogg` 为 34,055 字节、单声道 44,100 Hz、约 3.1465 秒，SHA-256 为 `a4ec2d6cc1bf1abff0089d82574d8789e6ecdffae5b456e01906b5823f8cf21e`。隔离场景替换为这条本作录音，仍使用当时的 `b9d41aa7…91e97cf6` APK；KA 开关关闭时无语音请求，开启时实际播放器前进、输出增益 0.79、播放字节 SHA 与原档一致，两组均在修改原版设置后强制停止并重启。FO/MY 同时重测通过，结束后恢复设置。原资源可用 `research/verify_birth_ka_original.py` 复验；结果见 `research/birth-ka-original-resource-evidence.json` 和 `research/birth-original-voice-device-verification.json`。未覆写旧矩阵的历史证据。
 
-五款各完成 10 次进程冷启动、20 次 Home 后恢复，共 50 次启动、100 次恢复、150 次暂停采样，全部通过。每次 `am start -W -S` 后分别验证 session 与标题就绪，再进入有持续音频的原剧情页；BLESS 为第 13 页、BIRTH 为第 6 页，其余为第 1 页，选页按通用音频元数据进行。后台两次采样确认音频位置稳定，恢复确认相同 Activity／进程、相同音频 token／播放器、实际播放位置继续前进，且剧情坐标不变。最后一次恢复后再次暂停采样，证明最后一次恢复也实际前进。标题就绪范围为 2,281–8,750 ms。前后安装包哈希均为顶部 `b9d41aa7…91e97cf6`，无需更换 APK。
+五款各完成 10 次进程冷启动、20 次 Home 后恢复，共 50 次启动、100 次恢复、150 次暂停采样，全部通过。每次 `am start -W -S` 后分别验证 session 与标题就绪，再进入有持续音频的原剧情页；BLESS 为第 13 页、BIRTH 为第 6 页，其余为第 1 页，选页按通用音频元数据进行。后台两次采样确认音频位置稳定，恢复确认相同 Activity／进程、相同音频 token／播放器、实际播放位置继续前进，且剧情坐标不变。最后一次恢复后再次暂停采样，证明最后一次恢复也实际前进。标题就绪范围为 2,281–8,750 ms。前后安装包哈希均为 `b9d41aa7…91e97cf6`，无需更换 APK。
 
 新增 `platforms/android/verify_startup_lifecycle.py` 可重复执行这套测试。正式记录见 `research/android-startup-lifecycle-verification.json`；完整逐阶段数据位于 `.local/android-probe/startup-lifecycle-resumed.json`，其 SHA 收录于验证记录。
 
@@ -83,6 +83,17 @@ BIRTH 原版 `system.dat` 的 `script/EP02.txt` 中有 21 条连续 KA speaker �
 
 ## 提交前 APK 与源码一致性核对
 
-提交前使用当前源码重新运行 `platforms/android/build_probe.py`。新构建整包 SHA-256 为 `bd690fcf6445a40314d0154714e902441d5494e5d516a7be239f2d361f81c5ac`，与经过设备验证的顶部最终 APK 比较，全部 17 个 ZIP 条目内容逐字节一致，包括 DEX、三个原生库、Android 资源与清单、许可证及包内签名文件。两包签名验证通过，证书 SHA-256 相同；部分 ZIP 条目时间戳不同，因此整包哈希不同。交付继续使用经过五款设备验证的 `nekopack-core-redirect-voice-arm64.apk`（`b9d41aa7…91e97cf6`）。
+提交前使用当前源码重新运行 `platforms/android/build_probe.py`。新构建整包 SHA-256 为 `bd690fcf6445a40314d0154714e902441d5494e5d516a7be239f2d361f81c5ac`，与当时经过设备验证的 `b9d41aa7…91e97cf6` APK 比较，全部 17 个 ZIP 条目内容逐字节一致，包括 DEX、三个原生库、Android 资源与清单、许可证及包内签名文件。两包签名验证通过，证书 SHA-256 相同；部分 ZIP 条目时间戳不同，因此整包哈希不同。交付继续使用经过五款设备验证的 `nekopack-core-redirect-voice-arm64.apk`（`b9d41aa7…91e97cf6`）。
 
 `research/android-final-apk-source-verification.json` 记录两个 APK 的逐条目哈希、签名证书和 146 个源码输入的 Git blob ID。复验脚本为 `platforms/android/verify_apk_match.py`，应先执行构建再比较；它不会自行构建。矩阵、原录音隔离场景、整档重定向与游戏库扫描的本轮脚本已整理到 `platforms/android/regression/`，所需外部资源和本地元数据见该目录 README；连续启动／恢复脚本保留在 `platforms/android/verify_startup_lifecycle.py`。游戏 DAT、原录音、用户存档、APK 和签名私钥不纳入 Git。
+
+
+## 汉化姓名渲染中断修复（2026-11-12）
+
+用户正常播放时报告 `speaker not encodable in active CP932 profile`。根因是 `DialogueRenderer::prepare` 为复原原脚本 `(name_width - name.len()*11)/2` 的居中计算，把已经解码成 Unicode 的所有姓名再次固定编码为 CP932。汉化的“姬”“红”“妮可”等姓名无法按该编码表示，因而在实际绘制前报错。此前原版语音矩阵和汉化首段检查未覆盖这些具体姓名，是测试覆盖缺口。
+
+修复由 `DatGame` 根据当前页实际选中的脚本资源确定姓名行编码：已验证混合汉化脚本的姓名行使用 GB18030，原版仍使用 CP932。编码后的字节长度传给渲染器，Unicode 字形绘制保留，原姓名居中公式保留；首次显示和原版设置关闭后的样式重建使用同一路径。没有逐游戏分支，也没有用问号替换姓名、使用 UTF-8 长度或直接吞掉编码错误。独立 `dialogue_overlay` 比较工具增加显式编码参数。
+
+新增 `platforms/android/regression/verify-translated-speaker.py`：实际添加汉化档、从标题推进到非 CP932 姓名页，验证绘制完成、存档、强停重启读取、Bold 切换重绘与恢复；五款全部通过。脚本在设备端过滤正文和 UI 无关字段，只读取姓名与页坐标；只清除本次新增补丁，测试存档使用隔离命名。最初恢复设置时遇到旧 presentation JSON 残留，已改为等待实际设置控件出现再读状态，未修改运行时来迁就测试。
+
+结果见 `research/translated-speaker-render-verification.json`。原版回归在这一个新 APK 上完成五款各 1 次冷启动、2 次后台恢复；旧版的 86／172 语音矩阵和 50／100 稳定性记录仍属于旧版，不冒充本次全量重跑。新 APK 经当前源码再次构建，17 个包内文件与已测修复 APK 完全一致、签名证书一致，详见 `research/android-translated-speaker-apk-source-verification.json`。

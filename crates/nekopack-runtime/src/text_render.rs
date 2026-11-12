@@ -521,15 +521,11 @@ impl DialogueRenderer {
         Self::draw_glyphs(target, &layout.glyphs, position, border);
         Ok(())
     }
-    pub fn prepare(&mut self, sequence: u64, speaker: &str, text: &str) -> Result<()> {
+    pub fn prepare(&mut self, sequence: u64, speaker: &str, speaker_byte_len: usize, text: &str) -> Result<()> {
         let name = if speaker.is_empty() {
             None
         } else {
-            let (encoded, _, errors) = encoding_rs::SHIFT_JIS.encode(speaker);
-            if errors {
-                return Err("speaker not encodable in active CP932 profile".into());
-            }
-            let x = (self.name.width - encoded.len() as i32 * 11) / 2;
+            let x = (self.name.width - speaker_byte_len as i32 * 11) / 2;
             // Name Print occurs before message.nut assigns LineWidth for the body.
             // Long names remain on one line and are clipped by the NAME sprite.
             let glyphs = Self::layout(&self.font, speaker, i32::MAX, self.bold)?;
@@ -739,6 +735,24 @@ mod tests {
                 .to_string(),
             "font exceeds 40 MiB input budget"
         );
+    }
+    #[test]
+    #[ignore = "requires NEKO_TEST_FONT and NEKO_TEST_MSGBOX local assets; synthetic text only"]
+    fn chinese_name_renders_and_rebuilds_without_cp932_conversion() {
+        let font = std::fs::read(std::env::var_os("NEKO_TEST_FONT").unwrap()).unwrap();
+        let mng = std::fs::read(std::env::var_os("NEKO_TEST_MSGBOX").unwrap()).unwrap();
+        let mut renderer = DialogueRenderer::new(font, 0, &mng, 191, true).unwrap();
+        assert!(encoding_rs::SHIFT_JIS.encode("赵晓").2);
+        renderer.prepare(1, "赵晓", 4, "probe").unwrap();
+        let original = renderer.page.as_ref().unwrap().name.as_ref().unwrap().pixels().to_vec();
+        assert_ne!(original, renderer.name.image.pixels());
+        renderer.prepare(2, "赵晓", 6, "probe").unwrap();
+        assert_ne!(original, renderer.page.as_ref().unwrap().name.as_ref().unwrap().pixels());
+        renderer.set_style(&mng, TextStyle { opacity: 191, bold: true, border: true }).unwrap();
+        renderer.prepare(3, "赵晓", 4, "probe").unwrap();
+        assert!(renderer.page.as_ref().unwrap().name.is_some());
+        renderer.prepare(4, "", 0, "probe").unwrap();
+        assert!(renderer.page.as_ref().unwrap().name.is_none());
     }
     #[test]
     fn native_message_box_blt_scales_rgb_and_alpha() {

@@ -56,6 +56,19 @@ fn chinese_pack<R: Read + Seek>(archive: &Archive<R>) -> Option<ChinesePack> {
     }
 }
 
+fn speaker_byte_len(speaker: &str, profile: Option<ChinesePack>) -> Result<usize, String> {
+    // Speaker rows use the dialogue encoding, not the CP932 command encoding.
+    let encoding = match profile {
+        Some(ChinesePack::TinyDungeon | ChinesePack::EndlessScripts) => encoding_rs::GB18030,
+        _ => encoding_rs::SHIFT_JIS,
+    };
+    let (bytes, _, errors) = encoding.encode(speaker);
+    if errors {
+        return Err(format!("speaker not encodable in source {} profile", encoding.name()));
+    }
+    Ok(bytes.len())
+}
+
 fn chinese_ui_resource(name: &str) -> bool {
     matches!(
         name.to_ascii_lowercase().as_str(),
@@ -170,6 +183,13 @@ fn decode_mixed_scenario(raw: &[u8], endless: bool) -> Result<String, String> {
     Ok(out)
 }
 impl<R: Read + Seek> DatGame<R> {
+    pub(crate) fn speaker_byte_len(&self, source: &str, speaker: &str) -> Result<usize, String> {
+        let filename = format!("{source}.txt");
+        let selected = self.resource_entry("script", &filename)?
+            .ok_or_else(|| format!("missing DAT resource script/{filename}"))?;
+        speaker_byte_len(speaker, chinese_pack(self.archive(selected.source)))
+    }
+
     /// Mount-layout identity plus script validation is used by runtime saves.
     /// This is not a cryptographic hash of every resource payload.
     pub(crate) fn save_identity(&self) -> u64 {
@@ -640,6 +660,23 @@ mod tests {
     }
 
     use super::*;
+
+    #[test]
+    fn speaker_centering_uses_the_source_dialogue_encoding() {
+        assert_eq!(speaker_byte_len("Alice", None).unwrap(), 5);
+        assert_eq!(speaker_byte_len("カミシア", None).unwrap(), 8);
+        assert!(speaker_byte_len("赵晓", None).is_err());
+        assert!(speaker_byte_len("姬", None).is_err());
+        for profile in [ChinesePack::TinyDungeon, ChinesePack::EndlessScripts] {
+            assert_eq!(speaker_byte_len("姬", Some(profile)).unwrap(), 2);
+            assert_eq!(speaker_byte_len("赵晓", Some(profile)).unwrap(), 4);
+            assert_eq!(speaker_byte_len("A赵", Some(profile)).unwrap(), 3);
+            assert_eq!(speaker_byte_len("", Some(profile)).unwrap(), 0);
+            // Full GB18030 preserves four-byte characters too; Unicode scalar
+            // count or UTF-8 length would not match the original script formula.
+            assert_eq!(speaker_byte_len("𠀀", Some(profile)).unwrap(), 4);
+        }
+    }
 
     fn pack(priority: u32, payload: &[u8]) -> std::io::Cursor<Vec<u8>> {
         let mut bytes = b"NEKOPACK".to_vec();
