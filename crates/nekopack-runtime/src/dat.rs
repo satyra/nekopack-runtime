@@ -12,8 +12,9 @@ use std::{
 };
 /// Original CP932 resources with explicit profiles for the verified Chinese scenario packs.
 pub struct DatGame<R: Read + Seek> {
-    archives: Vec<Archive<R>>,
+    archives: Vec<Option<Archive<R>>>,
     catalog: Catalog,
+    mounted: Vec<bool>,
 }
 pub(crate) fn decode(bytes: &[u8]) -> Result<String, String> {
     let (text, errors) = encoding_rs::SHIFT_JIS.decode_without_bom_handling(bytes);
@@ -108,8 +109,31 @@ fn decode_chinese_ui_script(raw: &[u8]) -> Result<String, String> {
 fn decode_chinese_script(raw: &[u8]) -> Result<String, String> {
     decode_mixed_scenario(raw, false)
 }
+// The verified ED pack retains CP932 code and changes only these GB18030
+// literals: the title and full-width save date/time characters.
+fn decode_endless_ui_script(raw: &[u8]) -> Result<String, String> {
+    let mut out = String::new();
+    for line in raw.split_inclusive(|&byte| byte == b'\n') {
+        let trimmed = line.trim_ascii_start();
+        let localized = trimmed.starts_with(b"local t = \"Endless Dungeon ")
+            || trimmed.starts_with(b"local t = FullChar(info.sdate)")
+            || (trimmed.starts_with(b"case '") && trimmed.windows(4).any(|w| w == b"c=\"\xa3"));
+        let encoding = if localized {
+            encoding_rs::GB18030
+        } else {
+            encoding_rs::SHIFT_JIS
+        };
+        let (text, errors) = encoding.decode_without_bom_handling(line);
+        if errors {
+            return Err("invalid mixed Chinese system script encoding".into());
+        }
+        out.push_str(&text);
+    }
+    Ok(out)
+}
 fn decode_mixed_scenario(raw: &[u8], endless: bool) -> Result<String, String> {
     let mut out = String::new();
+    let mut map_rows = false;
     for (line_no, line) in raw.split(|&b| b == b'\n').enumerate() {
         if line_no != 0 {
             out.push('\n');
@@ -119,13 +143,17 @@ fn decode_mixed_scenario(raw: &[u8], endless: bool) -> Result<String, String> {
             out.push(';');
             continue;
         }
+        if endless && trimmed.starts_with(b".") {
+            map_rows =
+                trimmed.split(|b| b.is_ascii_whitespace()).next() == Some(b".map".as_slice());
+        }
         let syntax = trimmed.starts_with(b".")
             || trimmed.starts_with(b"?")
             || trimmed.starts_with(b"#")
             || (endless && trimmed.starts_with(b"@"));
         let label =
             !endless && (trimmed.starts_with(b".title ") || trimmed.starts_with(b".route "));
-        let enc = if syntax && !label {
+        let enc = if (syntax && !label) || map_rows {
             encoding_rs::SHIFT_JIS
         } else {
             encoding_rs::GB18030
@@ -146,7 +174,11 @@ impl<R: Read + Seek> DatGame<R> {
     /// This is not a cryptographic hash of every resource payload.
     pub(crate) fn save_identity(&self) -> u64 {
         let mut w = nekopack_script::checkpoint::Writer::default();
-        for a in &self.archives {
+        for (a, mounted) in self.archives.iter().zip(&self.mounted) {
+            if !mounted {
+                continue;
+            }
+            let a = a.as_ref().unwrap();
             let h = a.header();
             for n in [h.name_seed, h.priority, h.index_key, h.index_length] {
                 w.number(u64::from(n));
@@ -167,20 +199,138 @@ impl<R: Read + Seek> DatGame<R> {
         sources: impl IntoIterator<Item = R>,
         original_only: bool,
     ) -> Result<Self, String> {
-        let mut archives = Vec::new();
-        let mut catalog = Catalog::default();
-        for source in sources {
-            let archive = Archive::open(source, 16 * 1024 * 1024).map_err(|e| e.to_string())?;
-            if original_only && chinese_pack(&archive).is_some() {
-                continue;
+        Self::mount_archives(
+            sources.into_iter().map(|source| (String::new(), source)),
+            original_only,
+            None,
+            false,
+        )
+    }
+    /// Replaces whole archives before resource lookup; missing entries never fall
+    /// back to the replaced original. Source IDs retain caller input ordinals.
+    pub fn mount_named(
+        sources: impl IntoIterator<Item = (String, R)>,
+        original_only: bool,
+    ) -> Result<Self, String> {
+        Self::mount_archives(
+            sources,
+            original_only,
+            Some(&[
+                ("script.dat", "script_chs.dat"),
+                ("system.dat", "system_chs.dat"),
+            ]),
+            true,
+        )
+    }
+    /// Apply explicit whole-archive filename redirects with the same no-fallback
+    /// behavior as a native file-open hook. A translated target is mandatory.
+    pub fn mount_redirected(
+        sources: impl IntoIterator<Item = (String, R)>,
+        redirects: &[(&str, &str)],
+    ) -> Result<Self, String> {
+        Self::mount_archives(sources, false, Some(redirects), false)
+    }
+    fn mount_archives(
+        sources: impl IntoIterator<Item = (String, R)>,
+        original_only: bool,
+        redirects: Option<&[(&str, &str)]>,
+        verified_only: bool,
+    ) -> Result<Self, String> {
+        let (names, sources): (Vec<_>, Vec<_>) = sources.into_iter().unzip();
+        let mut sources: Vec<_> = sources.into_iter().map(Some).collect();
+        let mut archives: Vec<_> = (0..sources.len()).map(|_| None).collect();
+        // Parse redirect targets first. A replaced original is never parsed.
+        if !original_only {
+            for (i, name) in names.iter().enumerate() {
+                if redirects
+                    .unwrap_or(&[])
+                    .iter()
+                    .any(|(_, target)| name.eq_ignore_ascii_case(target))
+                {
+                    archives[i] = Some(
+                        Archive::open(sources[i].take().unwrap(), 16 * 1024 * 1024)
+                            .map_err(|e| e.to_string())?,
+                    );
+                }
             }
-            catalog.add(archive.header(), archive.entries());
-            archives.push(archive);
         }
-        if archives.is_empty() {
+        let endless = archives.iter().flatten().any(|a| {
+            matches!(
+                chinese_pack(a),
+                Some(ChinesePack::EndlessScripts | ChinesePack::EndlessSystem)
+            )
+        });
+        let mut mounted = vec![true; sources.len()];
+        if !original_only && (!verified_only || endless) {
+            for &(original, translated) in redirects.unwrap_or(&[]) {
+                if names
+                    .iter()
+                    .filter(|n| n.eq_ignore_ascii_case(translated))
+                    .count()
+                    != 1
+                {
+                    return Err(format!(
+                        "archive redirect requires exactly one {translated}"
+                    ));
+                }
+                for (i, name) in names.iter().enumerate() {
+                    if name.eq_ignore_ascii_case(original) {
+                        mounted[i] = false;
+                    }
+                }
+            }
+        }
+        for i in 0..sources.len() {
+            if mounted[i] && archives[i].is_none() {
+                archives[i] = Some(
+                    Archive::open(sources[i].take().unwrap(), 16 * 1024 * 1024)
+                        .map_err(|e| e.to_string())?,
+                );
+            }
+            if let Some(archive) = &archives[i] {
+                if original_only && chinese_pack(archive).is_some() {
+                    mounted[i] = false;
+                }
+                if !original_only
+                    && redirects.is_none()
+                    && matches!(
+                        chinese_pack(archive),
+                        Some(ChinesePack::EndlessScripts | ChinesePack::EndlessSystem)
+                    )
+                {
+                    return Err("translated archive redirects require named DAT sources".into());
+                }
+            }
+        }
+        let mut catalog = Catalog::default();
+        for (archive, &active) in archives.iter().zip(&mounted) {
+            if active {
+                let archive = archive.as_ref().unwrap();
+                catalog.add(archive.header(), archive.entries());
+            } else {
+                // Empty source slot keeps catalog IDs equal to input ordinals.
+                catalog.add(
+                    nekopack_archive::Header {
+                        name_seed: 0,
+                        priority: 0,
+                        index_key: 0,
+                        index_length: 0,
+                    },
+                    &[],
+                );
+            }
+        }
+        if !mounted.iter().any(|&active| active) {
             return Err("no DAT archives selected".into());
         }
-        Ok(Self { archives, catalog })
+        Ok(Self {
+            archives,
+            catalog,
+            mounted,
+        })
+    }
+    fn archive(&self, source: usize) -> &Archive<R> {
+        self.archives[source].as_ref().unwrap()
     }
     pub(crate) fn read(&mut self, dir: &str, name: &str) -> Result<Vec<u8>, String> {
         self.read_optional(dir, name)?
@@ -196,7 +346,7 @@ impl<R: Read + Seek> DatGame<R> {
         };
         let localized_ui = dir == "system"
             && name.to_ascii_lowercase().ends_with(".mng")
-            && chinese_header(self.archives[candidate.source].header());
+            && chinese_header(self.archive(candidate.source).header());
         let bytes = self.read_entry(candidate)?;
         if localized_ui {
             let canvas = self.original_ui_canvas(name)?;
@@ -212,13 +362,15 @@ impl<R: Read + Seek> DatGame<R> {
             .catalog
             .lookup(b"system", &encoded)
             .into_iter()
-            .filter(|candidate| !chinese_header(self.archives[candidate.source].header()))
+            .filter(|candidate| !chinese_header(self.archive(candidate.source).header()))
             .collect();
         match resolve(&base) {
             Resolution::Missing => Ok(None),
             Resolution::Ambiguous(_) => Err(format!("ambiguous original canvas for {name}")),
             Resolution::Selected(candidate) => {
                 let prefix = self.archives[candidate.source]
+                    .as_mut()
+                    .unwrap()
                     .read_prefix(candidate.ordinal, 48)
                     .map_err(|error| error.to_string())?;
                 nekopack_image::mng_canvas(&prefix)
@@ -228,7 +380,7 @@ impl<R: Read + Seek> DatGame<R> {
         }
     }
     fn read_entry(&mut self, candidate: nekopack_resource::Candidate) -> Result<Vec<u8>, String> {
-        let archive = &mut self.archives[candidate.source];
+        let archive = self.archives[candidate.source].as_mut().unwrap();
         let length = archive.entries()[candidate.ordinal].length as usize;
         if length > 64 * 1024 * 1024 {
             return Err("resource exceeds 64 MiB limit".into());
@@ -238,18 +390,27 @@ impl<R: Read + Seek> DatGame<R> {
             .map_err(|e| e.to_string())
     }
     pub fn has_chinese_scenario_patch(&self) -> bool {
-        self.archives.iter().any(|archive| {
-            matches!(
-                chinese_pack(archive),
-                Some(ChinesePack::TinyDungeon | ChinesePack::EndlessScripts)
-            )
-        })
+        self.archives
+            .iter()
+            .zip(&self.mounted)
+            .any(|(archive, mounted)| {
+                if !mounted {
+                    return false;
+                }
+                matches!(
+                    chinese_pack(archive.as_ref().unwrap()),
+                    Some(ChinesePack::TinyDungeon | ChinesePack::EndlessScripts)
+                )
+            })
     }
     pub fn recognized_chinese_archives(&self) -> Vec<usize> {
         self.archives
             .iter()
             .enumerate()
-            .filter_map(|(index, archive)| chinese_pack(archive).map(|_| index))
+            .filter_map(|(index, archive)| {
+                (self.mounted[index] && chinese_pack(archive.as_ref().unwrap()).is_some())
+                    .then_some(index)
+            })
             .collect()
     }
     pub fn has_resource(&self, dir: &str, name: &str) -> Result<bool, String> {
@@ -273,8 +434,8 @@ impl<R: Read + Seek> DatGame<R> {
         let candidates = self.catalog.lookup(dir.as_bytes(), &encoded);
         let candidates: Vec<_> = candidates
             .into_iter()
-            .filter_map(|mut candidate| {
-                match chinese_pack(&self.archives[candidate.source]) {
+            .filter_map(|candidate| {
+                match chinese_pack(self.archive(candidate.source)) {
                     None => {}
                     Some(ChinesePack::TinyDungeon) => {
                         let supported = (dir == "system" && chinese_ui_resource(name))
@@ -283,15 +444,7 @@ impl<R: Read + Seek> DatGame<R> {
                             return None;
                         }
                     }
-                    Some(ChinesePack::EndlessScripts) if dir == "script" && !boot_script => {
-                        candidate.priority = 1
-                    }
-                    Some(ChinesePack::EndlessSystem)
-                        if dir == "system" && name.to_ascii_lowercase().ends_with(".mng") =>
-                    {
-                        candidate.priority = 1
-                    }
-                    Some(_) => return None,
+                    Some(ChinesePack::EndlessScripts | ChinesePack::EndlessSystem) => {}
                 }
                 Some(candidate)
             })
@@ -310,7 +463,7 @@ impl<R: Read + Seek> Scripts for DatGame<R> {
         let selected = self
             .resource_entry("script", &filename)?
             .ok_or_else(|| format!("missing DAT resource script/{filename}"))?;
-        let chinese = chinese_pack(&self.archives[selected.source]);
+        let chinese = chinese_pack(self.archive(selected.source));
         let raw = self.read_entry(selected)?;
         Ok(Source {
             name: name.to_vec(),
@@ -332,12 +485,12 @@ impl<R: Read + Seek> GameResources for DatGame<R> {
         let candidate = self
             .resource_entry("system", name)?
             .ok_or_else(|| format!("missing DAT resource system/{name}"))?;
-        let chinese = chinese_header(self.archives[candidate.source].header());
+        let chinese = chinese_pack(self.archive(candidate.source));
         let bytes = self.read_entry(candidate)?;
-        Ok(if chinese {
-            decode_chinese_ui_script(&bytes)?
-        } else {
-            decode(&bytes)?
+        Ok(match chinese {
+            Some(ChinesePack::TinyDungeon) => decode_chinese_ui_script(&bytes)?,
+            Some(ChinesePack::EndlessSystem) => decode_endless_ui_script(&bytes)?,
+            _ => decode(&bytes)?,
         }
         .into_bytes())
     }
@@ -348,16 +501,9 @@ impl<R: Read + Seek> ResourceProvider for DatGame<R> {
             "Data" | "Ini" => {
                 let bytes = self.read_optional("system", name)?;
                 let Some(bytes) = bytes else {
-                    if kind == "Data"
-                        && name
-                            .strip_prefix("x_cg_page")
-                            .and_then(|name| name.strip_suffix(".txt"))
-                            .is_some_and(|number| number.parse::<u32>().is_ok())
-                    {
-                        // The room script enumerates more numbered pages than the archive ships.
-                        return Ok("[]".into());
-                    }
-                    return Err(format!("missing DAT resource system/{name}"));
+                    // Original data()/ini() parse an empty resource string when lookup fails.
+                    // They still return the array/table created before iterating its rows.
+                    return Ok(if kind == "Data" { "[]" } else { "{}" }.into());
                 };
                 let text = decode(&bytes)?;
                 let lines = text
@@ -447,6 +593,26 @@ impl<R: Read + Seek> ResourceProvider for DatGame<R> {
 #[cfg(test)]
 mod tests {
     #[test]
+    fn mixed_endless_system_literals_preserve_cp932_identifiers() {
+        let cp = encoding_rs::SHIFT_JIS.encode("local 設定 = 1\n").0;
+        let gb = encoding_rs::GB18030.encode("local t = \"Endless Dungeon （中文）\"\ncase '0': c=\"０\"; break;\nlocal t = FullChar(info.sdate) + \"　\" + FullChar(info.stime)\n").0;
+        let raw = [cp.as_ref(), gb.as_ref()].concat();
+        assert_eq!(
+            super::decode_endless_ui_script(&raw).unwrap(),
+            "local 設定 = 1\nlocal t = \"Endless Dungeon （中文）\"\ncase '0': c=\"０\"; break;\nlocal t = FullChar(info.sdate) + \"　\" + FullChar(info.stime)\n"
+        );
+    }
+    #[test]
+    fn endless_map_rows_keep_cp932_condition_identifiers() {
+        let raw = encoding_rs::SHIFT_JIS
+            .encode(".map title fade\n\tgraphic\tクリア\n\t@BASE\tクリア\n.case 1\n")
+            .0;
+        assert_eq!(
+            super::decode_mixed_scenario(&raw, true).unwrap(),
+            ".map title fade\n\tgraphic\tクリア\n\t@BASE\tクリア\n.case 1\n"
+        );
+    }
+    #[test]
     fn mixed_chinese_ui_script_decodes_font_and_preview_without_changing_labels() {
         let label = encoding_rs::SHIFT_JIS.encode("local button = \"設定\"\n").0;
         let font = encoding_rs::GB18030.encode("Font = \"中文字体\"\n").0;
@@ -506,11 +672,11 @@ mod tests {
             game.resource("Data", "config.txt").unwrap(),
             r#"[["value","=","new"]]"#
         );
-        assert!(
-            game.resource("Ini", "missing.txt")
-                .unwrap_err()
-                .contains("missing DAT")
-        );
+        assert_eq!(game.resource("Data", "missing.txt").unwrap(), "[]");
+        assert_eq!(game.resource("Ini", "missing.txt").unwrap(), "{}");
+        assert_eq!(game.resource("Data", "x_cg_page99.txt").unwrap(), "[]");
+        // Optional lookup does not turn malformed names into absent resources.
+        assert!(game.resource("Data", "../missing.txt").is_err());
         let mut tied = DatGame::mount([pack(2, b"a"), pack(2, b"b")]).unwrap();
         assert!(
             tied.resource("Data", "config.txt")
@@ -523,6 +689,131 @@ mod tests {
                 .unwrap_err()
                 .contains("invalid CP932")
         );
+    }
+    #[test]
+    fn whole_archive_redirect_has_no_entry_fallback_and_preserves_source_ids() {
+        let original = pack(100, b"original");
+        let mut translated = pack(0, b"translated");
+        // Rename the single entry so only the replaced original contains config.txt.
+        translated.get_mut()[32..36]
+            .copy_from_slice(&nekopack_archive::name_hash(1, b"other.txt").to_le_bytes());
+        let mut game = DatGame::mount_redirected(
+            [
+                ("system.dat".into(), original),
+                ("system_chs.dat".into(), translated),
+            ],
+            &[("system.dat", "system_chs.dat")],
+        )
+        .unwrap();
+        assert!(!game.has_resource("system", "config.txt").unwrap());
+        assert_eq!(
+            game.resource_entry("system", "other.txt")
+                .unwrap()
+                .unwrap()
+                .source,
+            1
+        );
+        assert_eq!(game.read("system", "other.txt").unwrap(), b"translated");
+        let missing = DatGame::mount_redirected(
+            [("system.dat".into(), pack(0, b"original"))],
+            &[("system.dat", "system_chs.dat")],
+        );
+        assert!(
+            missing
+                .err()
+                .unwrap()
+                .contains("exactly one system_chs.dat")
+        );
+        let corrupt = DatGame::mount_redirected(
+            [
+                ("system.dat".into(), pack(0, b"original")),
+                (
+                    "system_chs.dat".into(),
+                    std::io::Cursor::new(b"damaged".to_vec()),
+                ),
+            ],
+            &[("system.dat", "system_chs.dat")],
+        );
+        assert!(corrupt.is_err());
+        let replaced_corrupt = DatGame::mount_redirected(
+            [
+                (
+                    "system.dat".into(),
+                    std::io::Cursor::new(b"damaged".to_vec()),
+                ),
+                ("system_chs.dat".into(), pack(0, b"translated")),
+            ],
+            &[("system.dat", "system_chs.dat")],
+        );
+        assert!(replaced_corrupt.is_ok());
+    }
+    #[test]
+    #[ignore = "requires local ED DAT directory in NEKO_ED_TEST_DAT; reads system code only"]
+    fn endless_named_system_code_and_archive_identity() {
+        let root = std::path::PathBuf::from(std::env::var_os("NEKO_ED_TEST_DAT").unwrap());
+        let mount = |original| {
+            DatGame::mount_named(
+                [
+                    "script.dat",
+                    "script_chs.dat",
+                    "system.dat",
+                    "system_chs.dat",
+                    "actor.dat",
+                    "image.dat",
+                    "sound.dat",
+                    "voice.dat",
+                ]
+                .into_iter()
+                .map(|name| {
+                    (
+                        name.to_owned(),
+                        std::fs::File::open(root.join(name)).unwrap(),
+                    )
+                }),
+                original,
+            )
+            .unwrap()
+        };
+        let mut translated = mount(false);
+        let mut original = mount(true);
+        assert_eq!(translated.recognized_chinese_archives(), [1, 3]);
+        assert!(original.recognized_chinese_archives().is_empty());
+        assert_ne!(translated.save_identity(), original.save_identity());
+        let system = String::from_utf8(translated.system(b"system.nut").unwrap()).unwrap();
+        assert!(system.contains("Endless Dungeon （请勿网络直播、录播本补丁内容）"));
+        let save = String::from_utf8(translated.system(b"saveload.nut").unwrap()).unwrap();
+        assert!(save.contains("c=\"０\""));
+        assert!(save.contains("+ \"　\" +"));
+        assert!(
+            String::from_utf8(original.system(b"system.nut").unwrap())
+                .unwrap()
+                .contains("Endless Dungeon")
+        );
+        // Bootstrap executes the selected system scripts without rendering images
+        // or loading any scenario body.
+        crate::bootstrap_begin(&mut translated, 1, &mut std::io::sink(), true).unwrap();
+        // Exercise the native title path past bootstrap's pending .map command.
+        // Assert packet metadata only; do not write or display image pixels.
+        let mut title = crate::title::TitleSession::open(mount(false)).unwrap();
+        let packet = title.packet(None).unwrap();
+        let header = std::str::from_utf8(packet.split(|&b| b == b'\n').next().unwrap()).unwrap();
+        assert!(header.contains("\"width\":1280"), "{header}");
+    }
+    #[test]
+    fn lazy_resource_vm_returns_present_and_missing_containers() {
+        let mut game = DatGame::mount([pack(0, b"value=ok")]).unwrap();
+        let mut vm = nekopack_script::system::SystemVm::new();
+        vm.eval("dat-host", &game.setup().unwrap()).unwrap();
+        let mut variables = nekopack_script::runtime::Variables::default();
+        vm.eval_with_resources(
+            "resource-containers",
+            r#"if(Ini["config.txt"].value != "ok") throw "present ini";
+               if(Data["missing.txt"].len() != 0) throw "missing data";
+               if(Ini["missing.txt"].len() != 0) throw "missing ini";"#,
+            &mut variables,
+            &mut game,
+        )
+        .unwrap();
     }
     #[test]
     fn encoding_and_empty_mount_fail_explicitly() {

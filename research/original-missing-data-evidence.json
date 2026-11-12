@@ -1,0 +1,179 @@
+{
+  "scope": "Four unique original PE binaries; instruction inspection only, no scenario or gallery payloads",
+  "semantics": {
+    "Data": "[]",
+    "Ini": "{}"
+  },
+  "explanation": "Resource lookup failure preserves the initialized empty string. Native data/ini parse its zero rows, create an array/table unconditionally, and return one VM value. No filename-specific branch is present.",
+  "duplicate": "Tiny_BfY.exe is byte-identical to Tiny_BoD.exe",
+  "binaries": [
+    {
+      "executable": "Tiny_BaW.exe",
+      "sha256": "c570d44929360672475db25ec22704ae06ffc20cbabf4a46d0e60325fbe908d0",
+      "data": "0x40acb8",
+      "ini": "0x40b140",
+      "read_resource": "0x44a394",
+      "evidence": [
+        {
+          "address": "0x40ad56",
+          "instruction": "call 0x44a394"
+        },
+        {
+          "address": "0x40b1df",
+          "instruction": "call 0x44a394"
+        },
+        {
+          "address": "0x40ad8c",
+          "instruction": "call 0x4cdf94"
+        },
+        {
+          "address": "0x40b213",
+          "instruction": "call 0x4cdf2c"
+        },
+        {
+          "address": "0x44a646",
+          "instruction": "call 0x4476c4"
+        },
+        {
+          "address": "0x44a64b",
+          "instruction": "add esp, 0x2c"
+        },
+        {
+          "address": "0x44a64e",
+          "instruction": "test al, al"
+        },
+        {
+          "address": "0x44a650",
+          "instruction": "je 0x44aff6"
+        }
+      ],
+      "missing_path": "zero return skips resource population and goes to cleanup"
+    },
+    {
+      "executable": "Tiny_BoD.exe",
+      "sha256": "fc2a82cc733ae8fd9585b9e151d7f6a2ca5f1572c2df017e20d330eeff219521",
+      "data": "0x40ad5c",
+      "ini": "0x40b1e4",
+      "read_resource": "0x44a44c",
+      "evidence": [
+        {
+          "address": "0x40adfa",
+          "instruction": "call 0x44a44c"
+        },
+        {
+          "address": "0x40b283",
+          "instruction": "call 0x44a44c"
+        },
+        {
+          "address": "0x40ae30",
+          "instruction": "call 0x4cee5c"
+        },
+        {
+          "address": "0x40b2b7",
+          "instruction": "call 0x4cedf4"
+        },
+        {
+          "address": "0x44a6fe",
+          "instruction": "call 0x447778"
+        },
+        {
+          "address": "0x44a703",
+          "instruction": "add esp, 0x2c"
+        },
+        {
+          "address": "0x44a706",
+          "instruction": "test al, al"
+        },
+        {
+          "address": "0x44a708",
+          "instruction": "je 0x44b0ae"
+        }
+      ],
+      "missing_path": "zero return skips resource population and goes to cleanup"
+    },
+    {
+      "executable": "Tiny_BoS.exe",
+      "sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+      "data": "0x420428",
+      "ini": "0x421758",
+      "read_resource": "0x4c5908",
+      "evidence": [
+        {
+          "address": "0x420526",
+          "instruction": "call 0x4c5908"
+        },
+        {
+          "address": "0x421856",
+          "instruction": "call 0x4c5908"
+        },
+        {
+          "address": "0x42055b",
+          "instruction": "call 0x5ad7a8"
+        },
+        {
+          "address": "0x421889",
+          "instruction": "call 0x5ad6f0"
+        },
+        {
+          "address": "0x4c6334",
+          "instruction": "call 0x4b1084"
+        },
+        {
+          "address": "0x4c6339",
+          "instruction": "add esp, 0x2c"
+        },
+        {
+          "address": "0x4c633c",
+          "instruction": "test al, al"
+        },
+        {
+          "address": "0x4c633e",
+          "instruction": "jne 0x4c642e"
+        }
+      ],
+      "missing_path": "zero return falls through cleanup; nonzero jumps to population"
+    },
+    {
+      "executable": "ed.exe",
+      "sha256": "921815be7f5f6e6bbedee70daa5b39025acfa78f40897a276beeb6f209e6f12f",
+      "data": "0x56ec7c",
+      "ini": "0x570018",
+      "read_resource": "0x5c0ebc",
+      "evidence": [
+        {
+          "address": "0x56ed7d",
+          "instruction": "call 0x5c0ebc"
+        },
+        {
+          "address": "0x570119",
+          "instruction": "call 0x5c0ebc"
+        },
+        {
+          "address": "0x56edb3",
+          "instruction": "call 0x44349c"
+        },
+        {
+          "address": "0x57014d",
+          "instruction": "call 0x4433e4"
+        },
+        {
+          "address": "0x5c1a72",
+          "instruction": "call 0x5abaf0"
+        },
+        {
+          "address": "0x5c1a77",
+          "instruction": "add esp, 0x2c"
+        },
+        {
+          "address": "0x5c1a7a",
+          "instruction": "test al, al"
+        },
+        {
+          "address": "0x5c1a7c",
+          "instruction": "jne 0x5c1b6f"
+        }
+      ],
+      "missing_path": "zero return falls through cleanup; nonzero jumps to population"
+    }
+  ]
+}

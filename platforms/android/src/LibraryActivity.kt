@@ -34,7 +34,7 @@ internal object LibraryPaths {
 }
 
 class LibraryActivity : Activity() {
-    private external fun inspect(descriptors: IntArray, hasSave: Long, original: Long): ByteArray
+    private external fun inspect(descriptors: IntArray, hasSave: Long, original: Long, archiveNames: ByteArray): ByteArray
     private data class Game(val tree: Uri, val id: String, val name: String, val chinese: Boolean = false, val patches: List<String> = emptyList()) {
         val key get() = LibraryPaths.identity(tree, id)
         val index get() = LibraryPaths.gameIndex(name)
@@ -141,7 +141,8 @@ class LibraryActivity : Activity() {
         val descriptors = mutableListOf<ParcelFileDescriptor>()
         try {
             if (candidate != null) descriptors.add(ParcelFileDescriptor.open(candidate.file, ParcelFileDescriptor.MODE_READ_ONLY))
-            for (entry in datFiles(entries ?: children(game.tree, game.id))) {
+            val archives = datFiles(entries ?: children(game.tree, game.id))
+            for (entry in archives) {
                 try {
                     descriptors.add(contentResolver.openFileDescriptor(Docs.buildDocumentUriUsingTree(game.tree, entry.id), "r")
                         ?: error("文件不可读"))
@@ -151,7 +152,7 @@ class LibraryActivity : Activity() {
             }
             check(descriptors.size > if (candidate == null) 0 else 1) { "未找到可读取的 DAT" }
             val result = JSONObject(String(inspect(descriptors.map { it.fd }.toIntArray(), if (candidate == null) 0 else 1,
-                if (original) 1 else 0), Charsets.UTF_8).substringBefore('\n'))
+                if (original) 1 else 0, archives.joinToString("\u0000") { it.name }.toByteArray(Charsets.UTF_8)), Charsets.UTF_8).substringBefore('\n'))
             check(!result.has("error")) { result.getString("error") }
             return result
         } finally {
@@ -337,7 +338,7 @@ class LibraryActivity : Activity() {
         gravity = Gravity.CENTER
         setPadding(dp(5), dp(5), dp(5), dp(5))
         setBackgroundColor(0xfff0e8f6.toInt())
-        Page.values().forEach { destination ->
+        Page.values().filter { it != Page.RECENT }.forEach { destination ->
             val selected = destination == page
             addView(button(destination.title, selected) { showPage(destination) }.apply {
                 isSelected = selected
@@ -362,6 +363,8 @@ class LibraryActivity : Activity() {
             setText(query)
         }
         content.addView(search)
+        renderRecent(renderGeneration, latestOnly = true)
+        content.addView(label("全部游戏", 18, ink, true), spaced(18))
         gameList = column()
         content.addView(gameList, spaced(10))
         search.addTextChangedListener(object : TextWatcher {
@@ -415,15 +418,16 @@ class LibraryActivity : Activity() {
         }
     }
 
-    private fun renderRecent(generation: Int) {
+    private fun renderRecent(generation: Int, latestOnly: Boolean = false) {
         val history = games.values.mapNotNull { game ->
             registry.getLong("last_played_${game.key}", 0).takeIf { it > 0 }?.let { game to it }
         }.sortedByDescending { it.second }
         if (history.isEmpty()) {
-            content.addView(label("还没有游玩记录", 17, muted))
+            if (!latestOnly) content.addView(label("还没有游玩记录", 17, muted))
             return
         }
-        history.forEachIndexed { index, (recent, playedAt) ->
+        if (latestOnly) content.addView(label("最近游玩", 18, ink, true), spaced(18))
+        (if (latestOnly) history.take(1) else history).forEachIndexed { index, (recent, playedAt) ->
             val panel = if (index == 0) hero() else card()
             panel.addView(label(recent.name, if (index == 0) 24 else 17, ink, true))
             val date = android.text.format.DateFormat.getDateFormat(this).format(java.util.Date(playedAt))
@@ -525,46 +529,22 @@ class LibraryActivity : Activity() {
     }
 
     private fun renderDetailSheet(game: Game, generation: Int) {
-        val sheet = detailSheet ?: android.app.Dialog(this).also { dialog ->
-            detailSheet = dialog
-            dialog.setCanceledOnTouchOutside(true)
-            dialog.setOnDismissListener {
-                if (detailSheet === dialog) {
-                    detailSheet = null
-                    if (detail != null && !isDestroyed) { detail = null; render() }
-                }
-            }
-        }
-        val shell = column().apply {
-            background = GradientDrawable().apply {
-                setColor(this@LibraryActivity.background)
-                val radius = dp(24).toFloat()
-                cornerRadii = floatArrayOf(radius, radius, radius, radius, 0f, 0f, 0f, 0f)
-            }
-        }
-        val bar = row().apply { setPadding(dp(16), dp(8), dp(10), 0) }
-        bar.addView(label("游戏详情", 17, ink, true), LinearLayout.LayoutParams(0, -2, 1f))
-        bar.addView(button("关闭") { sheet.dismiss() })
+        val shell = column().apply { setBackgroundColor(this@LibraryActivity.background) }
+        val bar = row().apply { setPadding(dp(16), dp(10), dp(16), dp(8)) }
+        bar.addView(button("返回游戏库") { detail = null; render() })
+        bar.addView(label("游戏详情", 20, ink, true).apply { setPadding(dp(12), 0, 0, 0) })
         shell.addView(bar)
-        content = column().apply { setPadding(dp(16), dp(8), dp(16), dp(20)) }
+        content = column().apply { setPadding(dp(20), dp(8), dp(20), dp(24)) }
         shell.addView(ScrollView(this).apply { addView(content) }, LinearLayout.LayoutParams(-1, 0, 1f))
         renderDetail(game, generation)
-        sheet.setContentView(shell)
-        if (!sheet.isShowing) sheet.show()
-        sheet.window?.apply {
-            setBackgroundDrawable(android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT))
-            setGravity(Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL)
-            setDimAmount(0.38f)
-            val metrics = resources.displayMetrics
-            setLayout(minOf(metrics.widthPixels, dp(720)), (metrics.heightPixels * 0.84).toInt())
-        }
+        setContentView(shell)
     }
 
     private fun renderDetail(game: Game, generation: Int) {
         val original = original(game)
         val title = hero()
         title.addView(label(game.name, 28, ink, true))
-        title.addView(label(game.id.removePrefix("raw:"), 13, muted), spaced(6))
+        title.addView(label(version(game, original), 14, muted), spaced(6))
         content.addView(title, spaced(12))
         if (!authorized(game)) {
             content.addView(label("目录授权已失效", 16, accent), spaced(12))
@@ -593,6 +573,10 @@ class LibraryActivity : Activity() {
         versions.addView(resume)
         attachContinue(resume, game, original, generation, saveSummary)
         content.addView(versions, spaced(16))
+        val directory = card()
+        directory.addView(label("游戏目录", 17, ink, true))
+        directory.addView(label(game.id.removePrefix("raw:"), 13, muted), spaced(6))
+        content.addView(directory, spaced(12))
         val overrides = card()
         overrides.addView(label("单游戏覆盖", 17, ink, true))
         overrideSlider(overrides, game, "speed", "文字速度", 50)

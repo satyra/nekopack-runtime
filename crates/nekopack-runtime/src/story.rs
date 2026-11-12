@@ -382,7 +382,11 @@ impl<R: Read + Seek> StorySession<R> {
         {
             return Err("settings require a live, unadvanced dialogue".into());
         }
-        self.settings = Some(crate::settings::Settings::open(&mut self.store, &mut self.system, 1)?);
+        self.settings = Some(crate::settings::Settings::open(
+            &mut self.store,
+            &mut self.system,
+            1,
+        )?);
         self.skip_mode = false;
         self.settings_sequence += 1;
         let cues = crate::message_log::page_cue(&mut self.system)?;
@@ -439,7 +443,11 @@ impl<R: Read + Seek> StorySession<R> {
     }
 
     pub fn settings_tick(&mut self, elapsed: u64) -> Result<Vec<u8>, Box<dyn Error>> {
-        let Some(settings) = self.settings.as_mut().filter(|settings| settings.tick_delay() > 0) else {
+        let Some(settings) = self
+            .settings
+            .as_mut()
+            .filter(|settings| settings.tick_delay() > 0)
+        else {
             return Ok(Vec::new());
         };
         let cues = settings.tick(&mut self.store, &mut self.system, elapsed)?;
@@ -460,8 +468,12 @@ impl<R: Read + Seek> StorySession<R> {
         }
         self.settings = None;
         self.settings_sequence += 1;
-        let packet = format!("{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n",
-            self.page.as_ref().unwrap().sequence, self.settings_sequence).into_bytes();
+        let packet = format!(
+            "{{\"kind\":\"story_settings_closed\",\"sequence\":{},\"input_sequence\":{}}}\n",
+            self.page.as_ref().unwrap().sequence,
+            self.settings_sequence
+        )
+        .into_bytes();
         let cues = crate::message_log::page_cue(&mut self.system)?;
         crate::message_log::with_available_sounds(&mut self.store, packet, &cues)
     }
@@ -888,7 +900,9 @@ impl<R: Read + Seek> StorySession<R> {
                     self.set_auto_mode(sequence, true)?;
                     "applied"
                 }
-                "SKIP" if page && crate::preferences::enabled(&mut self.system, "Dialog")? => "request",
+                "SKIP" if page && crate::preferences::enabled(&mut self.system, "Dialog")? => {
+                    "request"
+                }
                 "SKIP" if page => {
                     self.set_skip_mode(sequence, true)?;
                     "applied"
@@ -1562,14 +1576,15 @@ impl<R: Read + Seek> StorySession<R> {
                         face.chars().take(2).collect()
                     };
                     if !self.voice.is_empty() {
-                        let tags = if mask.is_empty() {
-                            self.log_face.clone()
-                        } else {
-                            mask.join(" ")
-                        };
-                        self.system.eval("dialogue-voice-mask", &format!(
-                            "return (!(\"IsAvailVoice\" in getroottable()) || IsAvailVoice({})).tostring()",
-                            quote(tags.as_bytes())?
+                        let speaker_line = format!(
+                            ":{}:{}:{}",
+                            std::str::from_utf8(&fields[0])?,
+                            std::str::from_utf8(&fields[1])?,
+                            std::str::from_utf8(&fields[2])?
+                        );
+                        self.system.eval("dialogue-voice-availability", &format!(
+                            "return (!(\"IsAvailVoice\" in getroottable()) || NativeMessageVoice([{}])).tostring()",
+                            quote(speaker_line.as_bytes())?
                         ))?;
                         if self.system.result() == "false" {
                             self.voice.clear();
@@ -1855,26 +1870,16 @@ impl<R: Read + Seek> StorySession<R> {
                                     Some([resource]) => resource.as_str(),
                                     _ => name,
                                 };
-                                // This BLESS scene refers to the same background as its opening.
-                                let name = if name == "401b"
-                                    && self
-                                        .machine
-                                        .location()
-                                        .is_some_and(|(source, _)| source == b"035902")
-                                {
-                                    "BG401b"
-                                } else {
-                                    name
-                                };
                                 if let Some(color) = solid(name) {
                                     self.scene.background = None;
                                     self.scene.background_name = None;
                                     self.scene.background_color = Some(color);
                                     self.scene.overlay = None;
                                     self.scene.visual = None;
-                                } else {
-                                    let bytes =
-                                        self.store.read("image/back", &format!("{name}.png"))?;
+                                } else if let Some(bytes) = self
+                                    .store
+                                    .read_optional("image/back", &format!("{name}.png"))?
+                                {
                                     self.scene
                                         .set_background(name.into(), decode_png(&bytes, PIXELS)?)?;
                                 }
@@ -2093,23 +2098,33 @@ impl<R: Read + Seek> StorySession<R> {
                                 duration = 500;
                             }
                             let requested = format!("{name}.png");
-                            let (resolved, bytes) = match self
-                                .store
-                                .read_optional("image/mask", &requested)?
-                            {
-                                Some(bytes) => (requested, bytes),
-                                None => {
-                                    let previous =
-                                        self.last_wipe_mask.as_ref().ok_or_else(|| {
-                                            format!("missing DAT resource image/mask/{requested}")
-                                        })?;
-                                    (previous.clone(), self.store.read("image/mask", previous)?)
+                            let (resolved, bytes) =
+                                match self.store.read_optional("image/mask", &requested)? {
+                                    Some(bytes) => (Some(requested), Some(bytes)),
+                                    None => match &self.last_wipe_mask {
+                                        Some(previous) => (
+                                            Some(previous.clone()),
+                                            Some(self.store.read("image/mask", previous)?),
+                                        ),
+                                        None => (None, None),
+                                    },
+                                };
+                            let mask = match bytes {
+                                Some(bytes) => {
+                                    if png_position(&bytes)? != [0, 0] {
+                                        return Err("unsupported wipe mask offsets".into());
+                                    }
+                                    decode_png(&bytes, PIXELS)?
                                 }
+                                // The original allocates a zero-filled mask surface before
+                                // loading any mask; a missing resource leaves it untouched.
+                                None => nekopack_image::RgbaImage::filled(
+                                    self.scene.dimensions[0],
+                                    self.scene.dimensions[1],
+                                    [0; 4],
+                                    PIXELS,
+                                )?,
                             };
-                            if png_position(&bytes)? != [0, 0] {
-                                return Err("unsupported wipe mask offsets".into());
-                            }
-                            let mask = decode_png(&bytes, PIXELS)?;
                             let target = self.render()?;
                             let old = self.previous_frame()?;
                             let wipe = crate::transition::Wipe::new(
@@ -2119,7 +2134,7 @@ impl<R: Read + Seek> StorySession<R> {
                                 soft,
                                 duration,
                             )?;
-                            self.last_wipe_mask = Some(resolved);
+                            self.last_wipe_mask = resolved;
                             // The wipe presents a snapshot at the actors' final positions.
                             // Its target consumes the queued movements before later edits.
                             self.motions.clear();
@@ -2849,6 +2864,110 @@ mod tests {
         assert!(!second.skip_mode);
         assert!(second.import_read_history(&history).is_err());
     }
+    #[test]
+    fn voice_availability_uses_audio_name_instead_of_face_tags() {
+        for (xx, ve) in [(true, false), (false, true)] {
+            for (face_tags, expected_face) in [("VE KO", "XX"), ("VE", "VE")] {
+                let source = format!(":Alice:XXX_sample:{face_tags}\ntext");
+                let mut story = session(source.as_bytes());
+                story.store = DatGame::mount([audio_pack(b"voice", b"XXX_sample.ogg")]).unwrap();
+                story.system.eval("config", &format!(
+                    "Config <- {{VoiceCheck={{XX={xx},VE={ve}}}}}\nfunction IsAvailVoice(name){{return Config.VoiceCheck[name.slice(0,2)];}}"
+                )).unwrap();
+                story
+                    .system
+                    .eval(
+                        "original-message-adapter",
+                        &crate::message_adapter::voice_adapter(
+                            r#"
+com[""] = function(args){
+local m = {name="",voice="",face="",text=""}
+foreach(line in args){
+    local p=split(line,":")
+    p.append("");p.append("");p.append("")
+    m.name=p[0];m.voice=p[1]
+}
+local is_readed = IsReaded()
+local voice = IsAvailVoice(m.voice)
+}
+"#,
+                        )
+                        .unwrap(),
+                    )
+                    .unwrap();
+                story.enable_host_effects();
+                story.poll_packet().unwrap();
+                assert_eq!(story.log_face, expected_face);
+                if xx {
+                    let effect = story.pending_effect.as_ref().unwrap();
+                    assert_eq!(effect.kind, "voice");
+                    assert_eq!(effect.name, "XXX_sample");
+                    story.acknowledge_effect(effect.token).unwrap();
+                    assert_eq!(story.page().unwrap().voice, "XXX_sample");
+                } else {
+                    assert!(story.pending_effect.is_none());
+                    assert!(story.page().unwrap().voice.is_empty());
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn voice_availability_executes_original_multi_tag_mask_rule() {
+        for (mask, enabled) in [("VE", false), ("VE KO", true), ("", false)] {
+            let source = format!(":Alice:XXX_sample:{mask}\ntext");
+            let mut story = session(source.as_bytes());
+            story.store = DatGame::mount([audio_pack(b"voice", b"XXX_sample.ogg")]).unwrap();
+            story
+                .system
+                .eval(
+                    "config",
+                    r#"
+VOICE_MAPS <- {VE=0,KO=1,XX=2}
+Config <- {VoiceCheck={VE=false,KO=true,XX=false}}
+function IsAvailVoice(mask){
+    foreach(tag in split(mask," \t")){
+        if(!(tag in VOICE_MAPS))tag="XX"
+        if(Config.VoiceCheck[tag])return true
+    }
+    return false
+}"#,
+                )
+                .unwrap();
+            story
+                .system
+                .eval(
+                    "original-message-adapter",
+                    &crate::message_adapter::voice_adapter(
+                        r#"
+com[""] = function(args){
+local m={name="",voice="",mask="",text=""}
+foreach(line in args){
+    local p=split(line,":")
+    p.append("");p.append("");p.append("")
+    m.name=p[0];m.voice=p[1];m.mask=p[2]
+}
+local is_readed = IsReaded()
+local voice = IsAvailVoice(m.mask)
+}
+"#,
+                    )
+                    .unwrap(),
+                )
+                .unwrap();
+            story.enable_host_effects();
+            story.poll_packet().unwrap();
+            if enabled {
+                let effect = story.pending_effect.as_ref().unwrap();
+                assert_eq!(effect.kind, "voice");
+                assert_eq!(effect.name, "XXX_sample");
+            } else {
+                assert!(story.pending_effect.is_none());
+                assert!(story.page().unwrap().voice.is_empty());
+            }
+        }
+    }
+
     #[test]
     fn read_fast_only_reveals_and_skip_suppresses_next_voice() {
         let mut s = session(b"one\n:Alice:missing:A\ntwo");
@@ -3739,6 +3858,62 @@ mod tests {
         assert_eq!(story.motions.len(), 1);
         assert_eq!(story.motions[0].slot, 6);
         assert!(story.page().unwrap().motion.is_some());
+    }
+
+    #[test]
+    fn missing_background_retains_the_previous_background() {
+        let mut story = session(b".img0 existing\nfirst\n.img0 absent\nsecond");
+        let mut png = Vec::new();
+        RgbaImage::filled(1, 1, [10, 20, 30, 255], PIXELS)
+            .unwrap()
+            .write_png(&mut png)
+            .unwrap();
+        story.store =
+            DatGame::mount([resource_pack(b"image/back", b"existing.png", &png)]).unwrap();
+        let first = story.page().unwrap().png.clone();
+        let second = story.next(1).unwrap().png.clone();
+        assert_eq!(first, second);
+        assert_eq!(story.scene.background_name.as_deref(), Some("existing"));
+        assert_eq!(decode_png(&second, 4).unwrap().pixels(), &[10, 20, 30, 255]);
+    }
+
+    #[test]
+    fn first_missing_background_retains_the_initial_scene() {
+        let mut story = session(b".img0 absent\ntext");
+        let initial = story.scene.render().unwrap();
+        assert_eq!(story.page().unwrap().png, initial);
+        assert!(story.scene.background.is_none());
+        assert!(story.scene.background_name.is_none());
+        assert!(story.scene.background_color.is_none());
+    }
+
+    #[test]
+    fn corrupt_background_is_still_an_error() {
+        let mut story = session(b".img0 corrupt\ntext");
+        story.store =
+            DatGame::mount([resource_pack(b"image/back", b"corrupt.png", b"invalid PNG")]).unwrap();
+        assert!(story.poll_packet().is_err());
+        assert!(story.failed);
+    }
+
+    #[test]
+    fn first_missing_wipe_mask_uses_the_original_zero_filled_surface() {
+        for (option, middle) in [("", 0), (" fade", 128)] {
+            let source = format!(".img 白\n.wipe missing 100{option}\ntext");
+            let mut story = session(source.as_bytes());
+            story.enable_host_effects();
+            story.poll_packet().unwrap();
+            let wipe = story.wipe.as_ref().unwrap();
+            assert_eq!(wipe.frame(25).unwrap().pixels(), &[0, 0, 0, 255]);
+            assert_eq!(
+                wipe.frame(75).unwrap().pixels(),
+                &[middle, middle, middle, 255]
+            );
+            assert_eq!(wipe.frame(100).unwrap().pixels(), &[255; 4]);
+            assert!(story.last_wipe_mask.is_none());
+            story.acknowledge_effect(1).unwrap();
+            assert_eq!(story.page().unwrap().text, "text");
+        }
     }
 
     #[test]

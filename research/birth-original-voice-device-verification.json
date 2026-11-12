@@ -1,0 +1,78 @@
+{
+  "apk_sha256": "b9d41aa7699b10409bb552e404ede12fdbf92e32f1e35a96a2dbcc2d91e97cf6",
+  "serial": "emulator-5572",
+  "results": [
+    {
+      "cue": "FO_024302_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-birth-a63d5af6-play-0",
+      "state": "silent",
+      "tag": "FO"
+    },
+    {
+      "cue": "MY_024602_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-birth-a63d5af6-play-0",
+      "sha256": "6c1b6510b0aedc5f83464dc5acd9caf6888d8cdd6d750fd65241361dd11aaf5b",
+      "state": "playing",
+      "tag": "MY",
+      "token": 2
+    },
+    {
+      "cue": "KA_EP02_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-birth-a63d5af6-play-0",
+      "state": "silent",
+      "tag": "KA"
+    },
+    {
+      "cue": "FO_024302_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-birth-a63d5af6-play-1",
+      "sha256": "480145f2025a161088941a806334a80518dc05071f8a259869e48e535e386ebf",
+      "state": "playing",
+      "tag": "FO",
+      "token": 2
+    },
+    {
+      "cue": "MY_024602_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-birth-a63d5af6-play-1",
+      "state": "silent",
+      "tag": "MY"
+    },
+    {
+      "cue": "KA_EP02_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-birth-a63d5af6-play-1",
+      "sha256": "a4ec2d6cc1bf1abff0089d82574d8789e6ecdffae5b456e01906b5823f8cf21e",
+      "state": "playing",
+      "tag": "KA",
+      "token": 3
+    }
+  ],
+  "passed": true,
+  "fixture_sha256": "0ad7662c6cc629c5fbea46b9e0699518466347262edfeeb60d8573a319a78935",
+  "scope": "Original BIRTH FO/MY/KA audio; each setting phase followed by process restart. Playback progress and nonzero gain verified; original settings restored. Supplements earlier five-game matrix without rewriting historical evidence."
+}

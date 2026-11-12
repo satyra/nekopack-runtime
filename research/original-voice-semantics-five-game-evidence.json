@@ -1,0 +1,348 @@
+{
+  "scope": "Five original system.dat message/config source contracts only; no scene text, images, or recollection content",
+  "conclusion": "Four original handlers pass audio name; Endless handler passes complete third-field mask. Shared adapter executes each original local parser and predicate rather than identifying a game.",
+  "source_boundary_contract": {
+    "handler": "com[\"\"] = function(args){",
+    "parser_end": "local is_readed =",
+    "predicate": "local voice = IsAvailVoice(",
+    "all_markers_unique": true
+  },
+  "games": [
+    {
+      "file": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～ [汉化硬盘版+RR5]/[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～/system.dat",
+      "parser_prefix_sha256": "f21fe664df5c4fbbaa7ac9016bf352a0461b3d87f52aebe90196885f04284908",
+      "parser_side_effects": "local m fields only; history/global/UI effects begin after extraction boundary",
+      "predicate": "local voice = IsAvailVoice(m.voice)",
+      "evidence": [
+        {
+          "resource": "system/message.nut",
+          "sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+          "code_lines": [
+            {
+              "line": 88,
+              "code": "local face = f[m.face]"
+            },
+            {
+              "line": 214,
+              "code": "m.voice = p[1]"
+            },
+            {
+              "line": 215,
+              "code": "local mask  = split(p[2], \" \\t\")"
+            },
+            {
+              "line": 216,
+              "code": "local face = (mask.len() == 1) ? mask[0] : m.voice"
+            },
+            {
+              "line": 277,
+              "code": "local voice = IsAvailVoice(m.voice)"
+            }
+          ]
+        },
+        {
+          "resource": "system/config.nut",
+          "sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+          "code_lines": [
+            {
+              "line": 267,
+              "code": "function IsAvailVoice(name){"
+            },
+            {
+              "line": 268,
+              "code": "if(!name)return false"
+            },
+            {
+              "line": 269,
+              "code": "if(name.len() < 2)return false"
+            },
+            {
+              "line": 270,
+              "code": "local tag = name.slice(0,2)"
+            },
+            {
+              "line": 271,
+              "code": "if(!(tag in VOICE_MAPS))tag = \"XX\""
+            },
+            {
+              "line": 272,
+              "code": "return (tag in Config.VoiceCheck) && Config.VoiceCheck[tag]"
+            },
+            {
+              "line": 273,
+              "code": "}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～ [汉化硬盘版+RR5]/[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～/system.dat",
+      "parser_prefix_sha256": "f21fe664df5c4fbbaa7ac9016bf352a0461b3d87f52aebe90196885f04284908",
+      "parser_side_effects": "local m fields only; history/global/UI effects begin after extraction boundary",
+      "predicate": "local voice = IsAvailVoice(m.voice)",
+      "evidence": [
+        {
+          "resource": "system/message.nut",
+          "sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+          "code_lines": [
+            {
+              "line": 88,
+              "code": "local face = f[m.face]"
+            },
+            {
+              "line": 214,
+              "code": "m.voice = p[1]"
+            },
+            {
+              "line": 215,
+              "code": "local mask  = split(p[2], \" \\t\")"
+            },
+            {
+              "line": 216,
+              "code": "local face = (mask.len() == 1) ? mask[0] : m.voice"
+            },
+            {
+              "line": 277,
+              "code": "local voice = IsAvailVoice(m.voice)"
+            }
+          ]
+        },
+        {
+          "resource": "system/config.nut",
+          "sha256": "42e4126c3953b8854c2bf784fb39f959768e65dd6dbc7bccb9a0e1ee4ad5a894",
+          "code_lines": [
+            {
+              "line": 267,
+              "code": "function IsAvailVoice(name){"
+            },
+            {
+              "line": 268,
+              "code": "if(!name)return false"
+            },
+            {
+              "line": 269,
+              "code": "if(name.len() < 2)return false"
+            },
+            {
+              "line": 270,
+              "code": "local tag = name.slice(0,2)"
+            },
+            {
+              "line": 271,
+              "code": "if(!(tag in VOICE_MAPS))tag = \"XX\""
+            },
+            {
+              "line": 272,
+              "code": "return (tag in Config.VoiceCheck) && Config.VoiceCheck[tag]"
+            },
+            {
+              "line": 273,
+              "code": "}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～ [汉化硬盘版+RR5]/[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～/system.dat",
+      "parser_prefix_sha256": "f21fe664df5c4fbbaa7ac9016bf352a0461b3d87f52aebe90196885f04284908",
+      "parser_side_effects": "local m fields only; history/global/UI effects begin after extraction boundary",
+      "predicate": "local voice = IsAvailVoice(m.voice)",
+      "evidence": [
+        {
+          "resource": "system/message.nut",
+          "sha256": "5c6b9915acb875e98b7b6ba27d8ec2862fbc917b5dd0332eb783cf9ee86496bd",
+          "code_lines": [
+            {
+              "line": 88,
+              "code": "local face = f[m.face]"
+            },
+            {
+              "line": 216,
+              "code": "m.voice = p[1]"
+            },
+            {
+              "line": 217,
+              "code": "local mask  = split(p[2], \" \\t\")"
+            },
+            {
+              "line": 218,
+              "code": "local face = (mask.len() == 1) ? mask[0] : m.voice"
+            },
+            {
+              "line": 281,
+              "code": "local voice = IsAvailVoice(m.voice)"
+            }
+          ]
+        },
+        {
+          "resource": "system/config.nut",
+          "sha256": "29e7a536ef31314e2ff017f7dc1a0b113b7a2e7c0cba49d83334989618f66e8b",
+          "code_lines": [
+            {
+              "line": 270,
+              "code": "function IsAvailVoice(name){"
+            },
+            {
+              "line": 271,
+              "code": "if(!name)return false"
+            },
+            {
+              "line": 272,
+              "code": "if(name.len() < 2)return false"
+            },
+            {
+              "line": 273,
+              "code": "local tag = name.slice(0,2)"
+            },
+            {
+              "line": 274,
+              "code": "if(!(tag in VOICE_MAPS))tag = \"XX\""
+            },
+            {
+              "line": 275,
+              "code": "return (tag in Config.VoiceCheck) && Config.VoiceCheck[tag]"
+            },
+            {
+              "line": 276,
+              "code": "}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Endless Dungeon/Endless Dungeon/system.dat",
+      "parser_prefix_sha256": "4c48581e18788b806792bf44fba3a4100be662eb43b9c6fca93fa31e3397241f",
+      "parser_side_effects": "local m fields only; history/global/UI effects begin after extraction boundary",
+      "predicate": "local voice = IsAvailVoice(m.mask)",
+      "evidence": [
+        {
+          "resource": "system/message.nut",
+          "sha256": "dda9d61cdbf137cb5fbb2422fe17616e4d021ca646ec7c993aad3ba59639602d",
+          "code_lines": [
+            {
+              "line": 217,
+              "code": "m.voice = p[1]"
+            },
+            {
+              "line": 218,
+              "code": "m.mask  = p[2]"
+            },
+            {
+              "line": 280,
+              "code": "local voice = IsAvailVoice(m.mask)"
+            }
+          ]
+        },
+        {
+          "resource": "system/config.nut",
+          "sha256": "cd26e60491f607f4757a258c3b9e18ee0bf16f74039bcee97e54dd0df254b9be",
+          "code_lines": [
+            {
+              "line": 336,
+              "code": "function IsAvailVoice(mask){"
+            },
+            {
+              "line": 337,
+              "code": "local tags = split(mask, \" \\t\")"
+            },
+            {
+              "line": 338,
+              "code": "foreach(tag in tags){"
+            },
+            {
+              "line": 339,
+              "code": "if(!(tag in VOICE_MAPS)){ tag = \"XX\" }"
+            },
+            {
+              "line": 340,
+              "code": "if((tag in Config.VoiceCheck) && Config.VoiceCheck[tag])return true;"
+            },
+            {
+              "line": 341,
+              "code": "}"
+            },
+            {
+              "line": 342,
+              "code": "return false;"
+            },
+            {
+              "line": 343,
+              "code": "}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～（汉化硬盘）/Tiny Dungeon ～BLACK and WHITE～/Tiny Dungeon ～BLACK and WHITE～/system.dat",
+      "parser_prefix_sha256": "f21fe664df5c4fbbaa7ac9016bf352a0461b3d87f52aebe90196885f04284908",
+      "parser_side_effects": "local m fields only; history/global/UI effects begin after extraction boundary",
+      "predicate": "local voice = IsAvailVoice(m.voice)",
+      "evidence": [
+        {
+          "resource": "system/message.nut",
+          "sha256": "dd21703e0dd0b6d300fc5c5b458cca537bf6515a2301745608ec443b6e14cede",
+          "code_lines": [
+            {
+              "line": 88,
+              "code": "local face = f[m.face]"
+            },
+            {
+              "line": 214,
+              "code": "m.voice = p[1]"
+            },
+            {
+              "line": 215,
+              "code": "local mask  = split(p[2], \" \\t\")"
+            },
+            {
+              "line": 216,
+              "code": "local face = (mask.len() == 1) ? mask[0] : m.voice"
+            },
+            {
+              "line": 277,
+              "code": "local voice = IsAvailVoice(m.voice)"
+            }
+          ]
+        },
+        {
+          "resource": "system/config.nut",
+          "sha256": "1668334022e755ee29881eaee1d3fd29ccdd29bb754b9dbadbbfdba9f1afae50",
+          "code_lines": [
+            {
+              "line": 264,
+              "code": "function IsAvailVoice(name){"
+            },
+            {
+              "line": 265,
+              "code": "if(!name)return false"
+            },
+            {
+              "line": 266,
+              "code": "if(name.len() < 2)return false"
+            },
+            {
+              "line": 267,
+              "code": "local tag = name.slice(0,2)"
+            },
+            {
+              "line": 268,
+              "code": "if(!(tag in VOICE_MAPS))tag = \"XX\""
+            },
+            {
+              "line": 269,
+              "code": "return (tag in Config.VoiceCheck) && Config.VoiceCheck[tag]"
+            },
+            {
+              "line": 270,
+              "code": "}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

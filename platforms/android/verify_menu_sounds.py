@@ -73,6 +73,39 @@ class Probe:
         raw = self.read(name)
         return [json.loads(line) for line in raw.split(b'\n')[:-1] if line]
 
+    def start_activity(self, *extras):
+        """Force-stop once and retain ActivityManager's checked launch result."""
+        result = subprocess.run(
+            [*self.command, 'shell', 'am', 'start', '-W', '-S', '-n', ACTIVITY,
+             '--es', 'run_id', self.run, *extras],
+            capture_output=True, timeout=45,
+        )
+        self.launch = dict(exitcode=result.returncode,
+                           stdout=result.stdout.decode(errors='replace'),
+                           stderr=result.stderr.decode(errors='replace'))
+        assert result.returncode == 0 and 'Status: ok' in self.launch['stdout'], (
+            self.run, 'ActivityManager did not start the activity', self.launch)
+        return self.launch
+
+    def start_title(self, *extras):
+        """Launch and wait for title rendering independently of ActivityManager."""
+        self.start_activity(*extras)
+
+        def presented():
+            title = self.obj('title-presented.json')
+            if title:
+                return title
+            process = subprocess.run([*self.command, 'shell', 'pidof', PACKAGE],
+                                     capture_output=True, timeout=45)
+            assert process.returncode in (0, 1), process.stderr.decode(errors='replace')
+            assert process.stdout.strip(), (self.run, 'process exited before title', self.launch)
+            return None
+
+        try:
+            return self.wait('title', presented)
+        except AssertionError as error:
+            raise AssertionError(f'{error}; launch={self.launch}') from error
+
     def wait(self, description, predicate, timeout=90):
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
@@ -513,9 +546,8 @@ def main():
     assert any(node.get('name') == 'dat_tree' for node in ET.fromstring(original_prefs)), 'configure the BLESS SAF tree first'
     try:
         print('run:', run, flush=True)
-        probe.adb('shell', 'am', 'start', '-W', '-S', '-n', ACTIVITY, '--ei', 'title_game', '0',
-                  '--es', 'run_id', run, '--es', 'save_probe', run, '--es', 'read_history_probe', run,
-                  '--ez', 'lifecycle_probe', 'true')
+        probe.start_title('--ei', 'title_game', '0', '--es', 'save_probe', run,
+                          '--es', 'read_history_probe', run, '--ez', 'lifecycle_probe', 'true')
         config, bindings = title_settings(probe)
         story = story_settings(probe, config, bindings)
     finally:

@@ -1,0 +1,68 @@
+{
+  "scope": "BIRTH original system code only; no scenario text, images or recollection content",
+  "conclusion": "Voice availability uses the audio resource name. Speaker field 3 controls face selection only.",
+  "files": [
+    {
+      "file": "message.nut",
+      "sha256": "ce65a47f87403f20705e3264572fa4e5a2223185b21617f264cbf1aaa3472236",
+      "normalization": "decode UTF-8 with optional BOM; remove CR; split LF; trim indentation",
+      "code_lines": [
+        {
+          "line": 214,
+          "code": "m.voice = p[1]"
+        },
+        {
+          "line": 215,
+          "code": "local mask  = split(p[2], \" \\t\")"
+        },
+        {
+          "line": 216,
+          "code": "local face = (mask.len() == 1) ? mask[0] : m.voice"
+        },
+        {
+          "line": 217,
+          "code": "m.face = (face.len()<2) ? \"XX\" : face.slice(0,2)"
+        },
+        {
+          "line": 277,
+          "code": "local voice = IsAvailVoice(m.voice)"
+        },
+        {
+          "line": 286,
+          "code": "if(voice)PlayVoice(m.voice)"
+        }
+      ]
+    },
+    {
+      "file": "config.nut",
+      "sha256": "3fc43c6d28b4e7c62b9d5eded3740c6a7c74b85aa037dd05a628d8a51d2b2f7c",
+      "normalization": "decode UTF-8 with optional BOM; remove CR; split LF; trim indentation",
+      "code_lines": [
+        {
+          "line": 267,
+          "code": "function IsAvailVoice(name){"
+        },
+        {
+          "line": 268,
+          "code": "if(!name)return false"
+        },
+        {
+          "line": 269,
+          "code": "if(name.len() < 2)return false"
+        },
+        {
+          "line": 270,
+          "code": "local tag = name.slice(0,2)"
+        },
+        {
+          "line": 271,
+          "code": "if(!(tag in VOICE_MAPS))tag = \"XX\""
+        },
+        {
+          "line": 272,
+          "code": "return (tag in Config.VoiceCheck) && Config.VoiceCheck[tag]"
+        }
+      ]
+    }
+  ]
+}

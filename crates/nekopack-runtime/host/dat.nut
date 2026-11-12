@@ -3,7 +3,7 @@
 class DatResources {
  kind=null
  constructor(k){kind=k}
- function _get(name){return compilestring("return "+::NekoResource(kind,name))()}
+ function _get(name){return ::compilestring("return "+::NekoResource(kind,name))()}
 }
 Assets <- DatResources("Assets")
 Data <- DatResources("Data")

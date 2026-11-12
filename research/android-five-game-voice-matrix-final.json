@@ -1,0 +1,3152 @@
+{
+  "apk": "D:\\codex\\neko\\.local\\android-probe\\nekopack-core-redirect-voice-arm64.apk",
+  "sha256": "b9d41aa7699b10409bb552e404ede12fdbf92e32f1e35a96a2dbcc2d91e97cf6",
+  "serial": "emulator-5572",
+  "plan": [
+    {
+      "game": "ENDLESS",
+      "expected_controls": 18,
+      "expected_states": 36,
+      "route_candidates": [
+        "NI",
+        "LI",
+        "MK",
+        "KA",
+        "XY",
+        "XX",
+        "VE",
+        "FO",
+        "OP",
+        "UR",
+        "AM",
+        "MY",
+        "KO",
+        "NO",
+        "RR",
+        "DE",
+        "RA",
+        "BA",
+        "SY"
+      ],
+      "isolated_candidates": [],
+      "original_audio_gaps": []
+    },
+    {
+      "game": "BLESS",
+      "expected_controls": 16,
+      "expected_states": 32,
+      "route_candidates": [
+        "KA",
+        "VE",
+        "KO",
+        "NO",
+        "AM",
+        "UR",
+        "OP",
+        "DE",
+        "TO",
+        "XX",
+        "SY",
+        "BA",
+        "RA",
+        "MY",
+        "RU",
+        "XY",
+        "FO"
+      ],
+      "isolated_candidates": [],
+      "original_audio_gaps": []
+    },
+    {
+      "game": "BIRTH",
+      "expected_controls": 18,
+      "expected_states": 36,
+      "route_candidates": [
+        "BA",
+        "DE",
+        "NO",
+        "UR",
+        "OP",
+        "VE",
+        "KO",
+        "AM",
+        "XX",
+        "XY",
+        "RA",
+        "TO",
+        "RU",
+        "MI",
+        "SY",
+        "GE"
+      ],
+      "isolated_candidates": [
+        "FO",
+        "MY",
+        "KA"
+      ],
+      "original_audio_gaps": [
+        "KA: borrowed BLESS resource"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "expected_controls": 18,
+      "expected_states": 36,
+      "route_candidates": [
+        "KA",
+        "KO",
+        "UR",
+        "OP",
+        "VE",
+        "AM",
+        "NO",
+        "DE",
+        "RA",
+        "TO",
+        "RU",
+        "XX",
+        "BA",
+        "SY",
+        "GE",
+        "MY",
+        "XY"
+      ],
+      "isolated_candidates": [
+        "FO",
+        "MI"
+      ],
+      "original_audio_gaps": []
+    },
+    {
+      "game": "BLACK",
+      "expected_controls": 16,
+      "expected_states": 32,
+      "route_candidates": [
+        "RA",
+        "KO",
+        "UR",
+        "VE",
+        "OP",
+        "TO",
+        "NO",
+        "AM",
+        "XY",
+        "XX",
+        "BA",
+        "RU",
+        "KA",
+        "DE"
+      ],
+      "isolated_candidates": [
+        "FO",
+        "MI",
+        "SY"
+      ],
+      "original_audio_gaps": []
+    }
+  ],
+  "jobs": [
+    {
+      "game": "ENDLESS",
+      "script": "verify-remaining-settings.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\endless-verify-remaining-settings.log"
+    },
+    {
+      "game": "BLESS",
+      "script": "verify-remaining-settings.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\bless-verify-remaining-settings.log"
+    },
+    {
+      "game": "BIRTH",
+      "script": "verify-remaining-settings.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\birth-verify-remaining-settings.log"
+    },
+    {
+      "game": "BIRTH",
+      "script": "verify-isolated-original-audio.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\birth-verify-isolated-original-audio.log"
+    },
+    {
+      "game": "BRAVE",
+      "script": "verify-remaining-settings.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\brave-verify-remaining-settings.log"
+    },
+    {
+      "game": "BRAVE",
+      "script": "verify-isolated-original-audio.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\brave-verify-isolated-original-audio.log"
+    },
+    {
+      "game": "BLACK",
+      "script": "verify-remaining-settings.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\black-verify-remaining-settings.log"
+    },
+    {
+      "game": "BLACK",
+      "script": "verify-isolated-original-audio.py",
+      "exit_code": 0,
+      "log": ".local\\android-probe\\voice-matrix-source-adapter-final\\black-verify-isolated-original-audio.log"
+    }
+  ],
+  "controls": {
+    "ENDLESS": [
+      "AM",
+      "BA",
+      "DE",
+      "FO",
+      "KA",
+      "KO",
+      "LI",
+      "MK",
+      "MY",
+      "NI",
+      "NO",
+      "OP",
+      "RA",
+      "RR",
+      "SY",
+      "UR",
+      "VE",
+      "XX"
+    ],
+    "BLESS": [
+      "AM",
+      "BA",
+      "DE",
+      "FO",
+      "KA",
+      "KO",
+      "MY",
+      "NO",
+      "OP",
+      "RA",
+      "RU",
+      "SY",
+      "TO",
+      "UR",
+      "VE",
+      "XX"
+    ],
+    "BIRTH": [
+      "AM",
+      "BA",
+      "DE",
+      "FO",
+      "GE",
+      "KA",
+      "KO",
+      "MI",
+      "MY",
+      "NO",
+      "OP",
+      "RA",
+      "RU",
+      "SY",
+      "TO",
+      "UR",
+      "VE",
+      "XX"
+    ],
+    "BRAVE": [
+      "AM",
+      "BA",
+      "DE",
+      "FO",
+      "GE",
+      "KA",
+      "KO",
+      "MI",
+      "MY",
+      "NO",
+      "OP",
+      "RA",
+      "RU",
+      "SY",
+      "TO",
+      "UR",
+      "VE",
+      "XX"
+    ],
+    "BLACK": [
+      "AM",
+      "BA",
+      "DE",
+      "FO",
+      "KA",
+      "KO",
+      "MI",
+      "NO",
+      "OP",
+      "RA",
+      "RU",
+      "SY",
+      "TO",
+      "UR",
+      "VE",
+      "XX"
+    ]
+  },
+  "results": [
+    {
+      "cue": "NI_010100_0001",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-NI-1",
+      "state": "silent",
+      "tag": "NI"
+    },
+    {
+      "cue": "LI_010100_0001",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-LI-1",
+      "sha256": "57ccccfbcc5f755065dea442fff636df256b69c6b1257760b1b92ced203d04e2",
+      "state": "playing",
+      "tag": "LI",
+      "token": 2
+    },
+    {
+      "cue": "MK_010101_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-MK-1",
+      "state": "silent",
+      "tag": "MK"
+    },
+    {
+      "cue": "KA_010101_0001",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-KA-1",
+      "sha256": "36e5b3d2ac416357113565de3c11cfa187cf1f994ce71e7c828fb59e75757a29",
+      "state": "playing",
+      "tag": "KA",
+      "token": 2
+    },
+    {
+      "cue": "XXA_010102_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-XX-1",
+      "state": "silent",
+      "tag": "XX"
+    },
+    {
+      "cue": "VE_010102_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-VE-1",
+      "sha256": "3c9ae498fa7ad06f47521a596286c723699ee0622718c8bd5167c5b86d560a81",
+      "state": "playing",
+      "tag": "VE",
+      "token": 4
+    },
+    {
+      "cue": "FO_010102_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-FO-1",
+      "state": "silent",
+      "tag": "FO"
+    },
+    {
+      "cue": "OP_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-OP-1",
+      "state": "silent",
+      "tag": "OP"
+    },
+    {
+      "cue": "UR_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-UR-1",
+      "state": "silent",
+      "tag": "UR"
+    },
+    {
+      "cue": "AM_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-AM-1",
+      "sha256": "e0b2fe0db2cad24801ab7f74dd43b36a925b7e6e57c9ce1f3ed58c6d25e6ace5",
+      "state": "playing",
+      "tag": "AM",
+      "token": 2
+    },
+    {
+      "cue": "MY_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-MY-1",
+      "sha256": "6da11f798bf5b8637c8c7a0b9ede2fdbb946cfe1d42aa892b8a080efbb574c40",
+      "state": "playing",
+      "tag": "MY",
+      "token": 1
+    },
+    {
+      "cue": "KO_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-KO-1",
+      "state": "silent",
+      "tag": "KO"
+    },
+    {
+      "cue": "NO_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-NO-1",
+      "sha256": "35eb87880ede77b41749e0f0db3ad994a6ca0209ba27bd1673ada67f62f82330",
+      "state": "playing",
+      "tag": "NO",
+      "token": 2
+    },
+    {
+      "cue": "RR_010202_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-RR-1",
+      "state": "silent",
+      "tag": "RR"
+    },
+    {
+      "cue": "DE_010203_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-DE-1",
+      "sha256": "da81b0a9d8bbcd5f165774767a7c8d19afade53cc3144476b215ae8ab4001884",
+      "state": "playing",
+      "tag": "DE",
+      "token": 2
+    },
+    {
+      "cue": "RA_010203_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-RA-1",
+      "sha256": "7326b68c7eabacfadbd1b65ffa07cf84c84ccd521c9430a8e2c0435d9c4a34b9",
+      "state": "playing",
+      "tag": "RA",
+      "token": 1
+    },
+    {
+      "cue": "BA_010203_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-BA-1",
+      "state": "silent",
+      "tag": "BA"
+    },
+    {
+      "cue": "SY_010206_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-SY-1",
+      "sha256": "4a87a1b9f64e84cc506c835d742087ece32201bfbb25692575e2d2af8ffed15e",
+      "state": "playing",
+      "tag": "SY",
+      "token": 2
+    },
+    {
+      "cue": "NI_010100_0001",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-NI-0",
+      "sha256": "c5890333e1664a0142096ded75c44d1c702234276aec6988caf705006e43893d",
+      "state": "playing",
+      "tag": "NI",
+      "token": 2
+    },
+    {
+      "cue": "LI_010100_0001",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-LI-0",
+      "state": "silent",
+      "tag": "LI"
+    },
+    {
+      "cue": "MK_010101_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-MK-0",
+      "sha256": "089ca7c1bc7f23416b822030817e945e82f54ff798e741ce722560f0898c9b41",
+      "state": "playing",
+      "tag": "MK",
+      "token": 1
+    },
+    {
+      "cue": "KA_010101_0001",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-KA-0",
+      "state": "silent",
+      "tag": "KA"
+    },
+    {
+      "cue": "XXA_010102_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-XX-0",
+      "sha256": "ae92296135369e9a6862348ee6475f01403bcf911d31bc31e6891af70b821b55",
+      "state": "playing",
+      "tag": "XX",
+      "token": 1
+    },
+    {
+      "cue": "VE_010102_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-VE-0",
+      "state": "silent",
+      "tag": "VE"
+    },
+    {
+      "cue": "FO_010102_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-FO-0",
+      "sha256": "09ea76f042cfbc31b831aa07a8321225400d2edb2e0ff82dee626dc5fa3466d5",
+      "state": "playing",
+      "tag": "FO",
+      "token": 1
+    },
+    {
+      "cue": "OP_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-OP-0",
+      "sha256": "1ae21813eaa97183934e9583efd0bd7dfce4a2e38b47bef45eeec66bedc6a9df",
+      "state": "playing",
+      "tag": "OP",
+      "token": 2
+    },
+    {
+      "cue": "UR_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-UR-0",
+      "sha256": "62ca95aa03095fe4ce5a83f53196f097b1003559d4841922a58d1c012450b98f",
+      "state": "playing",
+      "tag": "UR",
+      "token": 2
+    },
+    {
+      "cue": "AM_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-AM-0",
+      "state": "silent",
+      "tag": "AM"
+    },
+    {
+      "cue": "MY_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-MY-0",
+      "state": "silent",
+      "tag": "MY"
+    },
+    {
+      "cue": "KO_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-KO-0",
+      "sha256": "ed30b5340e98011077f927e5e872a65550173789af502bced302802d2189ad62",
+      "state": "playing",
+      "tag": "KO",
+      "token": 2
+    },
+    {
+      "cue": "NO_010103_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-NO-0",
+      "state": "silent",
+      "tag": "NO"
+    },
+    {
+      "cue": "RR_010202_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-RR-0",
+      "sha256": "a47f5345b9414658c5e361f84b058cde79c44c73f53b041ddf4132895a1d6908",
+      "state": "playing",
+      "tag": "RR",
+      "token": 2
+    },
+    {
+      "cue": "DE_010203_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-DE-0",
+      "state": "silent",
+      "tag": "DE"
+    },
+    {
+      "cue": "RA_010203_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-RA-0",
+      "state": "silent",
+      "tag": "RA"
+    },
+    {
+      "cue": "BA_010203_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-endless-86ed171a-BA-0",
+      "sha256": "bec4c4608e15404a1cb45e325fd5d96147d663e65b15499a791829ac44066125",
+      "state": "playing",
+      "tag": "BA",
+      "token": 3
+    },
+    {
+      "cue": "SY_010206_0000",
+      "event": "result",
+      "game": "ENDLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-endless-86ed171a-SY-0",
+      "state": "silent",
+      "tag": "SY"
+    },
+    {
+      "cue": "KA_P01_0001",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-KA-1",
+      "sha256": "632794383e7e248b9589f60a1f2bf64c411b980fd250b80f4d1acd950ec9792b",
+      "state": "playing",
+      "tag": "KA",
+      "token": 1
+    },
+    {
+      "cue": "VE_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-VE-1",
+      "sha256": "b18e7d99d947264dcb38a3c33708c6df1b62a5db81a9f7d2153a0ca7643492c4",
+      "state": "playing",
+      "tag": "VE",
+      "token": 1
+    },
+    {
+      "cue": "KO_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-KO-1",
+      "state": "silent",
+      "tag": "KO"
+    },
+    {
+      "cue": "NO_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-NO-1",
+      "state": "silent",
+      "tag": "NO"
+    },
+    {
+      "cue": "AM_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-AM-1",
+      "sha256": "6eb3162f62a54d392b9b5578a727422aa5590a11165471bcf031f0e9eb8a313c",
+      "state": "playing",
+      "tag": "AM",
+      "token": 2
+    },
+    {
+      "cue": "UR_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-UR-1",
+      "state": "silent",
+      "tag": "UR"
+    },
+    {
+      "cue": "OP_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-OP-1",
+      "sha256": "c951e06a0ad923096651f39cbd3e77af7aaa207dc3e5f1e28464683c8557f671",
+      "state": "playing",
+      "tag": "OP",
+      "token": 2
+    },
+    {
+      "cue": "DE_012501_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-DE-1",
+      "sha256": "a3ebc58486df478c893b07e4b036fe5826ad939baf4987db849431e76f0150ce",
+      "state": "playing",
+      "tag": "DE",
+      "token": 1
+    },
+    {
+      "cue": "TO_012501_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-TO-1",
+      "sha256": "fa597c6b146bf11121e1e9ad2292ee42db4fedf62103eac4eec332f37da20bd6",
+      "state": "playing",
+      "tag": "TO",
+      "token": 1
+    },
+    {
+      "cue": "XXX_012501_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-XX-1",
+      "state": "silent",
+      "tag": "XX"
+    },
+    {
+      "cue": "SY_012502_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-SY-1",
+      "state": "silent",
+      "tag": "SY"
+    },
+    {
+      "cue": "BA_012602_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-BA-1",
+      "state": "silent",
+      "tag": "BA"
+    },
+    {
+      "cue": "RA_012604_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-RA-1",
+      "state": "silent",
+      "tag": "RA"
+    },
+    {
+      "cue": "MY_012604_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-MY-1",
+      "sha256": "a588479c9eb1e99c7dc7644b5df2d99a19a8347824d824294c9181fdf5684b14",
+      "state": "playing",
+      "tag": "MY",
+      "token": 1
+    },
+    {
+      "cue": "RU_012801_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-RU-1",
+      "sha256": "8f23cc0430e5eb4b7c081a14c20ff5f921cb5a1681cd9750f07efa0f541156a9",
+      "state": "playing",
+      "tag": "RU",
+      "token": 2
+    },
+    {
+      "cue": "FO_013206_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-FO-1",
+      "state": "silent",
+      "tag": "FO"
+    },
+    {
+      "cue": "KA_P01_0001",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-KA-0",
+      "state": "silent",
+      "tag": "KA"
+    },
+    {
+      "cue": "VE_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-VE-0",
+      "state": "silent",
+      "tag": "VE"
+    },
+    {
+      "cue": "KO_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-KO-0",
+      "sha256": "ce012350bb88c963b2eaa68e73976006349590ddddeadab4f749d61bc49124fa",
+      "state": "playing",
+      "tag": "KO",
+      "token": 2
+    },
+    {
+      "cue": "NO_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-NO-0",
+      "sha256": "cf0fc08081eec19d30e3fc5abe6521166f40235acd1387fbeb719858a90d7a36",
+      "state": "playing",
+      "tag": "NO",
+      "token": 2
+    },
+    {
+      "cue": "AM_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-AM-0",
+      "state": "silent",
+      "tag": "AM"
+    },
+    {
+      "cue": "UR_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-UR-0",
+      "sha256": "b69fd6820c21a604c5394e8f3da091927140c1a212d79ce5f0e04bff0776d323",
+      "state": "playing",
+      "tag": "UR",
+      "token": 2
+    },
+    {
+      "cue": "OP_012401_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-OP-0",
+      "state": "silent",
+      "tag": "OP"
+    },
+    {
+      "cue": "DE_012501_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-DE-0",
+      "state": "silent",
+      "tag": "DE"
+    },
+    {
+      "cue": "TO_012501_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-TO-0",
+      "state": "silent",
+      "tag": "TO"
+    },
+    {
+      "cue": "XXX_012501_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-XX-0",
+      "sha256": "cc1b1994b62094629dfbf51494fd4073362e1d5b30c6d0694b080ab0117dd517",
+      "state": "playing",
+      "tag": "XX",
+      "token": 3
+    },
+    {
+      "cue": "SY_012502_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-SY-0",
+      "sha256": "c6ec0b1e1adb2fcc655c0806263511b1bff002736cfdbd71f94268c2f5fb04b4",
+      "state": "playing",
+      "tag": "SY",
+      "token": 1
+    },
+    {
+      "cue": "BA_012602_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-BA-0",
+      "sha256": "6250cc79b0157617c91b548da38816c707d8290af1fa7132f0d4e12e23c6d65f",
+      "state": "playing",
+      "tag": "BA",
+      "token": 3
+    },
+    {
+      "cue": "RA_012604_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-RA-0",
+      "sha256": "82f3b2d7b9789949928db6925b499a876ecfa7a0bfeb6e9e63eccba1aac57b44",
+      "state": "playing",
+      "tag": "RA",
+      "token": 1
+    },
+    {
+      "cue": "MY_012604_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-MY-0",
+      "state": "silent",
+      "tag": "MY"
+    },
+    {
+      "cue": "RU_012801_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-bless-bf602295-RU-0",
+      "state": "silent",
+      "tag": "RU"
+    },
+    {
+      "cue": "FO_013206_0000",
+      "event": "result",
+      "game": "BLESS",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-bless-bf602295-FO-0",
+      "sha256": "79ea982d27adec0804513559a143b4c86d357c2e54a15e2717638678da1e089e",
+      "state": "playing",
+      "tag": "FO",
+      "token": 1
+    },
+    {
+      "cue": "BA_012401_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-BA-1",
+      "state": "silent",
+      "tag": "BA"
+    },
+    {
+      "cue": "DE_012401_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-DE-1",
+      "sha256": "495faf4761283dcaa0c26fc498fad0dd027256fb5e24d8221ccb2fb19a7bdd1a",
+      "state": "playing",
+      "tag": "DE",
+      "token": 1
+    },
+    {
+      "cue": "NO_012401_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-NO-1",
+      "sha256": "68597550b4e947dc998cea9356d1a599fbb0bd020ccbe9c920141eb1672b51a5",
+      "state": "playing",
+      "tag": "NO",
+      "token": 2
+    },
+    {
+      "cue": "UR_012402_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-UR-1",
+      "sha256": "632510c4265a2592aa25afda110d54e0b9d494b39f0650c2e8d80489971baeaa",
+      "state": "playing",
+      "tag": "UR",
+      "token": 1
+    },
+    {
+      "cue": "OP_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-OP-1",
+      "state": "silent",
+      "tag": "OP"
+    },
+    {
+      "cue": "VE_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-VE-1",
+      "state": "silent",
+      "tag": "VE"
+    },
+    {
+      "cue": "KO_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-KO-1",
+      "sha256": "651d37d66be3f97573ead11727ac7f609a35da742ec3f1115ac445b2ff28908c",
+      "state": "playing",
+      "tag": "KO",
+      "token": 1
+    },
+    {
+      "cue": "AM_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-AM-1",
+      "sha256": "c7928733b761a21fb63e9bb889eba85d5f1bb4d6c831e0e244f402c260ee4e4d",
+      "state": "playing",
+      "tag": "AM",
+      "token": 2
+    },
+    {
+      "cue": "XXX_012503_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-XX-1",
+      "sha256": "6078ec8ce946fe400c6f452bde43ff969d7d79b053356003ea1c58a9649b2186",
+      "state": "playing",
+      "tag": "XX",
+      "token": 2
+    },
+    {
+      "cue": "RA_012504_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-RA-1",
+      "sha256": "1027ba9fd85a81d38e685f1dc5c15c70307e72802e82a8418589cbf00d1e51f2",
+      "state": "playing",
+      "tag": "RA",
+      "token": 1
+    },
+    {
+      "cue": "TO_012505_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-TO-1",
+      "state": "silent",
+      "tag": "TO"
+    },
+    {
+      "cue": "RU_012506_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-RU-1",
+      "state": "silent",
+      "tag": "RU"
+    },
+    {
+      "cue": "MI_012507_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-MI-1",
+      "state": "silent",
+      "tag": "MI"
+    },
+    {
+      "cue": "SY_012605_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-SY-1",
+      "sha256": "82b5dc72dd31a73d291be4fe1822d40a38bb6f58fdc52c679ce711dd591aca09",
+      "state": "playing",
+      "tag": "SY",
+      "token": 2
+    },
+    {
+      "cue": "GE_012803_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-GE-1",
+      "state": "silent",
+      "tag": "GE"
+    },
+    {
+      "cue": "BA_012401_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-BA-0",
+      "sha256": "f9fbf0bba79c06bc2569949ad36f81f6ea60ed7004ab2cc972489504bdb5358f",
+      "state": "playing",
+      "tag": "BA",
+      "token": 1
+    },
+    {
+      "cue": "DE_012401_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-DE-0",
+      "state": "silent",
+      "tag": "DE"
+    },
+    {
+      "cue": "NO_012401_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-NO-0",
+      "state": "silent",
+      "tag": "NO"
+    },
+    {
+      "cue": "UR_012402_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-UR-0",
+      "state": "silent",
+      "tag": "UR"
+    },
+    {
+      "cue": "OP_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-OP-0",
+      "sha256": "4c5cd1133b6a29d16ef0b7ac850ecd018badcec066d11b13580a0e831184afe1",
+      "state": "playing",
+      "tag": "OP",
+      "token": 1
+    },
+    {
+      "cue": "VE_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-VE-0",
+      "sha256": "457a8f8d9fee9354a060f4383677e8b32bd82488a399462876ecf38c72c0a04d",
+      "state": "playing",
+      "tag": "VE",
+      "token": 2
+    },
+    {
+      "cue": "KO_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-KO-0",
+      "state": "silent",
+      "tag": "KO"
+    },
+    {
+      "cue": "AM_012402_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-AM-0",
+      "state": "silent",
+      "tag": "AM"
+    },
+    {
+      "cue": "XXX_012503_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-XX-0",
+      "state": "silent",
+      "tag": "XX"
+    },
+    {
+      "cue": "RA_012504_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-RA-0",
+      "state": "silent",
+      "tag": "RA"
+    },
+    {
+      "cue": "TO_012505_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-TO-0",
+      "sha256": "a94cd2ee165b67db682be70639640f4df476478c75a1d3941668d9f2e5406041",
+      "state": "playing",
+      "tag": "TO",
+      "token": 1
+    },
+    {
+      "cue": "RU_012506_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-RU-0",
+      "sha256": "7691cd58b738c326027336b8fb86899ca10e32bdbac318f4b824e81fef412879",
+      "state": "playing",
+      "tag": "RU",
+      "token": 1
+    },
+    {
+      "cue": "MI_012507_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-MI-0",
+      "sha256": "252e682eda3f6160d4def534b9ba13d36879bfc4f3838e4e96096733e6707ea7",
+      "state": "playing",
+      "tag": "MI",
+      "token": 2
+    },
+    {
+      "cue": "SY_012605_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-birth-36eb69f9-SY-0",
+      "state": "silent",
+      "tag": "SY"
+    },
+    {
+      "cue": "GE_012803_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-birth-36eb69f9-GE-0",
+      "sha256": "a77b62bf10803597a17df34c92707635ea9db67c4d298d3b8f5566a0aebf4070",
+      "state": "playing",
+      "tag": "GE",
+      "token": 1
+    },
+    {
+      "cue": "FO_024302_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-birth-259c843e-play-0",
+      "state": "silent",
+      "tag": "FO"
+    },
+    {
+      "cue": "MY_024602_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-birth-259c843e-play-0",
+      "sha256": "6c1b6510b0aedc5f83464dc5acd9caf6888d8cdd6d750fd65241361dd11aaf5b",
+      "state": "playing",
+      "tag": "MY",
+      "token": 2
+    },
+    {
+      "cue": "KA_P01_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": false,
+      "run": "isolated-original-audio-birth-259c843e-play-0",
+      "state": "silent",
+      "tag": "KA"
+    },
+    {
+      "cue": "FO_024302_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-birth-259c843e-play-1",
+      "sha256": "480145f2025a161088941a806334a80518dc05071f8a259869e48e535e386ebf",
+      "state": "playing",
+      "tag": "FO",
+      "token": 2
+    },
+    {
+      "cue": "MY_024602_0000",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-birth-259c843e-play-1",
+      "state": "silent",
+      "tag": "MY"
+    },
+    {
+      "cue": "KA_P01_0001",
+      "event": "result",
+      "game": "BIRTH",
+      "origin": "isolated",
+      "original_audio": false,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-birth-259c843e-play-1",
+      "sha256": "632794383e7e248b9589f60a1f2bf64c411b980fd250b80f4d1acd950ec9792b",
+      "state": "playing",
+      "tag": "KA",
+      "token": 3
+    },
+    {
+      "cue": "KA_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-KA-1",
+      "sha256": "192d029a626df85ded7e596b3f8f237d859d64a74293a0cc4cd1fbebc207f021",
+      "state": "playing",
+      "tag": "KA",
+      "token": 3
+    },
+    {
+      "cue": "KO_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-KO-1",
+      "state": "silent",
+      "tag": "KO"
+    },
+    {
+      "cue": "UR_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-UR-1",
+      "state": "silent",
+      "tag": "UR"
+    },
+    {
+      "cue": "OP_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-OP-1",
+      "sha256": "d2c4f70ef8eeade308680478cd46ce8518c44f9ce22add7507a9814d03df051a",
+      "state": "playing",
+      "tag": "OP",
+      "token": 1
+    },
+    {
+      "cue": "VE_011001_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-VE-1",
+      "sha256": "5b7468fafa5e39e1b071b76387054ab69dbaab3bfb2b5bb2947d02f2e6f30c9d",
+      "state": "playing",
+      "tag": "VE",
+      "token": 4
+    },
+    {
+      "cue": "AM_011003_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-AM-1",
+      "sha256": "e79a0c78443a3f24f4ec956cb9e3b120bc17a71198755890ee842ba0818c652a",
+      "state": "playing",
+      "tag": "AM",
+      "token": 1
+    },
+    {
+      "cue": "NO_011004_0001",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-NO-1",
+      "state": "silent",
+      "tag": "NO"
+    },
+    {
+      "cue": "DE_011004_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-DE-1",
+      "sha256": "ee43cfe81f526b7bdfc41e9de4d6eb14b0317124e1c283907f070f8e0da322c3",
+      "state": "playing",
+      "tag": "DE",
+      "token": 1
+    },
+    {
+      "cue": "RA_011101_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-RA-1",
+      "state": "silent",
+      "tag": "RA"
+    },
+    {
+      "cue": "TO_011202_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-TO-1",
+      "sha256": "5774e3bcdef29a2c414c8f07dc6a1802436661d961644e4c987e78ea8978d71f",
+      "state": "playing",
+      "tag": "TO",
+      "token": 1
+    },
+    {
+      "cue": "RU_011202_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-RU-1",
+      "sha256": "425d228642f0191edfd9e90c76dee83bf348d49426c9a229772e7dd29c947df4",
+      "state": "playing",
+      "tag": "RU",
+      "token": 2
+    },
+    {
+      "cue": "XXX_011203_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-XX-1",
+      "state": "silent",
+      "tag": "XX"
+    },
+    {
+      "cue": "BA_011301_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-BA-1",
+      "state": "silent",
+      "tag": "BA"
+    },
+    {
+      "cue": "SY_011303_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-SY-1",
+      "state": "silent",
+      "tag": "SY"
+    },
+    {
+      "cue": "GE_011905_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-GE-1",
+      "state": "silent",
+      "tag": "GE"
+    },
+    {
+      "cue": "MY_011905_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-MY-1",
+      "sha256": "f3c1fc829745a69c8b9b911b993f097daa78100609dbce9747eaa0624f1754a3",
+      "state": "playing",
+      "tag": "MY",
+      "token": 2
+    },
+    {
+      "cue": "KA_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-KA-0",
+      "state": "silent",
+      "tag": "KA"
+    },
+    {
+      "cue": "KO_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-KO-0",
+      "sha256": "58651e36598925dbee3f544053c78ec017188ddc83e4867b839833cb1bde5f68",
+      "state": "playing",
+      "tag": "KO",
+      "token": 1
+    },
+    {
+      "cue": "UR_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-UR-0",
+      "sha256": "be9b921282b09774ea55e8d6da9e400bdf8f83577d24544f8f65fab22ae44b21",
+      "state": "playing",
+      "tag": "UR",
+      "token": 1
+    },
+    {
+      "cue": "OP_010901_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-OP-0",
+      "state": "silent",
+      "tag": "OP"
+    },
+    {
+      "cue": "VE_011001_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-VE-0",
+      "state": "silent",
+      "tag": "VE"
+    },
+    {
+      "cue": "AM_011003_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-AM-0",
+      "state": "silent",
+      "tag": "AM"
+    },
+    {
+      "cue": "NO_011004_0001",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-NO-0",
+      "sha256": "5f61df2f622014e3c7d2f1b6d21441feabd65a893249bd2a51690107bbdbae78",
+      "state": "playing",
+      "tag": "NO",
+      "token": 1
+    },
+    {
+      "cue": "DE_011004_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-DE-0",
+      "state": "silent",
+      "tag": "DE"
+    },
+    {
+      "cue": "RA_011101_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-RA-0",
+      "sha256": "3ede153d9851de98d0b10e7c23b16e79bbe2c55e6f8ff3c243a15e8f867d6642",
+      "state": "playing",
+      "tag": "RA",
+      "token": 1
+    },
+    {
+      "cue": "TO_011202_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-TO-0",
+      "state": "silent",
+      "tag": "TO"
+    },
+    {
+      "cue": "RU_011202_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-RU-0",
+      "state": "silent",
+      "tag": "RU"
+    },
+    {
+      "cue": "XXX_011203_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-XX-0",
+      "sha256": "7dee25c26412d664d9bb081022db6a94b94937cbd168af8da31cdb2bf2d3b97d",
+      "state": "playing",
+      "tag": "XX",
+      "token": 2
+    },
+    {
+      "cue": "BA_011301_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-BA-0",
+      "sha256": "2214685122d4eec722802ecfcdba4d69aecec88c44ecc8f119fb249250ecedae",
+      "state": "playing",
+      "tag": "BA",
+      "token": 1
+    },
+    {
+      "cue": "SY_011303_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-SY-0",
+      "sha256": "539e469603fe93bd1c61a1882a0b0db7d02466d8c5269ea70843dbae4220cefb",
+      "state": "playing",
+      "tag": "SY",
+      "token": 1
+    },
+    {
+      "cue": "GE_011905_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-brave-90efbac5-GE-0",
+      "sha256": "3eff20cb17174ca21051c4c645dd3e559a58c1e0d90cbbe1d2bf9f3de75168b9",
+      "state": "playing",
+      "tag": "GE",
+      "token": 2
+    },
+    {
+      "cue": "MY_011905_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-brave-90efbac5-MY-0",
+      "state": "silent",
+      "tag": "MY"
+    },
+    {
+      "cue": "FO_022703_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-brave-2134c5eb-play-0",
+      "state": "silent",
+      "tag": "FO"
+    },
+    {
+      "cue": "MI_022602_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-brave-2134c5eb-play-0",
+      "sha256": "dc281ba0ac901fe8570c9166d5e95122d935cb6a6bb1c406a80f1e114a07732c",
+      "state": "playing",
+      "tag": "MI",
+      "token": 1
+    },
+    {
+      "cue": "FO_022703_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-brave-2134c5eb-play-1",
+      "sha256": "e3b92f3f5b81a230103a2949c77184196c40a3d1f392cb66dcb1ec294482e971",
+      "state": "playing",
+      "tag": "FO",
+      "token": 1
+    },
+    {
+      "cue": "MI_022602_0000",
+      "event": "result",
+      "game": "BRAVE",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-brave-2134c5eb-play-1",
+      "state": "silent",
+      "tag": "MI"
+    },
+    {
+      "cue": "RA_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-RA-1",
+      "state": "silent",
+      "tag": "RA"
+    },
+    {
+      "cue": "KO_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-KO-1",
+      "sha256": "eaffef8184eb74ef74da8a09c0c828fa899738af5ab2888fe689fdc89a1d520b",
+      "state": "playing",
+      "tag": "KO",
+      "token": 1
+    },
+    {
+      "cue": "UR_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-UR-1",
+      "sha256": "4b8d3aa364bb8d196032d9ea286494f91f7a43ee92be69a227b60a1b89885a6e",
+      "state": "playing",
+      "tag": "UR",
+      "token": 2
+    },
+    {
+      "cue": "VE_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-VE-1",
+      "state": "silent",
+      "tag": "VE"
+    },
+    {
+      "cue": "OP_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-OP-1",
+      "sha256": "276959ba74614fc732fa70751b24abfdac228269b30f4016a73528be28f72851",
+      "state": "playing",
+      "tag": "OP",
+      "token": 1
+    },
+    {
+      "cue": "TO_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-TO-1",
+      "state": "silent",
+      "tag": "TO"
+    },
+    {
+      "cue": "NO_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-NO-1",
+      "state": "silent",
+      "tag": "NO"
+    },
+    {
+      "cue": "AM_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-AM-1",
+      "sha256": "2f7ce6b80a23d74939fb32fb080866704fc9ef279363ab38167fb331f1da7f3c",
+      "state": "playing",
+      "tag": "AM",
+      "token": 1
+    },
+    {
+      "cue": "XXA_010104_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-XX-1",
+      "sha256": "0e7afab7a57292079d5cab119347414381f218da3816e902fb312f08e38a1528",
+      "state": "playing",
+      "tag": "XX",
+      "token": 2
+    },
+    {
+      "cue": "BA_010104_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-BA-1",
+      "state": "silent",
+      "tag": "BA"
+    },
+    {
+      "cue": "RU_010107_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-RU-1",
+      "sha256": "3609dc4c37dc41d6e2a24352e0cef5a8c4dd9ae72ebbf2ed76d45bae150908b0",
+      "state": "playing",
+      "tag": "RU",
+      "token": 1
+    },
+    {
+      "cue": "KA_010108_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-KA-1",
+      "state": "silent",
+      "tag": "KA"
+    },
+    {
+      "cue": "DE_010203_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-DE-1",
+      "sha256": "9d65c83a28ea029fb9e23d52d21c2d47424f8ff7d1577ec9eeabf97687e33009",
+      "state": "playing",
+      "tag": "DE",
+      "token": 2
+    },
+    {
+      "cue": "RA_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-RA-0",
+      "sha256": "bbd1b6f3677e0048d74b79dc87a895d9daed3e15778d16629333be8d6e184671",
+      "state": "playing",
+      "tag": "RA",
+      "token": 1
+    },
+    {
+      "cue": "KO_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-KO-0",
+      "state": "silent",
+      "tag": "KO"
+    },
+    {
+      "cue": "UR_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-UR-0",
+      "state": "silent",
+      "tag": "UR"
+    },
+    {
+      "cue": "VE_P01_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-VE-0",
+      "sha256": "dc8eb9aebae9bb4f58c1400794eec1464a916ae578b4cf5e6621ae7da6f73ea9",
+      "state": "playing",
+      "tag": "VE",
+      "token": 1
+    },
+    {
+      "cue": "OP_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-OP-0",
+      "state": "silent",
+      "tag": "OP"
+    },
+    {
+      "cue": "TO_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-TO-0",
+      "sha256": "11585907a0ebbc44b3aaae0e921c7ec3c09ab79a616e8367d17afaa1be0cc04f",
+      "state": "playing",
+      "tag": "TO",
+      "token": 1
+    },
+    {
+      "cue": "NO_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-NO-0",
+      "sha256": "eb4bdeb6f9bd1b8c461281b8d3c5a25c8efcc6d15713440fd7dc0919fec64bd1",
+      "state": "playing",
+      "tag": "NO",
+      "token": 1
+    },
+    {
+      "cue": "AM_010103_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-AM-0",
+      "state": "silent",
+      "tag": "AM"
+    },
+    {
+      "cue": "XXA_010104_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-XX-0",
+      "state": "silent",
+      "tag": "XX"
+    },
+    {
+      "cue": "BA_010104_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-BA-0",
+      "sha256": "e0fda1b5ab82401615dfd2783b5e8139908fed39172856bad5f2d351cca18db9",
+      "state": "playing",
+      "tag": "BA",
+      "token": 1
+    },
+    {
+      "cue": "RU_010107_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-RU-0",
+      "state": "silent",
+      "tag": "RU"
+    },
+    {
+      "cue": "KA_010108_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "remaining-config-black-bb7d6842-KA-0",
+      "sha256": "55c62bf9a557c9bdb4d033b0c54b5395aa4837cb7e000e9dddf8ae064211b3ff",
+      "state": "playing",
+      "tag": "KA",
+      "token": 1
+    },
+    {
+      "cue": "DE_010203_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "route",
+      "original_audio": true,
+      "run": "remaining-config-black-bb7d6842-DE-0",
+      "state": "silent",
+      "tag": "DE"
+    },
+    {
+      "cue": "FO_046701_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-black-49edef21-play-0",
+      "state": "silent",
+      "tag": "FO"
+    },
+    {
+      "cue": "MI_046703_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-black-49edef21-play-0",
+      "sha256": "184d61aebc2d575ebad76b740d2bd5a30b4c0267430c91db2c94ea59e82dc730",
+      "state": "playing",
+      "tag": "MI",
+      "token": 1
+    },
+    {
+      "cue": "SY_010402_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-black-49edef21-play-0",
+      "state": "silent",
+      "tag": "SY"
+    },
+    {
+      "cue": "FO_046701_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-black-49edef21-play-1",
+      "sha256": "053fd922068f642a527fa57348b1d3217bf000db3ece148757fb5097a5aff9e1",
+      "state": "playing",
+      "tag": "FO",
+      "token": 1
+    },
+    {
+      "cue": "MI_046703_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "isolated",
+      "original_audio": true,
+      "run": "isolated-original-audio-black-49edef21-play-1",
+      "state": "silent",
+      "tag": "MI"
+    },
+    {
+      "cue": "SY_010402_0000",
+      "event": "result",
+      "game": "BLACK",
+      "origin": "isolated",
+      "original_audio": true,
+      "output_gain": 0.79,
+      "run": "isolated-original-audio-black-49edef21-play-1",
+      "sha256": "6b84dba926ea6917b5bb3cff3db22d32ff941f142165cf5d5ba4b16a31fe01e9",
+      "state": "playing",
+      "tag": "SY",
+      "token": 2
+    }
+  ],
+  "failures": [],
+  "original_audio_gaps": [
+    {
+      "game": "BIRTH",
+      "tag": "KA",
+      "reason": "BLESS audio borrowed; BIRTH original not verified"
+    }
+  ],
+  "matrix": [
+    {
+      "game": "ENDLESS",
+      "tag": "AM",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "BA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "DE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "FO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "KA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "KO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "LI",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "MK",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "MY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "NI",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "NO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "OP",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "RA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "RR",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "SY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "UR",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "VE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "ENDLESS",
+      "tag": "XX",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "AM",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "BA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "DE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "FO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "KA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "KO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "MY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "NO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "OP",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "RA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "RU",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "SY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "TO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "UR",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "VE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLESS",
+      "tag": "XX",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "AM",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "BA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "DE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "FO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "GE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "KA",
+      "playing": true,
+      "silent": true,
+      "original_audio": false,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "KO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "MI",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "MY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "NO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "OP",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "RA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "RU",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "SY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "TO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "UR",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "VE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "tag": "XX",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "AM",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "BA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "DE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "FO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "GE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "KA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "KO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "MI",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "MY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "NO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "OP",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "RA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "RU",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "SY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "TO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "UR",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "VE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "tag": "XX",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "AM",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "BA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "DE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "FO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "KA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "KO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "MI",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "NO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "OP",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "RA",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "RU",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "SY",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "isolated"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "TO",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "UR",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "VE",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    },
+    {
+      "game": "BLACK",
+      "tag": "XX",
+      "playing": true,
+      "silent": true,
+      "original_audio": true,
+      "origins": [
+        "route"
+      ]
+    }
+  ],
+  "controls_expected": 86,
+  "states_expected": 172,
+  "controls_verified": 86,
+  "states_verified": 172,
+  "matrix_passed": true,
+  "all_original_audio_verified": false
+}

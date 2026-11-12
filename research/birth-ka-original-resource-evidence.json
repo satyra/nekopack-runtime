@@ -1,0 +1,486 @@
+{
+  "scope": "BIRTH original KA: original system voice map, EP02 speaker headers, exact resource lookup and Ogg metadata; no dialogue text or images output",
+  "original_game": "BIRTH",
+  "borrowed": false,
+  "archives": [
+    "system.dat",
+    "voice.dat"
+  ],
+  "source_script": {
+    "archive": "system.dat",
+    "ordinal": 92,
+    "directory": "script",
+    "name": "EP02.txt",
+    "bytes": 8111,
+    "sha256": "69a54f03da8d46ade0ad4a944416ec60d7783642de652075f90b6642eaea6f34"
+  },
+  "voice_map_resource": {
+    "archive": "system.dat",
+    "ordinal": 5,
+    "directory": "system",
+    "name": "voicemap.txt",
+    "bytes": 214,
+    "sha256": "5a4a4b328e0bbad40297a334be9a681c6bd5328b81fc661a0f18e6ccd0055474"
+  },
+  "voice_map_rows": [
+    {
+      "line": 22,
+      "speaker_bytes_hex": "834a837e83568341",
+      "tag": "KA"
+    }
+  ],
+  "speaker_headers": [
+    {
+      "line": 15,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0000",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 31,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0001",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 47,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0002",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 62,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0003",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 102,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0004",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 111,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0005",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 116,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0006",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 124,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0007",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 128,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0008",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 159,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0009",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 199,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0010",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 204,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0011",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 209,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0012",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 239,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0013",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 244,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0014",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 292,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0015",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 323,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0016",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 333,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0017",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 342,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0018",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 346,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0019",
+      "face_tags_bytes_hex": "4b41"
+    },
+    {
+      "line": 350,
+      "speaker_bytes_hex": "834a837e83568341",
+      "cue": "KA_EP02_0020",
+      "face_tags_bytes_hex": "4b41"
+    }
+  ],
+  "voice_resources": [
+    {
+      "archive": "voice.dat",
+      "ordinal": 1153,
+      "directory": "voice",
+      "name": "KA_EP02_0000.ogg",
+      "bytes": 34055,
+      "sha256": "a4ec2d6cc1bf1abff0089d82574d8789e6ecdffae5b456e01906b5823f8cf21e",
+      "cue": "KA_EP02_0000",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 138761,
+      "duration_seconds": 3.1465079365079367,
+      "pages": 10
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 5041,
+      "directory": "voice",
+      "name": "KA_EP02_0001.ogg",
+      "bytes": 87003,
+      "sha256": "b9225a2971f4d573abf9682317a30703269630a95737fe1f6696cf343b8b7fd8",
+      "cue": "KA_EP02_0001",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 375117,
+      "duration_seconds": 8.506054421768708,
+      "pages": 22
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 2134,
+      "directory": "voice",
+      "name": "KA_EP02_0002.ogg",
+      "bytes": 37182,
+      "sha256": "bfd58a831a3acc23b770e369e924dbca49327fdaab35bf082550c1a80defdcfa",
+      "cue": "KA_EP02_0002",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 149661,
+      "duration_seconds": 3.393673469387755,
+      "pages": 10
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 4661,
+      "directory": "voice",
+      "name": "KA_EP02_0003.ogg",
+      "bytes": 31093,
+      "sha256": "83094eb1e4d70386f7b5c29541d5e5fd4bcbce8de6e5ebbc44c646c8f098724e",
+      "cue": "KA_EP02_0003",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 128723,
+      "duration_seconds": 2.918888888888889,
+      "pages": 9
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 1126,
+      "directory": "voice",
+      "name": "KA_EP02_0004.ogg",
+      "bytes": 54177,
+      "sha256": "9465e56371e39fe6b903a3d0e58148362942c479447e57c7735b4881ef9b600a",
+      "cue": "KA_EP02_0004",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 221288,
+      "duration_seconds": 5.017868480725624,
+      "pages": 14
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 3405,
+      "directory": "voice",
+      "name": "KA_EP02_0005.ogg",
+      "bytes": 137044,
+      "sha256": "c0a8fd26976a180c6871cf2605dce4471fadf05cabde22ef1de1d91b90b81ca3",
+      "cue": "KA_EP02_0005",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 604785,
+      "duration_seconds": 13.713945578231293,
+      "pages": 34
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 4656,
+      "directory": "voice",
+      "name": "KA_EP02_0006.ogg",
+      "bytes": 44813,
+      "sha256": "302f7d242fcde48fcdd9a36c06849994e44021fea689492ce4b40386b8a76339",
+      "cue": "KA_EP02_0006",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 186009,
+      "duration_seconds": 4.217891156462585,
+      "pages": 12
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 1455,
+      "directory": "voice",
+      "name": "KA_EP02_0007.ogg",
+      "bytes": 144992,
+      "sha256": "e24d928218d9d6949bfbc970da6453df5f34e9cf14dc1d9e40c9fc02f4e70353",
+      "cue": "KA_EP02_0007",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 646612,
+      "duration_seconds": 14.662403628117914,
+      "pages": 36
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 2428,
+      "directory": "voice",
+      "name": "KA_EP02_0008.ogg",
+      "bytes": 68820,
+      "sha256": "677ba1060a3a666a13ce2b47f86f0ef28cb5365b818ae3468d863c34ce74ebe5",
+      "cue": "KA_EP02_0008",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 293836,
+      "duration_seconds": 6.662947845804989,
+      "pages": 18
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 1090,
+      "directory": "voice",
+      "name": "KA_EP02_0009.ogg",
+      "bytes": 21827,
+      "sha256": "c33306089a953c0b3f3bdce386665bb628724cdb1487336e1f93f0a0b70ff190",
+      "cue": "KA_EP02_0009",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 86509,
+      "duration_seconds": 1.961655328798186,
+      "pages": 7
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 560,
+      "directory": "voice",
+      "name": "KA_EP02_0010.ogg",
+      "bytes": 102425,
+      "sha256": "d4998183038bc6a7aaa029b410b3a31b5682a79939b41f777956ab2d9a298a33",
+      "cue": "KA_EP02_0010",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 441851,
+      "duration_seconds": 10.019297052154196,
+      "pages": 26
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 2562,
+      "directory": "voice",
+      "name": "KA_EP02_0011.ogg",
+      "bytes": 191285,
+      "sha256": "e32b6f22165ad667a4ad1761c1e484dfd2e996fbe567d7b738a5d5e2215637c3",
+      "cue": "KA_EP02_0011",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 875082,
+      "duration_seconds": 19.84312925170068,
+      "pages": 47
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 1606,
+      "directory": "voice",
+      "name": "KA_EP02_0012.ogg",
+      "bytes": 186013,
+      "sha256": "cdb700def5b399c64fe9e75c731ff6ab788464297c6b823347c3407e41e5ad4a",
+      "cue": "KA_EP02_0012",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 819887,
+      "duration_seconds": 18.591541950113378,
+      "pages": 45
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 3888,
+      "directory": "voice",
+      "name": "KA_EP02_0013.ogg",
+      "bytes": 79661,
+      "sha256": "40ccb076e80d0b736e013a932c68c0f82b756685536bbd73ae9e9032cd231d79",
+      "cue": "KA_EP02_0013",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 348822,
+      "duration_seconds": 7.9097959183673465,
+      "pages": 20
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 528,
+      "directory": "voice",
+      "name": "KA_EP02_0014.ogg",
+      "bytes": 92100,
+      "sha256": "8e4b08bd0f3cbcf9b43e2979af5527f552c4ca8f9aa667fddbe1b99c08086f0e",
+      "cue": "KA_EP02_0014",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 440927,
+      "duration_seconds": 9.998344671201814,
+      "pages": 23
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 1211,
+      "directory": "voice",
+      "name": "KA_EP02_0015.ogg",
+      "bytes": 24266,
+      "sha256": "6a068acbd9f7e52fdce9984f92f43054efaf65619d93c40667ff3fabbbab7762",
+      "cue": "KA_EP02_0015",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 86699,
+      "duration_seconds": 1.9659637188208616,
+      "pages": 7
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 2466,
+      "directory": "voice",
+      "name": "KA_EP02_0016.ogg",
+      "bytes": 52775,
+      "sha256": "4b0e91b5501c14e35efb9002a73cee398e6d8209768bd456ed9d36d658bc6a14",
+      "cue": "KA_EP02_0016",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 224586,
+      "duration_seconds": 5.09265306122449,
+      "pages": 14
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 5086,
+      "directory": "voice",
+      "name": "KA_EP02_0017.ogg",
+      "bytes": 89131,
+      "sha256": "c5a2b4b6089aea7716b4d09c2dff360ca70c1f7ed92513928c38aa1951f138ce",
+      "cue": "KA_EP02_0017",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 401851,
+      "duration_seconds": 9.112267573696146,
+      "pages": 23
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 192,
+      "directory": "voice",
+      "name": "KA_EP02_0018.ogg",
+      "bytes": 63409,
+      "sha256": "0dacdc5925665551c4a6c66af36bdd8d79639d8d9a31d819a929aedd958ae6d0",
+      "cue": "KA_EP02_0018",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 242546,
+      "duration_seconds": 5.499909297052154,
+      "pages": 16
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 491,
+      "directory": "voice",
+      "name": "KA_EP02_0019.ogg",
+      "bytes": 30431,
+      "sha256": "c7db11a9dfd40140ed872fcd38ff23a03ead8edb89d4e25584f97b95fd2b7084",
+      "cue": "KA_EP02_0019",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 128743,
+      "duration_seconds": 2.919342403628118,
+      "pages": 9
+    },
+    {
+      "archive": "voice.dat",
+      "ordinal": 849,
+      "directory": "voice",
+      "name": "KA_EP02_0020.ogg",
+      "bytes": 10808,
+      "sha256": "7ad77103a8ba63c1ac524db82e47be0d18db2f1047ee4307bb73f50a1e54421c",
+      "cue": "KA_EP02_0020",
+      "codec": "Vorbis",
+      "channels": 1,
+      "sample_rate": 44100,
+      "total_samples": 27957,
+      "duration_seconds": 0.6339455782312925,
+      "pages": 4
+    }
+  ],
+  "cue_count": 21,
+  "collision_checks": {
+    "names_taken_from_original_speaker_headers": true,
+    "all_speakers_match_original_KA_voice_map": true,
+    "all_21_cues_select_distinct_archive_entries": true,
+    "first_audio_sha256_matches_verified_resource": true,
+    "interpretation": "Original script cross-references establish intended names; this is not a guessed 32-bit hash match. Arbitrary other strings can still share a 32-bit hash."
+  },
+  "previous_gap_reason": "Earlier scene candidate scans omitted the nonnumeric EP02 scene name"
+}

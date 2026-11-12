@@ -263,12 +263,29 @@ pub unsafe extern "C" fn neko_probe_story(
     operation: i32,
     sequence: u64,
     elapsed_ms: u64,
+    archive_names: *const u8,
+    archive_names_len: usize,
     out_len: *mut usize,
 ) -> *mut u8 {
     use std::os::fd::BorrowedFd;
     let result = std::panic::catch_unwind(|| {
         STORY.with(|cell| -> Result<Vec<u8>, Box<dyn Error>> {
             let mut state = cell.borrow_mut();
+            let names = if archive_names_len == 0 {
+                Vec::new()
+            } else {
+                std::str::from_utf8(unsafe { std::slice::from_raw_parts(archive_names, archive_names_len) })?
+                    .split('\0').map(str::to_owned).collect::<Vec<_>>()
+            };
+            let mount = |files: Vec<std::fs::File>, original_only| {
+                if names.is_empty() {
+                    nekopack_runtime::dat::DatGame::mount_version(files, original_only)
+                } else if names.len() != files.len() {
+                    Err("archive name and descriptor counts differ".into())
+                } else {
+                    nekopack_runtime::dat::DatGame::mount_named(names.clone().into_iter().zip(files), original_only)
+                }
+            };
             match operation {
                 67 => {
                     use nekopack_script::runtime::Scripts;
@@ -295,7 +312,7 @@ pub unsafe extern "C" fn neko_probe_story(
                         None
                     };
                     let mut store =
-                        nekopack_runtime::dat::DatGame::mount_version(files, elapsed_ms != 0)?;
+                        mount(files, elapsed_ms != 0)?;
                     let chinese = store.has_chinese_scenario_patch();
                     let patches = store.recognized_chinese_archives();
                     if !store.has_resource("system", "title.mng")? {
@@ -453,10 +470,7 @@ pub unsafe extern "C" fn neko_probe_story(
                             let mut title = title.borrow_mut();
                             *title =
                                 Some(nekopack_runtime::title::TitleSession::open_with_progress(
-                                    nekopack_runtime::dat::DatGame::mount_version(
-                                        files,
-                                        elapsed_ms & 2 != 0,
-                                    )?,
+                                    mount(files, elapsed_ms & 2 != 0)?,
                                     sequence != 0,
                                     &progress,
                                 )?);
@@ -464,7 +478,7 @@ pub unsafe extern "C" fn neko_probe_story(
                         });
                     }
                     *state = Some(nekopack_runtime::story::StorySession::open(
-                        nekopack_runtime::dat::DatGame::mount(files)?,
+                        mount(files, false)?,
                         1,
                     )?);
                     state.as_mut().unwrap().enable_host_effects();

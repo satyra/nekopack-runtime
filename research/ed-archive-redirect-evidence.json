@@ -1,0 +1,645 @@
+{
+  "scope": "Static PE hook, archive metadata, system NUT and boot control code; no scenario body/image payloads",
+  "dll_sha256": "b17723c128fec566292503d5cd98886d48171268515bdba57937a386e899d27e",
+  "dll_size": 10752,
+  "redirects": [
+    {
+      "original": "script.dat",
+      "target": "script_chs.dat"
+    },
+    {
+      "original": "system.dat",
+      "target": "system_chs.dat"
+    }
+  ],
+  "hook_entrypoints": {
+    "CreateFileW": "0x1500",
+    "CreateFileA": "0x15c0"
+  },
+  "behavior": "CreateFileA converts filename to UTF-16 and calls W hook. Each matched replacement call returns directly; only unmatched names pass through. No failed-open fallback or resource-level filtering.",
+  "hook_disassembly": [
+    {
+      "rva": "0x1500",
+      "instruction": "push ebp"
+    },
+    {
+      "rva": "0x1501",
+      "instruction": "mov ebp, esp"
+    },
+    {
+      "rva": "0x1503",
+      "instruction": "sub esp, 0x208"
+    },
+    {
+      "rva": "0x1509",
+      "instruction": "lea edx, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x150f",
+      "instruction": "xor eax, eax"
+    },
+    {
+      "rva": "0x1511",
+      "instruction": "mov ecx, 0x82"
+    },
+    {
+      "rva": "0x1516",
+      "instruction": "push edi"
+    },
+    {
+      "rva": "0x1517",
+      "instruction": "lea edi, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x151d",
+      "instruction": "rep stosd dword ptr es:[edi], eax"
+    },
+    {
+      "rva": "0x151f",
+      "instruction": "xor ecx, ecx"
+    },
+    {
+      "rva": "0x1521",
+      "instruction": "lea edi, [ebp]"
+    },
+    {
+      "rva": "0x1524",
+      "instruction": "xor al, al"
+    },
+    {
+      "rva": "0x1526",
+      "instruction": "rep stosb byte ptr es:[edi], al"
+    },
+    {
+      "rva": "0x1528",
+      "instruction": "mov ecx, dword ptr [ebp + 8]"
+    },
+    {
+      "rva": "0x152b",
+      "instruction": "call 0x10001340"
+    },
+    {
+      "rva": "0x1530",
+      "instruction": "push -1"
+    },
+    {
+      "rva": "0x1532",
+      "instruction": "mov edx, 0x10001230"
+    },
+    {
+      "rva": "0x1537",
+      "instruction": "lea ecx, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x153d",
+      "instruction": "call 0x10001aa0"
+    },
+    {
+      "rva": "0x1542",
+      "instruction": "pop edi"
+    },
+    {
+      "rva": "0x1543",
+      "instruction": "test eax, eax"
+    },
+    {
+      "rva": "0x1545",
+      "instruction": "jne 0x1000156a"
+    },
+    {
+      "rva": "0x1547",
+      "instruction": "push dword ptr [ebp + 0x20]"
+    },
+    {
+      "rva": "0x154a",
+      "instruction": "push dword ptr [ebp + 0x1c]"
+    },
+    {
+      "rva": "0x154d",
+      "instruction": "push dword ptr [ebp + 0x18]"
+    },
+    {
+      "rva": "0x1550",
+      "instruction": "push dword ptr [ebp + 0x14]"
+    },
+    {
+      "rva": "0x1553",
+      "instruction": "push dword ptr [ebp + 0x10]"
+    },
+    {
+      "rva": "0x1556",
+      "instruction": "push dword ptr [ebp + 0xc]"
+    },
+    {
+      "rva": "0x1559",
+      "instruction": "push 0x10001248"
+    },
+    {
+      "rva": "0x155e",
+      "instruction": "call dword ptr [0x10003100]"
+    },
+    {
+      "rva": "0x1564",
+      "instruction": "mov esp, ebp"
+    },
+    {
+      "rva": "0x1566",
+      "instruction": "pop ebp"
+    },
+    {
+      "rva": "0x1567",
+      "instruction": "ret 0x1c"
+    },
+    {
+      "rva": "0x156a",
+      "instruction": "push -1"
+    },
+    {
+      "rva": "0x156c",
+      "instruction": "mov edx, 0x10001270"
+    },
+    {
+      "rva": "0x1571",
+      "instruction": "lea ecx, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x1577",
+      "instruction": "call 0x10001aa0"
+    },
+    {
+      "rva": "0x157c",
+      "instruction": "push dword ptr [ebp + 0x20]"
+    },
+    {
+      "rva": "0x157f",
+      "instruction": "push dword ptr [ebp + 0x1c]"
+    },
+    {
+      "rva": "0x1582",
+      "instruction": "push dword ptr [ebp + 0x18]"
+    },
+    {
+      "rva": "0x1585",
+      "instruction": "push dword ptr [ebp + 0x14]"
+    },
+    {
+      "rva": "0x1588",
+      "instruction": "push dword ptr [ebp + 0x10]"
+    },
+    {
+      "rva": "0x158b",
+      "instruction": "push dword ptr [ebp + 0xc]"
+    },
+    {
+      "rva": "0x158e",
+      "instruction": "test eax, eax"
+    },
+    {
+      "rva": "0x1590",
+      "instruction": "jne 0x100015a3"
+    },
+    {
+      "rva": "0x1592",
+      "instruction": "push 0x10001288"
+    },
+    {
+      "rva": "0x1597",
+      "instruction": "call dword ptr [0x10003100]"
+    },
+    {
+      "rva": "0x159d",
+      "instruction": "mov esp, ebp"
+    },
+    {
+      "rva": "0x159f",
+      "instruction": "pop ebp"
+    },
+    {
+      "rva": "0x15a0",
+      "instruction": "ret 0x1c"
+    },
+    {
+      "rva": "0x15a3",
+      "instruction": "push dword ptr [ebp + 8]"
+    },
+    {
+      "rva": "0x15a6",
+      "instruction": "call dword ptr [0x10003100]"
+    },
+    {
+      "rva": "0x15ac",
+      "instruction": "mov esp, ebp"
+    },
+    {
+      "rva": "0x15ae",
+      "instruction": "pop ebp"
+    },
+    {
+      "rva": "0x15af",
+      "instruction": "ret 0x1c"
+    },
+    {
+      "rva": "0x15b2",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b3",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b4",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b5",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b6",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b7",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b8",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15b9",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15ba",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15bb",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15bc",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15bd",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15be",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15bf",
+      "instruction": "int3 "
+    },
+    {
+      "rva": "0x15c0",
+      "instruction": "push ebp"
+    },
+    {
+      "rva": "0x15c1",
+      "instruction": "mov ebp, esp"
+    },
+    {
+      "rva": "0x15c3",
+      "instruction": "sub esp, 0x208"
+    },
+    {
+      "rva": "0x15c9",
+      "instruction": "xor eax, eax"
+    },
+    {
+      "rva": "0x15cb",
+      "instruction": "mov ecx, 0x82"
+    },
+    {
+      "rva": "0x15d0",
+      "instruction": "push edi"
+    },
+    {
+      "rva": "0x15d1",
+      "instruction": "lea edi, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x15d7",
+      "instruction": "rep stosd dword ptr es:[edi], eax"
+    },
+    {
+      "rva": "0x15d9",
+      "instruction": "xor ecx, ecx"
+    },
+    {
+      "rva": "0x15db",
+      "instruction": "lea edi, [ebp]"
+    },
+    {
+      "rva": "0x15de",
+      "instruction": "xor al, al"
+    },
+    {
+      "rva": "0x15e0",
+      "instruction": "rep stosb byte ptr es:[edi], al"
+    },
+    {
+      "rva": "0x15e2",
+      "instruction": "mov ecx, dword ptr [ebp + 8]"
+    },
+    {
+      "rva": "0x15e5",
+      "instruction": "call 0x100019d0"
+    },
+    {
+      "rva": "0x15ea",
+      "instruction": "push eax"
+    },
+    {
+      "rva": "0x15eb",
+      "instruction": "push dword ptr [ebp + 8]"
+    },
+    {
+      "rva": "0x15ee",
+      "instruction": "lea eax, [ebp + 8]"
+    },
+    {
+      "rva": "0x15f1",
+      "instruction": "push eax"
+    },
+    {
+      "rva": "0x15f2",
+      "instruction": "push 0x208"
+    },
+    {
+      "rva": "0x15f7",
+      "instruction": "lea eax, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x15fd",
+      "instruction": "push eax"
+    },
+    {
+      "rva": "0x15fe",
+      "instruction": "call dword ptr [0x100040bc]"
+    },
+    {
+      "rva": "0x1604",
+      "instruction": "push dword ptr [ebp + 0x20]"
+    },
+    {
+      "rva": "0x1607",
+      "instruction": "lea eax, [ebp - 0x208]"
+    },
+    {
+      "rva": "0x160d",
+      "instruction": "push dword ptr [ebp + 0x1c]"
+    },
+    {
+      "rva": "0x1610",
+      "instruction": "push dword ptr [ebp + 0x18]"
+    },
+    {
+      "rva": "0x1613",
+      "instruction": "push dword ptr [ebp + 0x14]"
+    },
+    {
+      "rva": "0x1616",
+      "instruction": "push dword ptr [ebp + 0x10]"
+    },
+    {
+      "rva": "0x1619",
+      "instruction": "push dword ptr [ebp + 0xc]"
+    },
+    {
+      "rva": "0x161c",
+      "instruction": "push eax"
+    },
+    {
+      "rva": "0x161d",
+      "instruction": "call 0x10001500"
+    },
+    {
+      "rva": "0x1622",
+      "instruction": "pop edi"
+    },
+    {
+      "rva": "0x1623",
+      "instruction": "mov esp, ebp"
+    },
+    {
+      "rva": "0x1625",
+      "instruction": "pop ebp"
+    },
+    {
+      "rva": "0x1626",
+      "instruction": "ret 0x1c"
+    }
+  ],
+  "archives": [
+    {
+      "file": "script.dat",
+      "size": 1529772,
+      "sha256": "52e0081bddac94a5445a8e9cfca71e63fede6a2a05dde306a9a65c35a3c889d5",
+      "seed": 2608180649,
+      "priority": 0,
+      "entries": 162
+    },
+    {
+      "file": "script_chs.dat",
+      "size": 1331882,
+      "sha256": "9b380d6ebdae10e01b808ff0487814399074ff5e6dfe4e879dfef9320795f039",
+      "seed": 2608180649,
+      "priority": 0,
+      "entries": 162
+    },
+    {
+      "file": "system.dat",
+      "size": 14682747,
+      "sha256": "1f3b6aedb2ef2b277e90d458cad34580f3a8ccbded31d18a8fdace4555e08b25",
+      "seed": 2608180649,
+      "priority": 0,
+      "entries": 44
+    },
+    {
+      "file": "system_chs.dat",
+      "size": 14682537,
+      "sha256": "23d3c3d3230368649a2f6d5dbaeeda3b714f1ebf02b020aef5eb217d438b2a37",
+      "seed": 2608180649,
+      "priority": 0,
+      "entries": 44
+    }
+  ],
+  "system_code": [
+    {
+      "resource": "system/gui.nut",
+      "original_sha256": "4bb63231917474930a5a08fedd94ccd386cbe95196953f34c643d603b19e532d",
+      "translated_sha256": "4bb63231917474930a5a08fedd94ccd386cbe95196953f34c643d603b19e532d",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/staff_roll.nut",
+      "original_sha256": "3c45634d8d324c8a1606a742c843ed8bea2184e201aa6ddee9a4ce2d5f64f604",
+      "translated_sha256": "3c45634d8d324c8a1606a742c843ed8bea2184e201aa6ddee9a4ce2d5f64f604",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/shortcut.nut",
+      "original_sha256": "c5572a7cd15360ee8f2c118d28daa204d0b10906eae637e27a9e1ab0d3bd3323",
+      "translated_sha256": "c5572a7cd15360ee8f2c118d28daa204d0b10906eae637e27a9e1ab0d3bd3323",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/saveload.nut",
+      "original_sha256": "3f0cae1fdd683ebec341a56cc457104d785b0c0cc453e48564001d406d80658f",
+      "translated_sha256": "1f61d8dd375542e521b4c1ed888c3094058a3a2dda73fe91881de5cbf4e607bf",
+      "gb18030_lines": [
+        {
+          "line": 93,
+          "sha256": "d05c649e96a17b2fc91cd74cb54b0045b593bf6df7a03be64a381aa9ecf367b7",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 94,
+          "sha256": "f46e5fd6901448490c5533751f20333e221209fb31907111c932b73282028d75",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 95,
+          "sha256": "a2b6ebcd1844cb345dfaf43449e97305c74cce09ddc927bfc91c3d999278e7f2",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 96,
+          "sha256": "b532474e42a69c12f8feae5dcc919c030a51dd7f628a665c0f47413fc88b55ca",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 97,
+          "sha256": "ecf141d5a99ad78f3a7ef860ea97ed6ee073d5e45d834c7a4d087402ef57fb6f",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 98,
+          "sha256": "93be862a94bed3ec29ed8509275486d7c41ced0b0ec5eeef4d81017019caf975",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 99,
+          "sha256": "123cd2c52a52481dbe3769601f520189ab5426e7afdcd675543e4f1439626651",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 100,
+          "sha256": "bb90c620ae789110d29f9c43113aa9a2681b9c268e01e597f24865d99f265c86",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 101,
+          "sha256": "286750422ae97c4b888c02851ecffbe1f3d8729ffa90ebed56f855715811a581",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 102,
+          "sha256": "44afb45519668b0164bfd4e40167dc9575200d76b082aaf64b5d285799af28f1",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 104,
+          "sha256": "cd1e9b97bba986c2bccf2856e5b303271c6eb22de40ca96d7a42581dfa89f920",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 105,
+          "sha256": "c86f92739275eaf878e520e22ae6190c53e0c2efa448d1a8e61919f1b00db508",
+          "encoding": "GB18030"
+        },
+        {
+          "line": 215,
+          "sha256": "856bca4e99ad7ae1ba694362a88ee90baa5eb681efd67959ba5ef4de6b2a3e86",
+          "encoding": "GB18030"
+        }
+      ],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/select.nut",
+      "original_sha256": "5432fc13f90dbbee147bf0b37efbb0143241ed633d02c12b67dc34ea10c1c152",
+      "translated_sha256": "5432fc13f90dbbee147bf0b37efbb0143241ed633d02c12b67dc34ea10c1c152",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/config.nut",
+      "original_sha256": "cd26e60491f607f4757a258c3b9e18ee0bf16f74039bcee97e54dd0df254b9be",
+      "translated_sha256": "cd26e60491f607f4757a258c3b9e18ee0bf16f74039bcee97e54dd0df254b9be",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/message.nut",
+      "original_sha256": "dda9d61cdbf137cb5fbb2422fe17616e4d021ca646ec7c993aad3ba59639602d",
+      "translated_sha256": "dda9d61cdbf137cb5fbb2422fe17616e4d021ca646ec7c993aad3ba59639602d",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/system.nut",
+      "original_sha256": "59a088e401973ff92eb80120753813a5e7a07286daf85f5342766a93a8f5e85d",
+      "translated_sha256": "493ae519a5228f5b8c01b62b79e025b10a0716cccf7a5ebdcfc558020dbfeb1f",
+      "gb18030_lines": [
+        {
+          "line": 9,
+          "sha256": "cbb6b7cab73d1e3b9b40f333fe2500d4c5540d25cda05d96f792b05830e0db81",
+          "encoding": "GB18030"
+        }
+      ],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/x_rooms.nut",
+      "original_sha256": "d0b61840176ad11e59a744c0d865d161894a36f04c89ac76eb18fded7838fa1c",
+      "translated_sha256": "d0b61840176ad11e59a744c0d865d161894a36f04c89ac76eb18fded7838fa1c",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/dialog.nut",
+      "original_sha256": "1a50df9190c10e663462cd87b825d4caf545cb8e2b63c98f6ff9495a2fb55b41",
+      "translated_sha256": "1a50df9190c10e663462cd87b825d4caf545cb8e2b63c98f6ff9495a2fb55b41",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    },
+    {
+      "resource": "system/macro.nut",
+      "original_sha256": "3ee914dd61214c1dd7a60bfda5d529c89f240ec61c7ddcbb5620799a40f59dfe",
+      "translated_sha256": "3ee914dd61214c1dd7a60bfda5d529c89f240ec61c7ddcbb5620799a40f59dfe",
+      "gb18030_lines": [],
+      "remaining_lines_encoding": "CP932"
+    }
+  ],
+  "boot_control_code": [
+    {
+      "resource": "script/start.txt",
+      "original_sha256": "1725296b926e785dae8813ff1ef01cd7eb9e9b0c51ab804af9f3efc0992b719e",
+      "translated_sha256": "1725296b926e785dae8813ff1ef01cd7eb9e9b0c51ab804af9f3efc0992b719e",
+      "byte_identical": true
+    },
+    {
+      "resource": "script/title.txt",
+      "original_sha256": "8675f123a812ac496db420b4c0d088e6fbddeb2276ba0c0f6e09946a5ad4a798",
+      "translated_sha256": "8675f123a812ac496db420b4c0d088e6fbddeb2276ba0c0f6e09946a5ad4a798",
+      "byte_identical": true
+    },
+    {
+      "resource": "script/titlelogo.txt",
+      "original_sha256": "e1852aaf92999b967f1698e727d82579d485e97307600d0a54ec6e22a3d99591",
+      "translated_sha256": "e1852aaf92999b967f1698e727d82579d485e97307600d0a54ec6e22a3d99591",
+      "byte_identical": true
+    }
+  ],
+  "map_row_encoding": "CP932 resource/condition identifiers; not GB18030 display text",
+  "archive_entry_name_sets": "Each translated pack covers all original entries; runtime must still prohibit fallback for absent entries."
+}

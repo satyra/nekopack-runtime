@@ -185,9 +185,13 @@ fn run() -> Result<(), Box<dyn Error>> {
             };
             let files = args[file_start..]
                 .iter()
-                .map(File::open)
+                .map(|path| {
+                    let name = std::path::Path::new(path).file_name()
+                        .and_then(|name| name.to_str()).ok_or("invalid archive filename")?;
+                    Ok::<_, Box<dyn std::error::Error>>((name.to_owned(), File::open(path)?))
+                })
                 .collect::<Result<Vec<_>, _>>()?;
-            let store = nekopack_runtime::dat::DatGame::mount(files)?;
+            let store = nekopack_runtime::dat::DatGame::mount_named(files, false)?;
             let mut session = if command == "preview-title-story" {
                 let mut title = nekopack_runtime::title::TitleSession::open(store)?;
                 std::fs::create_dir_all(&args[1])?;
@@ -264,10 +268,11 @@ fn run() -> Result<(), Box<dyn Error>> {
                     .extension()
                     .is_some_and(|x| x.eq_ignore_ascii_case("dat"))
                 {
-                    files.push(std::fs::File::open(path)?);
+                    let name = path.file_name().and_then(|name| name.to_str()).ok_or("invalid archive filename")?.to_owned();
+                    files.push((name, std::fs::File::open(path)?));
                 }
             }
-            let mut store = nekopack_runtime::dat::DatGame::mount(files)?;
+            let mut store = nekopack_runtime::dat::DatGame::mount_named(files, false)?;
             nekopack_runtime::run_title(
                 &mut store,
                 args[2].to_str().ok_or("invalid choice")?.parse()?,

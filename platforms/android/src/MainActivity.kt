@@ -21,7 +21,7 @@ import java.io.File
 
 /** Validation shell only: all VM lifetime stays within one native call on its worker. */
 class MainActivity : Activity() {
-    private external fun story(descriptors:IntArray,operation:Int,sequence:Long,elapsedMillis:Long=0):ByteArray
+    private external fun story(descriptors:IntArray,operation:Int,sequence:Long,elapsedMillis:Long=0,archiveNames:ByteArray=byteArrayOf()):ByteArray
     private val routeReplay by lazy { intent.getBooleanExtra("route_replay",false) }
     private val timeline by lazy { SessionTimeline(if(routeReplay)8 else 1) }
     private val menuTimeline=SessionTimeline()
@@ -137,7 +137,11 @@ class MainActivity : Activity() {
         val uri=DocumentsContract.buildChildDocumentsUriUsingTree(tree,id)
         val projection=arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID,DocumentsContract.Document.COLUMN_DISPLAY_NAME)
         val result=mutableListOf<Pair<String, Uri>>()
-        val cursor=contentResolver.query(uri,projection,null,null,null) ?: error("provider returned no cursor")
+        val cursor=try {
+            contentResolver.query(uri,projection,null,null,null)
+        } catch(error:RuntimeException) {
+            throw IllegalStateException("无法读取游戏目录，请检查目录位置和授权",error)
+        } ?: error("目录提供程序没有返回读取结果")
         cursor.use { while(it.moveToNext()) result.add(it.getString(1) to DocumentsContract.buildDocumentUriUsingTree(tree,it.getString(0))) }
         return result
     }
@@ -374,7 +378,7 @@ class MainActivity : Activity() {
         }
         fun fail(error:Throwable) {
             storyClosing=true
-            File(root,"error.txt").writeText("${error.javaClass.name}: ${error.message}")
+            File(root,"error.txt").writeText(error.stackTraceToString())
             if(storyLoaded)story(intArrayOf(),3,0)
             runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.visibility=android.view.View.VISIBLE;text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
@@ -1236,9 +1240,11 @@ class MainActivity : Activity() {
                 }else null
                 var packet=try {
                     if(progressFile!=null)opened.add(ParcelFileDescriptor.open(progressFile,ParcelFileDescriptor.MODE_READ_ONLY))
-                    for((_,uri) in selected.filter{it.first.endsWith(".dat",true)&&!it.first.equals("unins000.dat",true)})opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
+                    val archives=selected.filter{it.first.endsWith(".dat",true)&&!it.first.equals("unins000.dat",true)}
+                    require(archives.isNotEmpty()){"游戏目录中没有可读取的 DAT，请检查目录位置和授权"}
+                    for((_,uri) in archives)opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
                     val cleared=titleFirst && getPreferences(MODE_PRIVATE).getBoolean(clearKey,false)
-                    story(opened.map{it.fd}.toIntArray(),if(titleFirst)17 else 0,if(cleared)1L else 0L,(if(progressFile!=null)1L else 0L) or (if(originalVersion)2L else 0L))
+                    story(opened.map{it.fd}.toIntArray(),if(titleFirst)17 else 0,if(cleared)1L else 0L,(if(progressFile!=null)1L else 0L) or (if(originalVersion)2L else 0L),archives.joinToString("\u0000"){it.first}.toByteArray(Charsets.UTF_8))
                 }finally{
                     opened.forEach{it.close()}
                     progressFile?.delete()

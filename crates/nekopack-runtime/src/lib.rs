@@ -4,6 +4,7 @@ mod dialogue;
 mod filter;
 pub mod flash;
 mod menu;
+mod message_adapter;
 mod motion;
 mod preferences;
 mod read_history;
@@ -125,7 +126,7 @@ fn bootstrap_continue(
                 }
                 match request {
                     Request::Speaker(_) | Request::Text(_) => {
-                        return Err("unexpected dialogue during title bootstrap".into())
+                        return Err("unexpected dialogue during title bootstrap".into());
                     }
                     Request::System(name) => {
                         let data = store.system(&name)?;
@@ -139,6 +140,12 @@ fn bootstrap_continue(
                             .map_err(|e| {
                                 format!("module {}: {e}", String::from_utf8_lossy(&name))
                             })?;
+                        if name.eq_ignore_ascii_case(b"message.nut") {
+                            system.eval(
+                                "message-voice-adapter",
+                                &message_adapter::voice_adapter(std::str::from_utf8(&data)?)?,
+                            )?;
+                        }
                         writeln!(output, "system\t{}", String::from_utf8_lossy(&name))?;
                         modules += 1;
                         machine.complete(None)?;
@@ -165,7 +172,16 @@ fn bootstrap_continue(
                             )?;
                             machine.complete(None)?;
                         } else {
-                            let invoke=format!("local f=com[{}]\nlocal result=f.call(getroottable(),{}{})\nreturn result==null ? \"null\" : result.tostring()",quote(&name)?,array(&args)?,if name==b"map" {format!(",{}",array(&rows)?)} else {String::new()});
+                            let invoke = format!(
+                                "local f=com[{}]\nlocal result=f.call(getroottable(),{}{})\nreturn result==null ? \"null\" : result.tostring()",
+                                quote(&name)?,
+                                array(&args)?,
+                                if name == b"map" {
+                                    format!(",{}", array(&rows)?)
+                                } else {
+                                    String::new()
+                                }
+                            );
                             system
                                 .eval_with_resources(
                                     "dispatch",

@@ -1,0 +1,256 @@
+{
+  "scope": "read-only PE headers/imports/disassembly; no scenario/image access",
+  "executable": "Tiny_BoS.exe",
+  "sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+  "mask_surface": {
+    "address": "0x648854",
+    "channels": 4,
+    "width": 1280,
+    "height": 720,
+    "allocation": "VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_READWRITE)"
+  },
+  "conclusion": "Failed mask loads leave the existing surface unchanged; before the first successful load it is the zero-initialized committed surface.",
+  "evidence_kind": "static control-flow and allocation evidence, not a live rendering observation",
+  "instruction_checks": [
+    {
+      "va": "0x491136",
+      "mnemonic": "mov",
+      "operands": "edx, dword ptr [0x64885c]"
+    },
+    {
+      "va": "0x49113c",
+      "mnemonic": "test",
+      "operands": "edx, edx"
+    },
+    {
+      "va": "0x49113e",
+      "mnemonic": "jne",
+      "operands": "0x491159"
+    },
+    {
+      "va": "0x491140",
+      "mnemonic": "push",
+      "operands": "0x2d0"
+    },
+    {
+      "va": "0x491145",
+      "mnemonic": "push",
+      "operands": "0x500"
+    },
+    {
+      "va": "0x49114a",
+      "mnemonic": "push",
+      "operands": "4"
+    },
+    {
+      "va": "0x49114c",
+      "mnemonic": "push",
+      "operands": "0x648854"
+    },
+    {
+      "va": "0x491151",
+      "mnemonic": "call",
+      "operands": "0x597f74"
+    },
+    {
+      "va": "0x597fe3",
+      "mnemonic": "imul",
+      "operands": "esi, ebx"
+    },
+    {
+      "va": "0x598004",
+      "mnemonic": "imul",
+      "operands": "ecx, dword ptr [ebx + 0x20]"
+    },
+    {
+      "va": "0x59800c",
+      "mnemonic": "call",
+      "operands": "0x583118"
+    },
+    {
+      "va": "0x58313b",
+      "mnemonic": "push",
+      "operands": "4"
+    },
+    {
+      "va": "0x58313d",
+      "mnemonic": "push",
+      "operands": "0x1000"
+    },
+    {
+      "va": "0x583142",
+      "mnemonic": "push",
+      "operands": "edi"
+    },
+    {
+      "va": "0x583143",
+      "mnemonic": "push",
+      "operands": "0"
+    },
+    {
+      "va": "0x583145",
+      "mnemonic": "call",
+      "operands": "0x639a10"
+    },
+    {
+      "va": "0x639a10",
+      "mnemonic": "jmp",
+      "operands": "dword ptr [0x6b838c]"
+    },
+    {
+      "va": "0x4911d6",
+      "mnemonic": "call",
+      "operands": "0x597e94"
+    },
+    {
+      "va": "0x597ebc",
+      "mnemonic": "xor",
+      "operands": "ecx, ecx"
+    },
+    {
+      "va": "0x597ec3",
+      "mnemonic": "mov",
+      "operands": "dword ptr [eax + 4], ecx"
+    },
+    {
+      "va": "0x4911e9",
+      "mnemonic": "push",
+      "operands": "0x648568"
+    },
+    {
+      "va": "0x4911f2",
+      "mnemonic": "call",
+      "operands": "0x4c00f4"
+    },
+    {
+      "va": "0x4c12e9",
+      "mnemonic": "call",
+      "operands": "0x4b1084"
+    },
+    {
+      "va": "0x4c12f1",
+      "mnemonic": "test",
+      "operands": "al, al"
+    },
+    {
+      "va": "0x4c12f3",
+      "mnemonic": "jne",
+      "operands": "0x4c13e3"
+    },
+    {
+      "va": "0x4c12f9",
+      "mnemonic": "xor",
+      "operands": "eax, eax"
+    },
+    {
+      "va": "0x4c12fb",
+      "mnemonic": "push",
+      "operands": "eax"
+    },
+    {
+      "va": "0x4c13d0",
+      "mnemonic": "pop",
+      "operands": "eax"
+    },
+    {
+      "va": "0x4c13de",
+      "mnemonic": "jmp",
+      "operands": "0x4c14ee"
+    },
+    {
+      "va": "0x4c13ea",
+      "mnemonic": "call",
+      "operands": "0x598c50"
+    },
+    {
+      "va": "0x4c14f4",
+      "mnemonic": "ret",
+      "operands": ""
+    },
+    {
+      "va": "0x4911f7",
+      "mnemonic": "add",
+      "operands": "esp, 0xc"
+    },
+    {
+      "va": "0x4911fa",
+      "mnemonic": "lea",
+      "operands": "eax, [ebp - 0xc]"
+    },
+    {
+      "va": "0x4911fd",
+      "mnemonic": "push",
+      "operands": "eax"
+    },
+    {
+      "va": "0x491202",
+      "mnemonic": "push",
+      "operands": "0x648854"
+    },
+    {
+      "va": "0x491207",
+      "mnemonic": "call",
+      "operands": "0x59a62c"
+    },
+    {
+      "va": "0x59a651",
+      "mnemonic": "call",
+      "operands": "0x59a8b8"
+    },
+    {
+      "va": "0x59a8e0",
+      "mnemonic": "call",
+      "operands": "0x59a398"
+    },
+    {
+      "va": "0x59a8e8",
+      "mnemonic": "test",
+      "operands": "eax, eax"
+    },
+    {
+      "va": "0x59a8ea",
+      "mnemonic": "je",
+      "operands": "0x59a954"
+    },
+    {
+      "va": "0x59a3c2",
+      "mnemonic": "call",
+      "operands": "0x59831c"
+    },
+    {
+      "va": "0x59a3c8",
+      "mnemonic": "cmp",
+      "operands": "eax, 4"
+    },
+    {
+      "va": "0x59a3cb",
+      "mnemonic": "je",
+      "operands": "0x59a3d4"
+    },
+    {
+      "va": "0x59a3cd",
+      "mnemonic": "xor",
+      "operands": "eax, eax"
+    },
+    {
+      "va": "0x59a3cf",
+      "mnemonic": "jmp",
+      "operands": "0x59a4f6"
+    },
+    {
+      "va": "0x598324",
+      "mnemonic": "mov",
+      "operands": "eax, dword ptr [ebx + 8]"
+    },
+    {
+      "va": "0x598331",
+      "mnemonic": "je",
+      "operands": "0x598357"
+    },
+    {
+      "va": "0x598357",
+      "mnemonic": "xor",
+      "operands": "eax, eax"
+    }
+  ]
+}

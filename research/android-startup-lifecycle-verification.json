@@ -1,0 +1,1876 @@
+{
+  "serial": "emulator-5572",
+  "rounds": 10,
+  "apk_sha256": "b9d41aa7699b10409bb552e404ede12fdbf92e32f1e35a96a2dbcc2d91e97cf6",
+  "installed_sha256_before": "b9d41aa7699b10409bb552e404ede12fdbf92e32f1e35a96a2dbcc2d91e97cf6",
+  "installed_sha256_after": "b9d41aa7699b10409bb552e404ede12fdbf92e32f1e35a96a2dbcc2d91e97cf6",
+  "status": "passed",
+  "audio_progress_coverage": {
+    "BLESS": 20,
+    "BIRTH": 20,
+    "BRAVE": 20,
+    "BLACK": 20,
+    "Endless Dungeon": 20
+  },
+  "procedure": "Each attempt: cold launch, complete first dialogue, advance completed pages to sustained bgm/env metadata, 2 resumes and 3 Home pauses; final pause verifies last resumed position.",
+  "raw_report": ".local\\android-probe\\startup-lifecycle-resumed.json",
+  "raw_sha256": "c1ec2eb59ef13c8836b63577ee3b1bc5df2b5a702c7d40981bf1882baecc02c4",
+  "cold_starts_passed": 50,
+  "resumes_passed": 100,
+  "pauses_verified": 150,
+  "application_failures": 0,
+  "history_conclusion": "Previous historical startup timeout not reproduced; its original cause remains unconfirmed due to absent original ActivityManager output.",
+  "games": {
+    "BLESS": {
+      "cold_starts": 10,
+      "resumes": 20,
+      "title_ready_ms_min": 5344,
+      "title_ready_ms_max": 7844
+    },
+    "BIRTH": {
+      "cold_starts": 10,
+      "resumes": 20,
+      "title_ready_ms_min": 5375,
+      "title_ready_ms_max": 8282
+    },
+    "BRAVE": {
+      "cold_starts": 10,
+      "resumes": 20,
+      "title_ready_ms_min": 2281,
+      "title_ready_ms_max": 8750
+    },
+    "BLACK": {
+      "cold_starts": 10,
+      "resumes": 20,
+      "title_ready_ms_min": 5468,
+      "title_ready_ms_max": 8156
+    },
+    "Endless Dungeon": {
+      "cold_starts": 10,
+      "resumes": 20,
+      "title_ready_ms_min": 4796,
+      "title_ready_ms_max": 7641
+    }
+  },
+  "attempts": [
+    {
+      "game": "BLESS",
+      "round": 1,
+      "run": "startup-life-5787c461d1-1-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 674\r\nWaitTime: 705\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1032,
+      "session_elapsed_ms": 1203,
+      "title_elapsed_ms": 6938,
+      "pid": "13337",
+      "instance": "a9a5e2d0-4e9c-4f7a-b1dc-ee5dffe77879",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        3
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 1,
+      "run": "startup-life-5787c461d1-1-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 647\r\nWaitTime: 655\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 968,
+      "session_elapsed_ms": 1156,
+      "title_elapsed_ms": 5406,
+      "pid": "15045",
+      "instance": "2dd31914-ea2c-4714-b3aa-9e53dd41071c",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        3
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 1,
+      "run": "startup-life-5787c461d1-1-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 746\r\nWaitTime: 756\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1078,
+      "session_elapsed_ms": 1313,
+      "title_elapsed_ms": 6250,
+      "pid": "16116",
+      "instance": "133f7084-da9c-484f-ac98-c4a5cffc1921",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        3
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 1,
+      "run": "startup-life-5787c461d1-1-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 665\r\nWaitTime: 673\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 984,
+      "session_elapsed_ms": 1218,
+      "title_elapsed_ms": 5468,
+      "pid": "16823",
+      "instance": "537c3afe-255e-4001-914b-4a4847a6826b",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        13,
+        8
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 1,
+      "run": "startup-life-5787c461d1-1-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 733\r\nWaitTime: 744\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1062,
+      "session_elapsed_ms": 1250,
+      "title_elapsed_ms": 4890,
+      "pid": "17507",
+      "instance": "f7d703b7-2883-4e67-a744-39f65f535621",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        3
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 2,
+      "run": "startup-life-5787c461d1-2-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 713\r\nWaitTime: 757\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1079,
+      "session_elapsed_ms": 1297,
+      "title_elapsed_ms": 5641,
+      "pid": "18177",
+      "instance": "7f0ede77-bb64-4c44-a26e-36ff02c37e27",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        10,
+        6
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 2,
+      "run": "startup-life-5787c461d1-2-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 697\r\nWaitTime: 704\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1032,
+      "session_elapsed_ms": 1250,
+      "title_elapsed_ms": 5391,
+      "pid": "19846",
+      "instance": "1d951114-d539-4f97-9ec7-074f0b92ef9f",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        9,
+        6
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 2,
+      "run": "startup-life-5787c461d1-2-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 745\r\nWaitTime: 784\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1093,
+      "session_elapsed_ms": 1296,
+      "title_elapsed_ms": 6187,
+      "pid": "20936",
+      "instance": "8449084c-bf55-4c1b-b251-e8a0422e70a3",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        10
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 2,
+      "run": "startup-life-5787c461d1-2-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 692\r\nWaitTime: 705\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1031,
+      "session_elapsed_ms": 1234,
+      "title_elapsed_ms": 5688,
+      "pid": "21643",
+      "instance": "7ac8972b-3f12-4b2b-b730-5352dfbe6676",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        2
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 2,
+      "run": "startup-life-5787c461d1-2-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 609\r\nWaitTime: 617\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 954,
+      "session_elapsed_ms": 1141,
+      "title_elapsed_ms": 4969,
+      "pid": "22327",
+      "instance": "69e2aa2e-97c6-4924-9470-12d02948e3b6",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        2
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 3,
+      "run": "startup-life-5787c461d1-3-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 781\r\nWaitTime: 790\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 3125,
+      "session_elapsed_ms": 3344,
+      "title_elapsed_ms": 7688,
+      "pid": "22995",
+      "instance": "848ad59a-c4a3-4256-abcd-eb715c7aa0b3",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        21,
+        3
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 3,
+      "run": "startup-life-5787c461d1-3-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 693\r\nWaitTime: 705\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1703,
+      "session_elapsed_ms": 1875,
+      "title_elapsed_ms": 6187,
+      "pid": "24679",
+      "instance": "414d0fe3-3f88-4a60-a76e-92d68dfa58dc",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        4
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 3,
+      "run": "startup-life-5787c461d1-3-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 804\r\nWaitTime: 818\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 2235,
+      "session_elapsed_ms": 2438,
+      "title_elapsed_ms": 7735,
+      "pid": "25759",
+      "instance": "eab956aa-ddb5-4ff8-87f4-0136c477d622",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        6
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 3,
+      "run": "startup-life-5787c461d1-3-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 668\r\nWaitTime: 680\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1859,
+      "session_elapsed_ms": 2031,
+      "title_elapsed_ms": 6812,
+      "pid": "26458",
+      "instance": "de27b7b5-289b-42d3-8dc9-9a86a4e44c7d",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        9
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 3,
+      "run": "startup-life-5787c461d1-3-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 755\r\nWaitTime: 762\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 3078,
+      "session_elapsed_ms": 3313,
+      "title_elapsed_ms": 6906,
+      "pid": "27142",
+      "instance": "bd1ea3d8-57d3-447e-9c05-9a558a42d89c",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        6,
+        3
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 4,
+      "run": "startup-life-5787c461d1-4-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 687\r\nWaitTime: 700\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1016,
+      "session_elapsed_ms": 1250,
+      "title_elapsed_ms": 5953,
+      "pid": "27801",
+      "instance": "b41a0a88-6b3f-4738-9bff-2ebe97029716",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        2
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 4,
+      "run": "startup-life-5787c461d1-4-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 753\r\nWaitTime: 765\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1110,
+      "session_elapsed_ms": 1313,
+      "title_elapsed_ms": 5953,
+      "pid": "29460",
+      "instance": "f71efdca-a5e2-4d45-905e-acfdaa4ef2d9",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        13,
+        12
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 4,
+      "run": "startup-life-5787c461d1-4-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 683\r\nWaitTime: 695\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1203,
+      "title_elapsed_ms": 6875,
+      "pid": "30544",
+      "instance": "144a800d-753d-43c8-931f-5e9d14c5f8ed",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        7,
+        3
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 4,
+      "run": "startup-life-5787c461d1-4-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 747\r\nWaitTime: 756\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1063,
+      "session_elapsed_ms": 1266,
+      "title_elapsed_ms": 5656,
+      "pid": "31259",
+      "instance": "9c561754-4fea-43ee-b9ec-657741fea054",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        3
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 4,
+      "run": "startup-life-5787c461d1-4-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 640\r\nWaitTime: 649\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 969,
+      "session_elapsed_ms": 1203,
+      "title_elapsed_ms": 4860,
+      "pid": "31943",
+      "instance": "d04b838c-4633-47f4-aa3a-15158c911447",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        7,
+        2
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 5,
+      "run": "startup-life-5787c461d1-5-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 723\r\nWaitTime: 733\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1078,
+      "session_elapsed_ms": 1313,
+      "title_elapsed_ms": 5719,
+      "pid": "32603",
+      "instance": "5b1978ec-07c6-4a16-b79b-94f9a651ab02",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        4
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 5,
+      "run": "startup-life-5787c461d1-5-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 692\r\nWaitTime: 703\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1047,
+      "session_elapsed_ms": 1266,
+      "title_elapsed_ms": 5657,
+      "pid": "2439",
+      "instance": "a7ef0709-1d13-43d9-a2d8-1c162da2988d",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        2,
+        3
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 5,
+      "run": "startup-life-5787c461d1-5-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 739\r\nWaitTime: 760\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1078,
+      "session_elapsed_ms": 1375,
+      "title_elapsed_ms": 6625,
+      "pid": "3604",
+      "instance": "50f7e8aa-060e-4107-aa6e-bdd5e8b3a3f3",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        4
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 5,
+      "run": "startup-life-5787c461d1-5-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 656\r\nWaitTime: 686\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1172,
+      "title_elapsed_ms": 5703,
+      "pid": "4305",
+      "instance": "8589b761-384a-4e75-9b21-0fc42ec21f08",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        3
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 5,
+      "run": "startup-life-5787c461d1-5-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 687\r\nWaitTime: 693\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1031,
+      "session_elapsed_ms": 1234,
+      "title_elapsed_ms": 5031,
+      "pid": "4976",
+      "instance": "c4d85f61-e256-49b5-8005-2f17a0f56333",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        2
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 6,
+      "run": "startup-life-5787c461d1-6-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 656\r\nWaitTime: 665\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 985,
+      "session_elapsed_ms": 1172,
+      "title_elapsed_ms": 5828,
+      "pid": "5643",
+      "instance": "ea404f2e-978d-44c0-a88d-c40b83a5ee43",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        5
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 6,
+      "run": "startup-life-5787c461d1-6-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 787\r\nWaitTime: 832\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1172,
+      "session_elapsed_ms": 1422,
+      "title_elapsed_ms": 5782,
+      "pid": "7287",
+      "instance": "5edabe56-3364-48d9-beb4-33fa32f3bc9b",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        8,
+        7
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 6,
+      "run": "startup-life-dc001fa901-6-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 719\r\nWaitTime: 733\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1047,
+      "session_elapsed_ms": 1250,
+      "title_elapsed_ms": 2281,
+      "pid": "8445",
+      "instance": "87cd0dd8-839f-401f-b0cb-ca276451659d",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        6,
+        3
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 6,
+      "run": "startup-life-dc001fa901-6-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 669\r\nWaitTime: 680\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1172,
+      "title_elapsed_ms": 8156,
+      "pid": "9027",
+      "instance": "14efff4b-e425-4549-832f-103466522a26",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        4
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 6,
+      "run": "startup-life-dc001fa901-6-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 913\r\nWaitTime: 919\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1235,
+      "session_elapsed_ms": 1485,
+      "title_elapsed_ms": 7641,
+      "pid": "9823",
+      "instance": "b3a015af-f4fe-4462-a8db-a8b4e62abc64",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        7,
+        2
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 7,
+      "run": "startup-life-dc001fa901-7-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 695\r\nWaitTime: 704\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1031,
+      "session_elapsed_ms": 1234,
+      "title_elapsed_ms": 7844,
+      "pid": "10527",
+      "instance": "42da2df5-655f-41a2-a90c-3a1718f8b671",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        4
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 7,
+      "run": "startup-life-dc001fa901-7-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 803\r\nWaitTime: 814\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1157,
+      "session_elapsed_ms": 1360,
+      "title_elapsed_ms": 8282,
+      "pid": "12281",
+      "instance": "8f2712e8-001e-444a-bbc0-34559e8be1b2",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        9
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 7,
+      "run": "startup-life-dc001fa901-7-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 657\r\nWaitTime: 667\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1187,
+      "title_elapsed_ms": 8750,
+      "pid": "13457",
+      "instance": "9bb04ae5-999b-43e2-b77c-2878d4ec7e18",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        13,
+        4
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 7,
+      "run": "startup-life-dc001fa901-7-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 643\r\nWaitTime: 650\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 953,
+      "session_elapsed_ms": 1141,
+      "title_elapsed_ms": 5625,
+      "pid": "14284",
+      "instance": "f074b4b7-d5dd-4531-9e1d-7abadb13dc1d",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        7,
+        6
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 7,
+      "run": "startup-life-dc001fa901-7-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 673\r\nWaitTime: 682\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1187,
+      "title_elapsed_ms": 4796,
+      "pid": "15002",
+      "instance": "e3a91e58-5f21-48c4-b74c-cc418cd52210",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        8
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 8,
+      "run": "startup-life-dc001fa901-8-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 649\r\nWaitTime: 659\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 969,
+      "session_elapsed_ms": 1219,
+      "title_elapsed_ms": 5344,
+      "pid": "15678",
+      "instance": "d77824f0-faed-4740-8249-12cc92c956e5",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        9,
+        4
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 8,
+      "run": "startup-life-dc001fa901-8-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 716\r\nWaitTime: 744\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1063,
+      "session_elapsed_ms": 1297,
+      "title_elapsed_ms": 5500,
+      "pid": "17352",
+      "instance": "25ffe504-fd3f-4de9-b2bb-fd049aacffdf",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        10,
+        4
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 8,
+      "run": "startup-life-dc001fa901-8-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 629\r\nWaitTime: 641\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 953,
+      "session_elapsed_ms": 1156,
+      "title_elapsed_ms": 6516,
+      "pid": "18445",
+      "instance": "e4df34be-6b1f-4c4e-a5a4-2825782c0b54",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        7,
+        19
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 8,
+      "run": "startup-life-dc001fa901-8-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 659\r\nWaitTime: 672\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 984,
+      "session_elapsed_ms": 1188,
+      "title_elapsed_ms": 5609,
+      "pid": "19186",
+      "instance": "14a0c864-8369-40a9-8674-a71eda789d29",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        13
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 8,
+      "run": "startup-life-dc001fa901-8-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 728\r\nWaitTime: 737\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1062,
+      "session_elapsed_ms": 1250,
+      "title_elapsed_ms": 5031,
+      "pid": "19878",
+      "instance": "70c01c92-e323-45d8-aff3-51dea62ac7a2",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        2
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 9,
+      "run": "startup-life-dc001fa901-9-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 658\r\nWaitTime: 667\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 984,
+      "session_elapsed_ms": 1219,
+      "title_elapsed_ms": 5375,
+      "pid": "20562",
+      "instance": "d4a4bf48-0e16-4434-8190-701a525f2f1d",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        4
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 9,
+      "run": "startup-life-dc001fa901-9-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 691\r\nWaitTime: 699\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1016,
+      "session_elapsed_ms": 1203,
+      "title_elapsed_ms": 5437,
+      "pid": "22247",
+      "instance": "8d383a45-9dd1-4e13-9c4d-d1c8ecb1d4e7",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        6,
+        20
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 9,
+      "run": "startup-life-dc001fa901-9-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 685\r\nWaitTime: 695\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1031,
+      "session_elapsed_ms": 1219,
+      "title_elapsed_ms": 6609,
+      "pid": "23323",
+      "instance": "45d29317-eb47-406d-8a88-377b37f94928",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        4
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 9,
+      "run": "startup-life-dc001fa901-9-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 796\r\nWaitTime: 832\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1156,
+      "session_elapsed_ms": 1343,
+      "title_elapsed_ms": 6078,
+      "pid": "24054",
+      "instance": "1d37a07c-840d-4e65-8507-b561b9c572b7",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        5
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 9,
+      "run": "startup-life-dc001fa901-9-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 662\r\nWaitTime: 678\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 984,
+      "session_elapsed_ms": 1156,
+      "title_elapsed_ms": 4984,
+      "pid": "24763",
+      "instance": "15282881-bea8-441d-8b5d-2b26cccd8c78",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        6,
+        9
+      ]
+    },
+    {
+      "game": "BLESS",
+      "round": 10,
+      "run": "startup-life-dc001fa901-10-bless",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 738\r\nWaitTime: 746\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1063,
+      "session_elapsed_ms": 1313,
+      "title_elapsed_ms": 5672,
+      "pid": "25454",
+      "instance": "8b9e9dc8-01b9-4ecd-8563-28bf776e0ca9",
+      "page": {
+        "sequence": 13,
+        "source": "012401",
+        "line": 11
+      },
+      "audio_observation_channels": {
+        "bgm": 4
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        4
+      ]
+    },
+    {
+      "game": "BIRTH",
+      "round": 10,
+      "run": "startup-life-dc001fa901-10-birth",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 652\r\nWaitTime: 663\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1187,
+      "title_elapsed_ms": 5375,
+      "pid": "27148",
+      "instance": "d0de10e7-5676-48fc-927c-8a0f6d10bf70",
+      "page": {
+        "sequence": 6,
+        "source": "012401",
+        "line": 38
+      },
+      "audio_observation_channels": {
+        "bgm": 5
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        7
+      ]
+    },
+    {
+      "game": "BRAVE",
+      "round": 10,
+      "run": "startup-life-dc001fa901-10-brave",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 661\r\nWaitTime: 669\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 984,
+      "session_elapsed_ms": 1172,
+      "title_elapsed_ms": 6406,
+      "pid": "28255",
+      "instance": "85ae3ec2-5899-49ef-ad6e-935e6555d0b7",
+      "page": {
+        "sequence": 1,
+        "source": "010901",
+        "line": 10
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        3,
+        3
+      ]
+    },
+    {
+      "game": "BLACK",
+      "round": 10,
+      "run": "startup-life-dc001fa901-10-black",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 645\r\nWaitTime: 657\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 969,
+      "session_elapsed_ms": 1156,
+      "title_elapsed_ms": 5610,
+      "pid": "28997",
+      "instance": "c477e732-5a19-4b47-8076-94cd217ff176",
+      "page": {
+        "sequence": 1,
+        "source": "P01",
+        "line": 14
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        4,
+        2
+      ]
+    },
+    {
+      "game": "Endless Dungeon",
+      "round": 10,
+      "run": "startup-life-dc001fa901-10-endless-dungeon",
+      "status": "passed",
+      "launch": {
+        "exitcode": 0,
+        "stdout": "Stopping: org.nekopack.probe\r\nStarting: Intent { cmp=org.nekopack.probe/.MainActivity (has extras) }\r\nStatus: ok\r\nActivity: org.nekopack.probe/.MainActivity\r\nTotalTime: 666\r\nWaitTime: 677\r\nComplete\r\n",
+        "stderr": ""
+      },
+      "am_elapsed_ms": 1000,
+      "session_elapsed_ms": 1219,
+      "title_elapsed_ms": 4922,
+      "pid": "29705",
+      "instance": "ccfd6ef3-7542-4362-91c8-f9323ae2af33",
+      "page": {
+        "sequence": 1,
+        "source": "010100",
+        "line": 8
+      },
+      "audio_observation_channels": {
+        "bgm": 1
+      },
+      "resume_progress": [
+        [
+          "bgm"
+        ],
+        [
+          "bgm"
+        ]
+      ],
+      "active_clock_background_delta_ms": [
+        5,
+        4
+      ]
+    }
+  ],
+  "test_harness_issues": [
+    {
+      "stage": "smoke1",
+      "issue": "exec-out sh reading stdin remained waiting for EOF",
+      "fix": "Pass script directly as sh -c argument",
+      "application_failed": false
+    },
+    {
+      "stage": "formal after 27 completed starts",
+      "issue": "Windows atomic JSON replacement failed with WinError 5 while report reader held file",
+      "fix": "Write report in place, monitor log; explicit resume preserves completed attempts and interruption evidence",
+      "source_report": ".local/android-probe/startup-lifecycle-report-interrupted.json",
+      "application_title_ready": true,
+      "application_error_present": false,
+      "application_pid": "8361",
+      "local_shared_handle_reproduction_winerror": 5
+    }
+  ],
+  "environment_interruption": "Before original KA deployment, emulator processes exited and ADB had no devices; restored original LDPlayer9 index9 and verified original data/APK. Not counted as application startup failure."
+}

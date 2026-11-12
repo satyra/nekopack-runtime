@@ -1,0 +1,143 @@
+{
+  "scope": "read-only PE imports/disassembly; no scenario/image access",
+  "executable": "Tiny_BoS.exe",
+  "sha256": "a36a6cac08b073c25f2d8e9a7be8cc21b618c43b2485ae18a5af35e36d3cb241",
+  "conclusion": "Missing background/image load skips replacement and logs an error, retaining the previous image; no filename-prefix repair occurs in this failure path.",
+  "evidence_kind": "static control-flow evidence, not a live rendering observation",
+  "instruction_checks": [
+    {
+      "va": "0x45eec2",
+      "mnemonic": "push",
+      "operands": "0x6456b5"
+    },
+    {
+      "va": "0x46d734",
+      "mnemonic": "lea",
+      "operands": "eax, [ebx + 0x30]"
+    },
+    {
+      "va": "0x46d738",
+      "mnemonic": "call",
+      "operands": "0x4c14f8"
+    },
+    {
+      "va": "0x46d740",
+      "mnemonic": "test",
+      "operands": "al, al"
+    },
+    {
+      "va": "0x46d742",
+      "mnemonic": "jne",
+      "operands": "0x46d776"
+    },
+    {
+      "va": "0x46d769",
+      "mnemonic": "push",
+      "operands": "0x64574b"
+    },
+    {
+      "va": "0x46d76e",
+      "mnemonic": "call",
+      "operands": "0x58065c"
+    },
+    {
+      "va": "0x46d773",
+      "mnemonic": "add",
+      "operands": "esp, 0xc"
+    },
+    {
+      "va": "0x46d776",
+      "mnemonic": "mov",
+      "operands": "al, byte ptr [ebx + 0x2c]"
+    },
+    {
+      "va": "0x4c4248",
+      "mnemonic": "call",
+      "operands": "0x4b1084"
+    },
+    {
+      "va": "0x4c4250",
+      "mnemonic": "test",
+      "operands": "al, al"
+    },
+    {
+      "va": "0x4c4252",
+      "mnemonic": "je",
+      "operands": "0x4c42f5"
+    },
+    {
+      "va": "0x4c42b4",
+      "mnemonic": "call",
+      "operands": "0x598ee8"
+    },
+    {
+      "va": "0x4c42c3",
+      "mnemonic": "push",
+      "operands": "dword ptr [ebp + 8]"
+    },
+    {
+      "va": "0x4c42c6",
+      "mnemonic": "call",
+      "operands": "0x4bec34"
+    },
+    {
+      "va": "0x4c42e4",
+      "mnemonic": "call",
+      "operands": "0x597ef0"
+    },
+    {
+      "va": "0x4c42f5",
+      "mnemonic": "dec",
+      "operands": "dword ptr [ebp - 0x1a8]"
+    },
+    {
+      "va": "0x4bec3e",
+      "mnemonic": "mov",
+      "operands": "ebx, dword ptr [ebp + 8]"
+    },
+    {
+      "va": "0x4becb0",
+      "mnemonic": "push",
+      "operands": "ebx"
+    },
+    {
+      "va": "0x4becb1",
+      "mnemonic": "call",
+      "operands": "0x5982d8"
+    },
+    {
+      "va": "0x580678",
+      "mnemonic": "call",
+      "operands": "0x5f24b4"
+    },
+    {
+      "va": "0x580687",
+      "mnemonic": "call",
+      "operands": "0x580470"
+    },
+    {
+      "va": "0x580690",
+      "mnemonic": "ret",
+      "operands": ""
+    },
+    {
+      "va": "0x580479",
+      "mnemonic": "call",
+      "operands": "0x63996e"
+    },
+    {
+      "va": "0x580483",
+      "mnemonic": "call",
+      "operands": "0x6399a4"
+    },
+    {
+      "va": "0x5804f4",
+      "mnemonic": "ret",
+      "operands": ""
+    }
+  ],
+  "imported_helpers": {
+    "0x63996e": "IsDebuggerPresent",
+    "0x6399a4": "OutputDebugStringA"
+  }
+}

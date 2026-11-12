@@ -1,0 +1,186 @@
+{
+  "scope": "Android 9 emulator metadata-only startup diagnostic; no story text or image inspection",
+  "date": "2026-11-12",
+  "original_failure": {
+    "run": "original-config-birth-eff3ee24-restore",
+    "run_id_length": 38,
+    "run_id_max_length": 64,
+    "matching_current_device_run_directories": [
+      "original-config-birth-eff3ee24-before",
+      "original-config-birth-eff3ee24-restart"
+    ],
+    "launch_stdout_available": false,
+    "conclusion": "Historical cause is not recoverable from available evidence. The test discarded am start stdout. Before/restart directories remain, but the exact restore directory is absent. No confirmed production lifecycle defect."
+  },
+  "command_semantics": {
+    "force_stop": "am start -S force-stops the target package before starting the Activity; this does not exercise graceful onDestroy cleanup",
+    "wait": "-W waits for ActivityManager launch completion; title rendering is checked independently"
+  },
+  "attempts": [
+    {
+      "index": 1,
+      "game": "BLESS",
+      "run": "startup-diag-056fe4c477",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1078,
+      "session_created_ms": 1203,
+      "title_presented_ms": 7484,
+      "process_present": true
+    },
+    {
+      "index": 2,
+      "game": "BIRTH",
+      "run": "startup-diag-ad8538712b",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1016,
+      "session_created_ms": 1157,
+      "title_presented_ms": 2688,
+      "process_present": true
+    },
+    {
+      "index": 3,
+      "game": "BLESS",
+      "run": "startup-diag-7f728576ee",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1016,
+      "session_created_ms": 1141,
+      "title_presented_ms": 2844,
+      "process_present": true
+    },
+    {
+      "index": 4,
+      "game": "BIRTH",
+      "run": "startup-diag-89a5a04eeb",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 984,
+      "session_created_ms": 1094,
+      "title_presented_ms": 2625,
+      "process_present": true
+    },
+    {
+      "index": 5,
+      "game": "BLESS",
+      "run": "startup-diag-b223285b4b",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1015,
+      "session_created_ms": 1140,
+      "title_presented_ms": 2625,
+      "process_present": true
+    },
+    {
+      "index": 6,
+      "game": "BIRTH",
+      "run": "startup-diag-1e09a5dbd4",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1062,
+      "session_created_ms": 1203,
+      "title_presented_ms": 2703,
+      "process_present": true
+    },
+    {
+      "index": 7,
+      "game": "BLESS",
+      "run": "startup-diag-dde10b30d5",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 968,
+      "session_created_ms": 1093,
+      "title_presented_ms": 2640,
+      "process_present": true
+    },
+    {
+      "index": 8,
+      "game": "BIRTH",
+      "run": "startup-diag-c79c022317",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1000,
+      "session_created_ms": 1109,
+      "title_presented_ms": 2625,
+      "process_present": true
+    },
+    {
+      "index": 9,
+      "game": "BLESS",
+      "run": "startup-diag-4ff48871c4",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 969,
+      "session_created_ms": 1094,
+      "title_presented_ms": 2828,
+      "process_present": true
+    },
+    {
+      "index": 10,
+      "game": "BIRTH",
+      "run": "startup-diag-3dc33e3314",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 984,
+      "session_created_ms": 1140,
+      "title_presented_ms": 2609,
+      "process_present": true
+    },
+    {
+      "index": 11,
+      "game": "BLESS",
+      "run": "startup-diag-09ce8d5a53",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 969,
+      "session_created_ms": 1109,
+      "title_presented_ms": 2594,
+      "process_present": true
+    },
+    {
+      "index": 12,
+      "game": "BIRTH",
+      "run": "startup-diag-38139a350d",
+      "am_exitcode": 0,
+      "am_status_ok": true,
+      "am_stderr_empty": true,
+      "launch_ms": 1031,
+      "session_created_ms": 1156,
+      "title_presented_ms": 2671,
+      "process_present": true
+    }
+  ],
+  "config_restart_reproduction": {
+    "game": "BIRTH",
+    "before_restart_finally_restore": true,
+    "exitcode": 0,
+    "observed": [
+      "Bold 1",
+      "process restart retained Bold",
+      "finally restored Bold 0"
+    ]
+  },
+  "fix": {
+    "files": [
+      "platforms/android/verify_menu_sounds.py"
+    ],
+    "behavior": "Check ActivityManager success, retain stdout/stderr/exitcode and fail immediately when process exits before title. No retries or fixed delays added.",
+    "production_lifecycle_changed": false
+  },
+  "limits": [
+    "Successful reruns do not establish the cause of the historical timeout.",
+    "Current directory absence does not prove the historical Activity never started; intervening cleanup is possible."
+  ]
+}
