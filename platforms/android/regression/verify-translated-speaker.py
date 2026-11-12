@@ -64,14 +64,16 @@ def main():
     parser.add_argument('--phase', choices=('render', 'all'), default='render',
                         help='render stops after the real non-CP932 name; all also saves, reloads and toggles Bold')
     parser.add_argument('--serial', required=True)
+    parser.add_argument('--remote-directory', help='ADB path of the selected game directory')
+    parser.add_argument('--document', help='SAF document ID of the same game directory')
     parser.add_argument('--adb', default='D:/codex/tools/android/sdk/platform-tools/adb.exe')
     parser.add_argument('--patch-root', type=Path, default=Path('D:/codex/td-port-workspace/research/pc-patch'))
     parser.add_argument('--endless-root', type=Path, default=Path('D:/codex/td-port-workspace/游戏/Endless Dungeon/Endless Dungeon'))
     args = parser.parse_args()
     assert args.max_pages > 0
     suffix, code = GAMES[args.game]
-    remote = '/sdcard/Download/NekoPack-BLESS' + ('/' + suffix if suffix else '')
-    document = 'raw:/storage/emulated/0/Download/NekoPack-BLESS' + ('/' + suffix if suffix else '')
+    remote = args.remote_directory or '/sdcard/Download/NekoPack-BLESS' + ('/' + suffix if suffix else '')
+    document = args.document or 'raw:/storage/emulated/0/Download/NekoPack-BLESS' + ('/' + suffix if suffix else '')
     patches = (sorted((args.patch_root / code).glob('*.dat')) if code else
                [args.endless_root / name for name in ('script_chs.dat', 'system_chs.dat')])
     assert patches and all(path.is_file() for path in patches), 'missing local patch inputs'
@@ -175,9 +177,8 @@ def main():
             except UnicodeEncodeError:
                 target = page
                 break
-            size = p.adb('shell', 'wm', 'size').decode().splitlines()[-1]
-            width, height = map(int, re.search(r'(\d+)x(\d+)', size).groups())
-            p.tap(width//2, round(height*.4))
+            layout = p.obj('layout.json')
+            p.tap(layout['stage_width']//2, round(layout['stage_height']*.4))
         assert target is not None, f'no non-CP932 speaker within {args.max_pages} pages'
         print(json.dumps(dict(stage='rendered', game=args.game, page=number, **target), ensure_ascii=True), flush=True)
         if args.phase == 'render':

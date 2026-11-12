@@ -67,3 +67,5 @@ python platforms/android/regression/verify-translated-speaker.py --serial emulat
 ```
 
 `--game` 支持 BLESS、BIRTH、BRAVE、BLACK、ENDLESS，补丁位置可用 `--patch-root` 和 `--endless-root` 指定。本项已在新姓名修复 APK `9f784ea0063783643be6386a890bfb863e2eca5aba42b82af357637d13723a7c` 上完成五款测试，详见 `research/translated-speaker-render-verification.json`；顶部历史语音矩阵的固定 APK 不因此更改。
+
+真机目录可通过 `--remote-directory`（ADB 文件路径）和 `--document`（同一目录的 SAF document ID）指定，仍使用应用已有目录授权。PGKM10／Android 15 的 BLACK 汉化新游戏、存档重启和样式重绘已通过，见 `research/translated-speaker-black-phone-verification.json`。

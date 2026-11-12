@@ -1,0 +1,31 @@
+{
+  "device_model": "PGKM10",
+  "android": "15",
+  "apk_sha256": "9f784ea0063783643be6386a890bfb863e2eca5aba42b82af357637d13723a7c",
+  "game": "BLACK / Tiny Dungeon Black and White Wings",
+  "version": "Chinese patch202.dat",
+  "entry": "new game",
+  "directory": "primary:Documents/NekoPackValidation/3",
+  "result": {
+    "result": "PASS",
+    "game": "BLACK",
+    "restarted": true,
+    "bold_restored": true,
+    "speaker": "红",
+    "source": "P01",
+    "line": 102
+  },
+  "rendered_page": 21,
+  "test_save_namespace": "isolated probe; existing save slots not written",
+  "temporary_patch_removed": true,
+  "original_archive_files": [
+    "image.dat",
+    "op.mpg",
+    "script.dat",
+    "sound.dat",
+    "system.dat",
+    "voice1.dat"
+  ],
+  "log_sha256": "1fd54c8d02772312442d1786a4c8a006b05834f40f51850723aac10d429c8bd6",
+  "scope": "Real device: actual non-CP932 speaker page, save/process restart/load, Bold redraw and restore. No game images or narrative body inspected."
+}

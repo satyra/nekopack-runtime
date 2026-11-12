@@ -97,3 +97,5 @@ BIRTH 原版 `system.dat` 的 `script/EP02.txt` 中有 21 条连续 KA speaker �
 新增 `platforms/android/regression/verify-translated-speaker.py`：实际添加汉化档、从标题推进到非 CP932 姓名页，验证绘制完成、存档、强停重启读取、Bold 切换重绘与恢复；五款全部通过。脚本在设备端过滤正文和 UI 无关字段，只读取姓名与页坐标；只清除本次新增补丁，测试存档使用隔离命名。最初恢复设置时遇到旧 presentation JSON 残留，已改为等待实际设置控件出现再读状态，未修改运行时来迁就测试。
 
 结果见 `research/translated-speaker-render-verification.json`。原版回归在这一个新 APK 上完成五款各 1 次冷启动、2 次后台恢复；旧版的 86／172 语音矩阵和 50／100 稳定性记录仍属于旧版，不冒充本次全量重跑。新 APK 经当前源码再次构建，17 个包内文件与已测修复 APK 完全一致、签名证书一致，详见 `research/android-translated-speaker-apk-source-verification.json`。
+
+用户随后确认问题出在第一部《黑白羽翼》（BLACK）中文版的新游戏，已在其连接的 PGKM10 真机（Android 15）覆盖安装同一 `9f784ea0…13723a7c` APK 实测。通过原 `system.dat` 哈希确认手机 `Documents/NekoPackValidation/3` 为 BLACK，临时加入对应 `patch202.dat` 后从标题新游戏推进至第 21 页 `P01:102`，实际汉化姓名正常渲染；存档、强停重启读取、Bold 修改重绘及恢复全部通过。使用隔离测试存档命名，未写入既有存档槽，结束移除本次临时补丁并再次核对已安装 APK 哈希。记录见 `research/translated-speaker-black-phone-verification.json`。设备脚本新增目录／SAF document 参数，推进点击使用实际横屏 stage 尺寸，避免真机 `wm size` 的竖屏物理尺寸误导。
