@@ -1,5 +1,11 @@
 # NekoPack 连续实机画面展示片
 
+## 可选轻快配乐版
+
+用户选定的轻快版使用 Kevin MacLeod 的《Carefree》（尤克里里、吉他与打击乐），官方曲目页标明 CC BY 4.0：<https://www.incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037>。将官方 MP3 保存到 `.local/promo-v2/music/Carefree.mp3` 后运行 `python tools/promo/replace_showcase_music.py`。输出独立的 `nekopack-showcase-carefree.mp4`，视频流保持不变，音乐截取到片长、调整响度并淡入淡出。原始合成音乐版仍保留。
+
+发布轻快版时，把生成的 `.local/promo-v2/music/CREDITS.txt` 署名、来源链接、CC BY 4.0 链接和修改说明加入视频简介；此音乐不适用项目源码 GPL 许可。脚本会验证完整解码和视频流哈希，并生成独立交付记录。
+
 本工具读取真实 APK 录屏，使用 FFmpeg 合成 1920×1080、30 fps 的展示片。浅米白背景、墨紫字体、Android 横屏设备轮廓与连续录屏为主；不含系统 TTS、示意游戏画面、借用的参考视频或配乐。片头与片尾共 8 秒，相邻镜头各有 0.5 秒淡化衔接。配乐由 NumPy 合成原创轻柔 ambient，含淡入淡出，最终 AAC 自动检查削波。
 
 ## 素材与配置
