@@ -38,3 +38,4 @@ Component inventory:
 - Gradle distribution 8.7: Apache-2.0 and distribution third-party terms (see original LICENSE)
 - Squirrel 2.2.5 stable (modified subset): Original zlib-style terms in COPYRIGHT
 - pl_mpeg c871f2be022ece7ef4f64230b4fb8e1fb9eb6023: MIT
+- FFmpeg 8.0.1: LGPL-2.1-or-later

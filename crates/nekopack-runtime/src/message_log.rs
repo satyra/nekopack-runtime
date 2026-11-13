@@ -1,8 +1,9 @@
 //! Observed BLESS ViewLog: four entries, one-entry scrolling, optional voice replay.
 use crate::{
+    GameResources,
     dat::DatGame,
     quote,
-    text_render::{draw_log_text, SharedFont},
+    text_render::{SharedFont, draw_log_text},
     title::{contains, update_pointer},
 };
 use nekopack_image::{Mng, RgbaImage};
@@ -247,7 +248,7 @@ impl LogUi {
 }
 pub(crate) enum Audio<'a> {
     Voice(&'a str),
-    Star,
+    Save(u32),
     Page,
     Click,
 }
@@ -256,14 +257,55 @@ pub(crate) fn audio<R: Read + Seek>(
     system: &mut SystemVm,
     audio: Audio<'_>,
 ) -> Result<Vec<u8>> {
+    let save_sound;
     let (kind, folder, name, volume) = match audio {
-        Audio::Voice(name) => ("voice", "voice", name, "VolVO"),
-        Audio::Star => ("system", "sound/se", "se_STAR", "VolSYS"),
+        Audio::Voice(name) => {
+            if !store.has_resource("voice", &format!("{name}.ogg"))? {
+                return Ok(format!("{{\"audio_unavailable\":true,\"name\":{}}}\n", quote(name.as_bytes())?).into_bytes());
+            }
+            ("voice", "voice", name, "VolVO")
+        }
+        Audio::Save(action) => {
+            let source = String::from_utf8(store.system(b"saveload.nut")?)?;
+            save_sound = format!("se_{}", save_sound_event(&source, action)?);
+            ("system", "sound/se", save_sound.as_str(), "VolSYS")
+        }
         Audio::Page => ("system", "sound/se", "se_PAGE", "VolSYS"),
         Audio::Click => ("system", "sound/se", "se_CLICK", "VolSYS"),
     };
     let percent = audio_volume(system, volume)?;
     audio_packet(store, kind, folder, name, percent)
+}
+// Use the mounted game's literal event for the requested save/load function.
+// Sorakoi uses OK, while the five observed Dungeon profiles use STAR.
+fn save_sound_event(source: &str, action: u32) -> Result<&str> {
+    let function = match action {
+        0 => "QuickSave",
+        1 => "QuickLoad",
+        2 => "NormalSave",
+        3 => "NormalLoad",
+        _ => return Err("unknown save/load sound action".into()),
+    };
+    let signature = format!("function {function}(");
+    let body = source
+        .split_once(&signature)
+        .ok_or_else(|| format!("missing save/load function {function}"))?
+        .1
+        .split("\nfunction ")
+        .next()
+        .unwrap();
+    let sound = body
+        .split_once("sound(\"")
+        .and_then(|(_, tail)| tail.split_once("\")").map(|(name, _)| name))
+        .ok_or_else(|| format!("missing literal save/load sound in {function}"))?;
+    if sound.is_empty()
+        || !sound
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_')
+    {
+        return Err("invalid save/load sound event".into());
+    }
+    Ok(sound)
 }
 fn audio_packet<R: Read + Seek>(
     store: &mut DatGame<R>,
@@ -282,12 +324,7 @@ fn audio_packet<R: Read + Seek>(
 }
 
 pub(crate) fn audio_volume(system: &mut SystemVm, field: &str) -> Result<u32> {
-    system.eval("ui-audio-volume", &format!("if(typeof Config.{field} != \"integer\")throw \"invalid UI audio configuration type\"\nreturn Config.{field}.tostring()"))?;
-    let percent = system.result().trim().parse::<u32>()?;
-    if percent > 100 {
-        return Err("invalid UI audio volume".into());
-    }
-    Ok(percent)
+    crate::audio_config::category(system, field)
 }
 
 pub(crate) type Cue = (u8, i32);
@@ -362,9 +399,78 @@ pub(crate) fn ui_sound_name(id: u64) -> Result<&'static str> {
 mod tests {
     use super::*;
     #[test]
+    fn save_audio_follows_each_original_script_contract() {
+        let source = ["QuickSave", "QuickLoad", "NormalSave", "NormalLoad"]
+            .into_iter()
+            .zip(["STAR", "OK", "SAVE", "LOAD"])
+            .map(|(function, event)| format!("function {function}(){{ sound(\"{event}\"); }}"))
+            .collect::<Vec<_>>()
+            .join("\n");
+        for (action, event) in ["STAR", "OK", "SAVE", "LOAD"].into_iter().enumerate() {
+            assert_eq!(save_sound_event(&source, action as u32).unwrap(), event);
+        }
+        assert!(save_sound_event(&source, 4).is_err());
+        assert!(save_sound_event("function QuickSave(){}", 0).is_err());
+        assert!(save_sound_event("function QuickSave(){ sound(\"../bad\"); }", 0).is_err());
+    }
+    #[test]
+    #[ignore = "requires NEKO_SAVE_SOUND_GAME_DIRS with the five Dungeon games and Sorakoi"]
+    fn save_audio_reads_six_original_game_resources() {
+        use std::{fs::File, io::Read};
+        let directories = std::env::var_os("NEKO_SAVE_SOUND_GAME_DIRS").unwrap();
+        let mut observed = Vec::new();
+        for directory in std::env::split_paths(&directories) {
+            let mut paths = std::fs::read_dir(directory)
+                .unwrap()
+                .map(|entry| entry.unwrap().path())
+                .filter(|path| {
+                    path.extension()
+                        .is_some_and(|ext| ext.eq_ignore_ascii_case("dat"))
+                })
+                .filter(|path| {
+                    let mut magic = [0; 8];
+                    File::open(path).unwrap().read_exact(&mut magic).unwrap();
+                    &magic == b"NEKOPACK"
+                })
+                .collect::<Vec<_>>();
+            paths.sort();
+            let mut store = DatGame::mount_named(
+                paths.iter().map(|path| {
+                    (
+                        path.file_name().unwrap().to_str().unwrap().to_owned(),
+                        File::open(path).unwrap(),
+                    )
+                }),
+                true,
+            )
+            .unwrap();
+            let source = String::from_utf8(store.system(b"saveload.nut").unwrap()).unwrap();
+            let event = save_sound_event(&source, 0).unwrap().to_owned();
+            let mut vm = SystemVm::new();
+            vm.eval("config", "Config <- {VolSYS=17}").unwrap();
+            for action in 0..4 {
+                let expected_event = save_sound_event(&source, action).unwrap();
+                assert_eq!(expected_event, event);
+                let packet = audio(&mut store, &mut vm, Audio::Save(action)).unwrap();
+                let split = packet.iter().position(|byte| *byte == b'\n').unwrap();
+                let meta = std::str::from_utf8(&packet[..split]).unwrap();
+                assert!(meta.contains(&format!("\"name\":\"se_{event}\"")));
+                assert!(meta.contains("\"category_percent\":17"));
+                assert!(packet[split + 1..].starts_with(b"OggS"));
+                assert_eq!(
+                    &packet[split + 1..],
+                    store.read("sound/se", &format!("se_{event}.ogg")).unwrap()
+                );
+            }
+            observed.push(event);
+        }
+        assert_eq!(observed.iter().filter(|event| *event == "STAR").count(), 5);
+        assert_eq!(observed.iter().filter(|event| *event == "OK").count(), 1);
+    }
+    #[test]
     fn ui_audio_uses_system_and_voice_categories() {
         let mut vm = SystemVm::new();
-        vm.eval("config", "Config <- {VolSYS=17,VolSE=92,VolVO=63}")
+        vm.eval("config", "Config <- {VolSYS=17,VolSE=92,VolVO=63,VolBGM=50,VolENV=50}")
             .unwrap();
         assert_eq!(audio_volume(&mut vm, "VolSYS").unwrap(), 17);
         assert_eq!(audio_volume(&mut vm, "VolVO").unwrap(), 63);

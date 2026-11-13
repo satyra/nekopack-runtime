@@ -1,4 +1,4 @@
-use super::{PIXELS, StorySession};
+use super::{StorySession, PIXELS};
 use crate::scene::{Layer, Order};
 use nekopack_image::{Metadata, Mng, RgbaImage};
 use std::{
@@ -89,12 +89,23 @@ impl<R: Read + Seek> StorySession<R> {
             return Ok(());
         };
         let slot: u8 = slot.parse()?;
-        let state = self.scene.mapped_actors.entry(slot).or_default();
         let Some(first) = words.next() else {
             self.scene.actors.retain(|actor| actor.slot != slot);
             self.motions.retain(|motion| motion.slot != slot);
             return Ok(());
         };
+        // The script-owned background map emits ImageAction("1 "+resource).
+        // Actor definitions emit #container compositions in slots starting at 2.
+        if slot == 1 && !first.starts_with('#') {
+            if words.next().is_some() {
+                return Err("unsupported mapped background modifiers".into());
+            }
+            let bytes = self.store.read("image/back", &format!("{first}.png"))?;
+            self.scene
+                .set_background(first.into(), nekopack_image::decode_png(&bytes, PIXELS)?)?;
+            return Ok(());
+        }
+        let state = self.scene.mapped_actors.entry(slot).or_default();
         let center = i32::try_from(self.scene.dimensions[0] / 2)?;
         let mut anchor = state
             .anchor
@@ -102,7 +113,17 @@ impl<R: Read + Seek> StorySession<R> {
         let mut order = Order::Front;
         for word in std::iter::once(first).chain(words) {
             if let Some(books) = word.strip_prefix('#') {
-                state.containers = books.split('#').map(str::to_owned).collect();
+                if let Some((container, parts)) = books.split_once('&') {
+                    let mut parts = parts.split('&');
+                    state.containers = vec![container.into()];
+                    state.expression = parts
+                        .next()
+                        .ok_or("actor composition requires a body")?
+                        .into();
+                    state.extras = parts.map(|part| (container.into(), part.into())).collect();
+                } else {
+                    state.containers = books.split('#').map(str::to_owned).collect();
+                }
             } else if let Some(extra) = word.strip_prefix('&') {
                 let (book, name) = extra.split_once('#').ok_or("invalid actor attachment")?;
                 state.extras.push((book.into(), name.into()));

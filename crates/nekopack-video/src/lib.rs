@@ -1,4 +1,4 @@
-//! Bounded MPEG-1/MP2 playback over an owned, seekable resource; no platform APIs.
+//! MPEG/ASF playback over an owned, seekable resource; no platform APIs.
 use std::{
     ffi::c_void,
     io::{Read, Seek, SeekFrom},
@@ -21,8 +21,27 @@ unsafe extern "C" {
     ) -> i32;
     fn neko_video_close(p: *mut c_void);
     fn neko_video_live_bytes() -> usize;
+    fn neko_video_times(p: *mut c_void, out: *mut f64);
+    #[cfg(neko_ffmpeg)]
+    fn neko_asf_open(io: Io, user: *mut c_void, length: usize, budget: usize) -> *mut c_void;
+    #[cfg(neko_ffmpeg)]
+    fn neko_asf_info(p: *mut c_void, out: *mut f64) -> i32;
+    #[cfg(neko_ffmpeg)]
+    fn neko_asf_step(
+        p: *mut c_void,
+        rgba: *mut *const u8,
+        rgba_len: *mut usize,
+        pcm: *mut *const i16,
+        pcm_len: *mut usize,
+        time: *mut f64,
+        peak: *mut usize,
+    ) -> i32;
+    #[cfg(neko_ffmpeg)]
+    fn neko_asf_times(p: *mut c_void, out: *mut f64);
+    #[cfg(neko_ffmpeg)]
+    fn neko_asf_close(p: *mut c_void);
 }
-/// Live decoder payload bytes on the calling decoder thread, excluding Rust frame copies.
+/// Live pl_mpeg arena payload on this thread; excludes FFmpeg and Rust frame copies.
 pub fn live_bytes() -> usize {
     unsafe { neko_video_live_bytes() }
 }
@@ -63,12 +82,27 @@ unsafe extern "C" fn io<R: Read + Seek>(
         }
     }
 }
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Container {
+    MpegProgramStream,
+    Asf,
+}
+impl Container {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::MpegProgramStream => "mpeg",
+            Self::Asf => "asf",
+        }
+    }
+}
 #[derive(Debug, Clone, Copy)]
 pub struct Info {
+    pub container: Container,
     pub width: u32,
     pub height: u32,
     pub fps: f64,
     pub sample_rate: u32,
+    /// Container metadata; ASF duration does not determine decoded frame count.
     pub duration: f64,
 }
 pub struct Frame {
@@ -77,6 +111,11 @@ pub struct Frame {
     pub video_time: f64,
     pub ended: bool,
     pub peak_bytes: usize,
+    /// Actual emitted stereo PCM sample frames / sample rate, including initial silence.
+    pub audio_end_time: f64,
+    /// End of the most recent video presentation interval.
+    pub video_end_time: f64,
+    pub decoded_video_frames: u64,
 }
 /// Owned by one decoder worker. Its callbacks borrow the stable boxed reader only
 /// during a synchronous C ABI call; neither the reader nor frame pointers escape.
@@ -96,34 +135,74 @@ impl<R: Read + Seek> Decoder<R> {
             return Err("unsupported movie length or decoder budget".into());
         }
         reader.seek(SeekFrom::Start(0)).map_err(|e| e.to_string())?;
-        let mut magic = [0; 4];
+        let mut magic = [0; 16];
         reader.read_exact(&mut magic).map_err(|e| e.to_string())?;
-        if magic != [0, 0, 1, 0xba] {
-            return Err("movie must be MPEG program stream".into());
-        }
+        let container = if magic[..4] == [0, 0, 1, 0xba] {
+            Container::MpegProgramStream
+        } else if magic
+            == [
+                0x30, 0x26, 0xb2, 0x75, 0x8e, 0x66, 0xcf, 0x11, 0xa6, 0xd9, 0, 0xaa, 0, 0x62, 0xce,
+                0x6c,
+            ]
+        {
+            Container::Asf
+        } else {
+            return Err("unsupported movie container (expected MPEG program stream or ASF)".into());
+        };
         reader.seek(SeekFrom::Start(0)).map_err(|e| e.to_string())?;
         let mut input = Box::new(Input {
             reader,
             failed: false,
         });
         let ptr = NonNull::new(unsafe {
-            neko_video_open(
-                io::<R>,
-                (&mut *input as *mut Input<R>).cast(),
-                length as usize,
-                budget,
-            )
+            match container {
+                Container::MpegProgramStream => neko_video_open(
+                    io::<R>,
+                    (&mut *input as *mut Input<R>).cast(),
+                    length as usize,
+                    budget,
+                ),
+                #[cfg(neko_ffmpeg)]
+                Container::Asf => neko_asf_open(
+                    io::<R>,
+                    (&mut *input as *mut Input<R>).cast(),
+                    length as usize,
+                    budget,
+                ),
+                #[cfg(not(neko_ffmpeg))]
+                Container::Asf => {
+                    return Err("ASF support requires a build with NEKO_FFMPEG_DIR".into())
+                }
+            }
         })
         .ok_or("invalid/unsupported movie, I/O or decoder budget failure")?;
         let mut values = [0.0; 5];
-        if unsafe { neko_video_info(ptr.as_ptr(), values.as_mut_ptr()) } != 0 {
-            unsafe { neko_video_close(ptr.as_ptr()) };
+        let info_status = unsafe {
+            match container {
+                Container::MpegProgramStream => neko_video_info(ptr.as_ptr(), values.as_mut_ptr()),
+                #[cfg(neko_ffmpeg)]
+                Container::Asf => neko_asf_info(ptr.as_ptr(), values.as_mut_ptr()),
+                #[cfg(not(neko_ffmpeg))]
+                Container::Asf => unreachable!(),
+            }
+        };
+        if info_status != 0 {
+            unsafe {
+                match container {
+                    Container::MpegProgramStream => neko_video_close(ptr.as_ptr()),
+                    #[cfg(neko_ffmpeg)]
+                    Container::Asf => neko_asf_close(ptr.as_ptr()),
+                    #[cfg(not(neko_ffmpeg))]
+                    Container::Asf => unreachable!(),
+                }
+            };
             return Err("movie metadata failure".into());
         }
         Ok(Self {
             ptr,
             _input: input,
             info: Info {
+                container,
                 width: values[0] as u32,
                 height: values[1] as u32,
                 fps: values[2],
@@ -137,8 +216,16 @@ impl<R: Read + Seek> Decoder<R> {
         let (mut rgba, mut pcm) = (std::ptr::null(), std::ptr::null());
         let (mut rn, mut pn, mut peak) = (0, 0, 0);
         let mut time = 0.0;
+        let mut times = [0.0; 3];
+        let step = match self.info.container {
+            Container::MpegProgramStream => neko_video_step,
+            #[cfg(neko_ffmpeg)]
+            Container::Asf => neko_asf_step,
+            #[cfg(not(neko_ffmpeg))]
+            Container::Asf => unreachable!(),
+        };
         let status = unsafe {
-            neko_video_step(
+            step(
                 self.ptr.as_ptr(),
                 &mut rgba,
                 &mut rn,
@@ -151,6 +238,17 @@ impl<R: Read + Seek> Decoder<R> {
         if status < 0 {
             return Err("movie decode/I/O/budget failure".into());
         }
+        unsafe {
+            match self.info.container {
+                Container::MpegProgramStream => {
+                    neko_video_times(self.ptr.as_ptr(), times.as_mut_ptr())
+                }
+                #[cfg(neko_ffmpeg)]
+                Container::Asf => neko_asf_times(self.ptr.as_ptr(), times.as_mut_ptr()),
+                #[cfg(not(neko_ffmpeg))]
+                Container::Asf => unreachable!(),
+            }
+        };
         Ok(Frame {
             rgba: if rn == 0 {
                 Vec::new()
@@ -165,12 +263,23 @@ impl<R: Read + Seek> Decoder<R> {
             video_time: time,
             ended: status == 1,
             peak_bytes: peak,
+            audio_end_time: times[0],
+            video_end_time: times[1],
+            decoded_video_frames: times[2] as u64,
         })
     }
 }
 impl<R: Read + Seek> Drop for Decoder<R> {
     fn drop(&mut self) {
-        unsafe { neko_video_close(self.ptr.as_ptr()) };
+        unsafe {
+            match self.info.container {
+                Container::MpegProgramStream => neko_video_close(self.ptr.as_ptr()),
+                #[cfg(neko_ffmpeg)]
+                Container::Asf => neko_asf_close(self.ptr.as_ptr()),
+                #[cfg(not(neko_ffmpeg))]
+                Container::Asf => unreachable!(),
+            }
+        };
     }
 }
 #[cfg(test)]

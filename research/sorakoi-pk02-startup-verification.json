@@ -1,0 +1,314 @@
+{
+  "date": "2026-11-13",
+  "apk": ".local/android-probe/nekopack-pk02-arm64-debug.apk",
+  "apk_sha256": "665b9f94340093b9049cd8e8a08a2843beb3af3ff99a721f4ea0099ef9eb6038",
+  "source_snapshot_sha256": "94a8a14d4581527fcbca3325ad9290b863dcc7b34fa13bb94aa8fdf549d51900",
+  "base_commit": "dc885ae10f6d37c9e4ef279ac8627064d6bd5703",
+  "source_status": "uncommitted working tree",
+  "android": {
+    "original-startup": {
+      "run": "pk02-original-a234f0b2",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T03:52:07.882701+00:00",
+      "apk_sha256": "665b9f94340093b9049cd8e8a08a2843beb3af3ff99a721f4ea0099ef9eb6038",
+      "translated": false,
+      "title_ready": true,
+      "width": 1600,
+      "height": 900,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_01",
+          "line": 19,
+          "speaker_chars": 3,
+          "dialogue_sha256": "a1eca4bca856e38bb4dd730a248f446aeee8e23f2055b308813e85729f821917"
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_01",
+          "line": 21,
+          "speaker_chars": 0,
+          "dialogue_sha256": "5bc9af515b68114df89334d520532beb50e74131f3c08c5c265df497b35c3f92"
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_01",
+          "line": 25,
+          "speaker_chars": 3,
+          "dialogue_sha256": "1477103e748238cfdbec92e48b919bc6ce9baa2fa209688845805434b4ec68a2"
+        },
+        {
+          "sequence": 4,
+          "source": "CS01_C_01",
+          "line": 27,
+          "speaker_chars": 0,
+          "dialogue_sha256": "60d232ba5fc744f7b46ca75b36d033a08c494be5f5172be3f3f5bc96e9a594e1"
+        },
+        {
+          "sequence": 5,
+          "source": "CS01_C_01",
+          "line": 31,
+          "speaker_chars": 3,
+          "dialogue_sha256": "5560981f3e39777f88e6ef4c2d95be3485ea4ee56e1e8ae09148b8d106760fa5"
+        },
+        {
+          "sequence": 6,
+          "source": "CS01_C_01",
+          "line": 33,
+          "speaker_chars": 0,
+          "dialogue_sha256": "685f5144571840393f1e800f82b60dfbd4aa2fa0757e801196b19420f78ef665"
+        },
+        {
+          "sequence": 7,
+          "source": "CS01_C_01",
+          "line": 35,
+          "speaker_chars": 0,
+          "dialogue_sha256": "ada81d96be75e476e5a5b0942335f32cb2e440f0679347ec465f6c00e9976404"
+        },
+        {
+          "sequence": 8,
+          "source": "CS01_C_01",
+          "line": 37,
+          "speaker_chars": 0,
+          "dialogue_sha256": "5393dff9660962b1c5b37707069abcee349cdcf66a518d0b2069ddf2b826d7e0"
+        },
+        {
+          "sequence": 9,
+          "source": "CS01_C_01",
+          "line": 39,
+          "speaker_chars": 0,
+          "dialogue_sha256": "9cb8a1d4faa970033fae2814ac489c1d04bed39bf59c46099d52a124b1fa7612"
+        },
+        {
+          "sequence": 10,
+          "source": "CS01_C_01",
+          "line": 43,
+          "speaker_chars": 3,
+          "dialogue_sha256": "42cb4c37ec9732a8aa60177897816543aac8fa00ed1608ed02332f37a3cd5387"
+        }
+      ]
+    },
+    "translated-startup": {
+      "run": "pk02-translated-15ce1e1e",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T03:52:53.458461+00:00",
+      "apk_sha256": "665b9f94340093b9049cd8e8a08a2843beb3af3ff99a721f4ea0099ef9eb6038",
+      "translated": true,
+      "title_ready": true,
+      "width": 1600,
+      "height": 900,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_01",
+          "line": 19,
+          "speaker_chars": 3,
+          "dialogue_sha256": "03621c0d5ef1ff0e478a57a38ef1a82eca1295d7e4bb8b8ff8ebb98279143162"
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_01",
+          "line": 21,
+          "speaker_chars": 0,
+          "dialogue_sha256": "211fa8d9ded86257a91ea96b089ceff9e77994fdc328ce805305593832a63b60"
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_01",
+          "line": 25,
+          "speaker_chars": 3,
+          "dialogue_sha256": "9da19356109d9d9af0e91294900a40cce4ac92223de3e9670c65a0ca25d93910"
+        },
+        {
+          "sequence": 4,
+          "source": "CS01_C_01",
+          "line": 27,
+          "speaker_chars": 0,
+          "dialogue_sha256": "52937b00a1d784d8a86ea39d84cd780f925a37a248a240f332d4f9a452401588"
+        },
+        {
+          "sequence": 5,
+          "source": "CS01_C_01",
+          "line": 31,
+          "speaker_chars": 3,
+          "dialogue_sha256": "5560981f3e39777f88e6ef4c2d95be3485ea4ee56e1e8ae09148b8d106760fa5"
+        },
+        {
+          "sequence": 6,
+          "source": "CS01_C_01",
+          "line": 33,
+          "speaker_chars": 0,
+          "dialogue_sha256": "5f5da51bbedd1dc752803a4ec764c364563e52427a873f963988c0ab70ddfc32"
+        },
+        {
+          "sequence": 7,
+          "source": "CS01_C_01",
+          "line": 35,
+          "speaker_chars": 0,
+          "dialogue_sha256": "c65db46dd0c695be31d1a8654071e13cc3a40e858848da5b8ac2628334d57456"
+        },
+        {
+          "sequence": 8,
+          "source": "CS01_C_01",
+          "line": 37,
+          "speaker_chars": 0,
+          "dialogue_sha256": "821a65411d93e987a389b4e5e2077195b05c66bc5f454109ce33cf11b99f6217"
+        },
+        {
+          "sequence": 9,
+          "source": "CS01_C_01",
+          "line": 39,
+          "speaker_chars": 0,
+          "dialogue_sha256": "c6755a0d59cdc0144bb7d2e96619051e4999b442d5afc66a090f5b8c33d27fd0"
+        },
+        {
+          "sequence": 10,
+          "source": "CS01_C_01",
+          "line": 43,
+          "speaker_chars": 3,
+          "dialogue_sha256": "42cb4c37ec9732a8aa60177897816543aac8fa00ed1608ed02332f37a3cd5387"
+        }
+      ]
+    },
+    "original-restart": {
+      "run": "pk02-original-3bbe2236",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T03:53:35.801910+00:00",
+      "apk_sha256": "665b9f94340093b9049cd8e8a08a2843beb3af3ff99a721f4ea0099ef9eb6038",
+      "translated": false,
+      "title_ready": true,
+      "width": 1600,
+      "height": 900,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_01",
+          "line": 19,
+          "speaker_chars": 3,
+          "dialogue_sha256": "a1eca4bca856e38bb4dd730a248f446aeee8e23f2055b308813e85729f821917"
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_01",
+          "line": 21,
+          "speaker_chars": 0,
+          "dialogue_sha256": "5bc9af515b68114df89334d520532beb50e74131f3c08c5c265df497b35c3f92"
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_01",
+          "line": 25,
+          "speaker_chars": 3,
+          "dialogue_sha256": "1477103e748238cfdbec92e48b919bc6ce9baa2fa209688845805434b4ec68a2"
+        }
+      ]
+    },
+    "translated-restart": {
+      "run": "pk02-translated-b2ac7760",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T03:54:13.147363+00:00",
+      "apk_sha256": "665b9f94340093b9049cd8e8a08a2843beb3af3ff99a721f4ea0099ef9eb6038",
+      "translated": true,
+      "title_ready": true,
+      "width": 1600,
+      "height": 900,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_01",
+          "line": 19,
+          "speaker_chars": 3,
+          "dialogue_sha256": "03621c0d5ef1ff0e478a57a38ef1a82eca1295d7e4bb8b8ff8ebb98279143162"
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_01",
+          "line": 21,
+          "speaker_chars": 0,
+          "dialogue_sha256": "211fa8d9ded86257a91ea96b089ceff9e77994fdc328ce805305593832a63b60"
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_01",
+          "line": 25,
+          "speaker_chars": 3,
+          "dialogue_sha256": "9da19356109d9d9af0e91294900a40cce4ac92223de3e9670c65a0ca25d93910"
+        }
+      ]
+    }
+  },
+  "different_dialogue_pages": [
+    1,
+    2,
+    3,
+    4,
+    6,
+    7,
+    8,
+    9
+  ],
+  "cold_restart_same_first_pages": 3,
+  "library_scan": {
+    "device": "127.0.0.1:5577",
+    "games": 1,
+    "chinese": true,
+    "patches": [
+      "sorakoi_chs.pk2"
+    ]
+  },
+  "desktop_title_regression": [
+    {
+      "game": "[101224][Rosebleu]Tiny Dungeon ～BLESS of DRAGON～",
+      "archives": 4,
+      "passed": true
+    },
+    {
+      "game": "[110729][Rosebleu]Tiny Dungeon ～BIRTH for YOURS～",
+      "archives": 5,
+      "passed": true
+    },
+    {
+      "game": "[120727][Rosebleu]Tiny Dungeon ～BRAVE or SLAVE～",
+      "archives": 4,
+      "passed": true
+    },
+    {
+      "game": "Endless Dungeon",
+      "archives": 8,
+      "passed": true
+    },
+    {
+      "game": "Tiny Dungeon ～BLACK and WHITE～",
+      "archives": 9,
+      "passed": true
+    }
+  ],
+  "tests": {
+    "workspace": "passed",
+    "archive": {
+      "passed": 19,
+      "ignored": 1
+    },
+    "script": {
+      "passed": 29,
+      "ignored": 0
+    },
+    "runtime": {
+      "passed": 147,
+      "ignored": 9
+    },
+    "local_pk02_entries": 151,
+    "local_decoded_scripts": 101,
+    "real_original_font_first_page": "passed"
+  },
+  "not_validated": [
+    "full route",
+    "gallery/recollection",
+    "complete settings regression",
+    "original message typography",
+    "NEXT/BACK shortcut actions"
+  ],
+  "privacy": "No screenshots viewed or exported; dialogue digests computed on device, no dialogue bodies transferred.",
+  "native_library_sha256": "2259433bf1fad06d82e8f179166e1e3d7c78d4bb0385ab5aa1b92598531f189b",
+  "apk_native_matches_build": true
+}

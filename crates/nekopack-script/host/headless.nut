@@ -8,6 +8,9 @@ class Registry {
 }
 com <- Registry()
 Host <- {caption="",clock=0,frames=[],sounds=[],effects=[],volumes=null,screen=null,missing_spots=[],skip=false,auto_mode=false}
+// Original host enables Windows file drops (DragAcceptFiles(hwnd, TRUE)).
+// The portable host retains the request; device file import belongs to its UI.
+function EnableDebugMode() { Host.debug_file_drop <- true }
 // Retained transition commands only; device interpolation belongs to the renderer.
 function TransBegin() { Host.effects.append(["transition-begin"]) }
 function TransEnd() { Host.effects.append(["transition-end"]) }
@@ -15,7 +18,11 @@ function TransSet(duration) { Host.effects.append(["transition-duration",duratio
 function RenderTrans() { Host.effects.append(["transition-render",Host.clock]) }
 function title(text) { Host.caption=text }
 function ini(name) { return Ini[name] }
-function data(name) { return Data[name] }
+function data(name,directory="system",delimiter=null) {
+    if(delimiter==null && directory=="system")return Data[name]
+    if(delimiter==null)delimiter=" \t"
+    return ::compilestring("return "+::NekoResource("Data\t"+directory+"\t"+delimiter,name))()
+}
 function SavePath(name) { return name }
 // The script filesystem contains no Windows-format saves. Android slots are managed by the host.
 function EnumFiles(path, pattern) {
@@ -51,9 +58,19 @@ function wait(time) {
 }
 function event() { return ID_OK }
 function NativeCommand(name,args) {
-    if(name=="img")Host.image <- clone args
+    if(name=="reset") {
+        if(args.len())throw "reset takes no arguments"
+        Host.image <- [];Host.bgm <- [];Host.sounds=[];Host.frames=[]
+        RestoreVolume()
+    }
+    else if(name=="img")Host.image <- clone args
     else if(name=="bgm")Host.bgm <- clone args
     else if(name=="se" || name=="env"){}
+    else if(name=="wipe") {
+        // Bootstrap retains native transitions and presents the final title frame.
+        if(args.len()<1 || args.len()>3)throw "wipe requires a mask and optional duration/mode"
+        if(args.len()>1)Host.clock+=args[1].tointeger()
+    }
     else if(name=="wait" || name=="fade") {
         if(args.len()!=1)throw "timing command requires one duration"
         Host.clock+=args[0].tointeger()
@@ -72,10 +89,12 @@ class Sprite {
     width=0
     height=0
     asset=null
+    avail=false
     layers=null
     constructor(w=0,h=0) { layers=[]
         width=w
-        height=h }
+        height=h
+        avail=w>0 && h>0 }
     function Base() { layers=[] }
     function Fill(color,opacity=255) { layers.append([["fill",color,width,height],0,0,opacity]) }
     function Draw(source,dx=0,dy=0,opacity=255) {
@@ -83,18 +102,21 @@ class Sprite {
         foreach(layer in source.layers)layers.append([layer[0],layer[1]+dx,layer[2]+dy,layer[3]*opacity/255])
     }
 }
-function Images(name) {
+function Images(name=null) {
     local result={}
+    // The original Images constructor also supports an empty image collection.
+    if(name==null)return NekoTableDelegate(result,{_get=function(key){return Sprite()}})
     foreach(key,meta in Assets[name]) {
         local sprite=Sprite()
         sprite.asset=meta[0]
+        sprite.avail=true
         sprite.x=meta[1]
         sprite.y=meta[2]
         sprite.width=meta[3]
         sprite.height=meta[4]
         result.rawset(key,sprite)
     }
-    return result
+    return NekoTableDelegate(result,{_get=function(key){return Sprite()}})
 }
 class Screen extends Sprite {
     function Snap() { Host.snapshot <- clone layers }
@@ -108,6 +130,7 @@ class Spot {
     normal=null
     hover=null
     active=null
+    disable=null
     mask=null
     popup=null
     enabled=true
@@ -126,10 +149,10 @@ class Spots {
         items={}
         if(images==null)return
         foreach(name,sprite in images) {
-            if(name.len()<3 || name[1]!=32)continue
+            if(name.len()<2)continue
             local prefix=name.slice(0,1)
-            if(prefix!="=" && prefix!="+" && prefix!="@" && prefix!="*")continue
-            local key=name.slice(2)
+            if(prefix!="=" && prefix!="+" && prefix!="@" && prefix!="*" && prefix!="-")continue
+            local key=name.slice(name[1]==32 ? 2 : 1)
             if(!(key in items)) { local spot=Spot()
                 spot.name=key
                 items.rawset(key,spot) }
@@ -139,6 +162,7 @@ class Spots {
                 case "+":spot.hover=sprite;break
                 case "@":spot.active=sprite;break
                 case "*":spot.mask=sprite;break
+                case "-":spot.disable=sprite;break
             }
         }
     }

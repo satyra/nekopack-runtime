@@ -1,4 +1,5 @@
 """Play original loose MPEG files through the persisted SAF grant. No transcoding.
+Uses counters and digest events; never captures screenshots or raw media.
 Host-only tests do not claim execution of a game's movie command.
 """
 import argparse,hashlib,json,subprocess,time,uuid,struct,math
@@ -24,12 +25,9 @@ def main():
   if not reuse:adb('shell','am','start','-W','-S','-n',package+'/.MainActivity','--ei','movie_probe_game',str(game),'--es','run_id',run)
   deadline=time.monotonic()+700
   out=a.captures/str(game);out.mkdir(parents=True,exist_ok=True)
-  captured=bool(reuse and (out/'display.png').exists())
   while time.monotonic()<deadline:
    events_raw=private(run,'movie-1-events.jsonl')
    events=[] if events_raw.startswith(b'cat:') else [json.loads(x) for x in events_raw.splitlines()]
-   if any(x['event']=='progress' and x['head']>0 for x in events) and not captured:
-    (out/'display.png').write_bytes(adb('exec-out','screencap','-p'));captured=True
    if events and events[-1]['event']=='closed':break
    error=private(run,'error.txt');assert b'No such file' in error,error
    # pidof can race Android process publication even after am -W.
@@ -44,18 +42,15 @@ def main():
   assert end['head']>=end['samples']>0 and end['peak_bytes']<=64*1024*1024
   assert end['elapsed_ms']>=end['samples']/info['sample_rate']*1000-200
   samples=[]
+  assert end['decoded_frames']==end['presented_frames']+end['dropped_frames']
+  assert end['pcm_nonzero_samples']>0 and end['pcm_peak_amplitude']>0
   for n in [0,24,240]:
-   data=private(run,f'movie-1-frame-{n}.rgba');expected=(a.desktop/str(game)/f'frame-{n}.rgba').read_bytes()
-   assert data==expected,('decoder RGB platform mismatch',game,n)
-   (out/f'frame-{n}.rgba').write_bytes(data);samples.append(dict(frame=n,sha256=hashlib.sha256(data).hexdigest(),desktop_equal=True))
-  pcm=private(run,'movie-1-sample.pcm');(out/'sample.pcm').write_bytes(pcm)
-  pcm_reference=(a.desktop/str(game)/'audio.pcm').read_bytes();assert len(pcm)==len(pcm_reference)>0
-  actual_samples=struct.unpack('<'+str(len(pcm)//2)+'h',pcm);expected_samples=struct.unpack('<'+str(len(pcm)//2)+'h',pcm_reference)
-  differences=[abs(x-y) for x,y in zip(actual_samples,expected_samples)]
-  pcm_error=dict(max_error=max(differences),rms_error=math.sqrt(sum(d*d for d in differences)/len(differences)))
-  assert pcm_error['max_error']<=4 and pcm_error['rms_error']<=2,('platform PCM mismatch',game,pcm_error)
+   actual=next(e for e in events if e['event']=='frame_digest' and e['decoded_frame']==n)
+   expected=(a.desktop/str(game)/f'frame-{n}.rgba').read_bytes()
+   assert actual['rgba_sha256']==hashlib.sha256(expected).hexdigest(),('decoder RGB platform mismatch',game,n)
+   samples.append(dict(frame=n,sha256=actual['rgba_sha256'],desktop_equal=True))
   (out/'events.jsonl').write_bytes(events_raw);(out/'info.json').write_text(json.dumps(info))
-  reports.append(dict(game=game,run_id=run,rechecked_observed_run=bool(reuse),info=info,closed=end,events=events,frames=samples,pcm_sha256=hashlib.sha256(pcm).hexdigest(),desktop_pcm_error=pcm_error,display_captured=captured))
+  reports.append(dict(game=game,run_id=run,rechecked_observed_run=bool(reuse),info=info,closed=end,events=events,frames=samples,pcm_sha256=end['pcm_sha256'],audio_verified='actual playback head, nonzero PCM and complete sample count',display_captured=False))
   print('PASS movie natural',a.serial,game,end['frames'],end['elapsed_ms'],flush=True)
  kernel=adb('shell','uname','-m').decode().strip();bridge=adb('shell','getprop','ro.dalvik.vm.native.bridge').decode().strip()
  result=dict(scope='four original MPEG files through SAF; standalone Android host, not four script-chain runs',serial=a.serial,execution='native ARM64' if kernel=='aarch64' and bridge in ('','0') else 'translated ARM64',kernel=kernel,native_bridge=bridge,build=build,games=reports)

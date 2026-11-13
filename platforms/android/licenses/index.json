@@ -421,11 +421,31 @@
         ],
         "note": "Upstream header declares MIT and attribution; the repository LICENSE retains the full MIT text and provenance."
       }
+    },
+    {
+      "component": "FFmpeg",
+      "version": "8.0.1",
+      "license_expression": "LGPL-2.1-or-later",
+      "scope": "Minimal shared ASF/WMV/WMA decoder; GPL, nonfree, network and external codecs disabled",
+      "license_files": [
+        "ffmpeg-8.0.1/COPYING.LGPLv2.1",
+        "ffmpeg-8.0.1/COPYING.LGPLv3",
+        "ffmpeg-8.0.1/LICENSE.md"
+      ],
+      "source": {
+        "url": "https://ffmpeg.org/releases/ffmpeg-8.0.1.tar.xz",
+        "sha256": "05ee0b03119b45c0bdb4df654b96802e909e0a752f72e4fe3794f487229e5a41",
+        "build_script": "crates/nekopack-video/tools/build_ffmpeg.py",
+        "note": "Unmodified upstream source; distribute the pinned source archive and build script with binary releases."
+      }
     }
   ],
   "files_sha256": {
-    "NOTICE": "7b24f059a46f3d9e757bb7110c15749ac14d3bab4f5e6e6aabb5eaff34810947",
+    "NOTICE": "4b995965699b244efd36d5a138a7bcbd2f969dd8be09b947f8ad071e223009dc",
     "android-ndk-r27d/NOTICE.toolchain.txt": "f96f763beb66a7ba7a667647fc64c0226ace875e590c831fdd9579ec1c1d91e1",
+    "ffmpeg-8.0.1/COPYING.LGPLv2.1": "246041b6ecf9bc32d718a62c57877c78b5eb397b6467e74ed7ae2626ab189c30",
+    "ffmpeg-8.0.1/COPYING.LGPLv3": "da7eabb7bafdf7d3ae5e9f223aa5bdc1eece45ac569dc21b3b037520b4464768",
+    "ffmpeg-8.0.1/LICENSE.md": "2e1d16c72fd74e12063776371da757322f8b77589386532f4fd8634bde7de1af",
     "gradle-8.7/LICENSE": "9536d88ea948603d18e232a13f5958d67807cd80828036b082bff171d2cf0703",
     "gradle-8.7/NOTICE": "c2de5fd9adc7ccc4e1382a0e1f38ec6e14f8ca6e28d3c20289fe80353b019aa1",
     "kotlin-stdlib-1.9.22/LICENSE.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",

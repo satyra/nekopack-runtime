@@ -34,7 +34,7 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
                 busy=false;check(state.getLong("sequence")==token);visibleCount=state.getLong("visible")
                 if(bitmap!=null){
                     view.show(bitmap,geometry,speaker+"\n"+state.getString("text"))
-                    paintedCount=visibleCount
+                    paintedCount=if(state.optBoolean("message_animating"))-1 else visibleCount
                 }
                 if(trace){
                     val snapshot=File(root,"text-$token.tmp");snapshot.writeText(state.toString())
@@ -46,7 +46,7 @@ class DialoguePresentation(private val view:DialogueView,private val timeline:Se
                 else {
                     ready(true)
                     if(pendingClick){pendingClick=false;this.click()}
-                    else if(!state.getBoolean("complete") || state.getBoolean("auto") || state.getBoolean("skip"))timeline.post((33-(timeline.now()-sentAt)).coerceAtLeast(0)){if(active&&epoch==generation&&!busy)send(false,timeline.now()-started)}
+                    else if(!state.getBoolean("complete") || state.getBoolean("auto") || state.getBoolean("skip") || state.optBoolean("message_animating") || state.optBoolean("delay_pending"))timeline.post((33-(timeline.now()-sentAt)).coerceAtLeast(0)){if(active&&epoch==generation&&!busy)send(false,timeline.now()-started)}
                 }
             }else bitmap?.recycle()
         }

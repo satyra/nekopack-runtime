@@ -32,6 +32,7 @@ def main():
     parser=argparse.ArgumentParser()
     for name in ['ndk','sdk','jdk','kotlin_lib','cargo']:
         parser.add_argument('--'+name.replace('_','-'),type=Path,required=True)
+    parser.add_argument('--ffmpeg-prefix', type=Path, default=ROOT/'.local/ffmpeg/android', help='Minimal shared FFmpeg build from crates/nekopack-video/tools/build_ffmpeg.py')
     parser.add_argument('--variant', choices=['debug','release'], default='debug')
     parser.add_argument('--version-code', type=int, default=1)
     parser.add_argument('--version-name', default='0.1.0-preview.1')
@@ -58,6 +59,11 @@ def main():
                CARGO_TARGET_DIR=str(ROOT/'target'),
                CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=str(tools/'bin/clang.exe'),
                CARGO_TARGET_AARCH64_LINUX_ANDROID_RUSTFLAGS='-C link-arg=--target=aarch64-linux-android23 -C link-arg=-Wl,-z,max-page-size=16384')
+    ffmpeg_prefix=args.ffmpeg_prefix.resolve()
+    ffmpeg_libraries=[ffmpeg_prefix/'lib'/('lib'+name+'.so') for name in ['avformat','avcodec','avutil','swscale','swresample']]
+    for library in ffmpeg_libraries:
+        if not library.is_file(): raise RuntimeError(f'missing FFmpeg shared library: {library}; build the pinned video dependency first')
+    env['NEKO_FFMPEG_DIR']=str(ffmpeg_prefix)
     run(args.cargo,'build','-p','nekopack-android-probe','--release','--target',target,env=env)
     native=ROOT/'target'/target/'release/libnekopack_probe.so'
     shim=out/'libnekopack_host.so'
@@ -66,7 +72,7 @@ def main():
         '-Wl,-z,max-page-size=16384','-Wl,--no-undefined','-Wl,-soname,libnekopack_host.so',
         ROOT/'platforms/android/jni.cpp','-L'+str(native.parent),'-lnekopack_probe','-o',shim)
     elf={}
-    for path in [native,shim,cpp]:
+    for path in [native,shim,cpp,*ffmpeg_libraries]:
         result=subprocess.check_output([str(tools/'bin/llvm-readelf.exe'),'-h','-l','-d',str(path)],text=True)
         if 'AArch64' not in result: raise RuntimeError(f'not AArch64: {path}')
         segments=[line for line in result.splitlines() if line.strip().startswith('LOAD ')]
@@ -101,7 +107,7 @@ def main():
         for license_file in sorted(license_root.rglob('*')):
             if license_file.is_file():
                 apk.write(license_file,'assets/licenses/'+license_file.relative_to(license_root).as_posix())
-        for path in [native,shim,cpp]: apk.write(path,'lib/arm64-v8a/'+path.name)
+        for path in [native,shim,cpp,*ffmpeg_libraries]: apk.write(path,'lib/arm64-v8a/'+path.name)
     aligned=out/'aligned.apk'
     run(build/'zipalign.exe','-f','-P','16','4',unsigned,aligned)
     if args.variant == 'debug':
@@ -124,7 +130,7 @@ def main():
     (out/'build.json').write_text(json.dumps({
         'ndk':(args.ndk/'source.properties').read_text(), 'target':target,'api':23,
         'variant':args.variant,'signed':not args.unsigned,'version_code':args.version_code,'version_name':args.version_name,
-        'sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [native,shim,cpp,apk]},
+        'sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [native,shim,cpp,*ffmpeg_libraries,apk]},
         'elf':elf,
     },indent=2)+'\n')
     print(apk)

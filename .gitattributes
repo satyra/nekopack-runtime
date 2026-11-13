@@ -1,3 +1,5 @@
 # License snapshots are hashed and packaged byte-for-byte.
 /LICENSE -text
 /platforms/android/licenses/** -text
+# Verification evidence retains the exact bytes referenced by SHA-256 records.
+/research/verification/native-load-room/** -text

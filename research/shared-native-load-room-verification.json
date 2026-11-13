@@ -1,0 +1,350 @@
+{
+  "date": "2026-11-13",
+  "device": "127.0.0.1:5577",
+  "package": "org.nekopack.probe",
+  "variant": "debug",
+  "apk": ".local/android-probe/nekopack-native-load-room-arm64-debug.apk",
+  "apk_sha256": "c42b9ff4098f4d3540c6c9e56a83d5e6ec2de1fcd0b2e585f3507e531c397135",
+  "installed_apk_matches": true,
+  "packaged_native_matches_build": true,
+  "libraries": {
+    "libnekopack_probe.so": "99d0702ee821806c3fe550c4acf665bad5123fca4eee84e2b0bbf142a4c148be",
+    "libnekopack_host.so": "659b848a510f698707fc160054e33bf7cbf93694aaab8109dc937b970bd4597d",
+    "libc++_shared.so": "d523468d62d9b603cb3354294d70d4b2feabf2c3f1e43b0c96c9aabf32813708",
+    "libavformat.so": "85477fb866068ee6247e5d57a10bdc06d63d3e1bec4bb2b74a722f1f6d4458aa",
+    "libavcodec.so": "b4dd6d74f5c6b54e386e6d5850d607e5c08e21a274e696b068330702add63c67",
+    "libavutil.so": "97a3ca7582c8656f79f0282e4b1a8808afbd2f87bb28ad0f393655d64495205c",
+    "libswscale.so": "cfe518272e60ce491b792458b1c6e161483d52ada298505eb0474b04e47628cb",
+    "libswresample.so": "0c53ab449bc5b4b65400a4295cfc7a15fae0dae7b22b7734f1e3e29c8a567b7c"
+  },
+  "source_manifest": "research/verification/native-load-room/source-worktree-sha256.json",
+  "source_manifest_entries": 132,
+  "source_manifest_payload_sha256": "fbc3d513e826c253807027b760cf1fc5a433f224ac8d0a83ff517ea8a198ffc7",
+  "tests": {
+    "workspace": {
+      "passed": 380,
+      "failed": 0,
+      "ignored": 27
+    },
+    "original_load_contract": {
+      "passed": 8,
+      "failed": 0
+    },
+    "native_load_real_restore": {
+      "passed": 8,
+      "failed": 0
+    },
+    "native_room_including_original_scene": {
+      "passed": 5,
+      "failed": 0
+    }
+  },
+  "desktop_music_loop": {
+    "passed": true,
+    "frames": 1201,
+    "plan_lengths": [
+      10
+    ],
+    "max_rust_surfaces": 2,
+    "max_vm_leases": 1,
+    "opaque_assets": 0,
+    "elapsed_seconds": 40.299,
+    "artwork_inspected": false
+  },
+  "android": {
+    "load": {
+      "passed": true,
+      "run": "native-load-ada4dba1",
+      "report": "research/verification/native-load-room/real-native-load-final6.json",
+      "report_sha256": "0fe80822a8309271656cce068ac28fb0c93bdac32d6581952dba50f230c830c1",
+      "checks": [],
+      "steps": [
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1",
+          "sequence": 1,
+          "source": "story1",
+          "line": 3
+        },
+        {
+          "name": "real_quick_save",
+          "run": "native-load-ada4dba1",
+          "path": "files/saves/6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-ada4dba1/quick-2a8b0b29-8a39-4e5f-b748-ce02ec17ffc3.nksv",
+          "sha256": "a7d1c7c94ad9f877b11f44d8328707a480c3e657a300233d12325aa151156ff2"
+        },
+        {
+          "name": "isolated_ordinary_slot",
+          "run": "native-load-ada4dba1",
+          "slot": 2,
+          "stat": "1704042000:7045",
+          "sha256": "a7d1c7c94ad9f877b11f44d8328707a480c3e657a300233d12325aa151156ff2"
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1",
+          "sequence": 2,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "real_quick_save",
+          "run": "native-load-ada4dba1",
+          "path": "files/saves/6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-ada4dba1/quick-c4ad3ed4-bc48-4c44-a185-a4a4466d6dd8.nksv",
+          "sha256": "a1efe96f79a929477ac998ea0e09ff759300c59dd18c1fe6554ec5892b99a72e"
+        },
+        {
+          "name": "isolated_ordinary_slot",
+          "run": "native-load-ada4dba1",
+          "slot": 1,
+          "stat": "1704045600:7149",
+          "sha256": "a1efe96f79a929477ac998ea0e09ff759300c59dd18c1fe6554ec5892b99a72e"
+        },
+        {
+          "name": "load_confirmation_cancel_preserves_original_page",
+          "run": "native-load-ada4dba1",
+          "token": 1
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1",
+          "sequence": 3,
+          "source": "story1",
+          "line": 3
+        },
+        {
+          "name": "original_confirmed_load",
+          "run": "native-load-ada4dba1",
+          "slot": 2,
+          "sleep_delay_ms": 1000
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1",
+          "sequence": 4,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1",
+          "sequence": 5,
+          "source": "story1",
+          "line": 8
+        },
+        {
+          "name": "original_sysload_cancel",
+          "run": "native-load-ada4dba1"
+        },
+        {
+          "name": "real_quick_save",
+          "run": "native-load-ada4dba1",
+          "path": "files/saves/6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-ada4dba1/quick-5b0e4fd3-227b-46fe-ab75-716d5c9ec769.nksv",
+          "sha256": "5b6e3255420f88948123b8cbf00d7bb2a42766cf6431768d3a2b6de65fd68f71"
+        },
+        {
+          "name": "mtime_order_differs_from_slot_order_and_newer_quick",
+          "run": "native-load-ada4dba1",
+          "mtime_seconds": {
+            "slot1": 1704045600,
+            "slot2": 1704042000,
+            "quick": 1704049200
+          }
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1",
+          "sequence": 6,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "continue_uses_latest_ordinary",
+          "run": "native-load-ada4dba1",
+          "sleep_delay_ms": 1000
+        },
+        {
+          "name": "warm_cycle_passed",
+          "run": "native-load-ada4dba1"
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-cold",
+          "sequence": 1,
+          "source": "story1",
+          "line": 3
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-cold",
+          "sequence": 2,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-cold",
+          "sequence": 3,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "original_confirmed_load",
+          "run": "native-load-ada4dba1-cold",
+          "slot": 1,
+          "sleep_delay_ms": 1000
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-cold",
+          "sequence": 4,
+          "source": "story1",
+          "line": 8
+        },
+        {
+          "name": "original_sysload_cancel",
+          "run": "native-load-ada4dba1-cold"
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-cold",
+          "sequence": 5,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "continue_uses_latest_ordinary",
+          "run": "native-load-ada4dba1-cold",
+          "sleep_delay_ms": 1000
+        },
+        {
+          "name": "cold_cycle_passed",
+          "run": "native-load-ada4dba1-cold"
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-empty",
+          "sequence": 1,
+          "source": "story1",
+          "line": 3
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-empty",
+          "sequence": 2,
+          "source": "story1",
+          "line": 5
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-empty",
+          "sequence": 3,
+          "source": "story1",
+          "line": 8
+        },
+        {
+          "name": "original_sysload_cancel",
+          "run": "native-load-ada4dba1-empty"
+        },
+        {
+          "name": "page",
+          "run": "native-load-ada4dba1-empty",
+          "sequence": 4,
+          "source": "story1",
+          "line": 11
+        },
+        {
+          "name": "empty_continue_returns_to_scenario",
+          "run": "native-load-ada4dba1-empty"
+        }
+      ]
+    },
+    "music": {
+      "passed": true,
+      "run": "system-room-7a0dd72f",
+      "report": "research/verification/native-load-room/real-room-final6.json",
+      "report_sha256": "c1ea3fb059397709954a5a6b0638b61a50935b765c01c86909a2e3e8100617e5",
+      "checks": [
+        "original room starts on retained system command token",
+        "original item NEXT BACK produce matching original Ogg hashes and real non-loop playback",
+        "original VolumeBar drag updates actual player gain",
+        "original STOP releases the player",
+        "same original coroutine restores title BGM and returns to synthetic caller"
+      ]
+    },
+    "cg_boundaries": {
+      "passed": true,
+      "run": "system-room-boundaries-f0ecb8f7",
+      "report": "research/verification/native-load-room/real-room-boundaries-final6.json",
+      "report_sha256": "bbdff8ce933b10c27bbfc331c25f264e57e00f72db17d66d3a09212935e67fcb",
+      "checks": [
+        "original room music to CG switch keeps the same coroutine",
+        "original ViewRoomCGPage ImageAction Commit ImageAction ACK Render displays generated pixels",
+        "CG viewer cancel returns to original CG page then switches to scene page",
+        "original scene selection reaches suspended ScriptEval metadata without replay resource loading"
+      ]
+    },
+    "synthetic_replay": {
+      "passed": true,
+      "run": "system-room-replay-989afe58",
+      "report": "research/verification/native-load-room/real-room-replay-final6.json",
+      "report_sha256": "94118b978a4d4f846c7c3ab28dff52fefd36885bcd688581c5c138529de44409",
+      "checks": [
+        "deployed archive hashes and exact inventory bind the generated replay bytes; no original script archive",
+        "original music to scene selection starts the generated command with a new token through the production replay path",
+        "generated command EOF returns to the original room token and identical original controls",
+        "closing the original room returns to story1:4 without errors under the same APK hash"
+      ],
+      "platform_modes": {
+        "child": true,
+        "returned_parent": false
+      },
+      "original_replay_executed": false
+    },
+    "config": {
+      "passed": true,
+      "run": "system-config-28054f75",
+      "report": "research/verification/native-load-room/real-config-final6.json",
+      "report_sha256": "f147d0d320c9d77e2636011927b0f450183f4dbaadd7ce0f2fba9bab7b187155",
+      "checks": [
+        "original role subpage returns without an extra user click",
+        "original root sliders, role mute/volume, dialog and shortcut handlers execute",
+        "cold restart reexports identical values from original Config after SaveConfig acknowledgement",
+        "original ResetConfig and nested DEFAULT confirmation restore defaults through SaveConfig"
+      ]
+    },
+    "quit": {
+      "passed": true,
+      "run": "system-exit-3a8cb98e",
+      "report": "research/verification/native-load-room/real-exit-final6.json",
+      "report_sha256": "d909533b9f31e718e58e13eba4b8f17c4bd8a995e1064a9ba81784e53f719112",
+      "checks": [
+        "original ViewDialog CANCEL returns to the synthetic scenario without exiting",
+        "cold launch original OK emits exactly one original_quit system_exit",
+        "closed.txt confirms VM release with no second confirmation and no error",
+        "APK SHA-256 is identical before and after both runs"
+      ]
+    }
+  },
+  "scope": {
+    "common_runtime": true,
+    "per_game_dispatch_added": false,
+    "original_artwork_inspected": false,
+    "original_scenario_or_recollection_text_read": false,
+    "cg_uses_generated_pixels": true,
+    "replay_uses_generated_script": true,
+    "windows_sav_binary_compatibility_claimed": false,
+    "all_game_content_coverage_claimed": false
+  },
+  "test_logs": [
+    "research/verification/native-load-room/real-nested-workspace-final6.txt",
+    "research/verification/native-load-room/real-native-load-contract-final6.txt",
+    "research/verification/native-load-room/real-native-load-runtime-final6.txt"
+  ],
+  "submission_verification": {
+    "source_files_rechecked": 132,
+    "source_mismatches": 0,
+    "apk_and_packaged_libraries_rechecked": true,
+    "git_index_matches_source": true
+  },
+  "source_git_manifest": "research/verification/native-load-room/source-git-sha256.json"
+}

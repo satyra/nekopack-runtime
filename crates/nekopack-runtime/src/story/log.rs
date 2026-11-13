@@ -90,11 +90,11 @@ impl<R: Read + Seek> StorySession<R> {
         };
         crate::message_log::audio(&mut self.store, &mut self.system, sound)
     }
-    pub fn star_sound(&mut self) -> Result<Vec<u8>, Box<dyn Error>> {
+    pub fn star_sound(&mut self, action: u32) -> Result<Vec<u8>, Box<dyn Error>> {
         crate::message_log::audio(
             &mut self.store,
             &mut self.system,
-            crate::message_log::Audio::Star,
+            crate::message_log::Audio::Save(action),
         )
     }
 }

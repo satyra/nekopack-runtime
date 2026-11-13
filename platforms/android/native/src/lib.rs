@@ -395,8 +395,8 @@ pub unsafe extern "C" fn neko_probe_story(
                     }
                     let session = title.as_mut().ok_or("no title session")?;
                     let action = session.pointer(values[0], values[1], values[2])?;
-                    if action == Some(1) {
-                        let mut session = title.take().unwrap().start()?;
+                    if let Some(action) = action.filter(|id| session.is_start_action(*id)) {
+                        let mut session = title.take().unwrap().start_action(action)?;
                         session.enable_host_effects();
                         session.enable_interactive_text();
                         *state = Some(session);
@@ -405,6 +405,7 @@ pub unsafe extern "C" fn neko_probe_story(
                         session.packet_with_settings_format(action, values[0] == 1)
                     }
                 }),
+                74 => TITLE.with(|title| title.borrow_mut().as_mut().ok_or("no title session")?.next_room_music()),
                 59 | 60 | 61 => TITLE.with(|title| {
                     let mut title = title.borrow_mut();
                     match operation {
@@ -437,6 +438,8 @@ pub unsafe extern "C" fn neko_probe_story(
                     .ok_or("no story session")?
                     .request_shortcut_reset(sequence),
                 65 => state.as_mut().ok_or("no story session")?.shortcut_voice(),
+                72 => state.as_mut().ok_or("no story session")?.begin_next(sequence),
+                73 => state.as_mut().ok_or("no story session")?.request_shortcut_back(sequence),
                 63 => {
                     let classic = state
                         .as_ref()
@@ -626,13 +629,13 @@ pub unsafe extern "C" fn neko_probe_story(
                     .close_log(sequence),
                 54 => {
                     if let Some(s) = state.as_mut() {
-                        s.star_sound()
+                        s.star_sound(u32::try_from(sequence)?)
                     } else {
                         TITLE.with(|t| {
                             t.borrow_mut()
                                 .as_mut()
                                 .ok_or("no title session")?
-                                .star_sound()
+                                .star_sound(u32::try_from(sequence)?)
                         })
                     }
                 }
@@ -836,6 +839,34 @@ pub unsafe extern "C" fn neko_probe_story(
                     .as_mut()
                     .ok_or("no story session")?
                     .replay_dialogue_batch(),
+                75 => {
+                    if count != 1 && count != 3 { return Err("system command input requires event and optional coordinates".into()); }
+                    let event = unsafe { *fds };
+                    let pointer=if count==3 {Some(unsafe {[*fds.add(1),*fds.add(2)]})}else{None};
+                    state.as_mut().ok_or("no story session")?.system_command_pointer(sequence, elapsed_ms, u32::try_from(event)?,pointer)
+                }
+                78 => {
+                    use std::io::Read;
+                    if count < 2 {return Err("native save registration requires descriptor and timestamp fields".into());}
+                    let values=unsafe {std::slice::from_raw_parts(fds,count)};
+                    let text=String::from_utf8(values[1..].iter().map(|v|u8::try_from(*v)).collect::<Result<Vec<_>,_>>()?)?;
+                    let fields=text.split('\t').collect::<Vec<_>>();
+                    if fields.len()!=3 {return Err("invalid native save timestamp fields".into());}
+                    let file=std::fs::File::from(unsafe {BorrowedFd::borrow_raw(values[0])}.try_clone_to_owned()?);
+                    let mut bytes=Vec::new();file.take((nekopack_script::checkpoint::LIMIT+1) as u64).read_to_end(&mut bytes)?;
+                    state.as_mut().ok_or("no story session")?.system_load_catalog_slot(u32::try_from(sequence)?,fields[0].parse()?,fields[1],fields[2],&bytes)?;
+                    Ok(b"{\"registered\":true}".to_vec())
+                }
+                79 => {state.as_mut().ok_or("no story session")?.system_load_catalog_install()?;Ok(b"{\"installed\":true}".to_vec())}
+                80 => state.as_mut().ok_or("no story session")?.next_system_room_audio(),
+                81 => {
+                    if count!=1 {return Err("room music feedback requires one boolean".into());}
+                    let value=unsafe{*fds};if value!=0 && value!=1 {return Err("invalid room music feedback".into());}
+                    state.as_mut().ok_or("no story session")?.system_room_music_state(value==1)?;
+                    Ok(b"{\"updated\":true}".to_vec())
+                }
+                82 => state.as_mut().ok_or("no story session")?.start_system_room_replay(),
+                77 => state.as_mut().ok_or("no story session")?.next_system_command_sound(),
                 6 => state
                     .as_mut()
                     .ok_or("no story session")?
@@ -956,12 +987,12 @@ pub unsafe extern "C" fn neko_probe_movie(fd: i32, operation: i32, out_len: *mut
                 let file=std::fs::File::from(unsafe{BorrowedFd::borrow_raw(fd)}.try_clone_to_owned()?);
                 let decoder=nekopack_video::Decoder::open(file)?;
                 let i=decoder.info;
-                let bytes=format!("{{\"width\":{},\"height\":{},\"fps\":{},\"sample_rate\":{},\"duration\":{}}}\n",i.width,i.height,i.fps,i.sample_rate,i.duration).into_bytes();
+                let bytes=format!("{{\"container\":\"{}\",\"allocation_scope\":\"{}\",\"width\":{},\"height\":{},\"fps\":{},\"sample_rate\":{},\"duration\":{}}}\n",i.container.as_str(),match i.container { nekopack_video::Container::MpegProgramStream=>"plmpeg_arena",nekopack_video::Container::Asf=>"bridge_owned_excludes_ffmpeg_heap" },i.width,i.height,i.fps,i.sample_rate,i.duration).into_bytes();
                 *state=Some(decoder);Ok(bytes)
             }
             1=>{
                 let frame=state.as_mut().ok_or("no movie")?.step()?;
-                let mut bytes=format!("{{\"pcm_bytes\":{},\"rgba_bytes\":{},\"video_time\":{},\"ended\":{},\"peak_bytes\":{}}}\n",frame.pcm.len()*2,frame.rgba.len(),frame.video_time,frame.ended,frame.peak_bytes).into_bytes();
+                let mut bytes=format!("{{\"pcm_bytes\":{},\"rgba_bytes\":{},\"video_time\":{},\"ended\":{},\"peak_bytes\":{},\"audio_end_time\":{},\"video_end_time\":{},\"decoded_video_frames\":{}}}\n",frame.pcm.len()*2,frame.rgba.len(),frame.video_time,frame.ended,frame.peak_bytes,frame.audio_end_time,frame.video_end_time,frame.decoded_video_frames).into_bytes();
                 for sample in frame.pcm {bytes.extend_from_slice(&sample.to_le_bytes());}
                 bytes.extend_from_slice(&frame.rgba);Ok(bytes)
             }

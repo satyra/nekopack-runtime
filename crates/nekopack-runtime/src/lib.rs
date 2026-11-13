@@ -1,11 +1,15 @@
 //! Shared bounded title execution and raw DAT resources; no platform APIs.
 pub mod dat;
+mod audio_config;
+pub(crate) mod system_command;
+pub mod engine_abi;
 mod dialogue;
 mod filter;
 pub mod flash;
 mod menu;
 mod message_adapter;
 mod motion;
+mod patch_text;
 mod preferences;
 mod read_history;
 pub mod save_ui;
@@ -15,6 +19,8 @@ pub mod shake;
 pub mod story;
 pub mod text_render;
 pub mod title;
+#[cfg(test)]
+mod title_page_tests;
 pub mod transition;
 mod unlocks;
 use nekopack_script::{
@@ -46,6 +52,23 @@ fn array(items: &[Vec<u8>]) -> Result<String, String> {
             .collect::<Result<Vec<_>, _>>()?
             .join(",")
     ))
+}
+pub(crate) fn load_system_module(
+    store: &mut impl GameResources,
+    variables: &mut nekopack_script::runtime::Variables,
+    system: &mut SystemVm,
+    name: &[u8],
+) -> Result<(), Box<dyn Error>> {
+    let data = store.system(name)?;
+    let source = std::str::from_utf8(&data)?;
+    system.eval_with_resources(std::str::from_utf8(name)?, source, variables, store)
+        .map_err(|error| format!("module {}: {error}", String::from_utf8_lossy(name)))?;
+    if name.eq_ignore_ascii_case(b"message.nut") {
+        audio_config::validate_source(system, source)?;
+        system.eval("message-voice-adapter", &message_adapter::voice_adapter(source)?)?;
+        system.eval("message-layout-adapter", &message_adapter::layout_adapter(source)?)?;
+    }
+    Ok(())
 }
 pub fn run_title(
     store: &mut impl GameResources,
@@ -129,29 +152,14 @@ fn bootstrap_continue(
                         return Err("unexpected dialogue during title bootstrap".into());
                     }
                     Request::System(name) => {
-                        let data = store.system(&name)?;
-                        system
-                            .eval_with_resources(
-                                std::str::from_utf8(&name)?,
-                                std::str::from_utf8(&data)?,
-                                &mut machine.variables,
-                                store,
-                            )
-                            .map_err(|e| {
-                                format!("module {}: {e}", String::from_utf8_lossy(&name))
-                            })?;
-                        if name.eq_ignore_ascii_case(b"message.nut") {
-                            system.eval(
-                                "message-voice-adapter",
-                                &message_adapter::voice_adapter(std::str::from_utf8(&data)?)?,
-                            )?;
-                        }
+                        load_system_module(store, &mut machine.variables, &mut system, &name)?;
                         writeln!(output, "system\t{}", String::from_utf8_lossy(&name))?;
                         modules += 1;
                         machine.complete(None)?;
                     }
                     Request::Command { name, args, rows } => {
-                        if stop_at_menu && name == b"map" {
+                        if stop_at_menu && (name == b"map" || name == b"title" && !rows.is_empty())
+                        {
                             return Ok((machine, system));
                         }
                         writeln!(
@@ -161,22 +169,38 @@ fn bootstrap_continue(
                             args.len(),
                             rows.len()
                         )?;
-                        if [b"img".as_slice(), b"bgm", b"wait", b"fade", b"se", b"env"]
-                            .contains(&name.as_slice())
+                        if [
+                            b"img".as_slice(),
+                            b"bgm",
+                            b"wait",
+                            b"fade",
+                            b"wipe",
+                            b"reset",
+                            b"se",
+                            b"env",
+                        ]
+                        .contains(&name.as_slice())
                         {
-                            system.eval_with_resources(
-                                "native-effect",
-                                &format!("NativeCommand({},{})", quote(&name)?, array(&args)?),
-                                &mut machine.variables,
-                                store,
-                            )?;
+                            system
+                                .eval_with_resources(
+                                    "native-effect",
+                                    &format!("NativeCommand({},{})", quote(&name)?, array(&args)?),
+                                    &mut machine.variables,
+                                    store,
+                                )
+                                .map_err(|error| {
+                                    format!(
+                                        "native effect {}: {error}",
+                                        String::from_utf8_lossy(&name)
+                                    )
+                                })?;
                             machine.complete(None)?;
                         } else {
                             let invoke = format!(
                                 "local f=com[{}]\nlocal result=f.call(getroottable(),{}{})\nreturn result==null ? \"null\" : result.tostring()",
                                 quote(&name)?,
                                 array(&args)?,
-                                if name == b"map" {
+                                if name == b"map" || name == b"title" && !rows.is_empty() {
                                     format!(",{}", array(&rows)?)
                                 } else {
                                     String::new()
@@ -192,7 +216,7 @@ fn bootstrap_continue(
                                 .map_err(|e| {
                                     format!("command {}: {e}", String::from_utf8_lossy(&name))
                                 })?;
-                            if name == b"map" {
+                            if name == b"map" || name == b"title" && !rows.is_empty() {
                                 let selected = system.result().parse::<i32>()?;
                                 machine.complete(Some(selected))?;
                                 menus += 1;

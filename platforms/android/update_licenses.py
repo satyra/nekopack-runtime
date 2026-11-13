@@ -38,6 +38,7 @@ def main():
     parser.add_argument("--ndk", type=Path, required=True)
     parser.add_argument("--kotlin-jar", type=Path, required=True)
     parser.add_argument("--refresh-kotlin", action="store_true")
+    parser.add_argument("--ffmpeg-source", type=Path, default=ROOT / ".local/ffmpeg/ffmpeg-8.0.1")
     args = parser.parse_args()
     files = {}
     components = []
@@ -176,6 +177,18 @@ def main():
         "source": {"url": plmpeg["url"], "revision": plmpeg["revision"],
                    "paths": ["vendor/pl_mpeg/LICENSE", "vendor/pl_mpeg/NEKOPACK_CHANGES.md", "vendor/pl_mpeg/UPSTREAM.json"],
                    "note": "Upstream header declares MIT and attribution; the repository LICENSE retains the full MIT text and provenance."},
+    })
+
+    ffmpeg_files = [put(f"ffmpeg-8.0.1/{name}", (args.ffmpeg_source / name).read_bytes())
+                    for name in ("COPYING.LGPLv2.1", "COPYING.LGPLv3", "LICENSE.md")]
+    components.append({
+        "component": "FFmpeg", "version": "8.0.1", "license_expression": "LGPL-2.1-or-later",
+        "scope": "Minimal shared ASF/WMV/WMA decoder; GPL, nonfree, network and external codecs disabled",
+        "license_files": ffmpeg_files,
+        "source": {"url": "https://ffmpeg.org/releases/ffmpeg-8.0.1.tar.xz",
+                   "sha256": "05ee0b03119b45c0bdb4df654b96802e909e0a752f72e4fe3794f487229e5a41",
+                   "build_script": "crates/nekopack-video/tools/build_ffmpeg.py",
+                   "note": "Unmodified upstream source; distribute the pinned source archive and build script with binary releases."},
     })
 
     notice = """NekoPack Android project license and third-party notices

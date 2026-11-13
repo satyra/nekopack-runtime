@@ -1,5 +1,6 @@
 //! Shared observed BLESS saveload.mng composition and pointer contract.
 use crate::{
+    GameResources,
     dat::DatGame,
     quote,
     text_render::{SharedFont, draw_save_label},
@@ -21,10 +22,235 @@ pub struct Slot {
     pub title: String,
     pub route: String,
     pub stamp: String,
+    pub text: String,
     pub thumbnail: RgbaImage,
+}
+#[derive(Clone)]
+struct Layout {
+    items: usize,
+    save_pages: usize,
+    load_pages: usize,
+    switch_modes: bool,
+    mode_titles: Option<[String; 2]>,
+    labels: Vec<LabelSpec>,
+    thumbnail_at: [i32; 2],
+}
+#[derive(Clone)]
+struct LabelSpec {
+    field: String,
+    at: [i32; 2],
+    size: f32,
+    color: [u8; 3],
+}
+fn source_code(source: &str) -> String {
+    let mut result = String::new();
+    let mut block = false;
+    for line in source.lines() {
+        let mut rest = line;
+        while !rest.is_empty() {
+            if block {
+                if let Some((_, tail)) = rest.split_once("*/") {
+                    block = false;
+                    rest = tail;
+                } else {
+                    break;
+                }
+            } else if let Some((head, tail)) = rest.split_once("/*") {
+                result.push_str(head);
+                block = true;
+                rest = tail;
+            } else {
+                result.push_str(rest.split("//").next().unwrap());
+                break;
+            }
+        }
+        result.push('\n');
+    }
+    result
+}
+fn source_labels(source: &str) -> Result<Vec<LabelSpec>> {
+    let tail = source
+        .split_once("function ViewSavePage(")
+        .ok_or("missing ViewSavePage function")?
+        .1;
+    let start = tail.find('{').ok_or("missing ViewSavePage body")?;
+    let mut depth = 0usize;
+    let mut quoted = false;
+    let mut escaped = false;
+    let mut end = None;
+    for (offset, ch) in tail[start..].char_indices() {
+        if quoted {
+            if escaped {
+                escaped = false
+            } else if ch == '\\' {
+                escaped = true
+            } else if ch == '"' {
+                quoted = false
+            }
+        } else if ch == '"' {
+            quoted = true
+        } else if ch == '{' {
+            depth += 1
+        } else if ch == '}' {
+            depth -= 1;
+            if depth == 0 {
+                end = Some(start + offset);
+                break;
+            }
+        }
+    }
+    let body = &tail[start + 1..end.ok_or("unterminated ViewSavePage body")?];
+    let mut size = 0.0;
+    let mut color = [0; 3];
+    let mut labels = Vec::new();
+    for line in body.lines() {
+        let code = line.split_whitespace().collect::<String>();
+        if let Some(value) = code.strip_prefix("g.Size=") {
+            size = value.trim_end_matches(';').parse()?;
+        }
+        if let Some(value) = code.strip_prefix("g.Color=0x") {
+            let rgb = u32::from_str_radix(value.trim_end_matches(';'), 16)?;
+            color = [(rgb >> 16) as u8, (rgb >> 8) as u8, rgb as u8];
+        }
+        if let Some(args) = code.strip_prefix("g.Print(normal,") {
+            let args = args
+                .trim_end_matches(';')
+                .trim_end_matches(')')
+                .split(',')
+                .collect::<Vec<_>>();
+            let [field, x, y, ..] = args.as_slice() else {
+                return Err("save UI Glyph.Print requires field/x/y".into());
+            };
+            let field = match *field {
+                "code" => "code",
+                "info.stamp" | "datetime" | "t" => "stamp",
+                "info.route" => "route",
+                "info.title" => "title",
+                "text" => "text",
+                _ => return Err(format!("unsupported save UI Glyph.Print field {field}").into()),
+            };
+            if size <= 0.0 {
+                return Err("save UI label has no literal Glyph.Size".into());
+            }
+            labels.push(LabelSpec {
+                field: field.into(),
+                at: [x.parse()?, y.parse()?],
+                size,
+                color,
+            });
+        }
+    }
+    if !labels.iter().any(|label| label.field == "code") {
+        return Err("save UI has no slot code label".into());
+    }
+    Ok(labels)
+}
+fn sprite_key(name: &str) -> String {
+    let name = name.trim();
+    if let Some(prefix) = name.chars().next().filter(|c| "=+@*-".contains(*c)) {
+        format!(
+            "{prefix} {}",
+            name[prefix.len_utf8()..]
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ")
+                .to_ascii_uppercase()
+        )
+    } else {
+        name.split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ")
+            .to_ascii_uppercase()
+    }
+}
+impl Layout {
+    fn from_source(source: &str, images: &BTreeMap<String, Image>, separate: bool) -> Result<Self> {
+        let source = source_code(source);
+        let compact = source.split_whitespace().collect::<String>();
+        let constant = |name: &str| -> Result<Option<usize>> {
+            let marker = format!("const{name}=");
+            let Some((_, tail)) = compact.split_once(&marker) else {
+                return Ok(None);
+            };
+            let digits = tail
+                .chars()
+                .take_while(char::is_ascii_digit)
+                .collect::<String>();
+            Ok(Some(digits.parse()?))
+        };
+        let items = images
+            .keys()
+            .filter(|name| {
+                name.strip_prefix("DATA").is_some_and(|tail| {
+                    !tail.is_empty() && tail.bytes().all(|b| b.is_ascii_digit())
+                })
+            })
+            .count();
+        if items == 0 || (0..items).any(|i| !images.contains_key(&format!("DATA{i}"))) {
+            return Err("save UI requires contiguous DATA item anchors".into());
+        }
+        if let Some(expected) = constant("SAVE_ITEMS")? {
+            if expected != items {
+                return Err("save UI script item count differs from anchors".into());
+            }
+        }
+        let (save_pages, load_pages) = if let Some(pages) = constant("SAVE_PAGES")? {
+            (pages, pages)
+        } else if compact.contains("RadioButton(images,\"PAGE\",(mode!=ID_SAVE)?11:10)") {
+            (10, 11)
+        } else {
+            return Err("unsupported save UI page declaration".into());
+        };
+        if save_pages == 0 || (0..load_pages).any(|i| !images.contains_key(&format!("= PAGE#{i}")))
+        {
+            return Err("save UI page sprites differ from script count".into());
+        }
+        let switch_modes = compact.contains("spots.Bind(\"Load\",ID_LOAD)")
+            || compact.contains("spots.BindR(\"Load\",ID_LOAD)");
+        let mode_titles = if separate {
+            None
+        } else if compact.contains("?\"SBASE\":\"LBASE\"") {
+            Some(["SBASE".into(), "LBASE".into()])
+        } else if compact.contains("?\"SAVE\":\"LOAD\"") {
+            Some(["SAVE".into(), "LOAD".into()])
+        } else {
+            return Err("unsupported save UI mode title declaration".into());
+        };
+        let (_, draw) = compact
+            .split_once("normal.Draw(info.thumb,")
+            .ok_or("missing save UI thumbnail Draw")?;
+        let (args, _) = draw
+            .split_once(')')
+            .ok_or("unterminated save UI thumbnail Draw")?;
+        let (x, y) = args
+            .split_once(',')
+            .ok_or("save UI thumbnail Draw requires x/y")?;
+        let thumbnail_at = if x == "sample.x" && y == "sample.y" {
+            let sample = images
+                .get("SAMPLE")
+                .ok_or("save UI thumbnail SAMPLE missing")?;
+            let normal = images.get("DATA=").ok_or("save UI normal card missing")?;
+            [
+                sample.position[0] - normal.position[0],
+                sample.position[1] - normal.position[1],
+            ]
+        } else {
+            [x.parse()?, y.parse()?]
+        };
+        Ok(Self {
+            items,
+            save_pages,
+            load_pages,
+            switch_modes,
+            mode_titles,
+            labels: source_labels(&source)?,
+            thumbnail_at,
+        })
+    }
 }
 pub struct SaveUi {
     images: BTreeMap<String, Image>,
+    layout: Layout,
     load_images: Option<BTreeMap<String, Image>>,
     size: [u32; 2],
     slots: BTreeMap<usize, Slot>,
@@ -56,6 +282,8 @@ impl SaveUi {
                 }
                 (size, images, Some(load))
             };
+        let source = String::from_utf8(store.system(b"saveload.nut")?)?;
+        let layout = Layout::from_source(&source, &images, load_images.is_some())?;
         for key in ["BASE", "DATA=", "DATA+", "= CLOSE"] {
             if !images.contains_key(key) {
                 return Err(format!("missing save UI sprite {key}").into());
@@ -63,6 +291,7 @@ impl SaveUi {
         }
         Ok(Self {
             images,
+            layout,
             load_images,
             size,
             slots: BTreeMap::new(),
@@ -82,10 +311,7 @@ impl SaveUi {
             .len();
         let mut images = BTreeMap::new();
         for sprite in mng.sprites()? {
-            let key = crate::dat::decode(sprite.name)?
-                .split_whitespace()
-                .collect::<Vec<_>>()
-                .join(" ");
+            let key = sprite_key(&crate::dat::decode(sprite.name)?);
             let pixels = mng.decode_image(sprite.ordinal, BUDGET - retained)?;
             retained += pixels.pixels().len();
             if let Some(old) = images.insert(
@@ -140,18 +366,29 @@ impl SaveUi {
             i.pixels.height() as i32,
         ])
     }
+    fn page_count(&self) -> usize {
+        if self.saving {
+            self.layout.save_pages
+        } else {
+            self.layout.load_pages
+        }
+    }
+    fn slot_ids(&self) -> Vec<usize> {
+        (0..self.layout.items)
+            .map(|i| self.page * self.layout.items + i + 1)
+            .collect()
+    }
     fn controls(&self) -> Result<Vec<(i32, bool, [i32; 4])>> {
         let mut buttons = vec![(-1, true, self.bounds("= CLOSE")?)];
-        if self.saving {
+        if self.layout.switch_modes && self.saving {
             buttons.push((-2, true, self.bounds("= LOAD")?));
-        } else if !self.from_title {
+        } else if self.layout.switch_modes && !self.from_title {
             buttons.push((-2, true, self.bounds("= SAVE")?));
         }
-        for p in 0..if self.saving { 10 } else { 11 } {
-            buttons.push((200 + p, true, self.bounds(&format!("= PAGE#{p}"))?));
+        for p in 0..self.page_count() {
+            buttons.push((200 + p as i32, true, self.bounds(&format!("= PAGE#{p}"))?));
         }
-        for i in 0..10 {
-            let id = self.page * 10 + i + 1;
+        for (i, id) in self.slot_ids().into_iter().enumerate() {
             buttons.push((
                 id as i32,
                 self.saving || self.slots.contains_key(&id),
@@ -192,11 +429,11 @@ impl SaveUi {
             Ok(())
         };
         draw(&mut canvas, "BASE")?;
-        if self.load_images.is_none() {
-            draw(&mut canvas, if self.saving { "SBASE" } else { "LBASE" })?;
+        if let Some(titles) = &self.layout.mode_titles {
+            draw(&mut canvas, &titles[if self.saving { 0 } else { 1 }])?;
         }
-        for p in 0..if self.saving { 10 } else { 11 } {
-            let prefix = if self.pressed == Some(200 + p) {
+        for p in 0..self.page_count() {
+            let prefix = if self.pressed == Some(200 + p as i32) {
                 "+"
             } else if p as usize == self.page {
                 "@"
@@ -213,7 +450,7 @@ impl SaveUi {
                 "= CLOSE"
             },
         )?;
-        if self.saving || !self.from_title {
+        if self.layout.switch_modes && (self.saving || !self.from_title) {
             let name = if self.saving { "LOAD" } else { "SAVE" };
             draw(
                 &mut canvas,
@@ -224,8 +461,7 @@ impl SaveUi {
             )?;
         }
         let mut slots = Vec::new();
-        for i in 0..10 {
-            let id = self.page * 10 + i + 1;
+        for (i, id) in self.slot_ids().into_iter().enumerate() {
             let base = self.bounds(&format!("DATA{i}"))?;
             let hover = self.pressed == Some(id as i32);
             let normal = &self.images()["DATA="];
@@ -237,56 +473,41 @@ impl SaveUi {
             let mut card =
                 RgbaImage::transparent(frame.pixels.width(), frame.pixels.height(), BUDGET)?;
             if let Some(slot) = self.slots.get(&id) {
-                card.draw(&slot.thumbnail, [38 - shift[0], 5 - shift[1]]);
+                let at = self.layout.thumbnail_at;
+                card.draw(&slot.thumbnail, [at[0] - shift[0], at[1] - shift[1]]);
             }
             card.draw(&frame.pixels, [0, 0]);
-            let color = if hover { [255; 3] } else { [0x49, 8, 8] };
-            draw_save_label(
-                &mut card,
-                font,
-                &format!("{:03}", if self.page == 10 { id - 100 } else { id }),
-                [188 - shift[0], 10 - shift[1]],
-                16.0,
-                color,
-                75,
-            )?;
-            if let Some(slot) = self.slots.get(&id) {
+            for label in &self.layout.labels {
+                let text = if label.field == "code" {
+                    format!(
+                        "{:03}",
+                        if self.page >= self.layout.save_pages {
+                            id - 100
+                        } else {
+                            id
+                        }
+                    )
+                } else if let Some(slot) = self.slots.get(&id) {
+                    match label.field.as_str() {
+                        "stamp" => slot.stamp.clone(),
+                        "route" => slot.route.clone(),
+                        "title" => slot.title.clone(),
+                        "text" => slot.text.chars().take(38).collect(),
+                        _ => unreachable!(),
+                    }
+                } else if self.errors.contains_key(&id) && label.field != "code" {
+                    "损坏存档".into()
+                } else {
+                    continue;
+                };
                 draw_save_label(
                     &mut card,
                     font,
-                    &slot.stamp,
-                    [270 - shift[0], 10 - shift[1]],
-                    16.0,
-                    color,
-                    270,
-                )?;
-                draw_save_label(
-                    &mut card,
-                    font,
-                    &slot.route,
-                    [194 - shift[0], 34 - shift[1]],
-                    18.0,
-                    color,
-                    350,
-                )?;
-                draw_save_label(
-                    &mut card,
-                    font,
-                    &slot.title,
-                    [194 - shift[0], 54 - shift[1]],
-                    18.0,
-                    color,
-                    350,
-                )?;
-            } else if self.errors.contains_key(&id) {
-                draw_save_label(
-                    &mut card,
-                    font,
-                    "损坏存档",
-                    [194 - shift[0], 34 - shift[1]],
-                    18.0,
-                    color,
-                    350,
+                    &text,
+                    [label.at[0] - shift[0], label.at[1] - shift[1]],
+                    label.size,
+                    label.color,
+                    (frame.pixels.width() as i32 - label.at[0]).max(0),
                 )?;
             }
             canvas.draw(&card, [base[0] + shift[0], base[1] + shift[1]]);
@@ -296,8 +517,16 @@ impl SaveUi {
                 quote(self.errors.get(&id).map_or("", String::as_str).as_bytes())?
             ));
         }
+        let slot_ids = self
+            .slot_ids()
+            .iter()
+            .map(usize::to_string)
+            .collect::<Vec<_>>()
+            .join(",");
+        let items = self.layout.items;
+        let [width, height] = self.size;
         let buttons=self.controls()?.iter().map(|(id,enabled,b)|format!("{{\"id\":{id},\"enabled\":{enabled},\"supported\":true,\"bounds\":[{},{},{},{}]}}",b[0],b[1],b[2],b[3])).collect::<Vec<_>>().join(",");
-        let mut out=format!("{{\"kind\":\"save_ui\",\"saving\":{},\"page\":{},\"from_title\":{},\"input_sequence\":{},\"action\":{action},\"refresh\":{refresh},\"buttons\":[{buttons}],\"slots\":[{}]}}\n",self.saving,self.page,self.from_title,self.input_sequence,slots.join(",")).into_bytes();
+        let mut out=format!("{{\"kind\":\"save_ui\",\"size\":[{width},{height}],\"saving\":{},\"page\":{},\"from_title\":{},\"slots_per_page\":{items},\"slot_ids\":[{slot_ids}],\"input_sequence\":{},\"action\":{action},\"refresh\":{refresh},\"buttons\":[{buttons}],\"slots\":[{}]}}\n",self.saving,self.page,self.from_title,self.input_sequence,slots.join(",")).into_bytes();
         canvas.write_png(&mut out)?;
         Ok(out)
     }
@@ -338,6 +567,35 @@ pub(crate) fn thumbnail(image: &RgbaImage) -> Result<RgbaImage> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn source_glyph_layout_uses_print_state_and_function_boundaries() {
+        let source = source_code(
+            r#"
+function ViewSavePage(mode){
+    g.Color = 0x123456
+    g.Size = 25
+    /* g.Print(normal, unsupported, 1, 2) */
+    g.Print(normal, code, 42, 17)
+}
+function Other(){ g.Print(normal, unsupported, 9, 9) }
+"#,
+        );
+        let labels = source_labels(&source).unwrap();
+        assert_eq!(labels.len(), 1);
+        assert_eq!(labels[0].field, "code");
+        assert_eq!(labels[0].at, [42, 17]);
+        assert_eq!(labels[0].size, 25.0);
+        assert_eq!(labels[0].color, [0x12, 0x34, 0x56]);
+        assert!(source_labels(&source.replace("code, 42, 17", "unknown, 42, 17")).is_err());
+        assert!(source_labels(&source.replace("code, 42, 17", "code, 42")).is_err());
+    }
+    #[test]
+    fn sprite_binding_names_normalize_spacing_and_case() {
+        assert_eq!(sprite_key("=CLOSE"), "= CLOSE");
+        assert_eq!(sprite_key("= Load"), "= LOAD");
+        assert_eq!(sprite_key(" @ PAGE#3 "), "@ PAGE#3");
+        assert_eq!(sprite_key("DATA="), "DATA=");
+    }
     fn ui(from_title: bool) -> SaveUi {
         let mut images = BTreeMap::new();
         let mut add = |key: String, x: i32| {
@@ -360,6 +618,15 @@ mod tests {
         }
         SaveUi {
             images,
+            layout: Layout {
+                items: 10,
+                save_pages: 10,
+                load_pages: 11,
+                switch_modes: true,
+                mode_titles: Some(["SBASE".into(), "LBASE".into()]),
+                labels: Vec::new(),
+                thumbnail_at: [38, 5],
+            },
             load_images: None,
             size: [320, 200],
             slots: BTreeMap::new(),

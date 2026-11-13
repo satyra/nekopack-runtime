@@ -259,3 +259,6 @@ impl<R: Read + Seek> Archive<R> {
 
 #[cfg(test)]
 mod tests;
+
+pub mod pk02;
+pub use pk02::{Entry as Pk02Entry, Pk02};

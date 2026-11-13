@@ -90,15 +90,23 @@ class Probe:
     def start_title(self, *extras):
         """Launch and wait for title rendering independently of ActivityManager."""
         self.start_activity(*extras)
+        saw_process = False
 
         def presented():
+            nonlocal saw_process
             title = self.obj('title-presented.json')
             if title:
                 return title
             process = subprocess.run([*self.command, 'shell', 'pidof', PACKAGE],
                                      capture_output=True, timeout=45)
             assert process.returncode in (0, 1), process.stderr.decode(errors='replace')
-            assert process.stdout.strip(), (self.run, 'process exited before title', self.launch)
+            # Some Android emulators return from am -W before the replacement
+            # process is visible to pidof after -S. Only a process observed and
+            # then lost is evidence that this launch exited.
+            if process.stdout.strip():
+                saw_process = True
+            else:
+                assert not saw_process, (self.run, 'process exited before title', self.launch)
             return None
 
         try:

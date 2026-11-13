@@ -2,6 +2,7 @@
 //! Parsing performs no CP932/CP936 conversion; unsupported syntax stays explicit.
 use std::{fmt, ops::Range};
 pub mod checkpoint;
+mod expression;
 pub mod runtime;
 pub mod system;
 
@@ -64,6 +65,30 @@ fn space(b: u8) -> bool {
 }
 fn decimal(bytes: &[u8]) -> bool {
     !bytes.is_empty() && bytes.iter().all(u8::is_ascii_digit)
+}
+
+/// Native banks each contain 1000 slots. F/f retain distinct GF/LF identities.
+pub(crate) fn parse_slot_address(address: &[u8]) -> Result<(u8, u32), &'static str> {
+    let (bank, digits) = if let Some(n) = address.strip_prefix(b"GF") {
+        (b'F', n)
+    } else if let Some(n) = address.strip_prefix(b"LF") {
+        (b'f', n)
+    } else if let Some(n) = address.strip_prefix(b"G") {
+        (b'G', n)
+    } else if let Some(n) = address.strip_prefix(b"L") {
+        (b'L', n)
+    } else {
+        return Err("variable address requires G/GF/L/LF bank");
+    };
+    if !decimal(digits) {
+        return Err("variable address requires decimal index");
+    }
+    let index = std::str::from_utf8(digits).unwrap().parse::<u32>()
+        .map_err(|_| "slot address overflow")?;
+    if index >= 1000 {
+        return Err("variable index outside 0..999");
+    }
+    Ok((bank, index))
 }
 
 /// Parse .def, .var, .call, .load, .system and `? name = integer` bootstrap syntax.
@@ -147,16 +172,12 @@ pub fn parse_bootstrap(data: &[u8], max_statements: usize) -> Result<Vec<Node<'_
                 if args.len() < 2 {
                     return Err(fail(".var needs address and at least one name"));
                 }
-                let address = args[0];
-                if !matches!(address[0], b'G' | b'L') || !decimal(&address[1..]) {
-                    return Err(fail(".var requires G/L plus decimal address"));
+                let (bank, first) = parse_slot_address(args[0]).map_err(fail)?;
+                if args.len() - 1 > (1000 - first) as usize {
+                    return Err(fail("variable declaration crosses bank boundary"));
                 }
-                let first = std::str::from_utf8(&address[1..])
-                    .unwrap()
-                    .parse()
-                    .map_err(|_| fail(".var address outside u32"))?;
                 Statement::Variables {
-                    bank: address[0],
+                    bank,
                     first,
                     names: args[1..].to_vec(),
                 }

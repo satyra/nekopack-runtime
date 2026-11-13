@@ -42,3 +42,7 @@ ID_SKIP <- 130
 ID_SKIP2 <- 131
 ID_SPACE <- 132
 ID_USER <- 1000
+ID_UP <- 133
+// Verified native slider endpoint exports (sorakoi.exe 0x51F7AC / 0x51F85A).
+ID_NEXT_END <- 65292
+ID_BACK_END <- 65293

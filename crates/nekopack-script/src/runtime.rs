@@ -1,5 +1,5 @@
 //! Cooperative script state. Host effects are acknowledged before the PC advances.
-use crate::{Statement, parse_bootstrap};
+use crate::{parse_bootstrap, Statement};
 use std::collections::BTreeMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -57,25 +57,11 @@ impl Variables {
         self.names.insert(name.to_vec(), Value::Constant(value));
         Ok(())
     }
-    /// Observed system `def(address, alias)` profile. GF aliases are read as @alias.
-    /// Flag storage is separate from integer G slots; packed original layout is unverified.
+    /// GF/LF aliases use @name; F/f are checkpoint bank tags, not source syntax.
     pub fn define_system(&mut self, address: &[u8], alias: &[u8]) -> Result<(), String> {
-        let (bank, digits, prefix) = if let Some(n) = address.strip_prefix(b"GF") {
-            (b'F', n, true)
-        } else if let Some(n) = address.strip_prefix(b"G") {
-            (b'G', n, false)
-        } else if let Some(n) = address.strip_prefix(b"L") {
-            (b'L', n, false)
-        } else {
-            return Err("unsupported system variable address".into());
-        };
-        if digits.is_empty() || !digits.iter().all(u8::is_ascii_digit) {
-            return Err("invalid system variable address".into());
-        }
-        let index = std::str::from_utf8(digits)
-            .unwrap()
-            .parse::<u32>()
-            .map_err(|_| "slot address overflow")?;
+        let (bank, index) = crate::parse_slot_address(address)
+            .map_err(|reason| format!("invalid system variable address: {reason}"))?;
+        let prefix = matches!(bank, b'F' | b'f');
         if alias.is_empty() || alias.contains(&0) {
             return Err("invalid variable alias".into());
         }
@@ -130,7 +116,46 @@ struct Frame {
     pc: usize,
     branch_ends: Vec<usize>,
 }
+/// A title menu has option rows followed by `.case`; bare `.title` also clears a story label.
+pub fn title_has_branches<'a>(following: impl Iterator<Item = &'a [u8]>) -> bool {
+    let mut has_rows = false;
+    for row in following {
+        let row = row.trim_ascii();
+        if row.is_empty() || row.starts_with(b";") {
+            continue;
+        }
+        if row.starts_with(b".") {
+            return has_rows
+                && row.split(|b| b.is_ascii_whitespace()).next() == Some(b".case".as_slice());
+        }
+        has_rows = true;
+    }
+    false
+}
 impl Frame {
+    fn branch(&self, index: usize, commands: &BTreeMap<Vec<u8>, bool>) -> bool {
+        let word = self.lines[index].1.split(|b| b.is_ascii_whitespace()).next().unwrap_or_default();
+        if word == b".switch" {
+            return true;
+        }
+        let Some(name) = word.strip_prefix(b".") else { return false };
+        commands.get(name).copied().unwrap_or_else(|| {
+            matches!(name, b"map" | b"select") || self.title_branch(index)
+        })
+    }
+
+    fn title_branch(&self, index: usize) -> bool {
+        let line = &self.lines[index].1;
+        if line.split(|b| b.is_ascii_whitespace()).next() != Some(b".title".as_slice()) {
+            return false;
+        }
+        title_has_branches(
+            self.lines[index + 1..]
+                .iter()
+                .map(|(_, row)| row.as_slice()),
+        )
+    }
+
     fn new(source: Source) -> Self {
         let lines = source
             .bytes
@@ -173,8 +198,20 @@ pub struct Machine {
     max_steps: usize,
     dialogue: bool,
     max_depth: usize,
+    system_commands: BTreeMap<Vec<u8>, bool>,
 }
 impl Machine {
+    /// Original com registration uses closure parameter count (including `this`) > 2.
+    /// Synchronize this metadata from the live VM before advancing, including after restore.
+    pub fn register_system_command(&mut self, name: &[u8], takes_rows: bool) {
+        self.system_commands.insert(name.to_vec(), takes_rows);
+    }
+
+    pub fn pending_system_command_takes_rows(&self) -> Option<bool> {
+        let Request::Command { name, .. } = self.pending.as_ref()? else { return None };
+        self.system_commands.get(name).copied()
+    }
+
     pub fn pending_text(&self) -> Option<&[u8]> {
         if let Some(Request::Text(text)) = &self.pending {
             Some(text)
@@ -182,11 +219,43 @@ impl Machine {
             None
         }
     }
+    pub fn message_prefix(&self) -> Vec<Vec<u8>> {
+        let Some(frame) = self.stack.last() else {
+            return Vec::new();
+        };
+        let mut rows = Vec::new();
+        for (_, line) in frame.lines[..frame.pc].iter().rev() {
+            if line.starts_with(b";") {
+                continue;
+            }
+            if !line.starts_with(b":") {
+                break;
+            }
+            rows.push(line.clone());
+        }
+        rows.reverse();
+        rows
+    }
     /// Save only at a pending text boundary; native Squirrel stacks are never serialized.
     pub fn save_dialogue(&self) -> Result<Vec<u8>, String> {
         if !matches!(self.pending, Some(Request::Text(_))) {
             return Err("save requires pending text".into());
         }
+        self.save_checkpoint()
+    }
+    pub fn selection_option_count(&self) -> Option<usize> {
+        match &self.pending {
+            Some(Request::Command { name, rows, .. }) if name == b"select" => Some(rows.len()),
+            _ => None,
+        }
+    }
+    pub fn save_selection(&self) -> Result<Vec<u8>, String> {
+        if !matches!(&self.pending, Some(Request::Command { name, .. }) if name == b"select") {
+            return Err("checkpoint requires pending selection".into());
+        }
+        self.save_checkpoint()
+    }
+    fn save_checkpoint(&self) -> Result<Vec<u8>, String> {
         let mut w = crate::checkpoint::Writer::default();
         w.number(self.max_steps as u64);
         w.number(self.max_depth as u64);
@@ -232,6 +301,23 @@ impl Machine {
         max_steps: usize,
         max_depth: usize,
     ) -> Result<Self, String> {
+        Self::load_checkpoint(bytes, scripts, max_steps, max_depth, false)
+    }
+    pub fn load_selection(
+        bytes: &[u8],
+        scripts: &mut impl Scripts,
+        max_steps: usize,
+        max_depth: usize,
+    ) -> Result<Self, String> {
+        Self::load_checkpoint(bytes, scripts, max_steps, max_depth, true)
+    }
+    fn load_checkpoint(
+        bytes: &[u8],
+        scripts: &mut impl Scripts,
+        max_steps: usize,
+        max_depth: usize,
+        selection: bool,
+    ) -> Result<Self, String> {
         let mut r = crate::checkpoint::Reader::new(bytes)?;
         let max_steps = r.count(max_steps)?;
         let max_depth = r.count(max_depth)?;
@@ -273,7 +359,8 @@ impl Machine {
             let bank = u8::try_from(r.number()?).map_err(|_| "invalid slot bank")?;
             let index = u32::try_from(r.number()?).map_err(|_| "invalid slot index")?;
             let value = u32::try_from(r.number()?).map_err(|_| "invalid slot value")? as i32;
-            if !matches!(bank, b'G' | b'L' | b'F')
+            if !matches!(bank, b'G' | b'L' | b'F' | b'f')
+                || index >= 1000
                 || variables.slots.insert((bank, index), value).is_some()
             {
                 return Err("invalid or duplicate saved slot".into());
@@ -304,22 +391,49 @@ impl Machine {
             .ok_or("saved dialogue past script end")?
             .1
             .clone();
-        if text.is_empty()
-            || matches!(
-                text[0],
-                b'.' | b':' | b'@' | b'#' | b'*' | b'!' | b';' | b'?'
-            )
-        {
-            return Err("saved location is not dialogue".into());
-        }
+        let pending = if selection {
+            let mut parts = text
+                .split(|b| b.is_ascii_whitespace())
+                .filter(|p| !p.is_empty());
+            if parts.next() != Some(b".select".as_slice()) {
+                return Err("saved location is not selection".into());
+            }
+            let args = parts.map(|p| p.to_vec()).collect();
+            let rows = frame.lines[frame.pc + 1..]
+                .iter()
+                .map(|(_, row)| row)
+                .take_while(|row| !row.starts_with(b"."))
+                .filter(|row| !row.is_empty() && !row.starts_with(b";"))
+                .cloned()
+                .collect::<Vec<_>>();
+            if rows.is_empty() {
+                return Err("saved selection has no options".into());
+            }
+            Request::Command {
+                name: b"select".to_vec(),
+                args,
+                rows,
+            }
+        } else {
+            if text.is_empty()
+                || matches!(
+                    text[0],
+                    b'.' | b':' | b'@' | b'#' | b'*' | b'!' | b';' | b'?'
+                )
+            {
+                return Err("saved location is not dialogue".into());
+            }
+            Request::Text(text)
+        };
         Ok(Self {
             variables,
             stack,
-            pending: Some(Request::Text(text)),
+            pending: Some(pending),
             steps,
             max_steps,
             dialogue: true,
             max_depth,
+            system_commands: BTreeMap::new(),
         })
     }
     pub fn new(source: Source, max_steps: usize, max_depth: usize) -> Self {
@@ -331,6 +445,7 @@ impl Machine {
             max_steps,
             dialogue: false,
             max_depth,
+            system_commands: BTreeMap::new(),
         }
     }
     /// Enable the observed colon-speaker and UTF-8 text profile explicitly.
@@ -404,41 +519,18 @@ impl Machine {
                 frame.pc += 1;
                 continue;
             }
-            if self.dialogue {
-                if let Some(assignment) = raw.strip_prefix(b"?") {
-                    let tokens = assignment
-                        .split(|b| b.is_ascii_whitespace())
-                        .filter(|token| !token.is_empty())
-                        .collect::<Vec<_>>();
-                    if let [target, b"=", source, b"|", comparison] = tokens.as_slice() {
-                        let comparison = std::str::from_utf8(comparison)
-                            .map_err(|_| "assignment comparison requires decoded UTF-8")?;
-                        let (left, right) = comparison
-                            .strip_prefix('(')
-                            .and_then(|group| group.strip_suffix(')'))
-                            .and_then(|group| group.split_once("=="))
-                            .ok_or("expected parenthesized equality after assignment OR")?;
-                        let source = self.variables.get(source)?;
-                        let left = self.variables.get(left.as_bytes())?;
-                        let right = self.variables.get(right.as_bytes())?;
-                        self.variables.set(target, source | i32::from(left == right))?;
-                        frame.pc += 1;
-                        continue;
-                    }
-                    if let [target, b"=", source] = tokens.as_slice() {
-                        if !source
-                            .strip_prefix(b"-")
-                            .unwrap_or(source)
-                            .iter()
-                            .all(u8::is_ascii_digit)
-                        {
-                            let value = self.variables.get(source)?;
-                            self.variables.set(target, value)?;
-                            frame.pc += 1;
-                            continue;
-                        }
-                    }
-                }
+            if let Some(assignment) = raw.strip_prefix(b"?") {
+                let equals = assignment
+                    .iter()
+                    .position(|byte| *byte == b'=')
+                    .ok_or("assignment requires =")?;
+                let target = assignment[..equals].trim_ascii();
+                let expression = assignment[equals + 1..].trim_ascii();
+                let value =
+                    crate::expression::evaluate(expression, |name| self.variables.get(name))?;
+                self.variables.set(target, value)?;
+                frame.pc += 1;
+                continue;
             }
             let mut raw = raw;
             if matches!(
@@ -468,6 +560,92 @@ impl Machine {
                 }
             }
             let word = raw.split(|b| b.is_ascii_whitespace()).next().unwrap();
+            if word == b".goto" {
+                let tokens = raw
+                    .split(|b| b.is_ascii_whitespace())
+                    .filter(|p| !p.is_empty())
+                    .collect::<Vec<_>>();
+                let enabled = match tokens.as_slice() {
+                    [_, _] => true,
+                    [_, _, b"if", name] => {
+                        let (negated, key) = name
+                            .strip_prefix(b"!")
+                            .map_or((false, *name), |key| (true, key));
+                        (self.variables.get(key)? != 0) != negated
+                    }
+                    [_, _, b"if", left, op, right] => {
+                        let operand = |token: &[u8]| {
+                            std::str::from_utf8(token)
+                                .ok()
+                                .and_then(|s| s.parse::<i32>().ok())
+                                .map(Ok)
+                                .unwrap_or_else(|| self.variables.get(token))
+                        };
+                        let left = operand(left)?;
+                        let right = operand(right)?;
+                        match *op {
+                            b"==" => left == right,
+                            b"!=" => left != right,
+                            b"<" => left < right,
+                            b"<=" => left <= right,
+                            b">" => left > right,
+                            b">=" => left >= right,
+                            _ => return Err("unsupported goto comparison".into()),
+                        }
+                    }
+                    _ => return Err("invalid goto arguments".into()),
+                };
+                if !enabled {
+                    frame.pc += 1;
+                    continue;
+                }
+                let label = tokens[1];
+                if !label.starts_with(b"#") {
+                    return Err("goto target must be a local label".into());
+                }
+                let mut target = None;
+                let mut openings = Vec::new();
+                let mut spans = Vec::new();
+                for (index, (_, line)) in frame.lines.iter().enumerate() {
+                    charge(&mut self.steps, self.max_steps)?;
+                    if line == label {
+                        if target.replace(index + 1).is_some() {
+                            return Err("ambiguous goto label".into());
+                        }
+                    }
+                    let marker = line
+                        .split(|b| b.is_ascii_whitespace())
+                        .next()
+                        .unwrap_or_default();
+                    if marker == b".loop" || frame.branch(index, &self.system_commands)
+                    {
+                        openings.push((index, marker == b".loop"));
+                    } else if line == b".end" {
+                        if let Some((start, is_loop)) = openings.pop() {
+                            if !is_loop {
+                                spans.push((start, index));
+                            }
+                        }
+                    }
+                }
+                let target = target.ok_or("missing goto label")?;
+                frame.branch_ends = spans
+                    .into_iter()
+                    .filter(|(start, end)| *start < target && target <= *end)
+                    .map(|(_, end)| end)
+                    .collect();
+                frame.branch_ends.sort_unstable_by(|a, b| b.cmp(a));
+                frame.pc = target;
+                continue;
+            }
+            if word.starts_with(b"#") && !raw.iter().any(|b| b.is_ascii_whitespace()) {
+                frame.pc += 1;
+                continue;
+            }
+            if raw == b".loop" {
+                frame.pc += 1;
+                continue;
+            }
             if self.dialogue && word == b".switch" {
                 let mut tokens = raw
                     .split(|b| b.is_ascii_whitespace())
@@ -487,6 +665,35 @@ impl Machine {
                 continue;
             }
             if word == b".case" || raw == b".end" {
+                if raw == b".end" && frame.branch_ends.last().is_none_or(|end| *end != frame.pc) {
+                    let mut nesting = 0usize;
+                    let mut loop_start = None;
+                    for i in (0..frame.pc).rev() {
+                        charge(&mut self.steps, self.max_steps)?;
+                        let line = &frame.lines[i].1;
+                        let word = line
+                            .split(|b| b.is_ascii_whitespace())
+                            .next()
+                            .unwrap_or_default();
+                        if line == b".end" {
+                            nesting += 1;
+                        } else if word == b".loop" || frame.branch(i, &self.system_commands)
+                        {
+                            if nesting != 0 {
+                                nesting -= 1;
+                            } else {
+                                if line == b".loop" {
+                                    loop_start = Some(i + 1)
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    if let Some(start) = loop_start {
+                        frame.pc = start;
+                        continue;
+                    }
+                }
                 let end = frame
                     .branch_ends
                     .pop()
@@ -508,10 +715,17 @@ impl Machine {
                                 u32::try_from(names.len() - 1).map_err(|_| "too many variables")?,
                             )
                             .ok_or("slot address overflow")?;
+                        let names: Vec<Vec<u8>> = names.iter().map(|name| {
+                            if matches!(bank, b'F' | b'f') {
+                                [b"@".as_slice(), *name].concat()
+                            } else {
+                                name.to_vec()
+                            }
+                        }).collect();
                         let mut seen = std::collections::BTreeSet::new();
                         if names
                             .iter()
-                            .any(|n| self.variables.names.contains_key(*n) || !seen.insert(*n))
+                            .any(|n| self.variables.names.contains_key(n.as_slice()) || !seen.insert(n.as_slice()))
                         {
                             return Err("duplicate variable declaration".into());
                         }
@@ -550,9 +764,9 @@ impl Machine {
                     .filter(|p| !p.is_empty());
                 let marker = parts.next().unwrap();
                 let name = if marker == b"@" { marker } else { &marker[1..] }.to_vec();
-                let args = parts.map(|p| p.to_vec()).collect();
+                let args: Vec<_> = parts.map(|p| p.to_vec()).collect();
                 let mut rows = Vec::new();
-                if matches!(name.as_slice(), b"map" | b"select") {
+                if frame.branch(frame.pc, &self.system_commands) {
                     for (_, row) in &frame.lines[frame.pc + 1..] {
                         charge(&mut self.steps, self.max_steps)?;
                         if row.starts_with(b".") {
@@ -574,9 +788,6 @@ impl Machine {
                 let request = if raw.starts_with(b":") {
                     let fields: Vec<_> =
                         raw[1..].split(|b| *b == b':').map(|s| s.to_vec()).collect();
-                    if fields.len() != 3 {
-                        return Err("speaker requires name:voice:actor".into());
-                    }
                     Request::Speaker(fields)
                 } else {
                     if raw.iter().any(|b| *b < 32 && *b != b'\t')
@@ -600,8 +811,7 @@ impl Machine {
     pub fn complete(&mut self, result: Option<i32>) -> Result<(), String> {
         let request = self.pending.as_ref().ok_or("no pending request")?;
         let frame = self.stack.last_mut().unwrap();
-        if matches!(request, Request::Command { name, .. } if matches!(name.as_slice(), b"map" | b"select" | b"switch"))
-        {
+        if matches!(request, Request::Command { .. }) && frame.branch(frame.pc, &self.system_commands) {
             let Request::Command { name, rows, .. } = request else {
                 unreachable!()
             };
@@ -620,7 +830,7 @@ impl Machine {
                     .split(|b| b.is_ascii_whitespace())
                     .next()
                     .unwrap_or_default();
-                if matches!(word, b".map" | b".select" | b".switch") {
+                if word == b".loop" || frame.branch(i, &self.system_commands) {
                     nesting += 1;
                     continue;
                 }
@@ -633,20 +843,23 @@ impl Machine {
                     break;
                 }
                 if nesting == 0 && word == b".case" {
-                    let value = &line[word.len()..];
-                    let value = value.trim_ascii();
-                    let id = match std::str::from_utf8(value)
-                        .map_err(|_| "invalid case encoding")?
-                        .parse::<i32>()
-                    {
-                        Ok(id) => id,
-                        Err(_) if name == b"switch" => self.variables.get(value)?,
-                        Err(_) => return Err("invalid case".into()),
-                    };
-                    if id == choice {
-                        if selected.is_some() {
-                            return Err("duplicate selected case".into());
-                        }
+                    let values: Vec<_> = line[word.len()..].split(|b| b.is_ascii_whitespace())
+                        .filter(|value| !value.is_empty()).collect();
+                    // Empty .case is unconditional; otherwise any listed constant matches.
+                    // Native tests are ordered, so the first matching case wins.
+                    let mut matches = values.is_empty();
+                    for value in values {
+                        let id = match std::str::from_utf8(value)
+                            .map_err(|_| "invalid case encoding")?.parse::<i32>() {
+                            Ok(id) => id,
+                            Err(_) => match self.variables.names.get(value) {
+                                Some(Value::Constant(id)) => *id,
+                                _ => return Err("case requires integer or declared constant".into()),
+                            },
+                        };
+                        matches |= id == choice;
+                    }
+                    if selected.is_none() && matches {
                         selected = Some(i + 1);
                     }
                 }
@@ -655,14 +868,21 @@ impl Machine {
             if let Some(pc) = selected {
                 frame.pc = pc;
                 frame.branch_ends.push(end);
-            } else if matches!(name.as_slice(), b"select" | b"switch") {
-                frame.pc = end + 1;
             } else {
-                return Err("map result has no matching case".into());
+                frame.pc = end + 1;
             }
         } else {
-            if result.is_some() {
+            if result.is_some() && !matches!(request, Request::Command { name, .. }
+                if self.system_commands.get(name) == Some(&false)) {
                 return Err("unexpected host result".into());
+            }
+            if matches!(request,Request::Command{name,args,..} if name==b"reset" && args.is_empty())
+            {
+                for ((bank, _), value) in &mut self.variables.slots {
+                    if matches!(*bank, b'L' | b'f') {
+                        *value = 0;
+                    }
+                }
             }
             frame.pc += 1;
         }
@@ -682,6 +902,336 @@ fn charge(steps: &mut usize, limit: usize) -> Result<(), String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn registered_machine(code: &[u8]) -> Machine {
+        let mut machine = Machine::new(Source { name: b"synthetic-com".to_vec(), bytes: code.to_vec() }, 1000, 8);
+        machine.enable_dialogue();
+        machine.register_system_command(b"probe", true);
+        machine.register_system_command(b"regular", false);
+        machine
+    }
+
+    #[test]
+    fn registered_arity_drives_rows_and_nested_case_checkpoint() {
+        const CODE: &[u8] = b".probe alpha beta\nrow one\n; ignored\n\nrow two\n.case 3 7\n.probe nested\n.case 2\nSynthetic\n.case\n.bad\n.end\n.case\n.bad\n.end\n.done";
+        struct SourceStore;
+        impl Scripts for SourceStore {
+            fn load(&mut self, name: &[u8]) -> Result<Source, String> {
+                Ok(Source { name: name.to_vec(), bytes: CODE.to_vec() })
+            }
+        }
+        let mut store = SourceStore;
+        let mut machine = registered_machine(CODE);
+        assert_eq!(machine.advance(&mut store).unwrap(), Step::Request(Request::Command {
+            name: b"probe".to_vec(), args: vec![b"alpha".to_vec(), b"beta".to_vec()],
+            rows: vec![b"row one".to_vec(), b"row two".to_vec()],
+        }));
+        assert_eq!(machine.pending_system_command_takes_rows(), Some(true));
+        machine.complete(Some(7)).unwrap();
+        assert!(matches!(machine.advance(&mut store).unwrap(), Step::Request(Request::Command { rows, .. }) if rows.is_empty()));
+        machine.complete(Some(2)).unwrap();
+        assert_eq!(machine.advance(&mut store).unwrap(), Step::Request(Request::Text(b"Synthetic".to_vec())));
+        let save = machine.save_dialogue().unwrap();
+        let mut restored = Machine::load_dialogue(&save, &mut store, 1000, 8).unwrap();
+        restored.register_system_command(b"probe", true);
+        for vm in [&mut machine, &mut restored] {
+            vm.complete(None).unwrap();
+            assert!(matches!(vm.advance(&mut store).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"done"));
+        }
+    }
+
+    #[test]
+    fn registered_one_argument_commands_ignore_results_without_consuming_rows() {
+        let mut machine = registered_machine(b".regular arg\nSynthetic\n.done");
+        assert!(matches!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Command { rows, .. }) if rows.is_empty()));
+        assert_eq!(machine.pending_system_command_takes_rows(), Some(false));
+        machine.complete(Some(99)).unwrap();
+        assert_eq!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Text(b"Synthetic".to_vec())));
+        let mut explicit = registered_machine(b".title\nSynthetic\n.case 1\n.end");
+        explicit.register_system_command(b"title", false);
+        assert!(matches!(explicit.advance(&mut Store).unwrap(), Step::Request(Request::Command { rows, .. }) if rows.is_empty()));
+        explicit.complete(None).unwrap();
+        assert_eq!(explicit.advance(&mut Store).unwrap(), Step::Request(Request::Text(b"Synthetic".to_vec())));
+    }
+
+    #[test]
+    fn registered_branch_cases_are_ordered_constant_lists_with_an_empty_default() {
+        for (result, expected) in [(7, b"first".as_slice()), (-2, b"negative"), (99, b"fallback")] {
+            let mut machine = registered_machine(b".def TARGET 7\n.probe\n.case TARGET 3\n.first\n.case 7\n.duplicate\n.case -2\n.negative\n.case\n.fallback\n.case 99\n.unreachable\n.end\n.done");
+            machine.advance(&mut Store).unwrap();
+            machine.complete(Some(result)).unwrap();
+            assert!(matches!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Command { name, .. }) if name == expected));
+            machine.complete(None).unwrap();
+            assert!(matches!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"done"));
+        }
+        for command in ["probe", "map"] {
+            let code = format!(".{command}\n.case 1\n.bad\n.end\n.done");
+            let mut machine = registered_machine(code.as_bytes());
+            machine.advance(&mut Store).unwrap();
+            machine.complete(Some(99)).unwrap();
+            assert!(matches!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"done"));
+        }
+        let mut machine = registered_machine(b".var L0 mutable\n.probe\n.case mutable\n.bad\n.end");
+        machine.advance(&mut Store).unwrap();
+        assert!(machine.complete(Some(0)).unwrap_err().contains("constant"));
+    }
+
+    #[test]
+    fn registered_branches_participate_in_loop_and_goto_nesting() {
+        let mut machine = registered_machine(b".loop\n.probe\n.case 1\n.goto #out\n.bad\n.end\n.end\n#out\n.done");
+        machine.advance(&mut Store).unwrap();
+        machine.complete(Some(1)).unwrap();
+        assert!(matches!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"done"));
+        assert!(machine.stack.last().unwrap().branch_ends.is_empty());
+        let mut machine = registered_machine(b".loop\n.probe\n.case 1\n.marker\n.end\n.end");
+        for _ in 0..2 {
+            assert!(matches!(machine.advance(&mut Store).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"probe"));
+            machine.complete(Some(1)).unwrap();
+            machine.advance(&mut Store).unwrap();
+            machine.complete(None).unwrap();
+        }
+    }
+    #[test]
+    fn four_banks_are_independent_and_checkpointed() {
+        const CODE: &[u8] = b".var G999 global\n.var L999 local\n.var GF999 flag\n.var LF999 local_flag\n? global = 11\n? local = 22\n? @flag = 33\n? @local_flag = 44\nSynthetic";
+        struct Store;
+        impl Scripts for Store {
+            fn load(&mut self, name: &[u8]) -> Result<Source, String> {
+                Ok(Source { name: name.to_vec(), bytes: CODE.to_vec() })
+            }
+        }
+        let mut store = Store;
+        let mut vm = Machine::new(store.load(b"banks").unwrap(), 1000, 4);
+        vm.enable_dialogue();
+        assert!(matches!(vm.advance(&mut store).unwrap(), Step::Request(Request::Text(_))));
+        let saved = vm.save_dialogue().unwrap();
+        let restored = Machine::load_dialogue(&saved, &mut store, 1000, 4).unwrap();
+        for (name, value) in [(b"global".as_slice(), 11), (b"local", 22), (b"@flag", 33), (b"@local_flag", 44)] {
+            assert_eq!(restored.variables.get(name), Ok(value));
+        }
+        assert_eq!(restored.variables.slots().len(), 4);
+        assert_eq!(restored.variables.unlock_slots().collect::<Vec<_>>(), vec![(b'F', 999)]);
+        for invalid_slot in [(b'f', 1000), (b'?', 0)] {
+            vm.variables.slots.insert(invalid_slot, 1);
+            let invalid = vm.save_dialogue().unwrap();
+            assert!(Machine::load_dialogue(&invalid, &mut store, 1000, 4).is_err());
+            vm.variables.slots.remove(&invalid_slot);
+        }
+    }
+
+    #[test]
+    fn variable_address_boundaries_are_shared() {
+        for prefix in ["G", "GF", "L", "LF"] {
+            let mut vars = Variables::default();
+            vars.define_system(format!("{prefix}999").as_bytes(), b"last").unwrap();
+            for suffix in ["1000", "4294967296", "-1", "", "1x"] {
+                assert!(vars.define_system(format!("{prefix}{suffix}").as_bytes(), b"bad").is_err());
+                assert!(crate::parse_bootstrap(format!(".var {prefix}{suffix} bad").as_bytes(), 1).is_err());
+            }
+            assert!(crate::parse_bootstrap(format!(".var {prefix}999 first second").as_bytes(), 1).is_err());
+            assert_eq!(vars.slots().len(), 1);
+        }
+        assert!(Variables::default().define_system(b"F1", b"bad").is_err());
+    }
+
+    #[test]
+    fn reset_clears_local_slots_only_after_host_acknowledgement() {
+        struct NoLoad;
+        impl Scripts for NoLoad {
+            fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+                Err("unexpected load".into())
+            }
+        }
+        let mut vm = Machine::new(
+            Source {
+                name: b"reset".to_vec(),
+                bytes: b".reset\n.marker".to_vec(),
+            },
+            100,
+            4,
+        );
+        for (address, name) in [
+            (b"G1".as_slice(), b"global".as_slice()),
+            (b"L2", b"local"),
+            (b"GF3", b"flag"),
+            (b"LF3", b"local_flag"),
+        ] {
+            vm.variables.define_system(address, name).unwrap();
+        }
+        vm.variables.set(b"global", 4).unwrap();
+        vm.variables.set(b"local", 8).unwrap();
+        vm.variables.set(b"@flag", 1).unwrap();
+        vm.variables.set(b"@local_flag", 7).unwrap();
+        assert!(
+            matches!(vm.advance(&mut NoLoad).unwrap(),Step::Request(Request::Command{name,..}) if name==b"reset")
+        );
+        assert_eq!(vm.variables.get(b"local").unwrap(), 8);
+        assert_eq!(vm.variables.get(b"@local_flag").unwrap(), 7);
+        vm.complete(None).unwrap();
+        assert_eq!(vm.variables.get(b"global").unwrap(), 4);
+        assert_eq!(vm.variables.get(b"@flag").unwrap(), 1);
+        assert_eq!(vm.variables.get(b"local").unwrap(), 0);
+        assert_eq!(vm.variables.get(b"@local_flag").unwrap(), 0);
+        assert!(
+            matches!(vm.advance(&mut NoLoad).unwrap(),Step::Request(Request::Command{name,..}) if name==b"marker")
+        );
+    }
+    #[test]
+    fn nested_loops_do_not_consume_outer_map_boundaries() {
+        struct NoLoad;
+        impl Scripts for NoLoad {
+            fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+                Err("unexpected load".into())
+            }
+        }
+        let mut vm=Machine::new(Source{name:b"nested".to_vec(),bytes:b".loop\n.map outer\n.case 1\n.loop\n.map inner\n.case 2\n.marker\n.end\n.end\n.end\n.end".to_vec()},1000,4);
+        vm.advance(&mut NoLoad).unwrap();
+        vm.complete(Some(1)).unwrap();
+        for _ in 0..3 {
+            assert!(
+                matches!(vm.advance(&mut NoLoad).unwrap(),Step::Request(Request::Command{name,args,..}) if name==b"map" && args==[b"inner".to_vec()])
+            );
+            vm.complete(Some(2)).unwrap();
+            assert!(
+                matches!(vm.advance(&mut NoLoad).unwrap(),Step::Request(Request::Command{name,..}) if name==b"marker")
+            );
+            assert_eq!(vm.stack.last().unwrap().branch_ends.len(), 2);
+            vm.complete(None).unwrap();
+        }
+    }
+    #[test]
+    fn dialogue_controls_and_selection_checkpoints_keep_original_boundaries() {
+        const CODE:&[u8]=b":size:42\n:Alice:v:mask\ntext\n.select\none\ntwo\n.case 1\nfirst\n.case 2\nsecond\n.end";
+        struct SourceStore;
+        impl Scripts for SourceStore {
+            fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+                Ok(Source {
+                    name: b"test".to_vec(),
+                    bytes: CODE.to_vec(),
+                })
+            }
+        }
+        let mut store = SourceStore;
+        let mut vm = Machine::new(store.load(b"test").unwrap(), 1000, 4);
+        vm.enable_dialogue();
+        vm.advance(&mut store).unwrap();
+        vm.complete(None).unwrap();
+        vm.advance(&mut store).unwrap();
+        vm.complete(None).unwrap();
+        vm.advance(&mut store).unwrap();
+        let bytes = vm.save_dialogue().unwrap();
+        let mut restored = Machine::load_dialogue(&bytes, &mut store, 1000, 4).unwrap();
+        assert_eq!(
+            restored.message_prefix(),
+            vec![b":size:42".to_vec(), b":Alice:v:mask".to_vec()]
+        );
+        restored.complete(None).unwrap();
+        restored.advance(&mut store).unwrap();
+        let bytes = restored.save_selection().unwrap();
+        assert!(restored.save_dialogue().is_err());
+        assert!(Machine::load_dialogue(&bytes, &mut store, 1000, 4).is_err());
+        let mut restored = Machine::load_selection(&bytes, &mut store, 1000, 4).unwrap();
+        assert_eq!(restored.selection_option_count(), Some(2));
+        assert!(restored.complete(Some(3)).is_err());
+        restored.complete(Some(2)).unwrap();
+        assert_eq!(
+            restored.advance(&mut store).unwrap(),
+            Step::Request(Request::Text(b"second".to_vec()))
+        );
+    }
+    #[test]
+    fn goto_compares_variables_and_rebuilds_local_branch_scope() {
+        let code=b".var L0 flag\n.goto #chosen if flag == 0\n.bad\n#chosen\n.map m\n.case 1\n.goto #exit\n.bad\n.end\n#exit\n.done";
+        struct Empty;
+        impl Scripts for Empty {
+            fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+                Err("unexpected load".into())
+            }
+        }
+        let mut vm = Machine::new(
+            Source {
+                name: b"test".to_vec(),
+                bytes: code.to_vec(),
+            },
+            1000,
+            4,
+        );
+        assert!(
+            matches!(vm.advance(&mut Empty).unwrap(),Step::Request(Request::Command{name,..}) if name==b"map")
+        );
+        vm.complete(Some(1)).unwrap();
+        assert!(
+            matches!(vm.advance(&mut Empty).unwrap(),Step::Request(Request::Command{name,..}) if name==b"done")
+        );
+        assert!(vm.stack.last().unwrap().branch_ends.is_empty());
+    }
+    #[test]
+    fn bare_title_label_is_not_a_branch() {
+        struct NoLoad;
+        impl Scripts for NoLoad {
+            fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+                Err("unexpected load".into())
+            }
+        }
+        let mut vm = Machine::new(
+            Source {
+                name: b"test".to_vec(),
+                bytes: b".title\n.map title\nSTART\n.case 1\n.title\n.done\n.end".to_vec(),
+            },
+            100,
+            4,
+        );
+        assert!(
+            matches!(vm.advance(&mut NoLoad).unwrap(), Step::Request(Request::Command { name, rows, .. }) if name == b"title" && rows.is_empty())
+        );
+        vm.complete(None).unwrap();
+        assert!(
+            matches!(vm.advance(&mut NoLoad).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"map")
+        );
+        vm.complete(Some(1)).unwrap();
+        assert!(
+            matches!(vm.advance(&mut NoLoad).unwrap(), Step::Request(Request::Command { name, rows, .. }) if name == b"title" && rows.is_empty())
+        );
+        vm.complete(None).unwrap();
+        assert!(
+            matches!(vm.advance(&mut NoLoad).unwrap(), Step::Request(Request::Command { name, .. }) if name == b"done")
+        );
+    }
+    #[test]
+    fn loop_title_and_nested_branch_resume_from_checkpoint() {
+        const CODE: &[u8] = b".var G0 total a b\n? a = 1\n? b = 2\n.loop\n? total = a | b\n.title\nSTART\n.case 1\n.map inner\n.case 2\nSynthetic\n.end\n.end\n.end";
+        struct LoopSource;
+        impl Scripts for LoopSource {
+            fn load(&mut self, _: &[u8]) -> Result<Source, String> {
+                Ok(Source {
+                    name: b"loop".to_vec(),
+                    bytes: CODE.to_vec(),
+                })
+            }
+        }
+        let mut store = LoopSource;
+        let mut vm = Machine::new(store.load(b"loop").unwrap(), 1000, 4);
+        vm.enable_dialogue();
+        let title = vm.advance(&mut store).unwrap();
+        assert!(
+            matches!(title,Step::Request(Request::Command{name,args,..}) if name==b"title" && args.is_empty())
+        );
+        assert_eq!(vm.variables.get(b"total").unwrap(), 3);
+        vm.complete(Some(1)).unwrap();
+        assert!(
+            matches!(vm.advance(&mut store).unwrap(),Step::Request(Request::Command{name,..}) if name==b"map")
+        );
+        vm.complete(Some(2)).unwrap();
+        assert!(matches!(
+            vm.advance(&mut store).unwrap(),
+            Step::Request(Request::Text(_))
+        ));
+        let saved = vm.save_dialogue().unwrap();
+        let mut restored = Machine::load_dialogue(&saved, &mut store, 1000, 4).unwrap();
+        restored.complete(None).unwrap();
+        assert!(
+            matches!(restored.advance(&mut store).unwrap(),Step::Request(Request::Command{name,args,..}) if name==b"title" && args.is_empty())
+        );
+    }
     #[test]
     fn saved_nested_calls_maps_variables_and_budget_resume_without_reexecution() {
         struct SavedScripts;
@@ -771,6 +1321,25 @@ mod tests {
         }
     }
     #[test]
+    fn compact_assignment_updates_the_declared_branch_variable() {
+        let mut vm = Machine::new(
+            Source {
+                name: b"start".to_vec(),
+                bytes: ".var L1 分支\n?分支=分支+1\n?分支=(分支+2)*3\n.done"
+                    .as_bytes()
+                    .to_vec(),
+            },
+            100,
+            8,
+        );
+        vm.enable_dialogue();
+        assert!(matches!(
+            vm.advance(&mut Store).unwrap(),
+            Step::Request(Request::Command { .. })
+        ));
+        assert_eq!(vm.variables.get("分支".as_bytes()), Ok(9));
+    }
+    #[test]
     fn dialogue_assignment_accumulates_matching_flags() {
         let mut vm = Machine::new(
             Source {
@@ -812,7 +1381,7 @@ mod tests {
         assert!(
             matches!(vm.advance(&mut store).unwrap(),Step::Request(Request::Command{name,..}) if name==b"map")
         );
-        assert!(vm.complete(Some(99)).is_err());
+        assert!(vm.complete(None).is_err());
         vm.complete(Some(1)).unwrap();
         assert!(
             matches!(vm.advance(&mut store).unwrap(),Step::Request(Request::Command{name,..}) if name==b"done")
@@ -867,7 +1436,7 @@ mod tests {
         vm.complete(Some(1)).unwrap();
         vm.advance(&mut store).unwrap();
         let location = vm.location().unwrap().1;
-        assert!(vm.complete(Some(9)).is_err());
+        assert!(vm.complete(None).is_err());
         assert_eq!(vm.location().unwrap().1, location);
         vm.complete(Some(2)).unwrap();
         assert!(
@@ -911,7 +1480,7 @@ mod tests {
     fn malformed_maps_and_scan_budget_do_not_acknowledge_requests() {
         for text in [
             ".map x\n.case 1\n.map inner\n.case 1\n.end",
-            ".map x\n.case 1\n.case 1\n.end",
+            ".map x\n.case unknown\n.end",
         ] {
             let mut vm = Machine::new(
                 Source {
@@ -1016,7 +1585,7 @@ mod dialogue_tests {
         );
     }
     #[test]
-    fn malformed_speaker_and_text_budget_stop() {
+    fn message_control_rows_and_text_budget() {
         let mut vm = Machine::new(
             Source {
                 name: vec![],
@@ -1026,7 +1595,9 @@ mod dialogue_tests {
             4,
         );
         vm.enable_dialogue();
-        assert!(vm.advance(&mut NoCalls).unwrap_err().contains("speaker"));
+        assert!(
+            matches!(vm.advance(&mut NoCalls).unwrap(), Step::Request(Request::Speaker(fields)) if fields == vec![b"incomplete".to_vec()])
+        );
         let mut vm = Machine::new(
             Source {
                 name: vec![],

@@ -19,19 +19,66 @@ pub(crate) const FIELDS: [&str; 12] = [
 const MAGIC: &[u8] = b"NKCF\x06";
 pub(crate) const EXTENDED: [&str; 3] = ["KeepSkip", "KeepAuto", "Movie"];
 pub(crate) const READING: [&str; 3] = ["MuteBGM", "AutoSave", "AutoSelect"];
-pub(crate) const PRESENTATION: [&str; 6] = ["Screen", "Effect", "SysEffect", "Popup", "Dialog", "KeepIcon"];
+pub(crate) const PRESENTATION: [&str; 6] = [
+    "Screen",
+    "Effect",
+    "SysEffect",
+    "Popup",
+    "Dialog",
+    "KeepIcon",
+];
 pub(crate) const INPUT: [&str; 2] = ["CenterKey", "SpaceKey"];
 pub(crate) const VOICE_TAGS: [&str; 18] = [
     "LI", "NI", "RR", "MK", "VE", "NO", "UR", "KO", "FO", "AM", "OP", "DE", "RA", "KA", "SY", "MY",
     "BA", "XX",
 ];
 
+// Extra named scalar preferences have their original Config types and ranges.
+const SUPPLEMENTAL: [&str; 13] = [
+    "VolMAS",
+    "VolBGV",
+    "VolMV",
+    "MuteMAS",
+    "MuteVO",
+    "MuteSE",
+    "MuteENV",
+    "MuteBGV",
+    "MuteSYS",
+    "MuteMV",
+    "ReadedColor",
+    "ReadedFast",
+    "Climax",
+];
+fn validate_supplemental(name: &str, value: i32) -> Result<()> {
+    if !SUPPLEMENTAL.contains(&name)
+        || value < 0
+        || value > if name.starts_with("Vol") { 100 } else { 1 }
+    {
+        return Err("invalid supplemental preference".into());
+    }
+    Ok(())
+}
+fn supplemental_values(vm: &mut SystemVm) -> Result<BTreeMap<String, i32>> {
+    let mut values = BTreeMap::new();
+    for name in SUPPLEMENTAL {
+        vm.eval("supplemental-preference", &format!("if(\"{name}\" in Config){{if(typeof Config.{name}!=\"integer\")throw \"invalid supplemental preference type\";return Config.{name}.tostring();}}\nreturn \"\";"))?;
+        let result = vm.result();
+        if !result.is_empty() {
+            let value = result.parse()?;
+            validate_supplemental(name, value)?;
+            values.insert(name.to_owned(), value);
+        }
+    }
+    Ok(values)
+}
+
 pub(crate) fn enabled(vm: &mut SystemVm, name: &str) -> Result<bool> {
     vm.eval("runtime-option", &format!("return (\"Config\" in getroottable() && \"{name}\" in Config && Config.{name}!=0).tostring()"))?;
     Ok(vm.result() == "true")
 }
-pub(crate) const ACTIONS: [&str; 11] = [
-    "", "AUTO", "SKIP", "LOG", "HIDE", "SAVE", "LOAD", "QSAVE", "QLOAD", "RESET", "QUIT",
+pub(crate) const ACTIONS: [&str; 18] = [
+    "", "AUTO", "SKIP", "LOG", "HIDE", "SAVE", "LOAD", "QSAVE", "QLOAD", "RESET", "QUIT", "NEXT",
+    "BACK", "VOICE", "CONFIG", "DELETE", "SCREEN", "MENU",
 ];
 pub(crate) fn shortcut_action(vm: &mut SystemVm, slot: u64) -> Result<String> {
     if !(1..=12).contains(&slot) {
@@ -39,13 +86,22 @@ pub(crate) fn shortcut_action(vm: &mut SystemVm, slot: u64) -> Result<String> {
     }
     vm.eval(
         "shortcut-action",
-        &format!("return Config.ShortCuts[{}]", slot - 1),
+        &format!("local action=Config.ShortCuts[{}];\nif(typeof action!=\"string\"){{throw \"invalid shortcut preference type\";}}\nreturn action", slot - 1),
     )?;
     let action = vm.result();
-    if action != "CONFIG" && action != "MENU" && !ACTIONS.contains(&action.as_str()) {
+    if !ACTIONS.contains(&action.as_str()) {
         return Err("unknown shortcut action".into());
     }
     Ok(action)
+}
+fn all_shortcut_ids(vm: &mut SystemVm) -> Result<Vec<u8>> {
+    vm.eval("all-shortcut-preferences", "if(typeof Config.ShortCuts!=\"array\" || Config.ShortCuts.len()!=12){throw \"invalid shortcut preference count\";}\nreturn null;")?;
+    (1..=12)
+        .map(|slot| {
+            let name = shortcut_action(vm, slot)?;
+            Ok(ACTIONS.iter().position(|action| *action == name).unwrap() as u8)
+        })
+        .collect()
 }
 pub(crate) fn shortcut_ids(vm: &mut SystemVm) -> Result<Vec<u8>> {
     vm.eval(
@@ -70,8 +126,8 @@ pub(crate) fn shortcut_ids(vm: &mut SystemVm) -> Result<Vec<u8>> {
 }
 #[cfg(test)]
 pub(crate) fn set_shortcut(vm: &mut SystemVm, slot: usize, action: usize) -> Result<()> {
-    if !(3..=12).contains(&slot) {
-        return Err("shortcut slot must be F3..F12".into());
+    if !(1..=12).contains(&slot) {
+        return Err("shortcut slot must be F1..F12".into());
     }
     let name = ACTIONS.get(action).ok_or("unknown shortcut action")?;
     vm.eval(
@@ -98,16 +154,58 @@ pub(crate) fn values(vm: &mut SystemVm) -> Result<BTreeMap<String, i32>> {
     vm.eval(
         "preferences",
         r#"local s=""; foreach(k,v in Config)if(typeof v=="integer")s+=k+"\t"+v+"\n";
-        foreach(k,v in Config.VoiceCheck)s+=k+"\t"+(v?1:0)+"\n";return s"#,
+        if("VoiceCheck" in Config) { foreach(k,v in Config.VoiceCheck) { s+=k+"\t"+(v?1:0)+"\n"; } }
+return s"#,
     )?;
-    vm.result()
+    let mut result: BTreeMap<String, i32> = vm
+        .result()
         .lines()
         .map(|l| {
             let (k, v) = l.split_once('\t').ok_or("invalid configuration entry")?;
             Ok((k.into(), v.parse()?))
         })
-        .collect()
+        .collect::<Result<_>>()?;
+    result.extend(structured_values(vm)?);
+    Ok(result)
 }
+
+const STRUCTURED: [&str; 3] = ["Dialog", "VoiceMute", "VoiceVolume"];
+
+fn structured_values(vm: &mut SystemVm) -> Result<BTreeMap<String, i32>> {
+    vm.eval("structured-preferences", r#"local result="";
+        foreach(name in ["Dialog","VoiceMute","VoiceVolume"]) {
+            if(name in Config && typeof Config[name]=="table") {
+                foreach(key,value in Config[name]) {
+                    if(typeof key!="string" || (name=="VoiceVolume" ? typeof value!="integer" : (typeof value!="bool" && typeof value!="integer"))) throw "invalid structured preference type";
+                    result+=name+"."+key+"\t"+(typeof value=="bool" ? (value?1:0) : value)+"\n";
+                }
+            } else if(name in Config && name!="Dialog") throw "invalid structured preference table";
+        }
+        return result"#)?;
+    let values: BTreeMap<String, i32> = vm
+        .result()
+        .lines()
+        .map(|line| {
+            let (name, value) = line
+                .split_once('\t')
+                .ok_or("invalid structured preference")?;
+            let value = value.parse()?;
+            validate_structured(name, value)?;
+            Ok((name.to_owned(), value))
+        })
+        .collect::<Result<_>>()?;
+    if values.keys().any(|name| name.starts_with("VoiceVolume.")) {
+        let maximum = voice_volume_max(vm)?;
+        if values
+            .iter()
+            .any(|(name, value)| name.starts_with("VoiceVolume.") && *value > maximum)
+        {
+            return Err("invalid voice volume".into());
+        }
+    }
+    Ok(values)
+}
+
 pub(crate) fn maximum(index: usize) -> i32 {
     match index {
         1 | 8 | 9 | 11 => 1,
@@ -141,6 +239,16 @@ pub(crate) fn style(vm: &mut SystemVm) -> Result<crate::text_render::TextStyle> 
     })
 }
 pub(crate) fn export(vm: &mut SystemVm) -> Result<Vec<u8>> {
+    let shortcuts = all_shortcut_ids(vm)?;
+    let base = export_base(vm)?;
+    let mut bytes = b"NKCF\x0d".to_vec();
+    bytes.extend(u32::try_from(base.len())?.to_le_bytes());
+    bytes.extend(base);
+    bytes.extend(shortcuts);
+    Ok(bytes)
+}
+
+fn export_base(vm: &mut SystemVm) -> Result<Vec<u8>> {
     let map = values(vm)?;
     let v = FIELDS
         .iter()
@@ -174,7 +282,13 @@ pub(crate) fn export(vm: &mut SystemVm) -> Result<Vec<u8>> {
         }
     }
     let voices = voice_values(vm)?;
-    if INPUT.iter().chain(READING[..1].iter()).chain(PRESENTATION.iter()).any(|name| map.contains_key(*name)) || !voices.is_empty() {
+    if INPUT
+        .iter()
+        .chain(READING[..1].iter())
+        .chain(PRESENTATION.iter())
+        .any(|name| map.contains_key(*name))
+        || !voices.is_empty()
+    {
         let mut snapshot = b"NKCF\x0a".to_vec();
         snapshot.push(bytes.len().try_into()?);
         snapshot.extend(bytes);
@@ -193,38 +307,247 @@ pub(crate) fn export(vm: &mut SystemVm) -> Result<Vec<u8>> {
         }
         bytes = snapshot;
     }
+    let structured = structured_values(vm)?;
+    if !structured.is_empty() {
+        let mut snapshot = b"NKCF\x0b".to_vec();
+        snapshot.extend(u32::try_from(bytes.len())?.to_le_bytes());
+        snapshot.extend(bytes);
+        for (name, value) in structured {
+            validate_structured(&name, value)?;
+            snapshot.push(name.len().try_into()?);
+            snapshot.extend(name.bytes());
+            snapshot.extend(value.to_le_bytes());
+        }
+        bytes = snapshot;
+    }
+    let supplemental = supplemental_values(vm)?;
+    if !supplemental.is_empty() {
+        let mut snapshot = b"NKCF\x0c".to_vec();
+        snapshot.extend(u32::try_from(bytes.len())?.to_le_bytes());
+        snapshot.extend(bytes);
+        for (name, value) in supplemental {
+            snapshot.push(name.len().try_into()?);
+            snapshot.extend(name.bytes());
+            snapshot.extend(value.to_le_bytes());
+        }
+        bytes = snapshot;
+    }
     Ok(bytes)
 }
 
+fn voice_volume_max(vm: &mut SystemVm) -> Result<i32> {
+    vm.eval(
+        "voice-volume-limit",
+        "return (\"VoiceVolume\" in Config ? VOLUME_MAX : 0).tostring()",
+    )?;
+    Ok(vm.result().parse()?)
+}
+
+fn validate_structured(name: &str, value: i32) -> Result<()> {
+    let (table, key) = name
+        .split_once('.')
+        .ok_or("invalid structured preference name")?;
+    if !STRUCTURED.contains(&table)
+        || key.is_empty()
+        || !key.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_')
+        || value < 0
+        || (table != "VoiceVolume" && value > 1)
+    {
+        return Err("invalid structured preference value".into());
+    }
+    Ok(())
+}
+
 fn valid_voice_tag(tag: &[u8]) -> bool {
-    tag.len() == 2 && tag.iter().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
+    tag.len() == 2
+        && tag
+            .iter()
+            .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
 }
 
 pub(crate) fn voice_values(vm: &mut SystemVm) -> Result<BTreeMap<String, i32>> {
-    vm.eval("voice-preferences", r#"local s=""; foreach(k,v in Config.VoiceCheck)s+=k+"\t"+(v?1:0)+"\n";return s"#)?;
-    vm.result().lines().map(|line| {
-        let (tag, value) = line.split_once('\t').ok_or("invalid voice preference")?;
-        Ok((tag.to_owned(), value.parse()?))
-    }).collect()
+    vm.eval("voice-preferences", r#"local s=""; if("VoiceCheck" in Config) { foreach(k,v in Config.VoiceCheck) { s+=k+"\t"+(v?1:0)+"\n"; } }
+return s"#)?;
+    vm.result()
+        .lines()
+        .map(|line| {
+            let (tag, value) = line.split_once('\t').ok_or("invalid voice preference")?;
+            Ok((tag.to_owned(), value.parse()?))
+        })
+        .collect()
 }
 
 pub(crate) fn import(vm: &mut SystemVm, bytes: &[u8]) -> Result<()> {
-    let (base, input, presentation, voices) = if matches!(bytes.get(..5), Some(b"NKCF\x09" | b"NKCF\x0a")) {
-        let payload = &bytes[5..];
-        let (&length, body) = payload.split_first().ok_or("missing preference base length")?;
-        let (base, tail) = body.split_at_checked(length.into()).ok_or("missing preference base")?;
-        let (input, tail) = tail.split_at_checked(3).ok_or("missing input preferences")?;
-        let (presentation, voices) = tail.split_at_checked(if bytes[4] == 10 { PRESENTATION.len() } else { 0 }).ok_or("missing presentation preferences")?;
-        if input[0] > 2 || input[1] > 2 || input[2] > 1 || presentation.iter().enumerate().any(|(i, v)| *v > if i == 0 { 2 } else { 1 })
-            || voices.len() % 3 != 0
-            || voices.chunks_exact(3).any(|row| !valid_voice_tag(&row[..2]) || row[2] > 1)
+    if bytes.starts_with(b"NKCF\x0d") {
+        let length = u32::from_le_bytes(
+            bytes
+                .get(5..9)
+                .ok_or("missing shortcut preference base length")?
+                .try_into()?,
+        ) as usize;
+        let (base, shortcuts) = bytes[9..]
+            .split_at_checked(length)
+            .ok_or("missing shortcut preference base")?;
+        if base.get(..4) != Some(b"NKCF")
+            || !base
+                .get(4)
+                .is_some_and(|version| (1..=12).contains(version))
         {
-            return Err("invalid input or voice preferences".into());
+            return Err("invalid shortcut preference base".into());
         }
-        (base, input, presentation, voices)
-    } else {
-        (bytes, &[][..], &[][..], &[][..])
-    };
+        if shortcuts.len() != 12 || shortcuts.iter().any(|id| usize::from(*id) >= ACTIONS.len()) {
+            return Err("invalid complete shortcut preferences".into());
+        }
+        let names = shortcuts
+            .iter()
+            .map(|id| crate::quote(ACTIONS[usize::from(*id)].as_bytes()))
+            .collect::<std::result::Result<Vec<_>, _>>()?;
+        import(vm, base)?;
+        vm.eval(
+            "restore-all-shortcut-preferences",
+            &format!("Config.ShortCuts=[{}]", names.join(",")),
+        )?;
+        return Ok(());
+    }
+    if bytes.starts_with(b"NKCF\x0c") {
+        let length = u32::from_le_bytes(
+            bytes
+                .get(5..9)
+                .ok_or("missing supplemental preference base length")?
+                .try_into()?,
+        ) as usize;
+        let (base, mut tail) = bytes[9..]
+            .split_at_checked(length)
+            .ok_or("missing supplemental preference base")?;
+        if base.get(..4) != Some(b"NKCF")
+            || !base
+                .get(4)
+                .is_some_and(|version| (1..=11).contains(version))
+        {
+            return Err("invalid supplemental preference base".into());
+        }
+        let mut entries = BTreeMap::new();
+        while !tail.is_empty() {
+            let (name, rest) = tail[1..]
+                .split_at_checked(usize::from(tail[0]))
+                .ok_or("missing supplemental preference name")?;
+            let (value, rest) = rest
+                .split_at_checked(4)
+                .ok_or("missing supplemental preference value")?;
+            let name = std::str::from_utf8(name)?;
+            let value = i32::from_le_bytes(value.try_into()?);
+            validate_supplemental(name, value)?;
+            if entries.insert(name, value).is_some() {
+                return Err("duplicate supplemental preference".into());
+            }
+            tail = rest;
+        }
+        let assignments = entries
+            .into_iter()
+            .map(|(name, value)| format!("if(\"{name}\" in Config){{Config.{name}={value};}}\n"))
+            .collect::<String>();
+        import(vm, base)?;
+        vm.eval(
+            "restore-supplemental-preferences",
+            &(assignments + "RestoreVolume()"),
+        )?;
+        return Ok(());
+    }
+    if bytes.starts_with(b"NKCF\x0b") {
+        let length = u32::from_le_bytes(
+            bytes
+                .get(5..9)
+                .ok_or("missing structured preference base length")?
+                .try_into()?,
+        ) as usize;
+        let (base, mut tail) = bytes[9..]
+            .split_at_checked(length)
+            .ok_or("missing structured preference base")?;
+        if !matches!(
+            base.get(..5),
+            Some(b"NKCF\x06" | b"NKCF\x07" | b"NKCF\x08" | b"NKCF\x09" | b"NKCF\x0a")
+        ) {
+            return Err("invalid structured preference base".into());
+        }
+        let mut assignments = String::new();
+        while !tail.is_empty() {
+            let length = usize::from(tail[0]);
+            let (name, rest) = tail[1..]
+                .split_at_checked(length)
+                .ok_or("missing structured preference name")?;
+            let (value, rest) = rest
+                .split_at_checked(4)
+                .ok_or("missing structured preference value")?;
+            let name = std::str::from_utf8(name)?;
+            let value = i32::from_le_bytes(value.try_into()?);
+            validate_structured(name, value)?;
+            let (table, key) = name.split_once('.').unwrap();
+            let literal = if table == "VoiceVolume" {
+                value.to_string()
+            } else {
+                (value != 0).to_string()
+            };
+            assignments += &format!(
+                "if(\"{table}\" in Config && typeof Config.{table}==\"table\"){{Config.{table}.rawset(\"{key}\",{literal});}}\n"
+            );
+            tail = rest;
+        }
+        // Check volume against the game's actual limit before changing any preferences.
+        let volume_max = voice_volume_max(vm)?;
+        let mut tail = &bytes[9 + length..];
+        while !tail.is_empty() {
+            let n = usize::from(tail[0]);
+            let name = std::str::from_utf8(&tail[1..1 + n])?;
+            let value = i32::from_le_bytes(tail[1 + n..5 + n].try_into()?);
+            if name.starts_with("VoiceVolume.") && value > volume_max {
+                return Err("invalid voice volume".into());
+            }
+            tail = &tail[5 + n..];
+        }
+        import(vm, base)?;
+        vm.eval(
+            "restore-structured-preferences",
+            &(assignments + "RestoreVolume()"),
+        )?;
+        return Ok(());
+    }
+    let (base, input, presentation, voices) =
+        if matches!(bytes.get(..5), Some(b"NKCF\x09" | b"NKCF\x0a")) {
+            let payload = &bytes[5..];
+            let (&length, body) = payload
+                .split_first()
+                .ok_or("missing preference base length")?;
+            let (base, tail) = body
+                .split_at_checked(length.into())
+                .ok_or("missing preference base")?;
+            let (input, tail) = tail
+                .split_at_checked(3)
+                .ok_or("missing input preferences")?;
+            let (presentation, voices) = tail
+                .split_at_checked(if bytes[4] == 10 {
+                    PRESENTATION.len()
+                } else {
+                    0
+                })
+                .ok_or("missing presentation preferences")?;
+            if input[0] > 2
+                || input[1] > 2
+                || input[2] > 1
+                || presentation
+                    .iter()
+                    .enumerate()
+                    .any(|(i, v)| *v > if i == 0 { 2 } else { 1 })
+                || voices.len() % 3 != 0
+                || voices
+                    .chunks_exact(3)
+                    .any(|row| !valid_voice_tag(&row[..2]) || row[2] > 1)
+            {
+                return Err("invalid input or voice preferences".into());
+            }
+            (base, input, presentation, voices)
+        } else {
+            (bytes, &[][..], &[][..], &[][..])
+        };
     let (v, shortcuts, extended) = decode(base)?;
     let mut assignments = FIELDS
         .iter()
@@ -241,7 +564,9 @@ pub(crate) fn import(vm: &mut SystemVm, bytes: &[u8]) -> Result<()> {
         }
     }
     for (name, value) in EXTENDED.iter().zip(extended) {
-        assignments += &format!("if(\"{name}\" in Config){{Config.{name}={value};}}\n");
+        assignments += &format!(
+            "if(\"{name}\" in Config && typeof Config.{name}!=\"table\"){{Config.{name}={value};}}\n"
+        );
     }
     if extended.len() > 3 {
         let second = ACTIONS[extended[3] as usize];
@@ -250,21 +575,33 @@ pub(crate) fn import(vm: &mut SystemVm, bytes: &[u8]) -> Result<()> {
             crate::quote(second.as_bytes())?
         );
         for (name, value) in READING.iter().zip(&extended[4..7]) {
-            assignments += &format!("if(\"{name}\" in Config){{Config.{name}={value};}}\n");
+            assignments += &format!(
+                "if(\"{name}\" in Config && typeof Config.{name}!=\"table\"){{Config.{name}={value};}}\n"
+            );
         }
         for (name, value) in VOICE_TAGS.iter().zip(&extended[7..]) {
             assignments += &format!(
-                "if(\"{name}\" in Config.VoiceCheck){{Config.VoiceCheck.{name}={};}}\n",
+                "if(\"VoiceCheck\" in Config && \"{name}\" in Config.VoiceCheck){{Config.VoiceCheck.{name}={};}}\n",
                 *value != 0
             );
         }
     }
-    for (name, value) in INPUT.iter().chain(READING[..1].iter()).zip(input).chain(PRESENTATION.iter().zip(presentation)) {
-        assignments += &format!("if(\"{name}\" in Config){{Config.{name}={value};}}\n");
+    for (name, value) in INPUT
+        .iter()
+        .chain(READING[..1].iter())
+        .zip(input)
+        .chain(PRESENTATION.iter().zip(presentation))
+    {
+        assignments += &format!(
+            "if(\"{name}\" in Config && typeof Config.{name}!=\"table\"){{Config.{name}={value};}}\n"
+        );
     }
     for row in voices.chunks_exact(3) {
         let tag = std::str::from_utf8(&row[..2])?;
-        assignments += &format!("if(\"{tag}\" in Config.VoiceCheck){{Config.VoiceCheck[\"{tag}\"]={};}}\n", row[2] != 0);
+        assignments += &format!(
+            "if(\"VoiceCheck\" in Config && \"{tag}\" in Config.VoiceCheck){{Config.VoiceCheck[\"{tag}\"]={};}}\n",
+            row[2] != 0
+        );
     }
     vm.eval("restore-preferences", &(assignments + "RestoreVolume()"))?;
     Ok(())
@@ -315,25 +652,53 @@ pub(crate) fn set(vm: &mut SystemVm, index: usize, value: i32) -> Result<()> {
         return Err("unknown preference".into());
     }
     let mut snapshot = export(vm)?;
-    let base = if snapshot[4] >= 9 { 6 } else { 0 };
+    let mut base = 0;
+    while matches!(snapshot[base + 4], 11..=13) {
+        base += 9;
+    }
+    if matches!(snapshot[base + 4], 9 | 10) {
+        base += 6;
+    }
     *snapshot
         .get_mut(base + MAGIC.len() + index)
         .ok_or("unknown preference")? = u8::try_from(value)?;
     import(vm, &snapshot)
 }
 pub(crate) fn presentation(vm: &mut SystemVm) -> Result<String> {
-    let fields = PRESENTATION.map(|name| format!(r#"("\"{name}\":" + Config.{name}.tostring())"#));
-    let expressions = PRESENTATION.iter().zip(fields).map(|(name, field)| {
-        format!(r#"if("{name}" in Config) parts.push({field});"#)
-    }).collect::<Vec<_>>().join("\n");
-    vm.eval("presentation-preferences", &format!(r#"local parts=[]; {expressions}
-        local result=""; foreach(field in parts) result += ","+field; return result"#))?;
+    // Validate table keys and value types before using them as JSON tokens.
+    structured_values(vm)?;
+    let expressions = PRESENTATION
+        .iter()
+        .map(|name| {
+            format!(r#"if("{name}" in Config) parts.push("\"{name}\":"+jsonValue(Config.{name}));"#)
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    vm.eval(
+        "presentation-preferences",
+        &format!(
+            r#"
+        local jsonValue=function(value) {{
+            if(typeof value!="table") return value.tostring();
+            local result="{{", separator="";
+            foreach(key,item in value) {{
+                result+=separator+"\""+key+"\":"+((item!=0 && item!=false)?"true":"false"); separator=",";
+            }}
+            return result+"}}";
+        }};
+        local parts=[]; {expressions}
+        local result=""; foreach(field in parts) result += ","+field; return result"#
+        ),
+    )?;
     Ok(vm.result())
 }
 
 #[cfg(test)]
 pub(crate) fn reset_shortcuts(vm: &mut SystemVm) -> Result<()> {
-    vm.eval("reset-shortcuts", "Config.ShortCuts=clone ConfigDefault.ShortCuts")?;
+    vm.eval(
+        "reset-shortcuts",
+        "Config.ShortCuts=clone ConfigDefault.ShortCuts",
+    )?;
     Ok(())
 }
 
@@ -344,7 +709,7 @@ pub(crate) fn reset(vm: &mut SystemVm, preserve_screen: bool) -> Result<()> {
     } else {
         ("", "")
     };
-    vm.eval("reset-preferences", &format!("{} Config=clone ConfigDefault; Config.VoiceCheck=clone ConfigDefault.VoiceCheck; Config.ShortCuts=clone ConfigDefault.ShortCuts; {} RestoreVolume()", screen.0, screen.1))?;
+    vm.eval("reset-preferences", &format!("{} Config=clone ConfigDefault; foreach(name in [\"VoiceCheck\",\"Dialog\",\"VoiceMute\",\"VoiceVolume\"]) {{ if(name in ConfigDefault && typeof ConfigDefault[name]==\"table\") {{ Config[name]=clone ConfigDefault[name]; }} }} Config.ShortCuts=clone ConfigDefault.ShortCuts; {} RestoreVolume()", screen.0, screen.1))?;
     Ok(())
 }
 
@@ -366,15 +731,195 @@ pub(crate) fn set_voice(vm: &mut SystemVm, tag: &str, value: i32) -> Result<()> 
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn shortcut_vm() -> SystemVm {
+        let mut vm = SystemVm::new();
+        vm.eval("shortcut-config",r#"
+            Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,
+                BoxOpacity=191,Bold=0,Border=1,AutoSpeed=50,SkipNoRead=0,
+                ShortCuts=["CONFIG","VOICE","AUTO","SKIP","SAVE","LOAD","QSAVE","QLOAD","LOG","HIDE","",""]};
+            Applies <- 0;
+            function RestoreVolume(){Applies++}
+        "#).unwrap();
+        vm
+    }
+
+    #[test]
+    fn complete_shortcuts_cold_boot_preserves_all_slots_and_original_action_names() {
+        let mut running = shortcut_vm();
+        let defaults = export(&mut running).unwrap();
+        assert_eq!(&defaults[..5], b"NKCF\x0d");
+        let base_len = u32::from_le_bytes(defaults[5..9].try_into().unwrap()) as usize;
+        assert_eq!(defaults.len(), 9 + base_len + 12);
+        assert_eq!(
+            &defaults[9 + base_len..],
+            &[14, 13, 1, 2, 5, 6, 7, 8, 3, 4, 0, 0]
+        );
+        // All actions offered by the original twelve-slot picker, including F1/F2.
+        running.eval("original-picker",r#"Config.ShortCuts=["QSAVE","QLOAD","SAVE","LOAD","SKIP","AUTO","VOICE","LOG","CONFIG","DELETE","SCREEN","HIDE"]"#).unwrap();
+        let saved = export(&mut running).unwrap();
+        let mut restarted = shortcut_vm();
+        import(&mut restarted, &saved).unwrap();
+        assert_eq!(export(&mut restarted).unwrap(), saved);
+        assert_eq!(shortcut_action(&mut restarted, 1).unwrap(), "QSAVE");
+        assert_eq!(shortcut_action(&mut restarted, 2).unwrap(), "QLOAD");
+        assert_eq!(shortcut_action(&mut restarted, 10).unwrap(), "DELETE");
+        assert_eq!(shortcut_action(&mut restarted, 11).unwrap(), "SCREEN");
+        for (index, name) in ACTIONS.iter().enumerate() {
+            set_shortcut(&mut running, 1, index).unwrap();
+            set_shortcut(&mut running, 2, index).unwrap();
+            let saved = export(&mut running).unwrap();
+            import(&mut restarted, &saved).unwrap();
+            assert_eq!(shortcut_action(&mut restarted, 1).unwrap(), *name);
+            assert_eq!(shortcut_action(&mut restarted, 2).unwrap(), *name);
+        }
+        // Modern structured/supplemental snapshots remain inside the new wrapper.
+        running.eval("modern-fields","Config.MuteMAS <- 1;\nConfig.Dialog <- {LOAD=0,QUIT=1}\nConfig.VoiceMute <- {AA=1}\n").unwrap();
+        let saved = export(&mut running).unwrap();
+        assert_eq!(&saved[9..14], b"NKCF\x0c");
+        restarted.eval("modern-defaults","Config.MuteMAS <- 0;\nConfig.Dialog <- {LOAD=true,QUIT=false}\nConfig.VoiceMute <- {}\n").unwrap();
+        import(&mut restarted, &saved).unwrap();
+        assert_eq!(export(&mut restarted).unwrap(), saved);
+        assert!(presentation(&mut restarted)
+            .unwrap()
+            .contains("\"LOAD\":false"));
+    }
+
+    #[test]
+    fn complete_shortcut_wrapper_rejects_invalid_data_before_mutation() {
+        let mut vm = shortcut_vm();
+        let original = export(&mut vm).unwrap();
+        let base_len = u32::from_le_bytes(original[5..9].try_into().unwrap()) as usize;
+        let mut corruptions = vec![
+            original[..8].to_vec(),
+            original[..original.len() - 1].to_vec(),
+        ];
+        let mut overlong = original.clone();
+        overlong.push(0);
+        corruptions.push(overlong);
+        let mut unknown = original.clone();
+        *unknown.last_mut().unwrap() = ACTIONS.len() as u8;
+        corruptions.push(unknown);
+        let mut nested = original.clone();
+        nested[13] = 13;
+        corruptions.push(nested);
+        let mut bad_base = original.clone();
+        bad_base[15] = 2;
+        corruptions.push(bad_base);
+        for bytes in corruptions {
+            assert!(import(&mut vm, &bytes).is_err());
+            assert_eq!(export(&mut vm).unwrap(), original);
+        }
+        vm.eval("count", "return Applies.tostring()").unwrap();
+        assert_eq!(vm.result(), "0");
+        // A pre-wrapper v6 still imports F3..F12 and preserves F1/F2.
+        set_shortcut(&mut vm, 1, 17).unwrap();
+        set_shortcut(&mut vm, 2, 16).unwrap();
+        import(&mut vm, &original[9..9 + base_len]).unwrap();
+        assert_eq!(shortcut_action(&mut vm, 1).unwrap(), "MENU");
+        assert_eq!(shortcut_action(&mut vm, 2).unwrap(), "SCREEN");
+        for edit in [
+            r#"Config.ShortCuts[0]="UNKNOWN""#,
+            r#"Config.ShortCuts[0]="AUTO\r""#,
+            "Config.ShortCuts[0]=1",
+            "Config.ShortCuts.pop()",
+        ] {
+            let mut invalid = shortcut_vm();
+            invalid.eval("invalid-shortcuts", edit).unwrap();
+            assert!(export(&mut invalid).is_err());
+        }
+    }
+
+    #[test]
+    fn cold_boot_restores_dynamic_role_keys_and_modern_audio_family() {
+        fn fresh() -> SystemVm {
+            let mut vm = SystemVm::new();
+            vm.eval("cold-config", r#"
+                const VOLUME_MAX=100;
+                Config <- {TextSpeed=50,KeepVoice=1,VolBGM=75,VolVO=80,VolSE=60,VolENV=40,VolSYS=20,
+                    BoxOpacity=191,Bold=0,Border=1,AutoSpeed=50,SkipNoRead=0,
+                    VolMAS=100,VolBGV=50,VolMV=50,MuteMAS=0,MuteBGM=0,MuteVO=0,MuteSE=0,MuteENV=0,MuteBGV=0,MuteSYS=0,MuteMV=0,
+                    ReadedColor=0,ReadedFast=0,Climax=1,VoiceMute={},VoiceVolume={},
+                    ShortCuts=["CONFIG","MENU","RESET","QUIT","SAVE","LOAD","QSAVE","QLOAD","LOG","HIDE","AUTO","SKIP"]};
+                function RestoreVolume() {}
+            "#).unwrap();
+            vm
+        }
+        let mut running = fresh();
+        running
+            .eval(
+                "dynamic-script-settings",
+                r#"
+            Config.VoiceMute.rawset("NewRoleA",false); Config.VoiceMute.rawset("NewRoleB",true);
+            Config.VoiceVolume.rawset("NewRoleA",73); Config.VoiceVolume.rawset("NewRoleB",61);
+            Config.VolMAS=67; Config.VolBGV=60; Config.VolMV=50;
+            Config.ReadedColor=1; Config.ReadedFast=1; Config.Climax=0;
+        "#,
+            )
+            .unwrap();
+        let snapshot = export_base(&mut running).unwrap();
+        assert_eq!(&snapshot[..5], b"NKCF\x0c");
+        let mut restarted = fresh();
+        import(&mut restarted, &snapshot).unwrap();
+        let map = values(&mut restarted).unwrap();
+        assert_eq!(map["VoiceVolume.NewRoleA"], 73);
+        assert_eq!(map["VoiceVolume.NewRoleB"], 61);
+        assert_eq!(map["VoiceMute.NewRoleA"], 0);
+        assert_eq!(map["VoiceMute.NewRoleB"], 1);
+        assert_eq!(map["ReadedColor"], 1);
+        assert_eq!(map["ReadedFast"], 1);
+        assert_eq!(map["Climax"], 0);
+        assert_eq!(
+            crate::audio_config::category(&mut restarted, "VolBGM").unwrap(),
+            50
+        );
+        assert_eq!(
+            crate::audio_config::category(&mut restarted, "VolBGV").unwrap(),
+            40
+        );
+        assert_eq!(
+            crate::audio_config::category(&mut restarted, "VolMV").unwrap(),
+            33
+        );
+        assert_eq!(export_base(&mut restarted).unwrap(), snapshot);
+        let base_len = u32::from_le_bytes(snapshot[5..9].try_into().unwrap()) as usize;
+        let first_record = 9 + base_len;
+        assert_eq!(&snapshot[first_record..first_record + 7], b"\x06Climax");
+        let mut older_v12 = snapshot.clone();
+        older_v12.drain(first_record..first_record + 11);
+        let mut default_climax = fresh();
+        import(&mut default_climax, &older_v12).unwrap();
+        assert_eq!(values(&mut default_climax).unwrap()["Climax"], 1);
+        let mut invalid_climax = snapshot.clone();
+        invalid_climax[first_record + 7..first_record + 11].copy_from_slice(&2_i32.to_le_bytes());
+        assert!(import(&mut restarted, &invalid_climax).is_err());
+        assert_eq!(export_base(&mut restarted).unwrap(), snapshot);
+        let baseline = snapshot.clone();
+        for invalid in [snapshot[..snapshot.len() - 1].to_vec(), {
+            let mut bytes = snapshot.clone();
+            bytes.extend([7]);
+            bytes.extend(b"Unknown");
+            bytes.extend(1_i32.to_le_bytes());
+            bytes
+        }] {
+            assert!(import(&mut restarted, &invalid).is_err());
+            assert_eq!(export_base(&mut restarted).unwrap(), baseline);
+        }
+        // Existing v11 data also restores dynamically introduced dictionary keys.
+        let n = u32::from_le_bytes(snapshot[5..9].try_into().unwrap()) as usize;
+        let mut old_reader = fresh();
+        import(&mut old_reader, &snapshot[9..9 + n]).unwrap();
+        assert_eq!(values(&mut old_reader).unwrap()["VoiceVolume.NewRoleA"], 73);
+    }
+
     #[test]
     fn import_is_validated_before_mutation_and_reset_uses_game_defaults() {
         let mut vm = SystemVm::try_new().unwrap();
         vm.eval("setup", "Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,BoxOpacity=191,Bold=0,Border=1,AutoSpeed=50,SkipNoRead=0,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}\nConfigDefault <- clone Config\nConfigDefault.ShortCuts = clone Config.ShortCuts\nApplies <- 0\nfunction RestoreVolume(){Applies++}").unwrap();
-        let original = export(&mut vm).unwrap();
+        let original = export_base(&mut vm).unwrap();
         assert_eq!(original.len(), 27);
         set_shortcut(&mut vm, 3, 1).unwrap();
         set_shortcut(&mut vm, 12, 0).unwrap();
-        let edited = export(&mut vm).unwrap();
+        let edited = export_base(&mut vm).unwrap();
         assert_eq!(edited[17], 1);
         assert_eq!(edited[26], 0);
         set(&mut vm, 2, 20).unwrap();
@@ -382,7 +927,7 @@ mod tests {
         assert_eq!(shortcut_ids(&mut vm).unwrap()[9], 0);
         let legacy = [b"NKCF\x01".as_slice(), &original[5..12]].concat();
         import(&mut vm, &legacy).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), edited);
+        assert_eq!(export_base(&mut vm).unwrap(), edited);
         // v2 imports its own shortcuts but preserves the new opacity field.
         let legacy2 = [b"NKCF\x02".as_slice(), &edited[5..12], &edited[17..]].concat();
         set(&mut vm, 7, 127).unwrap();
@@ -396,7 +941,7 @@ mod tests {
         }
         assert!(set(&mut vm, 7, 256).is_err());
         assert!(set(&mut vm, 7, -1).is_err());
-        assert_eq!(export(&mut vm).unwrap(), edited);
+        assert_eq!(export_base(&mut vm).unwrap(), edited);
         let legacy3 = [b"NKCF\x03".as_slice(), &edited[5..13], &edited[17..]].concat();
         set(&mut vm, 8, 1).unwrap();
         set(&mut vm, 9, 0).unwrap();
@@ -416,7 +961,7 @@ mod tests {
         // Restore style changed above after testing v4 migration.
         set(&mut vm, 8, 1).unwrap();
         set(&mut vm, 9, 0).unwrap();
-        let bold = export(&mut vm).unwrap();
+        let bold = export_base(&mut vm).unwrap();
         reset(&mut vm, false).unwrap();
         import(&mut vm, &bold).unwrap();
         assert!(style(&mut vm).unwrap().bold);
@@ -425,61 +970,65 @@ mod tests {
         set(&mut vm, 8, 0).unwrap();
         set(&mut vm, 9, 1).unwrap();
         let mut corrupt = edited.clone();
-        corrupt[26] = 11;
+        corrupt[26] = ACTIONS.len() as u8;
         assert!(import(&mut vm, &corrupt).is_err());
-        assert_eq!(export(&mut vm).unwrap(), edited);
-        assert!(set_shortcut(&mut vm, 2, 1).is_err());
+        assert_eq!(export_base(&mut vm).unwrap(), edited);
+        assert!(set_shortcut(&mut vm, 0, 1).is_err());
         assert!(set_shortcut(&mut vm, 13, 1).is_err());
         reset(&mut vm, false).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), original);
+        assert_eq!(export_base(&mut vm).unwrap(), original);
         vm.eval("reset-test-counter", "Applies=0").unwrap();
         let mut invalid = original.clone();
         invalid[6] = 2;
         assert!(import(&mut vm, &invalid).is_err());
-        assert_eq!(export(&mut vm).unwrap(), original);
+        assert_eq!(export_base(&mut vm).unwrap(), original);
         vm.eval("count", "return Applies.tostring()").unwrap();
         assert_eq!(vm.result(), "0");
         set(&mut vm, 0, 0).unwrap();
         set(&mut vm, 1, 0).unwrap();
         set(&mut vm, 2, 23).unwrap();
-        let changed = export(&mut vm).unwrap();
+        let changed = export_base(&mut vm).unwrap();
         assert_eq!(&changed[5..8], &[0, 0, 23]);
         reset(&mut vm, false).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), original);
+        assert_eq!(export_base(&mut vm).unwrap(), original);
         import(&mut vm, &changed).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), changed);
+        assert_eq!(export_base(&mut vm).unwrap(), changed);
 
         vm.eval("extended-defaults", "ConfigDefault.KeepSkip <- 0; ConfigDefault.KeepAuto <- 0; ConfigDefault.Movie <- 1; Config = clone ConfigDefault;").unwrap();
         reset(&mut vm, false).unwrap();
-        assert_eq!(&export(&mut vm).unwrap()[27..], &[0, 0, 1]);
+        assert_eq!(&export_base(&mut vm).unwrap()[27..], &[0, 0, 1]);
         for (name, value) in EXTENDED.into_iter().zip([1, 1, 0]) {
             set_extended(&mut vm, name, value).unwrap();
         }
-        let edited = export(&mut vm).unwrap();
+        let edited = export_base(&mut vm).unwrap();
         assert_eq!(&edited[..5], b"NKCF\x07");
         reset(&mut vm, false).unwrap();
         import(&mut vm, &edited).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), edited);
+        assert_eq!(export_base(&mut vm).unwrap(), edited);
         vm.eval(
             "input-and-voice-defaults",
             "Config.CenterKey <- 0; Config.SpaceKey <- 0; Config.MuteBGM <- 1; Config.VoiceCheck.RU <- true; ConfigDefault=clone Config; ConfigDefault.VoiceCheck=clone Config.VoiceCheck;",
         ).unwrap();
-        let input_defaults = export(&mut vm).unwrap();
-        vm.eval("edit-input", "Config.CenterKey=2; Config.SpaceKey=1; Config.MuteBGM=0;").unwrap();
+        let input_defaults = export_base(&mut vm).unwrap();
+        vm.eval(
+            "edit-input",
+            "Config.CenterKey=2; Config.SpaceKey=1; Config.MuteBGM=0;",
+        )
+        .unwrap();
         set_voice(&mut vm, "RU", 0).unwrap();
         set(&mut vm, 2, 32).unwrap();
-        let changed = export(&mut vm).unwrap();
+        let changed = export_base(&mut vm).unwrap();
         let mut bad = changed.clone();
         *bad.last_mut().unwrap() = 2;
         assert!(import(&mut vm, &bad).is_err());
-        assert_eq!(export(&mut vm).unwrap(), changed);
+        assert_eq!(export_base(&mut vm).unwrap(), changed);
         reset(&mut vm, false).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), input_defaults);
+        assert_eq!(export_base(&mut vm).unwrap(), input_defaults);
         import(&mut vm, &changed).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), changed);
+        assert_eq!(export_base(&mut vm).unwrap(), changed);
         import(&mut vm, &input_defaults).unwrap();
         vm.eval("presentation-defaults", "Config.Screen <- 0; Config.Effect <- 1; Config.SysEffect <- 1; Config.Popup <- 1; Config.Dialog <- 1; Config.KeepIcon <- 1; ConfigDefault=clone Config; ConfigDefault.ShortCuts=clone Config.ShortCuts").unwrap();
-        let defaults = export(&mut vm).unwrap();
+        let defaults = export_base(&mut vm).unwrap();
         let mut previous = defaults.clone();
         previous[4] = 9;
         let start = 6 + usize::from(previous[5]) + 3;
@@ -498,8 +1047,66 @@ mod tests {
         assert_eq!(values(&mut vm).unwrap()["Screen"], 2);
         assert_eq!(values(&mut vm).unwrap()["Popup"], 1);
         import(&mut vm, &defaults).unwrap();
-        assert_eq!(export(&mut vm).unwrap(), defaults);
+        assert_eq!(export_base(&mut vm).unwrap(), defaults);
     }
+    #[test]
+    fn structured_preferences_roundtrip_without_legacy_voice_check() {
+        let mut vm = SystemVm::try_new().unwrap();
+        vm.eval("setup", r#"
+            const VOLUME_MAX=100;
+            Config <- {TextSpeed=50,KeepVoice=1,VolBGM=50,VolVO=75,VolSE=50,VolENV=50,VolSYS=50,
+                BoxOpacity=191,Bold=0,Border=1,AutoSpeed=50,SkipNoRead=0,
+                Dialog={OVERWRITE=true,LOAD=false,QSAVE=true,QLOAD=false,NEXT=true,JUMP=true,QUIT=false,DEFAULT=true,RESET=true},
+                VoiceMute={AA=false,BB=true},VoiceVolume={AA=75,BB=100},
+                ShortCuts=["CONFIG","MENU","RESET","QUIT","SAVE","LOAD","QSAVE","QLOAD","LOG","HIDE","AUTO","SKIP"]};
+            function RestoreVolume() {}
+        "#).unwrap();
+        assert!(voice_values(&mut vm).unwrap().is_empty());
+        let map = values(&mut vm).unwrap();
+        assert_eq!(map["Dialog.LOAD"], 0);
+        assert_eq!(map["VoiceMute.BB"], 1);
+        assert_eq!(map["VoiceVolume.AA"], 75);
+        let json = presentation(&mut vm).unwrap();
+        assert!(json.starts_with(",\"Dialog\":{"));
+        assert!(json.contains("\"OVERWRITE\":true"));
+        assert!(json.contains("\"LOAD\":false"));
+        let original = export_base(&mut vm).unwrap();
+        assert_eq!(&original[..5], b"NKCF\x0b");
+        vm.eval(
+            "edit",
+            "Config.Dialog.LOAD=true; Config.VoiceMute.BB=false; Config.VoiceVolume.AA=20",
+        )
+        .unwrap();
+        import(&mut vm, &original).unwrap();
+        assert_eq!(export_base(&mut vm).unwrap(), original);
+        // An older scalar Dialog snapshot preserves a game's table structure.
+        let n = u32::from_le_bytes(original[5..9].try_into().unwrap()) as usize;
+        import(&mut vm, &original[9..9 + n]).unwrap();
+        assert_eq!(export_base(&mut vm).unwrap(), original);
+        // Both malformed records and game-specific volume overflow fail before mutation.
+        let mut invalid = original.clone();
+        invalid.pop();
+        assert!(import(&mut vm, &invalid).is_err());
+        assert_eq!(export_base(&mut vm).unwrap(), original);
+        let mut invalid = original.clone();
+        let end = invalid.len();
+        invalid[end - 4..].copy_from_slice(&101_i32.to_le_bytes());
+        assert!(import(&mut vm, &invalid).is_err());
+        assert_eq!(export_base(&mut vm).unwrap(), original);
+        vm.eval("bad-volume", "Config.VoiceVolume.AA=101").unwrap();
+        assert!(export_base(&mut vm).is_err());
+        vm.eval(
+            "original-check-list",
+            "Config.VoiceVolume.AA=75; Config.Dialog.LOAD=0; Config.VoiceMute.BB=1",
+        )
+        .unwrap();
+        assert_eq!(export_base(&mut vm).unwrap(), original);
+        assert!(presentation(&mut vm).unwrap().contains("\"LOAD\":false"));
+        vm.eval("bad-type", "Config.Dialog.LOAD=2").unwrap();
+        assert!(presentation(&mut vm).is_err());
+        assert!(export_base(&mut vm).is_err());
+    }
+
     #[test]
     fn version_length_and_ranges_are_strict() {
         let valid = [
@@ -529,7 +1136,7 @@ mod tests {
             assert!(decode(&overlong).is_err());
             if version == 2 {
                 let mut bad = legacy;
-                bad[21] = 11;
+                bad[21] = ACTIONS.len() as u8;
                 assert!(decode(&bad).is_err());
             }
         }
@@ -545,7 +1152,7 @@ mod tests {
             (14, 2),
             (15, 101),
             (16, 2),
-            (17, 11),
+            (17, ACTIONS.len() as u8),
         ] {
             let mut bad = valid.clone();
             bad[i] = value;

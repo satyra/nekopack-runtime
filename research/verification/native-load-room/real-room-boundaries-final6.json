@@ -1,0 +1,2450 @@
+{
+  "run": "system-room-boundaries-f0ecb8f7",
+  "passed": true,
+  "checks": [
+    "original room music to CG switch keeps the same coroutine",
+    "original ViewRoomCGPage ImageAction Commit ImageAction ACK Render displays generated pixels",
+    "CG viewer cancel returns to original CG page then switches to scene page",
+    "original scene selection reaches suspended ScriptEval metadata without replay resource loading"
+  ],
+  "fixture": {
+    "cg": {
+      "container": "HK01",
+      "pages": [
+        "0001",
+        "0002",
+        "0003",
+        "0004"
+      ],
+      "flag": "GF300"
+    },
+    "scene": {
+      "icon": "HKH05",
+      "name": "CS01_H_11H",
+      "flag": "G200"
+    },
+    "generated_resources": [
+      {
+        "name": "image/visual/HK01.mng",
+        "sha256": "0dc1eabd3eaae5d606c3d517d3077dabc44ac3adb0217d74c59704aeb3e77bc2"
+      },
+      {
+        "name": "system/thumbnail.mng",
+        "sha256": "11533e0dd607411986ac26bfb24415f78f57f1b8bea88c3e900e75eb05e04a15"
+      }
+    ],
+    "replay_resource_packaged": false,
+    "original_cg_extracted": false
+  },
+  "apk_sha256": "c42b9ff4098f4d3540c6c9e56a83d5e6ec2de1fcd0b2e585f3507e531c397135",
+  "cg_actions": [
+    {
+      "kind": "image",
+      "value": "1 white"
+    },
+    {
+      "kind": "commit",
+      "value": ""
+    },
+    {
+      "kind": "image",
+      "value": "0 #HK01&0001"
+    }
+  ],
+  "cg_render_frame": {
+    "kind": "system_command",
+    "token": 1,
+    "command": "room",
+    "elapsed_ms": 2292,
+    "delay_ms": -1,
+    "closed": false,
+    "has_frame": true,
+    "buttons": [],
+    "size": [
+      1600,
+      900
+    ],
+    "room_actions": [],
+    "room_replay": false,
+    "room_audio": 0,
+    "load_catalog": false,
+    "native_ack": false,
+    "save_config": false,
+    "restore_audio": false,
+    "restore_screen": false,
+    "platform_replaying": false
+  },
+  "replay_actions": [
+    {
+      "kind": "script_reset",
+      "value": ""
+    },
+    {
+      "kind": "script_reset",
+      "value": ""
+    },
+    {
+      "kind": "assign_image",
+      "value": ""
+    },
+    {
+      "kind": "replay",
+      "value": "CS01_H_11H"
+    }
+  ],
+  "replay_boundary": {
+    "kind": "system_command",
+    "token": 1,
+    "command": "room",
+    "elapsed_ms": 4105,
+    "delay_ms": -1,
+    "closed": false,
+    "has_frame": true,
+    "buttons": [
+      {
+        "name": "5:PAGE#0:1",
+        "bounds": [
+          750,
+          184,
+          30,
+          56
+        ]
+      },
+      {
+        "name": "5:PAGE#1:2",
+        "bounds": [
+          823,
+          184,
+          45,
+          56
+        ]
+      },
+      {
+        "name": "6::1",
+        "bounds": [
+          106,
+          266,
+          333,
+          200
+        ]
+      },
+      {
+        "name": "6:CG:1001",
+        "bounds": [
+          69,
+          84,
+          258,
+          73
+        ]
+      },
+      {
+        "name": "6:CLOSE:2000000002",
+        "bounds": [
+          839,
+          804,
+          212,
+          41
+        ]
+      },
+      {
+        "name": "6:MUSIC:1003",
+        "bounds": [
+          582,
+          84,
+          258,
+          73
+        ]
+      },
+      {
+        "name": "6:NEXT:117",
+        "bounds": [
+          903,
+          197,
+          25,
+          37
+        ]
+      },
+      {
+        "name": "6:SCENE:1002",
+        "bounds": [
+          326,
+          84,
+          257,
+          73
+        ]
+      }
+    ],
+    "size": [
+      1600,
+      900
+    ],
+    "room_actions": [
+      {
+        "kind": "script_reset",
+        "value": ""
+      },
+      {
+        "kind": "script_reset",
+        "value": ""
+      },
+      {
+        "kind": "assign_image",
+        "value": ""
+      },
+      {
+        "kind": "replay",
+        "value": "CS01_H_11H"
+      }
+    ],
+    "room_replay": true,
+    "room_audio": 1,
+    "load_catalog": false,
+    "native_ack": false,
+    "save_config": false,
+    "restore_audio": false,
+    "restore_screen": false,
+    "platform_replaying": false
+  },
+  "events": [
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 0,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": false,
+      "buttons": [],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": true,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 0,
+      "delay_ms": 50,
+      "closed": false,
+      "has_frame": false,
+      "buttons": [],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 1,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 71,
+      "delay_ms": 50,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "0::1",
+          "bounds": [
+            241,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::10",
+          "bounds": [
+            561,
+            542,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::11",
+          "bounds": [
+            881,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::12",
+          "bounds": [
+            881,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::13",
+          "bounds": [
+            881,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::14",
+          "bounds": [
+            881,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::2",
+          "bounds": [
+            241,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::3",
+          "bounds": [
+            241,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::4",
+          "bounds": [
+            241,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::5",
+          "bounds": [
+            241,
+            542,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::6",
+          "bounds": [
+            561,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::7",
+          "bounds": [
+            561,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::8",
+          "bounds": [
+            561,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::9",
+          "bounds": [
+            561,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0:BACK:101",
+          "bounds": [
+            468,
+            713,
+            46,
+            21
+          ]
+        },
+        {
+          "name": "0:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "0:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "0:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "0:NEXT:117",
+          "bounds": [
+            601,
+            713,
+            46,
+            21
+          ]
+        },
+        {
+          "name": "0:PLAY:2000000001",
+          "bounds": [
+            542,
+            708,
+            31,
+            32
+          ]
+        },
+        {
+          "name": "0:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        },
+        {
+          "name": "1:REPEAT:1",
+          "bounds": [
+            676,
+            707,
+            44,
+            30
+          ]
+        },
+        {
+          "name": "2:VOLUME++:65292",
+          "bounds": [
+            1141,
+            710,
+            59,
+            34
+          ]
+        },
+        {
+          "name": "2:VOLUME--:65293",
+          "bounds": [
+            814,
+            710,
+            60,
+            34
+          ]
+        },
+        {
+          "name": "2:VOLUME:2000000001",
+          "bounds": [
+            873,
+            710,
+            275,
+            34
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": true,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 526,
+      "delay_ms": 50,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "0::1",
+          "bounds": [
+            241,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::10",
+          "bounds": [
+            561,
+            542,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::11",
+          "bounds": [
+            881,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::12",
+          "bounds": [
+            881,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::13",
+          "bounds": [
+            881,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::14",
+          "bounds": [
+            881,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::2",
+          "bounds": [
+            241,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::3",
+          "bounds": [
+            241,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::4",
+          "bounds": [
+            241,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::5",
+          "bounds": [
+            241,
+            542,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::6",
+          "bounds": [
+            561,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::7",
+          "bounds": [
+            561,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::8",
+          "bounds": [
+            561,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::9",
+          "bounds": [
+            561,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0:BACK:101",
+          "bounds": [
+            468,
+            713,
+            46,
+            21
+          ]
+        },
+        {
+          "name": "0:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "0:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "0:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "0:NEXT:117",
+          "bounds": [
+            601,
+            713,
+            46,
+            21
+          ]
+        },
+        {
+          "name": "0:PLAY:2000000001",
+          "bounds": [
+            542,
+            708,
+            31,
+            32
+          ]
+        },
+        {
+          "name": "0:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        },
+        {
+          "name": "1:REPEAT:1",
+          "bounds": [
+            676,
+            707,
+            44,
+            30
+          ]
+        },
+        {
+          "name": "2:VOLUME++:65292",
+          "bounds": [
+            1141,
+            710,
+            59,
+            34
+          ]
+        },
+        {
+          "name": "2:VOLUME--:65293",
+          "bounds": [
+            814,
+            710,
+            60,
+            34
+          ]
+        },
+        {
+          "name": "2:VOLUME:2000000001",
+          "bounds": [
+            873,
+            710,
+            275,
+            34
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": true,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 887,
+      "delay_ms": 0,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "0::1",
+          "bounds": [
+            241,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::10",
+          "bounds": [
+            561,
+            542,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::11",
+          "bounds": [
+            881,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::12",
+          "bounds": [
+            881,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::13",
+          "bounds": [
+            881,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::14",
+          "bounds": [
+            881,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::2",
+          "bounds": [
+            241,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::3",
+          "bounds": [
+            241,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::4",
+          "bounds": [
+            241,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::5",
+          "bounds": [
+            241,
+            542,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::6",
+          "bounds": [
+            561,
+            378,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::7",
+          "bounds": [
+            561,
+            419,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::8",
+          "bounds": [
+            561,
+            460,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0::9",
+          "bounds": [
+            561,
+            501,
+            320,
+            41
+          ]
+        },
+        {
+          "name": "0:BACK:101",
+          "bounds": [
+            468,
+            713,
+            46,
+            21
+          ]
+        },
+        {
+          "name": "0:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "0:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "0:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "0:NEXT:117",
+          "bounds": [
+            601,
+            713,
+            46,
+            21
+          ]
+        },
+        {
+          "name": "0:PLAY:2000000001",
+          "bounds": [
+            542,
+            708,
+            31,
+            32
+          ]
+        },
+        {
+          "name": "0:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        },
+        {
+          "name": "1:REPEAT:1",
+          "bounds": [
+            676,
+            707,
+            44,
+            30
+          ]
+        },
+        {
+          "name": "2:VOLUME++:65292",
+          "bounds": [
+            1141,
+            710,
+            59,
+            34
+          ]
+        },
+        {
+          "name": "2:VOLUME--:65293",
+          "bounds": [
+            814,
+            710,
+            60,
+            34
+          ]
+        },
+        {
+          "name": "2:VOLUME:2000000001",
+          "bounds": [
+            873,
+            710,
+            275,
+            34
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 1,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": true,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 1333,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 1943,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [
+        {
+          "kind": "image",
+          "value": "1 white"
+        }
+      ],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": true,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 2206,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": false,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [
+        {
+          "kind": "commit",
+          "value": ""
+        }
+      ],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": true,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 2224,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": false,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [
+        {
+          "kind": "image",
+          "value": "0 #HK01&0001"
+        }
+      ],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": true,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 2267,
+      "delay_ms": 0,
+      "closed": false,
+      "has_frame": false,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 2292,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 2620,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 2684,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 3276,
+      "delay_ms": 0,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "3:PAGE#0:1",
+          "bounds": [
+            378,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#1:2",
+          "bounds": [
+            451,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#2:3",
+          "bounds": [
+            533,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#3:4",
+          "bounds": [
+            612,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#4:5",
+          "bounds": [
+            695,
+            185,
+            46,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#5:6",
+          "bounds": [
+            774,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#6:7",
+          "bounds": [
+            857,
+            185,
+            45,
+            55
+          ]
+        },
+        {
+          "name": "3:PAGE#7:8",
+          "bounds": [
+            937,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#8:9",
+          "bounds": [
+            1018,
+            184,
+            46,
+            56
+          ]
+        },
+        {
+          "name": "3:PAGE#9:10",
+          "bounds": [
+            1095,
+            184,
+            81,
+            56
+          ]
+        },
+        {
+          "name": "4::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "4:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "4:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "4:NEXT:117",
+          "bounds": [
+            1207,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "4:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 3554,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "5:PAGE#0:1",
+          "bounds": [
+            750,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "5:PAGE#1:2",
+          "bounds": [
+            823,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "6::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "6:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "6:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "6:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "6:NEXT:117",
+          "bounds": [
+            903,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "6:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [],
+      "room_replay": false,
+      "room_audio": 0,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    },
+    {
+      "kind": "system_command",
+      "token": 1,
+      "command": "room",
+      "elapsed_ms": 4105,
+      "delay_ms": -1,
+      "closed": false,
+      "has_frame": true,
+      "buttons": [
+        {
+          "name": "5:PAGE#0:1",
+          "bounds": [
+            750,
+            184,
+            30,
+            56
+          ]
+        },
+        {
+          "name": "5:PAGE#1:2",
+          "bounds": [
+            823,
+            184,
+            45,
+            56
+          ]
+        },
+        {
+          "name": "6::1",
+          "bounds": [
+            106,
+            266,
+            333,
+            200
+          ]
+        },
+        {
+          "name": "6:CG:1001",
+          "bounds": [
+            69,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "6:CLOSE:2000000002",
+          "bounds": [
+            839,
+            804,
+            212,
+            41
+          ]
+        },
+        {
+          "name": "6:MUSIC:1003",
+          "bounds": [
+            582,
+            84,
+            258,
+            73
+          ]
+        },
+        {
+          "name": "6:NEXT:117",
+          "bounds": [
+            903,
+            197,
+            25,
+            37
+          ]
+        },
+        {
+          "name": "6:SCENE:1002",
+          "bounds": [
+            326,
+            84,
+            257,
+            73
+          ]
+        }
+      ],
+      "size": [
+        1600,
+        900
+      ],
+      "room_actions": [
+        {
+          "kind": "script_reset",
+          "value": ""
+        },
+        {
+          "kind": "script_reset",
+          "value": ""
+        },
+        {
+          "kind": "assign_image",
+          "value": ""
+        },
+        {
+          "kind": "replay",
+          "value": "CS01_H_11H"
+        }
+      ],
+      "room_replay": true,
+      "room_audio": 1,
+      "load_catalog": false,
+      "native_ack": false,
+      "save_config": false,
+      "restore_audio": false,
+      "restore_screen": false,
+      "platform_replaying": false
+    }
+  ],
+  "original_replay_executed": false
+}

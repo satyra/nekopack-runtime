@@ -49,6 +49,13 @@ static SQInteger variable_call(HSQUIRRELVM v, int operation) {
 static SQInteger variable_get(HSQUIRRELVM v) {return variable_call(v,0);}
 static SQInteger variable_set(HSQUIRRELVM v) {return variable_call(v,1);}
 static SQInteger variable_def(HSQUIRRELVM v) {return variable_call(v,2);}
+static SQInteger table_delegate(HSQUIRRELVM v) {
+    if(sq_gettop(v)!=3 || sq_gettype(v,2)!=OT_TABLE || sq_gettype(v,3)!=OT_TABLE)
+        return sq_throwerror(v,"table delegate requires two tables");
+    if(SQ_FAILED(sq_setdelegate(v,2))) return SQ_ERROR;
+    sq_push(v,2);
+    return 1;
+}
 static SQInteger resource_get(HSQUIRRELVM v) {
     auto* c=context(v);
     if(!c->resource) return sq_throwerror(v,"resource state is not bound");
@@ -79,6 +86,7 @@ void* neko_sq_open() {
     SQFUNCTION functions[]={variable_get,variable_set,variable_def};
     for(int i=0;i<3;++i) {sq_pushstring(c->vm,names[i],-1);sq_newclosure(c->vm,functions[i],0);sq_newslot(c->vm,-3,SQFalse);}
     sq_pushstring(c->vm,"NekoResource",-1);sq_newclosure(c->vm,resource_get,0);sq_newslot(c->vm,-3,SQFalse);
+    sq_pushstring(c->vm,"NekoTableDelegate",-1);sq_newclosure(c->vm,table_delegate,0);sq_newslot(c->vm,-3,SQFalse);
     sq_pop(c->vm,1);
     return c;
     } catch(...) { delete c; return nullptr; }

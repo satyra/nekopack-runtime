@@ -1,20 +1,23 @@
-use crate::{GameResources, quote};
-use nekopack_archive::Archive;
+use crate::{quote, GameResources};
+use nekopack_archive::{Archive, Pk02};
 use nekopack_image::{Metadata, Mng};
-use nekopack_resource::{Catalog, Resolution, resolve};
+use nekopack_resource::{resolve, Catalog, Resolution};
 use nekopack_script::{
     runtime::{Scripts, Source},
     system::ResourceProvider,
 };
 use std::{
     collections::BTreeMap,
-    io::{Read, Seek},
+    io::{Read, Seek, SeekFrom},
 };
 /// Original CP932 resources with explicit profiles for the verified Chinese scenario packs.
 pub struct DatGame<R: Read + Seek> {
     archives: Vec<Option<Archive<R>>>,
     catalog: Catalog,
     mounted: Vec<bool>,
+    patches: Vec<Option<Pk02<R>>>,
+    wipe_timing: Option<crate::engine_abi::WipeTiming>,
+    pub(crate) bgv_profile: Option<crate::engine_abi::BgvProfile>,
 }
 pub(crate) fn decode(bytes: &[u8]) -> Result<String, String> {
     let (text, errors) = encoding_rs::SHIFT_JIS.decode_without_bom_handling(bytes);
@@ -64,7 +67,10 @@ fn speaker_byte_len(speaker: &str, profile: Option<ChinesePack>) -> Result<usize
     };
     let (bytes, _, errors) = encoding.encode(speaker);
     if errors {
-        return Err(format!("speaker not encodable in source {} profile", encoding.name()));
+        return Err(format!(
+            "speaker not encodable in source {} profile",
+            encoding.name()
+        ));
     }
     Ok(bytes.len())
 }
@@ -147,7 +153,8 @@ fn decode_endless_ui_script(raw: &[u8]) -> Result<String, String> {
 fn decode_mixed_scenario(raw: &[u8], endless: bool) -> Result<String, String> {
     let mut out = String::new();
     let mut map_rows = false;
-    for (line_no, line) in raw.split(|&b| b == b'\n').enumerate() {
+    let mut lines = raw.split(|&b| b == b'\n').enumerate();
+    while let Some((line_no, line)) = lines.next() {
         if line_no != 0 {
             out.push('\n');
         }
@@ -157,8 +164,15 @@ fn decode_mixed_scenario(raw: &[u8], endless: bool) -> Result<String, String> {
             continue;
         }
         if endless && trimmed.starts_with(b".") {
-            map_rows =
-                trimmed.split(|b| b.is_ascii_whitespace()).next() == Some(b".map".as_slice());
+            let mut words = trimmed
+                .split(|b| b.is_ascii_whitespace())
+                .filter(|b| !b.is_empty());
+            let command = words.next();
+            map_rows = command == Some(b".map".as_slice())
+                || (command == Some(b".title".as_slice())
+                    && nekopack_script::runtime::title_has_branches(
+                        lines.clone().map(|(_, row)| row),
+                    ));
         }
         let syntax = trimmed.starts_with(b".")
             || trimmed.starts_with(b"?")
@@ -183,9 +197,21 @@ fn decode_mixed_scenario(raw: &[u8], endless: bool) -> Result<String, String> {
     Ok(out)
 }
 impl<R: Read + Seek> DatGame<R> {
+    pub(crate) fn wipe_timing(&self) -> Option<crate::engine_abi::WipeTiming> {
+        self.wipe_timing
+    }
     pub(crate) fn speaker_byte_len(&self, source: &str, speaker: &str) -> Result<usize, String> {
         let filename = format!("{source}.txt");
-        let selected = self.resource_entry("script", &filename)?
+        if self.patch_entry("script", &filename)?.is_some() {
+            let (bytes, _, errors) = encoding_rs::GBK.encode(speaker);
+            return if errors {
+                Err("speaker not encodable in PK02 GBK profile".into())
+            } else {
+                Ok(bytes.len())
+            };
+        }
+        let selected = self
+            .resource_entry("script", &filename)?
             .ok_or_else(|| format!("missing DAT resource script/{filename}"))?;
         speaker_byte_len(speaker, chinese_pack(self.archive(selected.source)))
     }
@@ -194,6 +220,9 @@ impl<R: Read + Seek> DatGame<R> {
     /// This is not a cryptographic hash of every resource payload.
     pub(crate) fn save_identity(&self) -> u64 {
         let mut w = nekopack_script::checkpoint::Writer::default();
+        if self.wipe_timing == Some(crate::engine_abi::WipeTiming::SecondsFloat) {
+            w.bytes(b"WipeCommand:float-seconds");
+        }
         for (a, mounted) in self.archives.iter().zip(&self.mounted) {
             if !mounted {
                 continue;
@@ -208,6 +237,15 @@ impl<R: Read + Seek> DatGame<R> {
                     w.number(u64::from(n));
                 }
                 w.number(e.block_offset);
+            }
+        }
+        for patch in self.patches.iter().flatten() {
+            w.bytes(b"PK02");
+            for entry in patch.entries() {
+                w.bytes(&entry.path);
+                w.number(entry.size);
+                w.number(entry.offset);
+                w.number(u64::from(entry.compression));
             }
         }
         nekopack_script::checkpoint::digest(&w.0)
@@ -259,6 +297,63 @@ impl<R: Read + Seek> DatGame<R> {
         let (names, sources): (Vec<_>, Vec<_>) = sources.into_iter().unzip();
         let mut sources: Vec<_> = sources.into_iter().map(Some).collect();
         let mut archives: Vec<_> = (0..sources.len()).map(|_| None).collect();
+        let mut patches: Vec<_> = (0..sources.len()).map(|_| None).collect();
+        let mut is_patch = vec![false; sources.len()];
+        let mut wipe_timing = None;
+        let mut bgv_profile = None;
+        for (i, source) in sources.iter_mut().enumerate() {
+            let reader = source.as_mut().unwrap();
+            if names[i].to_ascii_lowercase().ends_with(".exe") {
+                let mut bytes = Vec::new();
+                reader
+                    .by_ref()
+                    .take(64 * 1024 * 1024 + 1)
+                    .read_to_end(&mut bytes)
+                    .map_err(|e| e.to_string())?;
+                if bytes.len() > 64 * 1024 * 1024 {
+                    return Err("native engine executable exceeds 64 MiB probe limit".into());
+                }
+                if let Some(timing) = crate::engine_abi::probe(&bytes)? {
+                    if wipe_timing.is_some_and(|previous| previous != timing) {
+                        return Err(
+                            "conflicting native WipeCommand semantics in game directory".into()
+                        );
+                    }
+                    wipe_timing = Some(timing);
+                }
+                if let Some(profile) = crate::engine_abi::probe_bgv(&bytes)? {
+                    if bgv_profile.as_ref().is_some_and(|previous| previous != &profile) {
+                        return Err("conflicting native BGV semantics in game directory".into());
+                    }
+                    bgv_profile = Some(profile);
+                }
+                // An executable is inspected as data, never executed or mounted
+                // in the resource catalog. Keep its input ordinal unoccupied.
+                is_patch[i] = true;
+                continue;
+            }
+            let mut magic = Vec::with_capacity(4);
+            reader
+                .by_ref()
+                .take(4)
+                .read_to_end(&mut magic)
+                .map_err(|e| e.to_string())?;
+            reader.seek(SeekFrom::Start(0)).map_err(|e| e.to_string())?;
+            if &magic == b"PK02" {
+                is_patch[i] = true;
+                if !original_only {
+                    patches[i] = Some(
+                        Pk02::open(source.take().unwrap(), 16 * 1024 * 1024)
+                            .map_err(|e| e.to_string())?,
+                    );
+                }
+            }
+        }
+        if patches.iter().flatten().count() > 1 {
+            return Err(
+                "multiple PK02 patches require an explicit load order; select one patch".into(),
+            );
+        }
         // Parse redirect targets first. A replaced original is never parsed.
         if !original_only {
             for (i, name) in names.iter().enumerate() {
@@ -281,6 +376,11 @@ impl<R: Read + Seek> DatGame<R> {
             )
         });
         let mut mounted = vec![true; sources.len()];
+        for (active, patch) in mounted.iter_mut().zip(is_patch) {
+            if patch {
+                *active = false;
+            }
+        }
         if !original_only && (!verified_only || endless) {
             for &(original, translated) in redirects.unwrap_or(&[]) {
                 if names
@@ -347,10 +447,66 @@ impl<R: Read + Seek> DatGame<R> {
             archives,
             catalog,
             mounted,
+            patches,
+            wipe_timing,
+            bgv_profile,
         })
     }
     fn archive(&self, source: usize) -> &Archive<R> {
         self.archives[source].as_ref().unwrap()
+    }
+    // Native PK02 hooks try the byte filename before its NEKOPACK hash alias.
+    // Hash seeds come from mounted archives, never from a title identifier.
+    fn patch_entry(&self, dir: &str, name: &str) -> Result<Option<(usize, Vec<u8>)>, String> {
+        if name.contains(['/', '\\', '\0']) || name == ".." {
+            return Err("resource name is not a basename".into());
+        }
+        let (encoded, _, errors) = encoding_rs::SHIFT_JIS.encode(name);
+        if errors {
+            return Err("resource name cannot be encoded in CP932 profile".into());
+        }
+        let mut path = dir.as_bytes().to_vec();
+        path.push(b'/');
+        path.extend_from_slice(&encoded);
+        for (source, patch) in self.patches.iter().enumerate() {
+            let Some(patch) = patch else {
+                continue;
+            };
+            if patch.entry(&path).is_some() {
+                return Ok(Some((source, path)));
+            }
+            let mut matches = std::collections::BTreeSet::new();
+            for (archive, active) in self.archives.iter().zip(&self.mounted) {
+                if !active {
+                    continue;
+                }
+                let hash = nekopack_archive::name_hash(
+                    archive.as_ref().unwrap().header().name_seed,
+                    &encoded,
+                );
+                let alias = format!("{dir}/{hash:08X}").into_bytes();
+                if patch.entry(&alias).is_some() {
+                    matches.insert(alias);
+                }
+            }
+            if matches.len() > 1 {
+                return Err(format!("ambiguous PK02 hash alias for {dir}/{name}"));
+            }
+            if let Some(alias) = matches.into_iter().next() {
+                return Ok(Some((source, alias)));
+            }
+        }
+        Ok(None)
+    }
+    fn read_patch(&mut self, dir: &str, name: &str) -> Result<Option<Vec<u8>>, String> {
+        let Some((source, path)) = self.patch_entry(dir, name)? else {
+            return Ok(None);
+        };
+        let patch = self.patches[source].as_mut().unwrap();
+        if patch.entry(&path).unwrap().size > 64 * 1024 * 1024 {
+            return Err("resource exceeds 64 MiB limit".into());
+        }
+        patch.read(&path).map_err(|e| e.to_string())
     }
     pub(crate) fn read(&mut self, dir: &str, name: &str) -> Result<Vec<u8>, String> {
         self.read_optional(dir, name)?
@@ -361,6 +517,9 @@ impl<R: Read + Seek> DatGame<R> {
         dir: &str,
         name: &str,
     ) -> Result<Option<Vec<u8>>, String> {
+        if let Some(bytes) = self.read_patch(dir, name)? {
+            return Ok(Some(bytes));
+        }
         let Some(candidate) = self.resource_entry(dir, name)? else {
             return Ok(None);
         };
@@ -409,8 +568,20 @@ impl<R: Read + Seek> DatGame<R> {
             .read_prefix(candidate.ordinal, length)
             .map_err(|e| e.to_string())
     }
+    fn original_bytes(&mut self, dir: &str, name: &str) -> Result<Vec<u8>, String> {
+        match self.resource_entry(dir, name)? {
+            Some(candidate) => self.read_entry(candidate),
+            None => Ok(Vec::new()),
+        }
+    }
     pub fn has_chinese_scenario_patch(&self) -> bool {
-        self.archives
+        self.patches.iter().flatten().any(|patch| {
+            patch
+                .entries()
+                .iter()
+                .any(|e| e.path.starts_with(b"script/"))
+        }) || self
+            .archives
             .iter()
             .zip(&self.mounted)
             .any(|(archive, mounted)| {
@@ -428,13 +599,14 @@ impl<R: Read + Seek> DatGame<R> {
             .iter()
             .enumerate()
             .filter_map(|(index, archive)| {
-                (self.mounted[index] && chinese_pack(archive.as_ref().unwrap()).is_some())
-                    .then_some(index)
+                (self.patches[index].is_some()
+                    || (self.mounted[index] && chinese_pack(archive.as_ref().unwrap()).is_some()))
+                .then_some(index)
             })
             .collect()
     }
     pub fn has_resource(&self, dir: &str, name: &str) -> Result<bool, String> {
-        Ok(self.resource_entry(dir, name)?.is_some())
+        Ok(self.patch_entry(dir, name)?.is_some() || self.resource_entry(dir, name)?.is_some())
     }
     fn resource_entry(
         &self,
@@ -480,6 +652,12 @@ impl<R: Read + Seek> Scripts for DatGame<R> {
     fn load(&mut self, name: &[u8]) -> Result<Source, String> {
         let text = std::str::from_utf8(name).map_err(|e| e.to_string())?;
         let filename = format!("{text}.txt");
+        if let Some(raw) = self.read_patch("script", &filename)? {
+            return Ok(Source {
+                name: name.to_vec(),
+                bytes: decode_mixed_scenario(&raw, true)?.into_bytes(),
+            });
+        }
         let selected = self
             .resource_entry("script", &filename)?
             .ok_or_else(|| format!("missing DAT resource script/{filename}"))?;
@@ -502,6 +680,10 @@ impl<R: Read + Seek> GameResources for DatGame<R> {
     }
     fn system(&mut self, name: &[u8]) -> Result<Vec<u8>, String> {
         let name = std::str::from_utf8(name).map_err(|e| e.to_string())?;
+        if let Some(bytes) = self.read_patch("system", name)? {
+            let original = self.original_bytes("system", name)?;
+            return Ok(crate::patch_text::system(&bytes, &original)?.into_bytes());
+        }
         let candidate = self
             .resource_entry("system", name)?
             .ok_or_else(|| format!("missing DAT resource system/{name}"))?;
@@ -517,15 +699,35 @@ impl<R: Read + Seek> GameResources for DatGame<R> {
 }
 impl<R: Read + Seek> ResourceProvider for DatGame<R> {
     fn resource(&mut self, kind: &str, name: &str) -> Result<String, String> {
+        let (kind, directory, delimiters) = if let Some(options) = kind.strip_prefix("Data\t") {
+            let (directory, delimiters) = options
+                .split_once('\t')
+                .ok_or("invalid data resource options")?;
+            if directory
+                .split('/')
+                .any(|p| p.is_empty() || p == "." || p == "..")
+                || directory.contains(['\\', '\0'])
+            {
+                return Err("invalid data resource directory".into());
+            }
+            ("Data", directory, delimiters)
+        } else {
+            (kind, "system", " \t")
+        };
         match kind {
             "Data" | "Ini" => {
-                let bytes = self.read_optional("system", name)?;
+                let bytes = self.read_optional(directory, name)?;
                 let Some(bytes) = bytes else {
                     // Original data()/ini() parse an empty resource string when lookup fails.
                     // They still return the array/table created before iterating its rows.
                     return Ok(if kind == "Data" { "[]" } else { "{}" }.into());
                 };
-                let text = decode(&bytes)?;
+                let text = if self.patch_entry(directory, name)?.is_some() {
+                    let original = self.original_bytes(directory, name)?;
+                    crate::patch_text::data(&bytes, &original)?
+                } else {
+                    decode(&bytes)?
+                };
                 let lines = text
                     .lines()
                     .map(str::trim)
@@ -534,7 +736,7 @@ impl<R: Read + Seek> ResourceProvider for DatGame<R> {
                     let rows = lines
                         .map(|line| {
                             let words = line
-                                .split([' ', '\t'])
+                                .split(|c| delimiters.contains(c))
                                 .filter(|s| !s.is_empty())
                                 .map(|s| quote(s.as_bytes()))
                                 .collect::<Result<Vec<_>, _>>()?;
@@ -575,8 +777,16 @@ impl<R: Read + Seek> ResourceProvider for DatGame<R> {
             }
             "Assets" => {
                 let (dir, stem) = name.rsplit_once('/').unwrap_or(("system", name));
+                if stem.is_empty() || dir.split('/').any(|part| matches!(part, "" | "." | ".."))
+                    || dir.contains(['\\', '\0']) {
+                    return Err("invalid image resource directory".into());
+                }
                 let file = format!("{stem}.mng");
-                let bytes = self.read(dir, &file)?;
+                // The original Images constructor leaves its sprite vector empty
+                // when no mounted resource exists; a present corrupt MNG still fails.
+                let Some(bytes) = self.read_optional(dir, &file)? else {
+                    return Ok("{}".into());
+                };
                 let mng = Mng::parse(&bytes, 100000).map_err(|e| e.to_string())?;
                 let images = mng.embedded_images().map_err(|e| e.to_string())?;
                 let mut entries = BTreeMap::new();
@@ -630,6 +840,27 @@ mod tests {
         assert_eq!(
             super::decode_mixed_scenario(&raw, true).unwrap(),
             ".map title fade\n\tgraphic\tクリア\n\t@BASE\tクリア\n.case 1\n"
+        );
+    }
+    #[test]
+    fn bare_title_does_not_change_following_dialogue_encoding() {
+        let text = "\u{4e2d}\u{6587}\u{6d4b}\u{8bd5}";
+        let mut raw = b".title\n".to_vec();
+        raw.extend_from_slice(&encoding_rs::GB18030.encode(text).0);
+        assert_eq!(
+            decode_mixed_scenario(&raw, true).unwrap(),
+            format!(".title\n{text}")
+        );
+    }
+    #[test]
+    fn native_title_rows_keep_original_condition_identifiers_in_pk02() {
+        let raw = encoding_rs::SHIFT_JIS
+            .encode(".title\n EXTRA\tクリア\n.case 1\n")
+            .0
+            .into_owned();
+        assert_eq!(
+            decode_mixed_scenario(&raw, true).unwrap(),
+            ".title\n EXTRA\tクリア\n.case 1\n"
         );
     }
     #[test]
@@ -715,17 +946,169 @@ mod tests {
         // Optional lookup does not turn malformed names into absent resources.
         assert!(game.resource("Data", "../missing.txt").is_err());
         let mut tied = DatGame::mount([pack(2, b"a"), pack(2, b"b")]).unwrap();
-        assert!(
-            tied.resource("Data", "config.txt")
-                .unwrap_err()
-                .contains("ambiguous DAT")
-        );
+        assert!(tied
+            .resource("Data", "config.txt")
+            .unwrap_err()
+            .contains("ambiguous DAT"));
         let mut bad = DatGame::mount([pack(0, &[0x81])]).unwrap();
-        assert!(
-            bad.resource("Data", "config.txt")
-                .unwrap_err()
-                .contains("invalid CP932")
+        assert!(bad
+            .resource("Data", "config.txt")
+            .unwrap_err()
+            .contains("invalid CP932"));
+    }
+    #[test]
+    fn images_missing_is_empty_but_corrupt_and_ambiguous_resources_fail() {
+        let mut missing = DatGame::mount([pack(0, b"value=1")]).unwrap();
+        assert_eq!(missing.resource("Assets", "absent").unwrap(), "{}");
+        assert!(missing.resource("Assets", "../absent").is_err());
+        let asset = || {
+            let mut bytes = pack(0, b"not an MNG").into_inner();
+            bytes[32..36].copy_from_slice(&nekopack_archive::name_hash(1, b"broken.mng").to_le_bytes());
+            std::io::Cursor::new(bytes)
+        };
+        let mut corrupt = DatGame::mount([asset()]).unwrap();
+        assert!(corrupt.resource("Assets", "broken").is_err());
+        let mut ambiguous = DatGame::mount([asset(), asset()]).unwrap();
+        assert!(ambiguous.resource("Assets", "broken").unwrap_err().contains("ambiguous DAT"));
+    }
+    #[test]
+    fn data_explicit_delimiter_preserves_spaces_inside_columns() {
+        let mut game = DatGame::mount([pack(0, b"track.ogg\tA title with spaces\n")]).unwrap();
+        assert_eq!(
+            game.resource("Data\tsystem\t\t", "config.txt").unwrap(),
+            r#"[["track.ogg","A title with spaces"]]"#
         );
+        assert_eq!(
+            game.resource("Data\tsystem\t\t", "absent.txt").unwrap(),
+            "[]"
+        );
+        assert!(game.resource("Data\t../system\t\t", "config.txt").is_err());
+    }
+    fn pk02_file(dir: &[u8], name: &[u8], payload: &[u8]) -> std::io::Cursor<Vec<u8>> {
+        let mut bytes = b"PK02".to_vec();
+        bytes.extend(0u64.to_le_bytes());
+        let data = bytes.len() as u64;
+        bytes.extend(payload);
+        let file = bytes.len() as u64;
+        bytes.extend((payload.len() as u64).to_le_bytes());
+        bytes.extend(data.to_le_bytes());
+        bytes.push(0);
+        bytes.extend(name);
+        bytes.push(0);
+        let child = bytes.len() as u64;
+        for n in [0, 1, 0, file] {
+            bytes.extend(n.to_le_bytes());
+        }
+        bytes.extend(dir);
+        bytes.push(0);
+        let root = bytes.len() as u64;
+        for n in [1, 0, child, 0] {
+            bytes.extend(n.to_le_bytes());
+        }
+        bytes.extend(b".\0");
+        bytes[4..12].copy_from_slice(&root.to_le_bytes());
+        std::io::Cursor::new(bytes)
+    }
+    #[test]
+    fn pk02_overrides_resources_and_original_mode_excludes_it() {
+        let sources = || {
+            [
+                pack(65535, b"old"),
+                pk02_file(b"system", b"config.txt", b"new"),
+            ]
+        };
+        let mut translated = DatGame::mount_version(sources(), false).unwrap();
+        let mut original = DatGame::mount_version(sources(), true).unwrap();
+        assert_eq!(translated.read("system", "config.txt").unwrap(), b"new");
+        assert_eq!(original.read("system", "config.txt").unwrap(), b"old");
+        assert_ne!(translated.save_identity(), original.save_identity());
+        assert_eq!(translated.recognized_chinese_archives(), [1]);
+        assert!(original.recognized_chinese_archives().is_empty());
+        assert!(translated
+            .read_optional("system", "absent.txt")
+            .unwrap()
+            .is_none());
+        assert!(translated.read_optional("system", "../config.txt").is_err());
+        let mut hashed = DatGame::mount([
+            pack(0, b"old"),
+            pk02_file(
+                b"system",
+                format!("{:08X}", nekopack_archive::name_hash(1, b"config.txt")).as_bytes(),
+                b"hash",
+            ),
+        ])
+        .unwrap();
+        assert_eq!(hashed.read("system", "config.txt").unwrap(), b"hash");
+        let error = DatGame::mount([
+            pack(0, b"old"),
+            pk02_file(b"system", b"a", b"one"),
+            pk02_file(b"system", b"a", b"two"),
+        ])
+        .err()
+        .unwrap();
+        assert!(error.contains("explicit load order"));
+    }
+    #[test]
+    #[ignore = "requires NEKO_PK02_GAME local directory; validates decoding without displaying text or art"]
+    fn local_pk02_sources_decode_and_versions_are_isolated() {
+        use crate::GameResources;
+        use nekopack_script::runtime::Scripts;
+        let root = std::path::PathBuf::from(std::env::var_os("NEKO_PK02_GAME").unwrap());
+        let mut paths: Vec<_> = std::fs::read_dir(root)
+            .unwrap()
+            .map(|e| e.unwrap().path())
+            .filter(|p| {
+                matches!(p.extension().and_then(|x| x.to_str()), Some("dat" | "pk2"))
+                    && p.file_name().unwrap() != "unins000.dat"
+            })
+            .collect();
+        paths.sort();
+        let mount = |original| {
+            DatGame::mount_named(
+                paths.iter().map(|p| {
+                    (
+                        p.file_name().unwrap().to_str().unwrap().to_owned(),
+                        std::fs::File::open(p).unwrap(),
+                    )
+                }),
+                original,
+            )
+            .unwrap()
+        };
+        let mut patched = mount(false);
+        let original = mount(true);
+        assert!(patched.has_chinese_scenario_patch());
+        assert!(!original.has_chinese_scenario_patch());
+        assert_ne!(patched.save_identity(), original.save_identity());
+        let names: Vec<_> = patched
+            .patches
+            .iter()
+            .flatten()
+            .flat_map(|p| p.entries().iter().map(|e| e.path.clone()))
+            .collect();
+        let mut scripts = 0;
+        for path in names {
+            if let Some(name) = path
+                .strip_prefix(b"script/")
+                .and_then(|p| p.strip_suffix(b".txt"))
+            {
+                patched
+                    .load(name)
+                    .unwrap_or_else(|e| panic!("script decode: {e}"));
+                scripts += 1;
+            } else if let Some(name) = path.strip_prefix(b"system/") {
+                if name.is_ascii() && name.ends_with(b".nut") {
+                    patched
+                        .system(name)
+                        .unwrap_or_else(|e| panic!("system decode: {e}"));
+                } else if name.is_ascii() && name.ends_with(b".txt") {
+                    patched
+                        .resource("Data", std::str::from_utf8(name).unwrap())
+                        .unwrap();
+                }
+            }
+        }
+        assert!(scripts > 0);
     }
     #[test]
     fn whole_archive_redirect_has_no_entry_fallback_and_preserves_source_ids() {
@@ -755,12 +1138,10 @@ mod tests {
             [("system.dat".into(), pack(0, b"original"))],
             &[("system.dat", "system_chs.dat")],
         );
-        assert!(
-            missing
-                .err()
-                .unwrap()
-                .contains("exactly one system_chs.dat")
-        );
+        assert!(missing
+            .err()
+            .unwrap()
+            .contains("exactly one system_chs.dat"));
         let corrupt = DatGame::mount_redirected(
             [
                 ("system.dat".into(), pack(0, b"original")),
@@ -821,11 +1202,9 @@ mod tests {
         let save = String::from_utf8(translated.system(b"saveload.nut").unwrap()).unwrap();
         assert!(save.contains("c=\"０\""));
         assert!(save.contains("+ \"　\" +"));
-        assert!(
-            String::from_utf8(original.system(b"system.nut").unwrap())
-                .unwrap()
-                .contains("Endless Dungeon")
-        );
+        assert!(String::from_utf8(original.system(b"system.nut").unwrap())
+            .unwrap()
+            .contains("Endless Dungeon"));
         // Bootstrap executes the selected system scripts without rendering images
         // or loading any scenario body.
         crate::bootstrap_begin(&mut translated, 1, &mut std::io::sink(), true).unwrap();

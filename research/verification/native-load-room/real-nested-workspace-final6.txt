@@ -1,0 +1,589 @@
+   Compiling nekopack-runtime v0.1.0 (D:\codex\neko\crates\nekopack-runtime)
+warning: associated items `open`, `open_with_screen`, and `into_mask_state` are never used
+   --> crates\nekopack-runtime\src\system_command.rs:92:19
+    |
+ 91 | impl SystemCommand {
+    | ------------------ associated items in this implementation
+ 92 |     pub(crate) fn open<R: Read + Seek>(
+    |                   ^^^^
+...
+106 |     pub(crate) fn open_with_screen<R:Read+Seek>(
+    |                   ^^^^^^^^^^^^^^^^
+...
+200 |     pub(crate) fn into_mask_state(self) -> mask::MaskState { self.mask }
+    |                   ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nekopack-runtime` (lib) generated 1 warning
+   Compiling nekopack-cli v0.1.0 (D:\codex\neko\crates\nekopack-cli)
+   Compiling nekopack-android-probe v0.1.0 (D:\codex\neko\platforms\android\native)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.27s
+     Running unittests src\lib.rs (target\debug\deps\nekopack_probe-2e56dcd42e240a04.exe)
+
+running 1 test
+test title::tests::fixture_lookup_is_ascii_case_insensitive ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\lib.rs (target\debug\deps\nekopack_archive-c2fa2da7f82c2e47.exe)
+
+running 20 tests
+test pk02::tests::local_archive ... ignored, set NEKOPACK_PK02 to a locally supplied archive; reads bytes without displaying content
+test tests::name_hash_reference_vectors_and_byte_semantics ... ok
+test tests::parity_golden_overflow_and_rotation ... ok
+test tests::offsets_above_four_gib ... ok
+test tests::reports_trailing_data_without_discarding_entries ... ok
+test tests::encrypted_index_and_odd_payload_golden_archive ... ok
+test tests::invalid_nonzero_keys_are_errors ... ok
+test tests::invalid_signature_index_length_and_budget ... ok
+test tests::directory_count_and_block_length_mismatch ... ok
+test tests::random_access_duplicate_hashes_and_odd_boundaries ... ok
+test tests::rejects_every_truncation ... ok
+test tests::zero_key_is_plaintext ... ok
+test pk02::tests::index_truncation_offsets_and_sizes ... ok
+test pk02::tests::nested_paths_use_exact_forward_slashes ... ok
+test pk02::tests::stored_and_missing ... ok
+test pk02::tests::invalid_index_and_payload ... ok
+test pk02::tests::lz4_overlapping_match_and_final_literals ... ok
+test pk02::tests::cp932_trail_backslash_is_part_of_filename ... ok
+test tests::golden_cipher_vectors_and_every_split ... ok
+test tests::streams_across_buffer_boundary_and_propagates_write_error ... ok
+
+test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\main.rs (target\debug\deps\nekopack_cli-e84cebe144721d93.exe)
+
+running 1 test
+test title::tests::fixture_lookup_is_ascii_case_insensitive ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\cli.rs (target\debug\deps\cli-c7e1790603a5c5d3.exe)
+
+running 7 tests
+test standalone_mng_metadata_cli_and_crc_failure ... ok
+test standalone_png_raster_protocol_and_failure ... ok
+test bootstrap_cli_reports_spans_and_never_outputs_partial_ast ... ok
+test rejects_missing_or_unknown_command ... ok
+test binary_output_metadata_and_error_exit ... ok
+test opaque_canvas_cli_and_invalid_background ... ok
+test names_and_priority_cli_preserve_sources_and_ties ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+
+     Running unittests src\lib.rs (target\debug\deps\nekopack_image-e1af1254b74c4bad.exe)
+
+running 16 tests
+test tests::crc_standard_check_vector ... ok
+test canvas::tests::alpha_and_signed_clipping ... ok
+test canvas::tests::display_background_preserves_alpha_and_edge_coverage ... ok
+test canvas::tests::mixed_translucent_colors ... ok
+test tests::metadata_raw_bytes_and_unknown_critical ... ok
+test tests::rejects_malformed_known_metadata ... ok
+test tests::sprite_positions_persist_and_names_are_not_deduplicated ... ok
+test tests::defi_signed_and_term ... ok
+test tests::localized_static_frames_keep_names_and_validate_the_original_crc ... ok
+test tests::requires_header_first_and_balanced_images ... ok
+test tests::pixel_extraction_rejects_unimplemented_dependencies ... ok
+test tests::fram_optional_fields_and_signed_coordinates ... ok
+test tests::rejects_truncation_crc_and_chunk_budget ... ok
+test tests::embedded_pixels_keep_control_chunk_provenance ... ok
+test tests::png_reference_pixels_alpha_palette_gray_and_adam7 ... ok
+test tests::png_truncation_crc_budget_and_sixteen_bit_rejection ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\lib.rs (target\debug\deps\nekopack_resource-18761579a6338431.exe)
+
+running 2 tests
+test tests::equal_priority_never_depends_on_insertion_order ... ok
+test tests::priority_ties_and_cross_seed_lookup ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\nekopack_runtime-e883ea62ec22ed76.exe)
+
+running 273 tests
+test dat::tests::endless_named_system_code_and_archive_identity ... ignored, requires local ED DAT directory in NEKO_ED_TEST_DAT; reads system code only
+test dat::tests::local_pk02_sources_decode_and_versions_are_isolated ... ignored, requires NEKO_PK02_GAME local directory; validates decoding without displaying text or art
+test dat::tests::bare_title_does_not_change_following_dialogue_encoding ... ok
+test dat::tests::mixed_endless_system_literals_preserve_cp932_identifiers ... ok
+test dat::tests::data_explicit_delimiter_preserves_spaces_inside_columns ... ok
+test dat::tests::encoding_and_empty_mount_fail_explicitly ... ok
+test dat::tests::dat_overlay_lazy_data_missing_and_ambiguity ... ok
+test dat::tests::mixed_chinese_script_keeps_commands_and_decodes_choices ... ok
+test dat::tests::images_missing_is_empty_but_corrupt_and_ambiguous_resources_fail ... ok
+test dat::tests::mixed_chinese_ui_script_decodes_font_and_preview_without_changing_labels ... ok
+test audio_config::tests::legacy_master_is_ignored_and_switch_is_preserved ... ok
+test dat::tests::lazy_resource_vm_returns_present_and_missing_containers ... ok
+test dat::tests::endless_map_rows_keep_cp932_condition_identifiers ... ok
+test dat::tests::native_title_rows_keep_original_condition_identifiers_in_pk02 ... ok
+test audio_config::tests::legacy_contract_accepts_native_internal_gate_with_unconditional_message_calls ... ok
+test dat::tests::speaker_centering_uses_the_source_dialogue_encoding ... ok
+test dialogue::tests::auto_unvoiced_delay_disable_and_single_ack ... ok
+test engine_abi::bgv::tests::original_and_changed_constants ... ignored, set NEKO_ENGINE_ABI_SORAKOI for read-only original PE and relocated constant checks
+test dat::tests::whole_archive_redirect_has_no_entry_fallback_and_preserves_source_ids ... ok
+test engine_abi::tests::local_original_handlers ... ignored, set NEKO_ENGINE_ABI_GAMES and NEKO_ENGINE_ABI_SORAKOI for local read-only PE checks
+test dialogue::tests::two_clicks_unicode_and_monotonic_time ... ok
+test audio_config::tests::modern_master_mutes_and_integer_truncation ... ok
+test engine_abi::bgv::tests::absent_and_malformed_pe_are_distinct ... ok
+test dialogue::tests::auto_voice_completion_reveals_then_advances_and_pause_is_not_completion ... ok
+test audio_config::tests::original_message_calls_validate_abi_without_comments_or_literals ... ok
+test dialogue::tests::natural_completion_fast_text_and_invalid_config ... ok
+test engine_abi::tests::absent_type_is_none_and_present_malformed_pe_errors ... ok
+test engine_abi::bgv::tests::token_order_and_last_assignment_follow_native_compiler ... ok
+test bootstrap_tests::title_pause_retains_variables_vm_and_pending_map_until_dispatch ... ok
+test dat::tests::pk02_overrides_resources_and_original_mode_excludes_it ... ok
+test filter::tests::sunset_uses_original_rgb_operands_and_preserves_alpha ... ok
+test filter::tests::night_clamps_every_channel_and_preserves_alpha ... ok
+test filter::tests::dark_filter_saturates_rgb_and_preserves_alpha ... ok
+test flash::tests::every_phase_is_required_and_last_restores_snapshot ... ok
+test audio_config::tests::partial_unknown_and_invalid_configuration_is_rejected ... ok
+test engine_abi::tests::rtti_prefix_is_not_the_previous_classes_suffix ... ok
+test flash::tests::options_are_color_and_count_not_seconds ... ok
+test message_adapter::tests::five_original_message_parsers_execute_their_own_voice_rules ... ignored, requires five original game directories in NEKO_VOICE_CODE_TEST_DIRS; system and boot code only
+test message_adapter::tests::malformed_or_duplicate_contract_is_rejected ... ok
+test engine_abi::tests::recognizes_numeric_abis ... ok
+test message_adapter::tests::six_original_layouts_preserve_their_own_parameters ... ignored, requires local original system sources; only system code and synthetic message inputs
+test message_log::tests::save_audio_reads_six_original_game_resources ... ignored, requires NEKO_SAVE_SOUND_GAME_DIRS with the five Dungeon games and Sorakoi
+test message_adapter::tests::original_parser_and_predicate_choose_their_own_input ... ok
+test message_adapter::layer_tests::box_snapshot_tracks_live_sprite_handles_and_geometry ... ok
+test message_log::tests::save_audio_follows_each_original_script_contract ... ok
+test message_adapter::tests::layout_executes_parser_sizes_name_decoration_and_spacing ... ok
+test motion::tests::cancelled_horizontal_components_retain_a_stationary_timed_operation ... ok
+test motion::tests::saved_queue_retains_current_segment_and_clock ... ok
+test motion::tests::dip_is_positive_y_sine_with_no_persistent_displacement ... ok
+test engine_abi::tests::unknown_and_ambiguous_handlers_are_errors ... ok
+test motion::tests::left_brackets_return_to_anchor_and_truncate_centered_coordinates ... ok
+test message_adapter::tests::original_color_expressions_follow_read_state_and_option_for_name_and_body ... ok
+test message_log::tests::ui_audio_uses_system_and_voice_categories ... ok
+test message_log::tests::history_roundtrip_and_external_input_boundaries ... ok
+test motion::tests::queue_discards_overshoot_and_actors_finish_independently ... ok
+test motion::tests::leftward_motion_truncates_centered_coordinates_and_keeps_negative_endpoint ... ok
+test motion::tests::original_curve_centered_truncation_and_endpoints ... ok
+test message_adapter::tests::volume_predicate_preserves_original_zero_and_positive_decisions ... ok
+test patch_text::tests::data_keeps_original_resource_keys_and_decodes_new_labels ... ok
+test patch_text::tests::original_keys_and_translated_literals_keep_distinct_encodings ... ok
+test preferences::tests::version_length_and_ranges_are_strict ... ok
+test read_history::tests::bounded_roundtrip_and_content_identity ... ok
+test message_adapter::layer_tests::hooks_exclude_comments_preserve_disabled_date_and_update_once ... ok
+test save_ui::tests::source_glyph_layout_uses_print_state_and_function_boundaries ... ok
+test save_ui::tests::original_pages_mode_switch_empty_slots_and_title_restrictions ... ok
+test save_ui::tests::sprite_binding_names_normalize_spacing_and_case ... ok
+test scene::tests::macros_and_position_are_explicit_and_unknown_motion_is_rejected ... ok
+test scene::tests::opaque_visual_taller_than_the_canvas_is_clipped ... ok
+test scene::tests::overlapping_layers_respect_order_replacement_and_pruning ... ok
+test settings::script_view::drawing_tests::nested_composite_uses_local_coordinates_and_native_opacity ... ok
+test settings::script_view::drawing_tests::reduction_uses_native_fixed_point_rgb_weights_and_opaque_output ... ok
+test settings::script_view::drawing_tests::pixel_alpha_replaces_alpha_without_changing_rgb_or_original_assets ... ok
+test scene::tests::saved_scene_retains_pixels_order_and_filter_without_double_applying ... ok
+test scene::tests::filter_is_sampled_on_first_draw_and_cached_until_resource_replacement ... ok
+test settings::script_view::drawing_tests::sized_fill_and_offscreen_composite_stay_inside_the_parent ... ok
+test settings::script_view::system_transition_tests::scene_redraw_and_current_screen_capture_are_distinct ... ok
+test preferences::tests::structured_preferences_roundtrip_without_legacy_voice_check ... ok
+test preferences::tests::complete_shortcut_wrapper_rejects_invalid_data_before_mutation ... ok
+test settings::script_view::drawing_tests::composite_clips_its_sized_canvas_and_preserves_transparent_margin ... ok
+test settings::script_view::system_transition_tests::colored_mask_snapshot_nested_in_plain_transition_is_retained ... ok
+test settings::tests::original_config_page_runs_past_wait ... ignored, requires original DAT resources
+test settings::script_view::drawing_tests::cp932_resource_text_crosses_the_existing_utf8_vm_boundary_once ... ok
+test scene::composite::tests::named_visual_parts_compose_in_order_and_survive_scene_checkpoint ... ok
+test settings::script_view::drawing_tests::glyph_protocol_accepts_positive_sizes_and_encoded_tabs_unicode ... ok
+test scene::tests::transparent_visual_blends_over_retained_background_and_actors ... ok
+test settings::tests::original_slider_range_and_clamping ... ok
+test preferences::tests::cold_boot_restores_dynamic_role_keys_and_modern_audio_family ... ok
+test settings::tests::original_setup_selects_bindings_and_restores_the_host ... ok
+test settings::script_view::system_transition_tests::native_fill_uses_its_own_quantization_and_nonpositive_noop ... ok
+test settings::tests::scroll_geometry_uses_the_script_expressions ... ok
+test settings::tests::modal_blocks_page_and_commits_only_matching_choice ... ok
+test shake::tests::clipped_frames_preserve_edges_and_last_frame_at_expiry ... ok
+test shake::tests::ordered_options_and_once_override ... ok
+test settings::tests::sprite_prefix_spacing_is_optional ... ok
+test settings::script_view::system_transition_tests::native_transition_endpoints_and_integer_blend_keep_display_opaque ... ok
+test settings::tests::shortcut_popup_choices_are_not_page_controls ... ok
+test shake::tests::original_phase_and_truncation ... ok
+test shake::tests::reject_unknown_and_overflow_without_wrapping ... ok
+test shake::tests::snapshot_contract_rejects_transparency_and_size_mismatch ... ok
+test save_ui::tests::thumbnail_uses_area_average_and_preserves_uniform_images ... ok
+test story::bgv::tests::audio_config_exports_only_profile_supplied_voice_substrings ... ok
+test story::native_load::tests::five_other_original_load_data_handlers_restore_real_nksv ... ignored, requires local user-owned TD1..4/ED technical saveload fixtures
+test story::bgv::tests::bgv_mega_skip_suppresses_load_and_missing_role_keys_mean_zero ... ok
+test side_menu::script::tests::next_and_back_are_supported_shortcut_actions ... ok
+test story::bgv::tests::bgv_missing_contract_resource_and_corrupt_audio_are_explicit_errors ... ok
+test story::bgv::tests::bgv_play_stop_and_ordinary_skip_keep_independent_loop_state ... ok
+test story::native_load::tests::original_saveload_continue_restores_real_nksv ... ignored, requires local user-owned technical saveload.nut fixture
+test story::bgv::tests::bgv_save_restores_loop_tag_and_recomputes_current_role_volume ... ok
+test settings::tests::touch_sounds_use_pre_mutation_volume_and_only_real_page_changes ... ok
+test story::native_load::tests::nksv9_preserves_real_back_checkpoints_and_selection_history ... ok
+test preferences::tests::complete_shortcuts_cold_boot_preserves_all_slots_and_original_action_names ... ok
+test story::native_room::tests::cg_scene_is_applied_before_command_render_and_replay_is_metadata_only ... ok
+test side_menu::script::tests::original_shortcut_update_owns_bindings_and_enable_state ... ok
+test settings::script_view::drawing_tests::styled_glyph_raster_uses_size_color_weight_and_border ... ok
+test story::native_room::tests::original_scene_child_return_requires_one_window_message_to_redraw ... ignored, requires isolated nested-room-replay-fixture-v2; executes only packaged synthetic replay bytes
+test story::native_load::tests::empty_catalog_continues_without_preparing_a_load ... ok
+test story::native_load::tests::legacy_nksv8_restores_known_history_without_inventing_back_points ... ok
+test story::bgv::tests::version_five_saves_remain_readable_and_bad_bgv_tags_are_rejected ... ok
+test story::native_load::tests::corrupt_catalog_record_is_not_silently_removed_or_committed ... ok
+test story::native_load::tests::thumbnail_has_original_dimensions_and_preserves_pixels ... ok
+test side_menu::script::tests::scripted_hit_areas_preserve_disabled_and_unsupported_actions ... ok
+test story::native_room::tests::resource_audio_packets_keep_order_and_real_payload ... ok
+test story::navigation::tests::finishing_next_restores_final_scene_and_only_bgm ... ok
+test story::navigation::tests::back_restores_confirmed_selection_variables_scene_history_and_audio ... ok
+test story::navigation::tests::next_executes_intermediate_commands_and_stops_at_selection ... ok
+test story::system_commands::tests::completed_voiced_text_keeps_zero_delay_pending_until_voice_finishes ... ok
+test story::system_commands::tests::cumulative_command_clock_is_converted_to_deltas ... ok
+test story::system_commands::tests::completed_text_keeps_delay_pending_until_the_strict_time_threshold ... ok
+test story::native_room::tests::synthetic_replay_runs_commands_and_returns_to_the_original_room_stack ... ok
+test preferences::tests::import_is_validated_before_mutation_and_reset_uses_game_defaults ... ok
+test story::system_commands::tests::message_hook_runs_once_and_original_saved_counter_survives_cold_restore ... ok
+test story::system_commands::tests::original_cancel_modes_update_live_story_before_nested_wait ... ok
+test story::system_commands::tests::delay_waits_for_voice_and_roundtrips_its_old_scene_and_clock ... ok
+test story::system_commands::tests::immediate_actions_and_closing_sound_are_consumed_once ... ok
+test story::system_commands::tests::delayed_scene_full_save_restores_remaining_threshold_and_pixels ... ok
+test story::system_commands::tests::ordinary_system_return_is_ignored_by_the_original_contract ... ok
+test story::system_commands::tests::original_config_save_waits_for_persistence_ack_before_returning ... ok
+test story::tests::actor_offsets_use_canvas_center_and_solid_overlay_retains_layers ... ok
+test story::tests::absolute_and_vertical_motion_preserve_segment_order ... ok
+test story::system_commands::tests::native_message_wake_can_release_wait_without_a_game_event ... ok
+test story::tests::actor_replacement_keeps_queued_motion ... ok
+test story::tests::audio_config_uses_vm_state_and_rejects_invalid_updates_without_advancing ... ok
+test story::tests::bless_original_credits_assets_render_and_release_to_title ... ignored, requires the four original BLESS DAT archives
+test story::system_commands::tests::original_quit_retains_terminal_packet_without_advancing_old_story ... ok
+test story::system_commands::tests::registered_waits_retain_one_token_and_require_explicit_continuation ... ok
+test story::tests::bad_duration_and_missing_audio_are_terminal ... ok
+test story::tests::bare_bgm_stops_without_resource_and_waits_for_host_confirmation ... ok
+test story::system_commands::tests::positive_delay_uses_strict_original_threshold ... ok
+test story::tests::auto_cancel_preserves_granted_ack_and_stops_following_page ... ok
+test story::tests::bare_bgv_stops_its_two_slots_without_touching_environment_or_bgm ... ok
+test story::system_commands::tests::screen_captures_last_message_overlay_while_base_rebuilds_scene ... ok
+test story::tests::bgm_fade_requests_explicit_and_original_default_duration ... ok
+test story::tests::auto_frames_keep_page_until_ack_and_reject_stale_events ... ok
+test story::tests::corrupt_background_is_still_an_error ... ok
+test story::tests::damaged_save_does_not_change_live_dialogue_and_cancel_resumes ... ok
+test story::tests::bgm_stop_preserves_queued_motion ... ok
+test story::tests::clearing_an_actor_removes_its_queued_motion ... ok
+test story::native_load::tests::original_load_transaction_restores_real_nksv_after_sleep_without_completing_old_machine ... ok
+test story::tests::each_movie_completion_resumes_only_its_own_pending_request ... ok
+test story::tests::dialogue_scene_is_reused_until_a_scene_command_changes_it ... ok
+test story::tests::first_missing_background_retains_the_initial_scene ... ok
+test story::tests::dialogue_motion_is_concurrent_tokened_monotonic_and_keeps_cached_filter ... ok
+test story::tests::clearing_slots_preserves_other_layers_and_clear_all_releases_them ... ok
+test story::tests::host_skips_bare_command_marker_between_dialogue_lines ... ok
+test story::tests::environment_audio_uses_own_resource_channel_and_ordered_acknowledgements ... ok
+test story::tests::flash_cannot_skip_phases_or_complete_early ... ok
+test story::tests::hide_preserves_page_and_restore_does_not_advance ... ok
+test story::tests::filter_changes_future_actor_loads_not_retained_pixels_or_background ... ok
+test story::tests::first_missing_wipe_mask_uses_the_original_zero_filled_surface ... ok
+test story::tests::interactive_text_requires_two_phase_input_and_preserves_cached_page ... ok
+test story::tests::invalid_auto_speed_does_not_leave_an_initialized_page ... ok
+test story::tests::mega_skip_stops_new_audio_without_loading_and_only_retains_desired_bgm ... ok
+test story::tests::left_excursion_frames_and_early_next_keep_base_position ... ok
+test story::tests::missing_voice_is_silent_but_following_available_voice_still_plays ... ok
+test story::tests::menu_is_modal_and_unsupported_actions_preserve_dialogue ... ok
+test story::tests::leftward_queue_survives_poll_and_early_dialogue_completion ... ok
+test story::tests::movie_preference_off_advances_without_opening_video ... ok
+test story::tests::host_wait_requires_matching_completion_before_text ... ok
+test story::tests::environment_stop_is_resource_free_and_unverified_options_fail ... ok
+test story::tests::motion_early_next_finishes_position_and_unverified_queue_combinations_stop ... ok
+test story::tests::missing_replay_voice_reports_unavailable_but_corrupt_voice_still_fails ... ok
+test story::tests::page_finishes_only_after_all_actor_queues_finish ... ok
+test story::tests::host_story_can_advance_past_the_bootstrap_step_limit ... ok
+test story::tests::original_default_fade_and_wipe_poll_contract ... ok
+test story::tests::quick_dialogue_modal_preserves_page_and_rejects_stale_requests ... ok
+test story::tests::rebuilding_pending_page_does_not_duplicate_message_log ... ok
+test story::tests::replay_completion_returns_without_consuming_the_title ... ok
+test story::tests::movie_waits_and_validates_skip_reason_without_loading_dat_audio ... ok
+test story::tests::read_fast_only_reveals_and_skip_suppresses_next_voice ... ok
+test story::tests::queued_segments_complete_in_core_without_advancing_dialogue ... ok
+test story::tests::missing_background_retains_the_previous_background ... ok
+test story::tests::reset_effect_clears_scene_and_audio_and_acknowledges_local_flags_once ... ok
+test story::tests::page_poll_and_stale_input_do_not_advance ... ok
+test story::tests::route_batch_runs_dialogue_but_stops_at_selection ... ok
+test story::tests::return_title_is_terminal_without_acknowledging_the_dialogue ... ok
+test story::tests::route_batch_preserves_previous_scene_for_wipe ... ok
+test story::tests::route_dispatch_retains_system_state_across_movie_and_text ... ok
+test story::tests::sorakoi_original_missing_voice_gap_is_not_a_resource_alias ... ignored, requires NEKO_SORAKOI_VOICE_DIR containing the original voice.dat
+test story::tests::script_image_action_background_uses_the_script_expansion ... ok
+test story::tests::script_title_map_emits_repeatable_terminal_checkpoint ... ok
+test story::tests::scenario_system_modules_reuse_vm_and_live_variables ... ok
+test story::tests::settings_reject_invalid_entry_without_consuming_dialogue ... ok
+test story::tests::queued_motion_survives_audio_start_and_voice_acknowledgements_exactly_once ... ok
+test story::tests::shortcut_uses_current_bindings_and_cancels_across_pending_ack ... ok
+test story::tests::shake_frames_require_matching_token_and_completion_without_advancing_pc ... ok
+test story::tests::script_image_action_composes_body_and_face_from_one_container ... ok
+test story::tests::trans_mask_missing_and_damaged_resources_have_different_boundaries ... ok
+test story::tests::skip_stops_at_next_unread_and_history_survives_restart ... ok
+test system_command::blit::tests::clip_negative_origin_and_source_edges_without_scaling ... ok
+test story::tests::sound_hook_resolves_playback_and_next_restore_names ... ok
+test story::tests::wipe_duration_follows_detected_native_numeric_abi ... ok
+test story::tests::selection_obeys_keep_mode_and_requires_an_explicit_choice ... ok
+test story::tests::spaced_brackets_queue_two_excursions_without_moving_the_anchor ... ok
+test side_menu::tests::disabled_quick_load_and_cancelled_drag_do_not_dispatch ... ok
+test story::tests::sound_effect_loop_once_and_stop_are_ordered_and_nonblocking ... ok
+test story::tests::voice_availability_executes_original_multi_tag_mask_rule ... ok
+test story::tests::sound_effect_invalid_options_and_missing_resource_fail ... ok
+test system_command::blit::tests::interpolation_rounds_negative_differences_down_and_blends_alpha ... ok
+test system_command::mask::tests::missing_alpha_clipping_and_old_snapshots ... ok
+test system_command::blit::tests::partial_opacity_packed_bgra_carry_and_row_alignment ... ok
+test system_command::mask::tests::native_byte_channels_threshold_and_signed_rounding ... ok
+test story::tests::stationary_motion_is_not_discarded_or_an_extra_script_wait ... ok
+test system_command::blit::tests::full_opacity_mixed_pairs_differ_from_scalar_and_opaque_pairs ... ok
+test system_command::tests::original_music_1201_frames_retain_bounded_surfaces_and_plans ... ignored, requires prepared nested-room-fixture and installed Windows font; metadata-only original UI run
+test story::tests::voice_availability_uses_audio_name_instead_of_face_tags ... ok
+test system_command::mask::tests::native_registration_mask_modes_and_snapshot_ids ... ok
+test system_command::tests::images_empty_named_and_missing_members_remain_iterable ... ok
+test system_command::tests::captured_transition_and_screen_survive_update_and_source_changes ... ok
+test system_command::tests::native_cancel_modes_emit_state_actions_and_change_current_skip_query ... ok
+test story::tests::wipe_commits_queued_actor_position_before_following_scene_edits ... ok
+test system_command::tests::immediate_handlers_keep_original_state_and_return_values ... ok
+test text_render::message_box_tests::six_original_msgbox_objects_drive_render_panels ... ignored, requires six original game directories in NEKO_MESSAGE_BOX_GAME_DIRS and NEKO_TEST_FONT; renders only in memory
+test text_render::tests::chinese_name_renders_and_rebuilds_without_cp932_conversion ... ignored, requires NEKO_TEST_FONT and NEKO_TEST_MSGBOX local assets; synthetic text only
+test system_command::tests::opaque_cover_requires_full_opacity_full_coverage_and_unmodified_asset ... ok
+test system_command::tests::drawings_after_update_are_not_discarded_by_raster_compaction ... ok
+test system_command::tests::original_wait_boundaries_preserve_scene_timer_input_and_restore_globals ... ok
+test text_render::tests::impossible_carry_has_an_explicit_boundary ... ok
+test system_command::tests::transition_without_snapshots_fails_and_restores_host_bindings ... ok
+test text_render::tests::local_original_font_reaches_first_rendered_page ... ignored, requires NEKO_FONT_GAME and NEKO_TEST_FONT; renders privately without exporting story or art
+test system_command::tests::sounds_keep_trigger_time_audio_snapshot_and_apply_modern_master_once ... ok
+test text_render::message_box_tests::current_classic_box_controls_panel_geometry ... ok
+test text_render::tests::native_hanging_stops_and_post_hanging_wrap ... ok
+test text_render::tests::native_message_box_blt_scales_rgb_and_alpha ... ok
+test text_render::tests::script_fill_and_border_colors_reach_actual_glyph_pixels ... ignored, requires NEKO_TEST_FONT; validates synthetic glyph RGBA values without viewing images
+test system_command::tests::mask_load_without_frame_is_retained_for_the_next_command ... ok
+test text_render::message_box_tests::shared_box_preserves_live_ornament_policy_and_direct_draw_opacity ... ok
+test text_render::tests::script_size_and_line_span_reach_the_rasterizer ... ignored, requires NEKO_TEST_FONT; synthetic text and private glyph geometry only
+test text_render::tests::native_single_character_carry_and_positive_gap_justification ... ok
+test text_render::tests::rejects_invalid_font_and_input_budget ... ok
+test text_render::tests::synthetic_bold_expands_once_and_preserves_coverage ... ok
+test text_render::tests::wraps_at_boundary_and_retains_explicit_breaks ... ok
+test title::room::tests::original_music_room_command_plays_and_switches ... ignored, requires TD4 original DAT files supplied by NEKO_ROOM_TEST_DAT; isolated original room command
+test title::room::tests::original_room_scripts_accept_input ... ignored, requires original game DAT files supplied by NEKO_ROOM_TEST_DAT
+test title::room::tests::restored_gallery_progress_opens_original_rooms ... ignored, requires an original game and a route ledger supplied by the device verification
+test story::tests::trans_and_wipe_share_the_live_per_channel_mask_surface ... ok
+test title::room::tests::bare_title_inside_menu_does_not_hide_destinations ... ok
+test title::room::tests::title_destinations_keep_all_start_branches_and_separate_resume ... ok
+test title::room::tests::music_host_runs_script_spots_and_preserves_audio_order ... ok
+test title::room::tests::music_control_ids_do_not_select_tracks ... ok
+test title_page_tests::title_coroutine_keeps_its_state_and_restores_host_between_steps ... ok
+test title::tests::hit_bounds_are_half_open_and_overflow_safe ... ok
+test title::tests::touch_requires_matching_down_up_and_cancels_irrevocably ... ok
+test transition::tests::threshold_direction_endpoints_and_soft_rounding ... ok
+test unlocks::tests::restore_merges_unlocks_without_restoring_local_or_unrelated_variables ... ok
+test transition::tests::malformed_frame_buffer_is_rejected ... ok
+test system_command::mask::tests::soft_kernel_matches_mmx_modular_arithmetic ... ok
+test system_command::tests::screen_snapshot_persists_between_commands_and_repeated_captures_are_bounded ... ok
+test text_render::tests::missing_required_anchors_and_duplicate_ornaments_are_rejected ... ok
+test text_render::tests::shared_dialogue_base_does_not_require_optional_frame ... ok
+test story::tests::early_rightward_ack_then_dip_uses_committed_origin_and_new_page_identity ... ok
+test story::tests::dip_frames_restore_y_and_early_next_never_commits_peak_or_reorders ... ok
+test system_command::tests::translucent_screen_accumulates_exactly_for_1201_frames_with_bounded_leases ... ok
+test system_command::tests::opaque_screen_cover_bounds_1200_frames_and_keeps_transparent_pixels ... ok
+
+test result: ok. 251 passed; 0 failed; 22 ignored; 0 measured; 0 filtered out; finished in 0.40s
+
+     Running tests\system_exit.rs (target\debug\deps\system_exit-0c8bf707aa14c8a3.exe)
+
+running 4 tests
+test explicit_quit_does_not_suppress_non_null_failure ... ok
+test unrelated_null_throw_is_an_error_instead_of_normal_completion ... ok
+test nested_quit_confirm_emits_terminal_action_only_after_dialog_final_wait ... ok
+test nested_quit_cancel_resumes_original_caller_without_terminal_action ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\system_gui.rs (target\debug\deps\system_gui-375b92749b331309.exe)
+
+running 9 tests
+test protocol_hex_uses_unsigned_utf8_bytes ... ok
+test native_enable_property_and_spots_enable_share_one_state ... ok
+test switch_mode_is_idempotent_and_uses_active_or_normal_under_pointer ... ok
+test overlapping_spots_keep_first_bound_hit_instead_of_smallest_area ... ok
+test screen_and_sprite_snap_keep_same_coroutine_snapshot_immutable ... ok
+test gui_geometry_visibility_position_and_glyph_plan_are_explicit ... ok
+test side_menu_updates_spots_retained_after_system_gui_bindings_restore ... ok
+test dialog_disabled_gate_and_focus_keep_original_branches ... ok
+test nested_dialog_keeps_wait_boundaries_buttons_and_caller_return ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests\system_load.rs (target\debug\deps\system_load-d3245a6d2b430c76.exe)
+
+running 8 tests
+test original_continue_and_saveinfo_execute_through_virtual_files ... ignored, requires local user-owned technical saveload.nut fixture
+test original_saveinfo_writers_determine_all_six_metadata_streams ... ignored, requires local user-owned TD1..4/ED/Sorakoi technical SaveInfo fixtures
+test original_sysload_keeps_page_stack_across_nested_confirmation_cancel ... ignored, requires local user-owned technical saveload/config fixtures
+test metadata_order_and_acknowledgement_are_explicit_boundaries ... ok
+test lazy_catalog_waits_for_install_and_refreshes_original_newest_index ... ok
+test enumeration_is_latest_normal_file_and_read_handles_have_independent_cursors ... ok
+test rejected_load_returns_to_original_caller_without_commit_or_sleep ... ok
+test success_keeps_nested_stack_until_original_sleep_and_null_unwind ... ok
+
+test result: ok. 5 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\system_room.rs (target\debug\deps\system_room-bf35612fb1c599d5.exe)
+
+running 4 tests
+test cg_commit_waits_for_scene_refresh_before_rendering ... ok
+test room_glyph_keeps_original_caption_styles_and_audio_inputs_are_validated ... ok
+test nested_room_audio_yields_and_returns_on_the_callers_thread ... ok
+test replay_boundary_records_metadata_and_keeps_original_stack_suspended ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests\system_sprite.rs (target\debug\deps\system_sprite-1ac78a50048a03d6.exe)
+
+running 3 tests
+test reduction_captures_source_plan_and_accepts_implicit_screen_dimensions ... ok
+test file_constructor_and_loadfile_keep_real_dimensions_and_independent_storage ... ok
+test masked_thumbnail_draw_keeps_a_snapshot_before_hover_fill ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\nekopack_script-10df960004447427.exe)
+
+running 42 tests
+test expression::tests::arithmetic_bitwise_and_comparison_precedence ... ok
+test expression::tests::utf8_names_work_without_spaces ... ok
+test expression::tests::logical_operators_short_circuit_but_validate_syntax ... ok
+test expression::tests::integer_boundaries_and_invalid_inputs_are_errors ... ok
+test runtime::dialogue_tests::message_control_rows_and_text_budget ... ok
+test runtime::dialogue_tests::dialogue_is_opt_in_and_waits_for_ack ... ok
+test runtime::tests::malformed_maps_and_scan_budget_do_not_acknowledge_requests ... ok
+test runtime::tests::errors_do_not_skip_calls_or_effects ... ok
+test runtime::tests::goto_compares_variables_and_rebuilds_local_branch_scope ... ok
+test runtime::tests::nested_loops_do_not_consume_outer_map_boundaries ... ok
+test runtime::tests::dialogue_controls_and_selection_checkpoints_keep_original_boundaries ... ok
+test runtime::tests::bare_title_label_is_not_a_branch ... ok
+test runtime::tests::conditional_resource_commands_follow_variables ... ok
+test runtime::tests::compact_assignment_updates_the_declared_branch_variable ... ok
+test runtime::tests::registered_one_argument_commands_ignore_results_without_consuming_rows ... ok
+test runtime::tests::registered_branches_participate_in_loop_and_goto_nesting ... ok
+test runtime::tests::calls_return_load_replaces_and_menu_resumes ... ok
+test runtime::tests::nested_maps_keep_outer_boundaries_and_call_context ... ok
+test runtime::tests::dialogue_assignment_accumulates_matching_flags ... ok
+test runtime::tests::registered_branch_cases_are_ordered_constant_lists_with_an_empty_default ... ok
+test runtime::tests::reset_clears_local_slots_only_after_host_acknowledgement ... ok
+test runtime::tests::scenario_budget_counts_empty_lines_and_zero_depth_is_rejected ... ok
+test runtime::tests::four_banks_are_independent_and_checkpointed ... ok
+test runtime::tests::loop_title_and_nested_branch_resume_from_checkpoint ... ok
+test runtime::tests::saved_nested_calls_maps_variables_and_budget_resume_without_reexecution ... ok
+test runtime::tests::select_allows_an_option_without_a_case ... ok
+test runtime::tests::variable_address_boundaries_are_shared ... ok
+test runtime::tests::variable_declarations_preserve_aliases_and_reject_partial_updates ... ok
+test runtime::tests::registered_arity_drives_rows_and_nested_case_checkpoint ... ok
+test tests::borrowed_bytes_spans_and_physical_lines ... ok
+test tests::empty_and_unterminated_line ... ok
+test tests::patch_assignment_is_not_a_general_expression_parser ... ok
+test tests::unknowns_and_invalid_forms_fail_without_partial_success ... ok
+test system::tests::variable_errors_preserve_diagnostics_and_unbind ... ok
+test system::tests::executes_registration_not_comment_text ... ok
+test system::tests::system_callback_writes_resume_in_scenario_state ... ok
+test system::tests::host_image_collections_allow_empty_animation_frames ... ok
+test system::tests::variables_are_live_aliases_across_both_languages ... ok
+test system::tests::native_limits_are_per_vm_and_failure_cleanup_does_not_touch_another_vm ... ok
+test system::resource_tests::resource_binding_errors_children_and_panic_are_contained ... ok
+test system::tests::callback_panic_is_contained_even_if_script_catches_it ... ok
+test system::tests::allocation_faults_are_terminal_and_all_arena_blocks_are_reclaimed ... ok
+
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+
+     Running tests\native_safety.rs (target\debug\deps\native_safety-0bfb48d273fd1ae9.exe)
+
+running 8 tests
+test native_probe ... ignored, executed by bounded subprocess tests
+
+running 1 test
+
+running 1 test
+
+running 1 test
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.01s
+
+
+running 1 test
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+test root_suspend_is_an_error_and_preserves_pending_request ... ok
+
+running 1 test
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.01s
+
+test checked_integer_arithmetic ... ok
+
+running 1 test
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+
+running 1 test
+test bytecode_budget_cannot_be_caught_or_reset_by_coroutines ... ok
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+test malformed_formats_are_errors ... ok
+test native_probe ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.01s
+
+test format_integer_width_and_types ... ok
+test coroutine_variable_context ... ok
+test native_memory_work_and_depth_limits_stop_execution ... ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running unittests src\lib.rs (target\debug\deps\nekopack_video-f7fd21bd1a41402f.exe)
+
+running 2 tests
+test tests::callback_panic_and_io_error_stay_inside_rust ... ok
+test tests::invalid_input_and_allocation_failure_are_errors ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nekopack_archive
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nekopack_image
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nekopack_resource
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nekopack_runtime
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nekopack_script
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nekopack_video
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -24,7 +24,57 @@ struct Sprite {
     position: [i32; 2],
 }
 
-pub(crate) struct SideMenu {
+mod script;
+use nekopack_script::{runtime::Variables, system::SystemVm};
+pub(crate) enum SideMenu {
+    Legacy(LegacySideMenu),
+    Script(script::ScriptSideMenu),
+}
+impl SideMenu {
+    pub fn open<R: Read + Seek>(
+        store: &mut DatGame<R>,
+        system: &mut SystemVm,
+        variables: &mut Variables,
+        quick: bool,
+        popup: bool,
+        keep_icon: bool,
+        in_route: bool,
+        voice: bool,
+        skip: bool,
+        auto_mode: bool,
+        next: bool,
+        back: bool,
+    ) -> Result<Self> {
+        system.eval(
+            "side-menu-contract",
+            "return (\"SIDEMENU\" in getroottable()).tostring()",
+        )?;
+        if system.result() == "true" {
+            Ok(Self::Legacy(LegacySideMenu::open(
+                store, quick, popup, keep_icon, in_route, voice,
+            )?))
+        } else {
+            Ok(Self::Script(script::ScriptSideMenu::open(
+                store, system, variables, quick, popup, keep_icon, in_route, voice, skip,
+                auto_mode, next, back,
+            )?))
+        }
+    }
+    pub fn pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Vec<u8>> {
+        match self {
+            Self::Legacy(menu) => menu.pointer(kind, x, y),
+            Self::Script(menu) => menu.pointer(kind, x, y),
+        }
+    }
+    pub fn packet(&self, action: &str) -> Result<Vec<u8>> {
+        match self {
+            Self::Legacy(menu) => menu.packet(action),
+            Self::Script(menu) => menu.packet(action),
+        }
+    }
+}
+
+pub(crate) struct LegacySideMenu {
     images: BTreeMap<String, Sprite>,
     size: [u32; 2],
     quick: bool,
@@ -37,7 +87,7 @@ pub(crate) struct SideMenu {
     hover: Option<i32>,
     sequence: u64,
 }
-impl SideMenu {
+impl LegacySideMenu {
     pub fn open<R: Read + Seek>(
         store: &mut DatGame<R>,
         quick: bool,
@@ -193,7 +243,10 @@ impl SideMenu {
             } else {
                 let b = self.bounds(i);
                 let sprite = &self.images[action];
-                image.draw(&sprite.image, [b[0] + sprite.position[0], b[1] + sprite.position[1]]);
+                image.draw(
+                    &sprite.image,
+                    [b[0] + sprite.position[0], b[1] + sprite.position[1]],
+                );
                 tooltip = action;
             }
         }
@@ -227,7 +280,7 @@ mod tests {
             add(format!("= {name}"), [0, 0]);
             add(name.to_string(), [-10, -5]);
         }
-        let mut menu = SideMenu {
+        let mut menu = LegacySideMenu {
             images,
             size: [200, 100],
             quick: false,

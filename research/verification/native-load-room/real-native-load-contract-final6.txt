@@ -1,0 +1,33 @@
+   Compiling nekopack-runtime v0.1.0 (D:\codex\neko\crates\nekopack-runtime)
+warning: associated items `open`, `open_with_screen`, and `into_mask_state` are never used
+   --> crates\nekopack-runtime\src\system_command.rs:92:19
+    |
+ 91 | impl SystemCommand {
+    | ------------------ associated items in this implementation
+ 92 |     pub(crate) fn open<R: Read + Seek>(
+    |                   ^^^^
+...
+106 |     pub(crate) fn open_with_screen<R:Read+Seek>(
+    |                   ^^^^^^^^^^^^^^^^
+...
+200 |     pub(crate) fn into_mask_state(self) -> mask::MaskState { self.mask }
+    |                   ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nekopack-runtime` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.95s
+     Running tests\system_load.rs (target\debug\deps\system_load-ad918a9c0c640b23.exe)
+
+running 8 tests
+test lazy_catalog_waits_for_install_and_refreshes_original_newest_index ... ok
+test enumeration_is_latest_normal_file_and_read_handles_have_independent_cursors ... ok
+test rejected_load_returns_to_original_caller_without_commit_or_sleep ... ok
+test success_keeps_nested_stack_until_original_sleep_and_null_unwind ... ok
+test metadata_order_and_acknowledgement_are_explicit_boundaries ... ok
+test original_continue_and_saveinfo_execute_through_virtual_files ... ok
+test original_sysload_keeps_page_stack_across_nested_confirmation_cancel ... ok
+test original_saveinfo_writers_determine_all_six_metadata_streams ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.06s
+

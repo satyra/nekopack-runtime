@@ -1,6 +1,131 @@
 # NekoPack Android 开发进度
 
-更新日期：2026-11-12
+更新日期：2026-11-13
+
+## sysload / continue 真实恢复与 room 平台动作完成（2026-11-13，当前）
+
+本轮沿原技术脚本接入共用运行时，没有按游戏名称分派。原 `SaveInfo.Save` 决定虚拟读档字段顺序，原缩略图实例决定尺寸；Android 真实目录映射普通槽和快捷槽，LoadState 准备成功后继续原 Sleep(1000)／null 展开，再提交真实 NKSV 恢复，旧协程 token 作废。NKSV9 保留原消息字段与实际 BACK 检查点，旧版本继续读取；不声称 Windows `.sav` 二进制兼容。
+
+room 已接真实音乐资源、播放状态、曲目／类别音量、停止、标题曲恢复，以及 ImageAction／Commit／Render 的 native ACK。ScriptEval 保留原父协程，子脚本 EOF 返回原 token；修复实测发现的返回后 wait(-1) 不重绘，Android 只在真实子页面返回时发送一次窗口消息，并恢复平台回想模式。另修复原音乐页长期循环累积绘制计划导致 work budget exceeded：保留不可变光栅快照及弱引用租约，不增加预算。原音乐页 1,201 帧数值验证中计划恒 10 字节、Rust surface 最多 2、VM lease 最多 1。
+
+**同一 APK 已在模拟器 `127.0.0.1:5577` 完成六组实际回归**：
+
+- 原 sysload 确认取消／确认恢复、真实存档、1000ms 等待、continue 最新普通档排除更新快捷档、冷启动、无档返回，共 32 步。
+- 原音乐房真实 Ogg 哈希、播放进度、NEXT/BACK、音量拖动、STOP 释放及退出恢复标题曲。
+- 原 CG ImageAction→Commit→ACK→Render 与取消返回；生成固色素材，无原图检查。
+- 原回想入口 metadata-only；另以 21 字节合成脚本走生产 op82、EOF、原父页恢复与重绘、CLOSE 返回，断言 Android 回想模式进入／退出；不读取原回想正文。
+- 原 config 子页、保存、冷启动持久化及 DEFAULT 重置。
+- 原 quit 取消／冷启动确认、VM 释放且无二次确认。
+
+工作区测试 **380 通过、0 失败、27 默认跳过**；额外运行本地原 load 契约 8/8、真实恢复 8/8、含原 ViewRoomScene 的 native_room 5/5。设备安装包、最终 APK、包内各 native 库与构建输出哈希一致。最终调试包：`.local/android-probe/nekopack-native-load-room-arm64-debug.apk`，SHA256 `c42b9ff4098f4d3540c6c9e56a83d5e6ec2de1fcd0b2e585f3507e531c397135`。证据见 [本轮验证记录](../research/shared-native-load-room-verification.json)、[读档研究](Nested_Load_Contract_Research.md)、[room 研究](Nested_Room_Contract_Research.md)。原技术脚本与隔离合成入口保留区分，不据此宣称所有游戏内容通关。本轮源码、回归脚本及验证记录已整理提交；APK 仍作为本地构建产物保留，不入 Git。
+
+## 原嵌套流程推进：quit 已接入，load / room 尚未完整集成（2026-11-13）
+
+本轮没有按游戏 ID 分派，也没有查看游戏图片或回想正文。四项请求尚未全部完成，不能将下列契约测试算作四项 APK 实测。
+
+- **已接入生产链路的 quit**：保留原 com.quit → InvokeCommand → ViewDialog 的嵌套栈、最后一次 wait 和取消分支。原 QuitGame 发出显式终止标记，只有与该标记对应的 null 展开才按正常退出处理；普通 null 和真实异常仍报错。Story 保留终止包，不完成旧 Machine 请求或推进后续剧情。Android 调用原确认之后的关闭入口，不重复确认。挂起系统协程不满足退出自动保存边界，避免 readiness 与实际序列化约束冲突。
+- **共用绘图已补充**：带尺寸 Sprite、复合图层 J 的局部画布/裁剪/透明度、G 字体字号/颜色/粗体/边框。原22px白色 T路径保留。新增真实字体光栅及裁剪数值测试，不以查看图片验收。
+- **sysload / continue 尚未接到生产加载链路**：新增独立虚拟文件模块、独立读取游标、修改时间降序枚举、LoadState准备确认及原Sleep→null展开契约。原EXE24条指令复核、6项测试通过（含本地原技术脚本；GUI与确认框使用记录型替身）。仍需Android真实存档目录投影、缩略图/原SaveInfo字段完整映射、准备/提交实际Saved及旧token作废，详见[契约研究](Nested_Load_Contract_Research.md)。不是原版.sav二进制兼容实现。
+- **room 尚未接到生产嵌套链路**：新增同协程native模块及3项契约测试；尚未将动作解析、播放完成状态、原CG Commit/Render、回想边界接到Story/Android。现有独立鉴赏界面通过过的旧测试不能充当新嵌套流程验收。
+
+本轮工作区回归：356通过、0失败、22默认跳过；额外本地原load契约含ignored运行6/6通过。最终APK为 `.local/android-probe/nekopack-arm64-probe.apk`，SHA256 `aaddd375f858515c5c237009d496f786f1c2526d13a4b0f4d3ee2ec7d989f225`；包内native与构建输出一致。同包原quit取消/确认冷启及原config三子页修改、冷启持久化、DEFAULT重置均通过，见 [验证记录](../research/shared-nested-flow-verification.json)。未提交或推送仓库。
+
+## 原 config 嵌套设置、保存确认与十二槽快捷键（2026-11-13，最新轮）
+
+本轮继续接共用运行时，没有按游戏 ID 分派。原场景 `.config` 调用现在沿原 ViewConfig → ViewConfigSound / ViewConfigDialog / ViewConfigShortcut → SaveConfig 栈执行，子页与快捷键弹出选择不另起设置协程。补齐五/六参数裁切 Draw、Screen/Sprite Snap、SwitchMode、滑块端点常量及无游戏按键的消息唤醒。原生证据脚本核对 65 条指令与 7 组常量；新增 blit 保留原标量、成对和尾部像素舍入规则。
+
+实测中修复：ShortCut.Init 保留新 Spots 实例后公共字段不一致；旧 Sprite 缺少 avail；空 mask 被快捷栏误当有效命中区；原 CheckList 返回整数0/1被保存层拒绝；释放消息被无绘制 wait(0) 吞掉导致弹出列表返回后父页不刷新。输入队列现在保留按下/释放顺序，仅合并相邻拖动。
+
+原 SaveConfig 仍执行 file/Save；共用配置文件边界发出保存请求并等待安卓提交成功 ACK，再返回调用者。NKCF13 完整保存 F1–F12，支持原 CONFIG/DELETE/SCREEN/MENU 动作，并读取旧1–12。此为便携配置持久化，不声称兼容任意原 `.sav` 文件。
+
+测试 APK：`.local/android-probe/nekopack-original-config-arm64-debug.apk`，SHA256 `e7e6bfe854efcbd879291563130a4a4b56540157f64f209ff12627fbea6a0a18`。包内 native 库与构建输出哈希一致，详细记录见 [shared-original-config-verification.json](../research/shared-original-config-verification.json)。
+
+- 工作区 **338 通过、0 失败、20 默认跳过**；涵盖保存 ACK、消息唤醒、快照跨com与有界保留、全十二槽与旧配置、SwitchMode及原裁切整数核。
+- 同一 APK、模拟器 `127.0.0.1:5577`：挂载原 system.dat，使用合成剧情入口实际调用原 config。文字速度设73、BGM设41、HK角色静音切换与音量36、QSAVE确认开关、F1=AUTO/F2=LOG 均通过原控件修改；退出剧情、强停冷启动再退出设置，完整配置值一致。
+- 原 DEFAULT 确认与 ResetConfig 实测恢复文字50、BGM75、F1=CONFIG/F2=VOICE、角色静音清零和确认开关默认值。
+- 同包再次通过系统指令/原确认框/分支与delay冷读档、音频/BGV33项、空恋原版/PK02各三页。已有中文快速存档从 `CS01_C_17:231` 恢复并推进至`:239`，未覆盖用户存档。
+
+以上设置实测是原场景 com config 链路，不等于现有启动器独立 Settings 展示入口已经全部改用此路径，也不等于五款安卓完整设置矩阵。任意 sysload/continue 的原槽位状态替换、room/quit 嵌套动作、像素级命中/popup及其他Glyph样式仍待接入。所有验证只读取配置、事件、坐标、音频状态及哈希；未看游戏图片或剧情/回想正文。未提交或推送本轮工作区。
+
+## 原分支、共享遮罩与嵌套确认框（2026-11-13，后续轮）
+
+继续修改共用引擎，无按游戏名称分派的实现。原闭包参数数决定是否收 rows 和启动分支，替代按命令名猜测；普通函数返回值忽略，分支函数数字返回走原整数语义，`.case` 支持多常量、默认、首个匹配及无匹配跳过。带 PNG mask 的 Trans 恢复硬/柔边逐通道公式、缺失沿用和快照，与 `.wipe` 共用同一个运行时遮罩表面。
+
+同一 SystemCommand 协程新增 Spots/Forcus、Glyph 预览及按钮计划；安卓把实际场景坐标、拖动、确认与取消交给原脚本。原 ViewDialog 的等待与 bool 返回留在原调用栈，不以独立原生对话框代替。没有自动遍历 GUI.Get(Config) 改动原子页时序。
+
+本轮 APK：`.local/android-probe/nekopack-system-branches-mask-arm64-debug.apk`，SHA256 `0efe2ad15a8ff3391431577612d2ad8a79ecb6b5488737022b2864e8a78ee21a`。包内 native 库与构建输出哈希一致；验收记录见 [shared-system-branches-verification.json](../research/shared-system-branches-verification.json)。
+
+- 工作区测试 **325 通过、0 失败、20 默认跳过**；包括注册分支、两方向 Trans/Wipe 共用表面、逐通道像素和确认框调用栈测试。
+- 同 APK、模拟器 `127.0.0.1:5577`：原 date 计时/确认、两次 wait、PNG mask 绘制路径、原 ViewDialog 触摸命中后返回第二 case、退出后的系统声、delay 快速存档冷恢复通过。资源为合成色块；执行的是挂载的原 date/ViewDialog 和独立合成注册分支，不冒称原 choice UI 全部走通。
+- 空恋原版与 PK02 汉化各新游戏三页通过；音频/BGV 33 项与冷恢复通过。用户已有中文快速存档从 `CS01_C_17:231` 读到 `:239`，未覆盖该存档。
+
+仍待补：原 choice 控件完整绘制、完整 ViewConfig 子页和退出持久化动作、sysload/continue 的槽位与状态替换、room/quit 嵌套闭环、五参数 Draw/Snap/SwitchMode 等已定位缺口。Spots 当前沿用既有矩形命中契约，不能当作任意像素 mask/popup 已完成；Glyph 仅现有白色 22px 预览子集。JPEG mask、负 Trans 时长仍拒绝；未新增任意遮罩表面或挂起 VM 栈的存档保证。技术证据见 [分支](System_Command_Branches.md)、[遮罩](System_Transition_Mask.md)、[GUI 原语](System_Gui_Primitives.md)。未查看游戏图像或剧情/回想正文，未提交或推送。
+
+## 原系统指令、消息对象与音频状态接入（2026-11-13）
+
+本轮继续修改共用运行时，没有新增按游戏 ID 选择实现的分支。补齐 LF 本地标志银行与 reset 确认边界、动态 `.system` 模块加载、原音乐房播放指令、从原 EXE ABI 提取的 BGV 双槽及语音抑制关系。音频按原配置族处理主音量、分类静音、MV 语音期间 BGM 音量与旧版 BGM 压低/恢复，修复 ED 原生内部 MuteBGM gate 的识别。
+
+原注册 `com` 处理器通过保留协程接入：`wait()` 后继续执行原绘制、计时和确认逻辑；Screen 捕获与 Base 场景重绘分开，Screen 捕获包含上一消息实际文字层。按原像素规则实现无 mask Trans、Fill 和快照。`.delay` 不再伪装为零时长 fade，改为延迟场景提交，等待原阈值或语音完成，并支持 NEXT 与冷读档。安卓在文字已完整但 delay 尚未提交时继续计时，不强制重画未变文字。
+
+消息渲染读取当前 VM 的 MsgBox 资源句柄、坐标与面板，而非固定猜测素材；执行原消息前钩子和有效绘制语句，保留被注释的 box 注册、旧 DrawDate 早返回等原行为。ReadedColor 使用原表达式与真实已读状态；未变化的覆盖层复用缓存。原 Images 整档缺失返回空集合，损坏或歧义资源仍报错。对应原语义和覆盖边界见 [System_Command_Coverage.md](System_Command_Coverage.md)、[System_Transition_Semantics.md](System_Transition_Semantics.md)、[System_Message_Layers.md](System_Message_Layers.md)。
+
+配置 NKCF12 保留动态新增角色字典、现代音量/静音族及已读/覆盖层开关，修复冷启动导入丢弃角色键导致 BGV 音量归零。运行时存档新写 NKSV/NKSC8，继续读取 1–7，分别保留 BGV 标签、延迟场景和原 ClimaxCount 状态；不将挂起的 VM 协程截断成可读存档。
+
+最终 APK：`.local/android-probe/nekopack-shared-systems-arm64-debug.apk`，SHA256 `4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8`。175 项构建输入前后哈希一致。验证记录见 [shared-system-integration-verification.json](../research/shared-system-integration-verification.json)。
+
+- 工作区测试 310 通过、0 失败、20 默认跳过；五款旧作原版标题桌面回归 5/5，六作原 MsgBox/布局实资源回归通过。它们不代表五款安卓完整剧情回归。
+- 同一 APK、同一模拟器 `127.0.0.1:5577`：音频/BGV 33 项及快速存档冷恢复通过；原音乐房第二曲播放、上下曲、循环、停止与退出释放通过。
+- 原 date 处理器的自动返回、确认返回、两次输入等待、返回后的系统声音通过；未提交的 10000ms delay 保存、强停重启后在剩余约 8079ms 完成。date 使用独立合成剧情入口和合成色块资源，不能当作原剧情中存在该调用的证据。
+- 空恋原版与 PK02 汉化版各从新游戏推进 3 页通过。另读取用户已有 NKSV5 中文快速存档，从 `CS01_C_17:231` 验证到 `:239`，未覆盖该快速存档。
+
+实测期间只读取命令、坐标、播放事件、音量与哈希等元数据，未查看游戏图像或剧情/回想正文。仍未完成 choice/非 null 返回的场景分支协议、带 mask Trans，以及任意 com 深入 GUI/config/sysload/room 的通用闭环；已有独立设置/读档/鉴赏 UI 不能替代这些路径的证明。未提交或推送本轮工作区。
+
+## 共用 WMV 正常播放与空恋进度恢复（2026-11-13）
+
+共用视频层按魔数选择 MPEG 或 ASF，新增固定 FFmpeg 8.0.1 的 WMV/WMA 解码，直接读取现有 SAF 资源。未按游戏名或汉化版分支，未转码媒体。Android 以 AudioTrack 实际播放头驱动视频，采用有界解码/绘制队列、过期帧丢弃、真实 EOF 排空及后台暂停恢复；默认不转储视频帧或 PCM。架构、构建、许可证及资源计数边界见 [WMV_Runtime_Playback.md](WMV_Runtime_Playback.md)。
+
+实际推进修复了共用链上的三个问题：存读档完成音效从当前 `saveload.nut` 的对应函数读取；存档页从原脚本和 MNG 读取每页槽位、分页、文字及缩略图锚点；原资源查无语音时按原引擎分支无声继续，已有资源的读取或解码错误仍报错。标题进入读档时停用原标题动画调度，并保留首个错误，避免次生回调覆盖根因。存档身份校验没有放宽；设备挂载顺序不同于桌面排序，检查点按设备实际清单重新生成并验证。
+
+同一 ARM64 debug APK `ae898b3adc8ad9792627d14758a97eab9920b38d59e54d3884509a98585dfd61` 在专用 Android 9 模拟器 `127.0.0.1:5577` 完成：
+
+- 原版和汉化 WMV 独立播放器全片验证，各解码 3387 帧；原版含 Home 后恢复。实际音频输出非零、播放头排空，耗时符合媒体时长。
+- 从各自真实运行时电影前存档 `CS01_C_06:2040` 进入原剧情命令，分别播放 `op.wmv` / `op_chs.wmv`，自然结束返回 `CS01_C_07:19`。原版呈现 3386、丢弃 1 帧；汉化呈现 3384、丢弃 3 帧，最大已记录呈现时间差分别 162 / 152 ms。没有用 MegaSkip 或桌面电影 ACK 代替播放证明。
+- 旧 MPEG 全片回归：3832 帧全部呈现、无丢帧、音频播放头排空。测试临时复制的媒体核对 SHA 后移除。
+- 从此前 `CS01_C_16:955` 恢复，原版继续 20 页至 `CS01_C_16:1036`；汉化版继续 100 页至 `CS01_C_17:231`。两版原版存档页首尾分页分别为槽 1–8 / 73–80，快捷存档后强停冷启动读回，源脚本及行号均一致。临时导入槽已移除，快捷存档保留；设备最后停在汉化版恢复后的进度。未声称主线通关。
+
+本轮没有查看游戏图片或剧情/回想正文，只读技术元数据。桌面普通 ACK 重建到此前进度的过程不是 Android 连续通关记录；两类验证明确区分。最新 `cargo test --workspace --lib` 为 243 passed / 15 ignored / 0 failed，另有本轮实际资源与存档页验证。195 个构建输入 SHA 与已测 APK 构建记录一致，交付 `.local/android-probe/nekopack-sorakoi-wmv-arm64-debug.apk` 与设备测试包 SHA 相同。
+
+完整摘要及复验报告哈希见 [sorakoi-wmv-playback-verification.json](../research/sorakoi-wmv-playback-verification.json)。原版 WMA2 两次 PCM SHA 不同但长度、非零样本数、峰值一致，逐样本差异尚未测量；汉化 PCM SHA 一致。不能将此描述成原版音频逐样本一致或已确认音质问题。本轮仅模拟器实测，未冒充真机覆盖。
+
+## 空恋原脚本排版与 NEXT / BACK（2026-11-13）
+
+共用运行时现执行原 `message.nut` 的消息参数解析和 Glyph 初始化，导出姓名装饰、字号/坐标、正文动态字号、宽度与行距。空恋默认正文/姓名 30、LineSpan=8、姓名 `[0,0]` 和旧五款 22px/原字节长度居中分别由挂载脚本决定，没有游戏名分支。六份原消息代码的默认/大中小/数值字号与实际字体栅格合成测试通过。
+
+NEXT 按原 MegaSkip 逻辑执行到下一选择；BACK 保存选择确认前的私有 NKSC 快照并恢复未完成的选择。实际跳转补齐共用的标签/条件 goto、整数表达式赋值、MNG 视觉组合与半透明混合、SoundHook 音频别名和无参 BGV 双通道停止。不可见转场不再构建中间 PNG；变量、资源名和最终场景仍正常更新。原 ViewDialog 只有显式 false 才免确认，结构化配置缺少 BACK 键时仍须确认，已修正宿主判断并验证取消不回退。
+
+原 `.wipe` 数值 ABI 在六份原 EXE 中实际存在差异：旧五款整数毫秒，空恋浮点秒。运行时只读同目录 EXE，通过 RTTI、构造器数值分支与原生转换函数识别能力，不执行原程序、不使用游戏名或版本阈值猜测；秒制语义纳入存档身份。游戏库存档可读性检查与启动传递同一组语义输入。游戏目录应保留原 EXE。原 `.fade` 的进一步浮点差异记录为边界，未据此声称全部转场语义已统一。
+
+最终同一 ARM64 APK 在专用 Android 9 / x86_64 + libnb 模拟器 `127.0.0.1:5577` 上完成原版和 PK02 汉化版各 35 页：前三页默认排版、NEXT 到 `CS01_C_16:844`、首次选择、BACK 取消保持当前页、再次 BACK 确认后恢复同一 source/line/scene/slots、重新选择和额外 30 页。两版均推进到 `CS01_C_16:955`，全部页面裁切计数为零；35 个对应位置的正文哈希全部不同，确认实际使用各自文本。只读取技术元数据与设备内计算的哈希，没有查看游戏图、剧情/选项正文或回想。
+
+`cargo test --workspace --lib` 为 238 通过、13 按需忽略；另外执行六原 EXE 的 ABI 探测、六份原排版脚本及实际字体合成栅格测试。旧五款桌面标题启动 5/5 通过，不冒充本 APK 的五款全量安卓回归。测试器修正了菜单边缘缩放取整导致的误翻页，以及 `am -W -S` 返回后新进程暂未出现在 pidof 的观测窗口；探索性与确认框修正前的运行不计入最终两版结果。
+
+交付文件：`.local/android-probe/nekopack-sorakoi-layout-navigation-arm64-debug.apk`，SHA-256 `df7b9a5ba593245055e50ec9a12583c593a24904b99c41f5a1ca0a1e1d970811`。APK 内 native 库与当前构建产物一致，现有签名验证通过；记录包含 160 个构建源码输入的 Git blob ID。完整结果见 [本轮验证记录](../research/sorakoi-layout-navigation-verification.json)，语义与限制见 [NEXT/BACK 记录](Sorakoi_Navigation_Semantics.md)，复现入口为 `platforms/android/regression/verify-sorakoi-layout-navigation.py`。
+
+尚未通关。当前视频解码器仍为 MPEG-1/MP2，WMV 常规播放没有接入；本轮 NEXT 越过 OP，不能算影片播放验证。带参数 BGV、完整设置/鉴赏与所有消息动画也没有在本轮扩大为已完成。导航确认遵循原条件，但使用宿主弹窗，不是原 dialog.mng 图像复现。
+
+## 空恋原版启动与 PK02 汉化加载（2026-11-13）
+
+共用运行时新增 PK02 字节容器读取和资源覆盖，按原 DLL 的文件名优先、哈希别名其次、未命中才读 DAT 的顺序加载。已命中补丁的读取错误直接报告。原版模式排除 PK02，补丁参与版本／存档身份；Android 扫描及启动均纳入 `.pk2`。没有按游戏名分支，也没有执行随附 Windows EXE/DLL。
+
+本轮修复原脚本暴露的共用契约：带行块与 `.case` 的标题协程、裸 `.title` 清空标题的区别、循环／reset、图像宏、紧凑快捷图标标签、结构化确认配置，以及消息框可选装饰帧。PK02 路径按原始字节精确匹配，不再破坏 CP932 双字节尾部的 `0x5C`。实现证据与边界见 [启动语义记录](Sorakoi_Runtime_Startup.md) 和 [PK02 格式记录](PK02_Format.md)。
+
+专用 Android 9 模拟器 `127.0.0.1:5577` 在同一 APK 上完成：原版标题→开始→连续十页、PK02 汉化版标题→开始→连续十页；两版各强制停止后重新启动并推进三页。十页中八页的设备内文本哈希不同，两版重启后的前三页哈希各自一致，确认实际覆盖加载及冷启动稳定性。只传回哈希和运行元数据，未查看图像、正文或回想。正常游戏库扫描另确认识别一款游戏和 `sorakoi_chs.pk2`。
+
+`cargo test --workspace` 通过；其中 runtime 147 通过／9 按需忽略，script 29 通过，archive 19 通过／1 按需忽略。按需执行真实 PK02 的全部 151 条目读取、101 个脚本解码／版本隔离、实际字体的首个正文页内存渲染均通过。旧五款原版标题桌面回归全部通过；这不替代五款在本 APK 上的完整 Android 回归。
+
+验证包：`.local/android-probe/nekopack-pk02-arm64-debug.apk`，SHA-256 `665b9f94340093b9049cd8e8a08a2843beb3af3ff99a721f4ea0099ef9eb6038`。这是调试验证包，不替换下文的发布候选。回归脚本为 `platforms/android/regression/verify-pk02-startup.py`，可审计结果见 [本轮验证记录](../research/sorakoi-pk02-startup-verification.json)。
+
+该启动批次尚未覆盖完整路线、鉴赏和全部设置；当时的姓名/正文布局与 NEXT/BACK 缺口已由上方后续批次继续处理。启动批次记录本身只证明启动与短段剧情，不宣称完整兼容。PK02 容器本身不规定文字编码，当前混合编码处理基于已验证的汉化来源契约；多 PK02 包尚未定义叠加顺序，明确拒绝自动猜测。
 
 ## 当前实现
 

@@ -27,7 +27,10 @@ class RoomSprite {
 class RoomImageSet {
     sprites=null
     constructor(){sprites={}}
-    function _get(key){return key in sprites ? sprites[key] : RoomSprite()}
+    function _get(key){
+        if(key in sprites)return sprites[key]
+        return ::RoomSprite()
+    }
 }
 function RoomImages(name=null,folder="system"){
     local result=RoomImageSet()
@@ -44,7 +47,7 @@ function RoomImages(name=null,folder="system"){
 function RoomData(name){return compilestring("return "+::NekoResource("Data",name))()}
 class RoomSpot {
     normal=null;hover=null;active=null;mask=null;disable=null;popup=null
-    id=0; enabled=true;selected=false
+    id=0; enabled=true;is_enable=true;selected=false
 }
 class RoomSpots {
     items=null; named=null; group=0
@@ -54,7 +57,7 @@ class RoomSpots {
         foreach(name,sprite in images.sprites){
             if(name.len()<2)continue
             local prefix=name.slice(0,1)
-            if(prefix!="=" && prefix!="+" && prefix!="@" && prefix!="*")continue
+            if(prefix!="=" && prefix!="+" && prefix!="@" && prefix!="*" && prefix!="-")continue
             local key=name.slice(name[1]==32 ? 2 : 1)
             if(!(key in named)){local spot=RoomSpot();named.rawset(key,spot);items.append(spot)}
             local spot=named[key]
@@ -63,11 +66,18 @@ class RoomSpots {
                 case "+":spot.hover=sprite;break
                 case "@":spot.active=sprite;break
                 case "*":spot.mask=sprite;break
+                case "-":spot.disable=sprite;break
             }
         }
     }
-    function _get(name){return named[name]}
-    function Add(spot){items.append(spot)}
+    function _get(name){
+        if(typeof name=="integer"){
+            foreach(spot in items)if(spot.id==name)return spot
+            throw "unknown room spot id"
+        }
+        return named[name]
+    }
+    function Add(spot){foreach(item in items)if(item==spot)return;items.append(spot)}
     function Bind(name,id){if(!(name in named))return false;named[name].id=id;return true}
     function BindR(name,id){
         local key=name.tolower()
@@ -81,16 +91,17 @@ class RoomSpots {
     function ActiveAll(value){foreach(spot in items)spot.selected=value}
     function Check(dx=0,dy=0){
         if(RoomHost.group==group)
-            foreach(spot in items)if(spot.id==RoomHost.hit && spot.enabled)return spot.id
+            foreach(spot in items)if(spot.id==RoomHost.hit && spot.enabled && spot.is_enable)return spot.id
         return 0
     }
     function Draw(screen,dx=0,dy=0){
         foreach(spot in items){
             if(!spot.id)continue
             local area=spot.mask!=null ? spot.mask : spot.disable!=null ? spot.disable : spot.normal
-            if(area!=null)RoomHost.buttons.append([group,spot.id,spot.enabled ? 1 : 0,area.x+dx,area.y+dy,area.width,area.height])
+            local enabled=spot.enabled && spot.is_enable
+            if(area!=null)RoomHost.buttons.append([group,spot.id,enabled ? 1 : 0,area.x+dx,area.y+dy,area.width,area.height])
             local sprite=spot.normal
-            if(!spot.enabled)sprite=spot.disable
+            if(!enabled)sprite=spot.disable
             else if(Check()==spot.id && spot.hover!=null)sprite=spot.hover
             else if(spot.selected && spot.active!=null)sprite=spot.active
             screen.Draw(sprite,dx,dy)
@@ -119,14 +130,27 @@ function RoomWait(time){suspend();return true}
 function RoomEvent(){return RoomHost.event}
 function RoomSound(name){RoomHost.audio+="S\t"+name+"\n"}
 function RoomStopMusic(){RoomHost.audio+="M\n"}
+function RoomPlayMusic(name,looped=true,volume=100){
+    if(typeof name!="string" || !name.len() || name.find("\t")!=null || name.find("\n")!=null)throw "invalid room music name"
+    if(typeof looped!="bool" || typeof volume!="integer" || volume<0 || volume>100)throw "invalid room music parameters"
+    RoomHost.audio+=format("P\t%s\t%d\t%d\n",name,looped?1:0,volume)
+}
+function RoomVolumeMusic(volume){
+    if(typeof volume!="integer" || volume<0 || volume>100)throw "invalid room music volume"
+    RoomHost.audio+=format("V\t%d\n",volume)
+}
 function RoomAssignImage(name){RoomHost.visual=name}
 function RoomReset(){}
 function RoomEval(name){RoomHost.replay=name;suspend()}
-function RoomInstall(name,cancel){
+function RoomInstall(name,cancel,ok=2000000001){
     local root=getroottable()
     local bindings={
-        ID_CANCEL=cancel, Sprite=RoomSprite, Images=RoomImages, Spot=RoomSpot, Spots=RoomSpots, Screen=RoomScreen,
+        // Portable host identifiers, not original Windows ABI constants. Keep
+        // control IDs outside the room's 1-based resource entry ID namespace.
+        ID_CANCEL=cancel,ID_OK=ok,ID_HIDE=2000000002,ID_NEXT=2000000003,ID_BACK=2000000004,
+        Sprite=RoomSprite, Images=RoomImages, Spot=RoomSpot, Spots=RoomSpots, Screen=RoomScreen,
         data=RoomData,wait=RoomWait,event=RoomEvent,sound=RoomSound,StopMusic=RoomStopMusic,
+        PlayMusic=RoomPlayMusic,VolumeMusic=RoomVolumeMusic,
         AssignImage=RoomAssignImage,ScriptReset=RoomReset,ScriptEval=RoomEval
     }
     foreach(key,value in bindings){
@@ -136,8 +160,12 @@ function RoomInstall(name,cancel){
     RoomHost.active=name
     RoomHost.thread=newthread(function(){
         seterrorhandler(function(error){
-            local info=getstackinfos(1)
-            RoomHost.failure=info!=null ? format("%s:%d: %s",info.src,info.line,error) : error
+            RoomHost.failure=error
+            for(local level=1;level<12;++level){
+                local info=getstackinfos(level)
+                if(info==null)break
+                RoomHost.failure+=format(" [%s:%d %s]",info.src,info.line,info.func)
+            }
         })
         local handler=com["room"]
         handler([RoomHost.active])
@@ -145,6 +173,7 @@ function RoomInstall(name,cancel){
     RoomHost.thread.call()
 }
 function RoomRestore(){
+    RoomStopMusic()
     local root=getroottable()
     RoomHost.thread=null
     foreach(key,pair in RoomHost.saved){

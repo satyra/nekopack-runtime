@@ -330,6 +330,35 @@ impl SystemVm {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn host_image_collections_allow_empty_animation_frames() {
+        let mut vm = SystemVm::new();
+        vm.eval(
+            "assets",
+            r#"Assets <- {test={BASE=["system/test.mng:0",1,2,3,4]}}"#,
+        )
+        .unwrap();
+        vm.eval("host", include_str!("../host/headless.nut"))
+            .unwrap();
+        vm.eval(
+            "collections",
+            r#"
+            EnableDebugMode()
+            local empty=Images()
+            local images=Images("test")
+            local missing=images["NAME"]
+            local screen=Screen()
+            screen.Draw(missing)
+            screen.Draw(images.BASE)
+            local count=0
+            foreach(key,image in images)count++
+            return (Host.debug_file_drop && empty.len()==0 && count==1 &&
+                missing.width==0 && missing.layers.len()==0 && screen.layers.len()==1).tostring()
+        "#,
+        )
+        .unwrap();
+        assert_eq!(vm.result(), "true");
+    }
     unsafe extern "C" {
         fn neko_sq_live_bytes() -> usize;
         fn neko_sq_fail_after(vm: *mut c_void, count: usize);

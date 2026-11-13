@@ -1,0 +1,8948 @@
+{
+  "date": "2026-11-13",
+  "scope": "Original nested quit production integration and shared drawing prerequisites; sysload/continue/room pending",
+  "all_requested_flows_complete": false,
+  "apk": ".local\\android-probe\\nekopack-arm64-probe.apk",
+  "apk_sha256": "aaddd375f858515c5c237009d496f786f1c2526d13a4b0f4d3ee2ec7d989f225",
+  "native_sha256": "659b848a510f698707fc160054e33bf7cbf93694aaab8109dc937b970bd4597d",
+  "native_matches_build": true,
+  "device": "127.0.0.1:5577",
+  "workspace_tests": {
+    "passed": 356,
+    "failed": 0,
+    "ignored": 22,
+    "log": ".local/system-integration/nested-workspace-final.log"
+  },
+  "additional_tests": {
+    "load_contract_with_local_original_technical_scripts": "6 passed; recording GUI substitutes, not APK",
+    "styled_drawing_and_transitions": "10 passed, real Arial font rasterization",
+    "original_file_enumeration": "24 pinned instructions passed",
+    "room_contract_after_shared_glyph_reuse": "3 passed, not APK"
+  },
+  "exit_device": {
+    "run": "system-exit-b8573fe5",
+    "serial": "127.0.0.1:5577",
+    "passed": true,
+    "checks": [
+      "original ViewDialog CANCEL returns to the synthetic scenario without exiting",
+      "cold launch original OK emits exactly one original_quit system_exit",
+      "closed.txt confirms VM release with no second confirmation and no error",
+      "APK SHA-256 is identical before and after both runs"
+    ],
+    "checked_at": "2026-11-13T12:11:07.233798+00:00",
+    "runs": [
+      {
+        "stage": "cancel",
+        "run": "system-exit-b8573fe5-cancel",
+        "apk_sha256": "aaddd375f858515c5c237009d496f786f1c2526d13a4b0f4d3ee2ec7d989f225",
+        "events": [
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 0,
+            "delay_ms": 0,
+            "closed": false,
+            "has_frame": false,
+            "buttons": [],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 16,
+            "delay_ms": 0,
+            "closed": false,
+            "has_frame": false,
+            "buttons": [],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 46,
+            "delay_ms": -1,
+            "closed": false,
+            "has_frame": true,
+            "buttons": [
+              {
+                "name": "0:CANCEL:2000000002",
+                "bounds": [
+                  818,
+                  426,
+                  230,
+                  47
+                ]
+              },
+              {
+                "name": "0:OK:2000000001",
+                "bounds": [
+                  550,
+                  426,
+                  230,
+                  47
+                ]
+              }
+            ],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 510,
+            "delay_ms": 0,
+            "closed": false,
+            "has_frame": false,
+            "buttons": [
+              {
+                "name": "0:CANCEL:2000000002",
+                "bounds": [
+                  818,
+                  426,
+                  230,
+                  47
+                ]
+              },
+              {
+                "name": "0:OK:2000000001",
+                "bounds": [
+                  550,
+                  426,
+                  230,
+                  47
+                ]
+              }
+            ],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          }
+        ],
+        "error_absent": true,
+        "closed": ""
+      },
+      {
+        "stage": "confirm",
+        "run": "system-exit-b8573fe5-confirm",
+        "apk_sha256": "aaddd375f858515c5c237009d496f786f1c2526d13a4b0f4d3ee2ec7d989f225",
+        "events": [
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 0,
+            "delay_ms": 0,
+            "closed": false,
+            "has_frame": false,
+            "buttons": [],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 16,
+            "delay_ms": 0,
+            "closed": false,
+            "has_frame": false,
+            "buttons": [],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 42,
+            "delay_ms": -1,
+            "closed": false,
+            "has_frame": true,
+            "buttons": [
+              {
+                "name": "0:CANCEL:2000000002",
+                "bounds": [
+                  818,
+                  426,
+                  230,
+                  47
+                ]
+              },
+              {
+                "name": "0:OK:2000000001",
+                "bounds": [
+                  550,
+                  426,
+                  230,
+                  47
+                ]
+              }
+            ],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_command",
+            "token": 1,
+            "command": "quit",
+            "elapsed_ms": 486,
+            "delay_ms": 0,
+            "closed": false,
+            "has_frame": false,
+            "buttons": [
+              {
+                "name": "0:CANCEL:2000000002",
+                "bounds": [
+                  818,
+                  426,
+                  230,
+                  47
+                ]
+              },
+              {
+                "name": "0:OK:2000000001",
+                "bounds": [
+                  550,
+                  426,
+                  230,
+                  47
+                ]
+              }
+            ],
+            "size": [
+              1600,
+              900
+            ],
+            "save_config": false,
+            "restore_audio": false,
+            "restore_screen": false
+          },
+          {
+            "kind": "system_exit",
+            "reason": "original_quit"
+          }
+        ],
+        "error_absent": true,
+        "closed": "closed; VM live bytes=0"
+      }
+    ],
+    "fixture_files": [
+      {
+        "name": "exit_probe.dat",
+        "sha256": "59c5a79b3196c8809bc841ed4d91aad5d5d8ebec9bd6ec4712fa733349138994",
+        "bytes": 983
+      },
+      {
+        "name": "sorakoi.exe",
+        "sha256": "9a30908aedf0f10b41ebf1a22c16f48eee840f1d949d2f7b7d8394de20a86d2f",
+        "bytes": 4235776
+      },
+      {
+        "name": "system.dat",
+        "sha256": "7c8139223cc7859e97928210ba7f6b2fd30911d758d8c01b85babc4175e77bd2",
+        "bytes": 25146532
+      }
+    ],
+    "apk_sha256": "aaddd375f858515c5c237009d496f786f1c2526d13a4b0f4d3ee2ec7d989f225",
+    "cancel_page": {
+      "sequence": 1,
+      "source": "story1",
+      "line": 4
+    },
+    "terminal": {
+      "kind": "system_exit",
+      "reason": "original_quit"
+    }
+  },
+  "config_regression_device": {
+    "run": "system-config-674e3250",
+    "passed": true,
+    "checks": [
+      "original role subpage returns without an extra user click",
+      "original root sliders, role mute/volume, dialog and shortcut handlers execute",
+      "cold restart reexports identical values from original Config after SaveConfig acknowledgement",
+      "original ResetConfig and nested DEFAULT confirmation restore defaults through SaveConfig"
+    ],
+    "apk_sha256": "aaddd375f858515c5c237009d496f786f1c2526d13a4b0f4d3ee2ec7d989f225",
+    "before": {
+      "TextSpeed": 50,
+      "KeepVoice": 0,
+      "VolBGM": 75,
+      "VolVO": 100,
+      "VolSE": 75,
+      "VolENV": 75,
+      "VolSYS": 75,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1,
+      "AutoSpeed": 50,
+      "SkipNoRead": 0,
+      "ShortCuts": [
+        "CONFIG",
+        "VOICE",
+        "AUTO",
+        "SKIP",
+        "SAVE",
+        "LOAD",
+        "QSAVE",
+        "QLOAD",
+        "LOG",
+        "HIDE",
+        "",
+        ""
+      ],
+      "Dialog.DEFAULT": 1,
+      "Dialog.JUMP": 1,
+      "Dialog.LOAD": 1,
+      "Dialog.NEXT": 1,
+      "Dialog.OVERWRITE": 1,
+      "Dialog.QLOAD": 1,
+      "Dialog.QSAVE": 1,
+      "Dialog.QUIT": 1,
+      "Dialog.RESET": 1,
+      "VoiceMute.AR": 0,
+      "VoiceMute.HK": 0,
+      "VoiceMute.NM": 0,
+      "VoiceMute.SR": 0,
+      "VoiceMute.XX": 0,
+      "VoiceVolume.AR": 100,
+      "VoiceVolume.HK": 100,
+      "VoiceVolume.NM": 100,
+      "VoiceVolume.SR": 100,
+      "VoiceVolume.XX": 100,
+      "Climax": 1,
+      "MuteBGV": 0,
+      "MuteENV": 0,
+      "MuteMAS": 0,
+      "MuteMV": 0,
+      "MuteSE": 0,
+      "MuteSYS": 0,
+      "MuteVO": 0,
+      "ReadedColor": 1,
+      "ReadedFast": 0,
+      "VolBGV": 50,
+      "VolMAS": 100,
+      "VolMV": 50
+    },
+    "after": {
+      "TextSpeed": 73,
+      "KeepVoice": 0,
+      "VolBGM": 41,
+      "VolVO": 100,
+      "VolSE": 75,
+      "VolENV": 75,
+      "VolSYS": 75,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1,
+      "AutoSpeed": 50,
+      "SkipNoRead": 0,
+      "ShortCuts": [
+        "AUTO",
+        "LOG",
+        "AUTO",
+        "SKIP",
+        "SAVE",
+        "LOAD",
+        "QSAVE",
+        "QLOAD",
+        "LOG",
+        "HIDE",
+        "",
+        ""
+      ],
+      "Dialog.DEFAULT": 1,
+      "Dialog.JUMP": 1,
+      "Dialog.LOAD": 1,
+      "Dialog.NEXT": 1,
+      "Dialog.OVERWRITE": 1,
+      "Dialog.QLOAD": 1,
+      "Dialog.QSAVE": 0,
+      "Dialog.QUIT": 1,
+      "Dialog.RESET": 1,
+      "VoiceMute.AR": 0,
+      "VoiceMute.HK": 1,
+      "VoiceMute.NM": 0,
+      "VoiceMute.SR": 0,
+      "VoiceMute.XX": 0,
+      "VoiceVolume.AR": 100,
+      "VoiceVolume.HK": 36,
+      "VoiceVolume.NM": 100,
+      "VoiceVolume.SR": 100,
+      "VoiceVolume.XX": 100,
+      "Climax": 1,
+      "MuteBGV": 0,
+      "MuteENV": 0,
+      "MuteMAS": 0,
+      "MuteMV": 0,
+      "MuteSE": 0,
+      "MuteSYS": 0,
+      "MuteVO": 0,
+      "ReadedColor": 1,
+      "ReadedFast": 0,
+      "VolBGV": 50,
+      "VolMAS": 100,
+      "VolMV": 41
+    },
+    "role": "HK",
+    "saved_sha256": "f138bc050ce12fbc032c9cbd6405572e1d68f3f87efbc8b51ee2b112c0a3fbc6",
+    "events": [
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 0,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 16,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 816,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 1199,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 1578,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 1976,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 2353,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 2749,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "28:MuteHK:1",
+            "bounds": [
+              368,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "29:MuteSR:1",
+            "bounds": [
+              368,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "30:MuteAR:1",
+            "bounds": [
+              1048,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "31:MuteNM:1",
+            "bounds": [
+              1048,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "33:VolHK++:65292",
+            "bounds": [
+              683,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "33:VolHK--:65293",
+            "bounds": [
+              356,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "33:VolHK:2000000001",
+            "bounds": [
+              415,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR++:65292",
+            "bounds": [
+              683,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR--:65293",
+            "bounds": [
+              356,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR:2000000001",
+            "bounds": [
+              415,
+              474,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR++:65292",
+            "bounds": [
+              1363,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR--:65293",
+            "bounds": [
+              1036,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR:2000000001",
+            "bounds": [
+              1095,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM++:65292",
+            "bounds": [
+              1363,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM--:65293",
+            "bounds": [
+              1036,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM:2000000001",
+            "bounds": [
+              1095,
+              474,
+              275,
+              34
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 3317,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "28:MuteHK:1",
+            "bounds": [
+              368,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "29:MuteSR:1",
+            "bounds": [
+              368,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "30:MuteAR:1",
+            "bounds": [
+              1048,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "31:MuteNM:1",
+            "bounds": [
+              1048,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "33:VolHK++:65292",
+            "bounds": [
+              683,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "33:VolHK--:65293",
+            "bounds": [
+              356,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "33:VolHK:2000000001",
+            "bounds": [
+              415,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR++:65292",
+            "bounds": [
+              683,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR--:65293",
+            "bounds": [
+              356,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR:2000000001",
+            "bounds": [
+              415,
+              474,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR++:65292",
+            "bounds": [
+              1363,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR--:65293",
+            "bounds": [
+              1036,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR:2000000001",
+            "bounds": [
+              1095,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM++:65292",
+            "bounds": [
+              1363,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM--:65293",
+            "bounds": [
+              1036,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM:2000000001",
+            "bounds": [
+              1095,
+              474,
+              275,
+              34
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 3633,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "28:MuteHK:1",
+            "bounds": [
+              368,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "29:MuteSR:1",
+            "bounds": [
+              368,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "30:MuteAR:1",
+            "bounds": [
+              1048,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "31:MuteNM:1",
+            "bounds": [
+              1048,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "33:VolHK++:65292",
+            "bounds": [
+              683,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "33:VolHK--:65293",
+            "bounds": [
+              356,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "33:VolHK:2000000001",
+            "bounds": [
+              415,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR++:65292",
+            "bounds": [
+              683,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR--:65293",
+            "bounds": [
+              356,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR:2000000001",
+            "bounds": [
+              415,
+              474,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR++:65292",
+            "bounds": [
+              1363,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR--:65293",
+            "bounds": [
+              1036,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR:2000000001",
+            "bounds": [
+              1095,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM++:65292",
+            "bounds": [
+              1363,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM--:65293",
+            "bounds": [
+              1036,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM:2000000001",
+            "bounds": [
+              1095,
+              474,
+              275,
+              34
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 3977,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "28:MuteHK:1",
+            "bounds": [
+              368,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "29:MuteSR:1",
+            "bounds": [
+              368,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "30:MuteAR:1",
+            "bounds": [
+              1048,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "31:MuteNM:1",
+            "bounds": [
+              1048,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "33:VolHK:2000000001",
+            "bounds": [
+              415,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR++:65292",
+            "bounds": [
+              683,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR--:65293",
+            "bounds": [
+              356,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR:2000000001",
+            "bounds": [
+              415,
+              474,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR++:65292",
+            "bounds": [
+              1363,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR--:65293",
+            "bounds": [
+              1036,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR:2000000001",
+            "bounds": [
+              1095,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM++:65292",
+            "bounds": [
+              1363,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM--:65293",
+            "bounds": [
+              1036,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM:2000000001",
+            "bounds": [
+              1095,
+              474,
+              275,
+              34
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 4283,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "28:MuteHK:1",
+            "bounds": [
+              368,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "29:MuteSR:1",
+            "bounds": [
+              368,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "30:MuteAR:1",
+            "bounds": [
+              1048,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "31:MuteNM:1",
+            "bounds": [
+              1048,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "33:VolHK:2000000001",
+            "bounds": [
+              415,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR++:65292",
+            "bounds": [
+              683,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR--:65293",
+            "bounds": [
+              356,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR:2000000001",
+            "bounds": [
+              415,
+              474,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR++:65292",
+            "bounds": [
+              1363,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR--:65293",
+            "bounds": [
+              1036,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR:2000000001",
+            "bounds": [
+              1095,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM++:65292",
+            "bounds": [
+              1363,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM--:65293",
+            "bounds": [
+              1036,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM:2000000001",
+            "bounds": [
+              1095,
+              474,
+              275,
+              34
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 4587,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "28:MuteHK:1",
+            "bounds": [
+              368,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "29:MuteSR:1",
+            "bounds": [
+              368,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "30:MuteAR:1",
+            "bounds": [
+              1048,
+              330,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "31:MuteNM:1",
+            "bounds": [
+              1048,
+              519,
+              107,
+              29
+            ]
+          },
+          {
+            "name": "33:VolHK:2000000001",
+            "bounds": [
+              415,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR++:65292",
+            "bounds": [
+              683,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR--:65293",
+            "bounds": [
+              356,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "34:VolSR:2000000001",
+            "bounds": [
+              415,
+              474,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR++:65292",
+            "bounds": [
+              1363,
+              285,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR--:65293",
+            "bounds": [
+              1036,
+              285,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "35:VolAR:2000000001",
+            "bounds": [
+              1095,
+              285,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM++:65292",
+            "bounds": [
+              1363,
+              474,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM--:65293",
+            "bounds": [
+              1036,
+              474,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "36:VolNM:2000000001",
+            "bounds": [
+              1095,
+              474,
+              275,
+              34
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 4887,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 5521,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 5902,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "38:OVERWRITE:1",
+            "bounds": [
+              670,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "39:LOAD:1",
+            "bounds": [
+              1008,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "40:QSAVE:1",
+            "bounds": [
+              670,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "41:QLOAD:1",
+            "bounds": [
+              1008,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "42:NEXT:1",
+            "bounds": [
+              670,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "43:JUMP:1",
+            "bounds": [
+              1008,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "44:QUIT:1",
+            "bounds": [
+              670,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "45:DEFAULT:1",
+            "bounds": [
+              1008,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "46:RESET:1",
+            "bounds": [
+              670,
+              545,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 6534,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "38:OVERWRITE:1",
+            "bounds": [
+              670,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "39:LOAD:1",
+            "bounds": [
+              1008,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "40:QSAVE:1",
+            "bounds": [
+              670,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "41:QLOAD:1",
+            "bounds": [
+              1008,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "42:NEXT:1",
+            "bounds": [
+              670,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "43:JUMP:1",
+            "bounds": [
+              1008,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "44:QUIT:1",
+            "bounds": [
+              670,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "45:DEFAULT:1",
+            "bounds": [
+              1008,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "46:RESET:1",
+            "bounds": [
+              670,
+              545,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 6888,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "38:OVERWRITE:1",
+            "bounds": [
+              670,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "39:LOAD:1",
+            "bounds": [
+              1008,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "40:QSAVE:1",
+            "bounds": [
+              670,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "41:QLOAD:1",
+            "bounds": [
+              1008,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "42:NEXT:1",
+            "bounds": [
+              670,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "43:JUMP:1",
+            "bounds": [
+              1008,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "44:QUIT:1",
+            "bounds": [
+              670,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "45:DEFAULT:1",
+            "bounds": [
+              1008,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "46:RESET:1",
+            "bounds": [
+              670,
+              545,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 7224,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "38:OVERWRITE:1",
+            "bounds": [
+              670,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "39:LOAD:1",
+            "bounds": [
+              1008,
+              313,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "40:QSAVE:1",
+            "bounds": [
+              670,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "41:QLOAD:1",
+            "bounds": [
+              1008,
+              368,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "42:NEXT:1",
+            "bounds": [
+              670,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "43:JUMP:1",
+            "bounds": [
+              1008,
+              428,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "44:QUIT:1",
+            "bounds": [
+              670,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "45:DEFAULT:1",
+            "bounds": [
+              1008,
+              487,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "46:RESET:1",
+            "bounds": [
+              670,
+              545,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 7576,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 8281,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 8683,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "47:F10:1010",
+            "bounds": [
+              717,
+              602,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F11:1011",
+            "bounds": [
+              717,
+              647,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F12:1012",
+            "bounds": [
+              717,
+              691,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F1:1001",
+            "bounds": [
+              717,
+              206,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F2:1002",
+            "bounds": [
+              717,
+              248,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F3:1003",
+            "bounds": [
+              717,
+              291,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F4:1004",
+            "bounds": [
+              717,
+              332,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F5:1005",
+            "bounds": [
+              717,
+              378,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F6:1006",
+            "bounds": [
+              717,
+              425,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F7:1007",
+            "bounds": [
+              717,
+              469,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F8:1008",
+            "bounds": [
+              717,
+              513,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F9:1009",
+            "bounds": [
+              717,
+              558,
+              299,
+              32
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 9297,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "47:F10:1010",
+            "bounds": [
+              717,
+              602,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F11:1011",
+            "bounds": [
+              717,
+              647,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F12:1012",
+            "bounds": [
+              717,
+              691,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F1:1001",
+            "bounds": [
+              717,
+              206,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F2:1002",
+            "bounds": [
+              717,
+              248,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F3:1003",
+            "bounds": [
+              717,
+              291,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F4:1004",
+            "bounds": [
+              717,
+              332,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F5:1005",
+            "bounds": [
+              717,
+              378,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F6:1006",
+            "bounds": [
+              717,
+              425,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F7:1007",
+            "bounds": [
+              717,
+              469,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F8:1008",
+            "bounds": [
+              717,
+              513,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F9:1009",
+            "bounds": [
+              717,
+              558,
+              299,
+              32
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 9669,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "48:AUTO:6",
+            "bounds": [
+              865,
+              333,
+              102,
+              17
+            ]
+          },
+          {
+            "name": "48:CONFIG:9",
+            "bounds": [
+              899,
+              400,
+              68,
+              17
+            ]
+          },
+          {
+            "name": "48:DELETE:2000000002",
+            "bounds": [
+              932,
+              423,
+              35,
+              17
+            ]
+          },
+          {
+            "name": "48:HIDE:12",
+            "bounds": [
+              845,
+              467,
+              122,
+              18
+            ]
+          },
+          {
+            "name": "48:LOAD:4",
+            "bounds": [
+              918,
+              290,
+              50,
+              16
+            ]
+          },
+          {
+            "name": "48:LOG:8",
+            "bounds": [
+              862,
+              378,
+              105,
+              17
+            ]
+          },
+          {
+            "name": "48:QLOAD:2",
+            "bounds": [
+              847,
+              245,
+              121,
+              17
+            ]
+          },
+          {
+            "name": "48:QSAVE:1",
+            "bounds": [
+              847,
+              222,
+              122,
+              17
+            ]
+          },
+          {
+            "name": "48:SAVE:3",
+            "bounds": [
+              916,
+              266,
+              53,
+              17
+            ]
+          },
+          {
+            "name": "48:SCREEN:11",
+            "bounds": [
+              794,
+              445,
+              173,
+              18
+            ]
+          },
+          {
+            "name": "48:SKIP:5",
+            "bounds": [
+              898,
+              311,
+              70,
+              17
+            ]
+          },
+          {
+            "name": "48:VOICE:7",
+            "bounds": [
+              880,
+              355,
+              87,
+              18
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 10334,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [
+          {
+            "name": "48:AUTO:6",
+            "bounds": [
+              865,
+              333,
+              102,
+              17
+            ]
+          },
+          {
+            "name": "48:CONFIG:9",
+            "bounds": [
+              899,
+              400,
+              68,
+              17
+            ]
+          },
+          {
+            "name": "48:DELETE:2000000002",
+            "bounds": [
+              932,
+              423,
+              35,
+              17
+            ]
+          },
+          {
+            "name": "48:HIDE:12",
+            "bounds": [
+              845,
+              467,
+              122,
+              18
+            ]
+          },
+          {
+            "name": "48:LOAD:4",
+            "bounds": [
+              918,
+              290,
+              50,
+              16
+            ]
+          },
+          {
+            "name": "48:LOG:8",
+            "bounds": [
+              862,
+              378,
+              105,
+              17
+            ]
+          },
+          {
+            "name": "48:QLOAD:2",
+            "bounds": [
+              847,
+              245,
+              121,
+              17
+            ]
+          },
+          {
+            "name": "48:QSAVE:1",
+            "bounds": [
+              847,
+              222,
+              122,
+              17
+            ]
+          },
+          {
+            "name": "48:SAVE:3",
+            "bounds": [
+              916,
+              266,
+              53,
+              17
+            ]
+          },
+          {
+            "name": "48:SCREEN:11",
+            "bounds": [
+              794,
+              445,
+              173,
+              18
+            ]
+          },
+          {
+            "name": "48:SKIP:5",
+            "bounds": [
+              898,
+              311,
+              70,
+              17
+            ]
+          },
+          {
+            "name": "48:VOICE:7",
+            "bounds": [
+              880,
+              355,
+              87,
+              18
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 10355,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [
+          {
+            "name": "48:AUTO:6",
+            "bounds": [
+              865,
+              333,
+              102,
+              17
+            ]
+          },
+          {
+            "name": "48:CONFIG:9",
+            "bounds": [
+              899,
+              400,
+              68,
+              17
+            ]
+          },
+          {
+            "name": "48:DELETE:2000000002",
+            "bounds": [
+              932,
+              423,
+              35,
+              17
+            ]
+          },
+          {
+            "name": "48:HIDE:12",
+            "bounds": [
+              845,
+              467,
+              122,
+              18
+            ]
+          },
+          {
+            "name": "48:LOAD:4",
+            "bounds": [
+              918,
+              290,
+              50,
+              16
+            ]
+          },
+          {
+            "name": "48:LOG:8",
+            "bounds": [
+              862,
+              378,
+              105,
+              17
+            ]
+          },
+          {
+            "name": "48:QLOAD:2",
+            "bounds": [
+              847,
+              245,
+              121,
+              17
+            ]
+          },
+          {
+            "name": "48:QSAVE:1",
+            "bounds": [
+              847,
+              222,
+              122,
+              17
+            ]
+          },
+          {
+            "name": "48:SAVE:3",
+            "bounds": [
+              916,
+              266,
+              53,
+              17
+            ]
+          },
+          {
+            "name": "48:SCREEN:11",
+            "bounds": [
+              794,
+              445,
+              173,
+              18
+            ]
+          },
+          {
+            "name": "48:SKIP:5",
+            "bounds": [
+              898,
+              311,
+              70,
+              17
+            ]
+          },
+          {
+            "name": "48:VOICE:7",
+            "bounds": [
+              880,
+              355,
+              87,
+              18
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 10366,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "47:F10:1010",
+            "bounds": [
+              717,
+              602,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F11:1011",
+            "bounds": [
+              717,
+              647,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F12:1012",
+            "bounds": [
+              717,
+              691,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F1:1001",
+            "bounds": [
+              717,
+              206,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F2:1002",
+            "bounds": [
+              717,
+              248,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F3:1003",
+            "bounds": [
+              717,
+              291,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F4:1004",
+            "bounds": [
+              717,
+              332,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F5:1005",
+            "bounds": [
+              717,
+              378,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F6:1006",
+            "bounds": [
+              717,
+              425,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F7:1007",
+            "bounds": [
+              717,
+              469,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F8:1008",
+            "bounds": [
+              717,
+              513,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F9:1009",
+            "bounds": [
+              717,
+              558,
+              299,
+              32
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 11034,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "47:F10:1010",
+            "bounds": [
+              717,
+              602,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F11:1011",
+            "bounds": [
+              717,
+              647,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F12:1012",
+            "bounds": [
+              717,
+              691,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F1:1001",
+            "bounds": [
+              717,
+              206,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F2:1002",
+            "bounds": [
+              717,
+              248,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F3:1003",
+            "bounds": [
+              717,
+              291,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F4:1004",
+            "bounds": [
+              717,
+              332,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F5:1005",
+            "bounds": [
+              717,
+              378,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F6:1006",
+            "bounds": [
+              717,
+              425,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F7:1007",
+            "bounds": [
+              717,
+              469,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F8:1008",
+            "bounds": [
+              717,
+              513,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F9:1009",
+            "bounds": [
+              717,
+              558,
+              299,
+              32
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 11403,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "49:AUTO:6",
+            "bounds": [
+              865,
+              375,
+              102,
+              17
+            ]
+          },
+          {
+            "name": "49:CONFIG:9",
+            "bounds": [
+              899,
+              442,
+              68,
+              17
+            ]
+          },
+          {
+            "name": "49:DELETE:2000000002",
+            "bounds": [
+              932,
+              465,
+              35,
+              17
+            ]
+          },
+          {
+            "name": "49:HIDE:12",
+            "bounds": [
+              845,
+              509,
+              122,
+              18
+            ]
+          },
+          {
+            "name": "49:LOAD:4",
+            "bounds": [
+              918,
+              332,
+              50,
+              16
+            ]
+          },
+          {
+            "name": "49:LOG:8",
+            "bounds": [
+              862,
+              420,
+              105,
+              17
+            ]
+          },
+          {
+            "name": "49:QLOAD:2",
+            "bounds": [
+              847,
+              287,
+              121,
+              17
+            ]
+          },
+          {
+            "name": "49:QSAVE:1",
+            "bounds": [
+              847,
+              264,
+              122,
+              17
+            ]
+          },
+          {
+            "name": "49:SAVE:3",
+            "bounds": [
+              916,
+              308,
+              53,
+              17
+            ]
+          },
+          {
+            "name": "49:SCREEN:11",
+            "bounds": [
+              794,
+              487,
+              173,
+              18
+            ]
+          },
+          {
+            "name": "49:SKIP:5",
+            "bounds": [
+              898,
+              353,
+              70,
+              17
+            ]
+          },
+          {
+            "name": "49:VOICE:7",
+            "bounds": [
+              880,
+              397,
+              87,
+              18
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 12063,
+        "delay_ms": 0,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [
+          {
+            "name": "49:AUTO:6",
+            "bounds": [
+              865,
+              375,
+              102,
+              17
+            ]
+          },
+          {
+            "name": "49:CONFIG:9",
+            "bounds": [
+              899,
+              442,
+              68,
+              17
+            ]
+          },
+          {
+            "name": "49:DELETE:2000000002",
+            "bounds": [
+              932,
+              465,
+              35,
+              17
+            ]
+          },
+          {
+            "name": "49:HIDE:12",
+            "bounds": [
+              845,
+              509,
+              122,
+              18
+            ]
+          },
+          {
+            "name": "49:LOAD:4",
+            "bounds": [
+              918,
+              332,
+              50,
+              16
+            ]
+          },
+          {
+            "name": "49:LOG:8",
+            "bounds": [
+              862,
+              420,
+              105,
+              17
+            ]
+          },
+          {
+            "name": "49:QLOAD:2",
+            "bounds": [
+              847,
+              287,
+              121,
+              17
+            ]
+          },
+          {
+            "name": "49:QSAVE:1",
+            "bounds": [
+              847,
+              264,
+              122,
+              17
+            ]
+          },
+          {
+            "name": "49:SAVE:3",
+            "bounds": [
+              916,
+              308,
+              53,
+              17
+            ]
+          },
+          {
+            "name": "49:SCREEN:11",
+            "bounds": [
+              794,
+              487,
+              173,
+              18
+            ]
+          },
+          {
+            "name": "49:SKIP:5",
+            "bounds": [
+              898,
+              353,
+              70,
+              17
+            ]
+          },
+          {
+            "name": "49:VOICE:7",
+            "bounds": [
+              880,
+              397,
+              87,
+              18
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 12075,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [
+          {
+            "name": "49:AUTO:6",
+            "bounds": [
+              865,
+              375,
+              102,
+              17
+            ]
+          },
+          {
+            "name": "49:CONFIG:9",
+            "bounds": [
+              899,
+              442,
+              68,
+              17
+            ]
+          },
+          {
+            "name": "49:DELETE:2000000002",
+            "bounds": [
+              932,
+              465,
+              35,
+              17
+            ]
+          },
+          {
+            "name": "49:HIDE:12",
+            "bounds": [
+              845,
+              509,
+              122,
+              18
+            ]
+          },
+          {
+            "name": "49:LOAD:4",
+            "bounds": [
+              918,
+              332,
+              50,
+              16
+            ]
+          },
+          {
+            "name": "49:LOG:8",
+            "bounds": [
+              862,
+              420,
+              105,
+              17
+            ]
+          },
+          {
+            "name": "49:QLOAD:2",
+            "bounds": [
+              847,
+              287,
+              121,
+              17
+            ]
+          },
+          {
+            "name": "49:QSAVE:1",
+            "bounds": [
+              847,
+              264,
+              122,
+              17
+            ]
+          },
+          {
+            "name": "49:SAVE:3",
+            "bounds": [
+              916,
+              308,
+              53,
+              17
+            ]
+          },
+          {
+            "name": "49:SCREEN:11",
+            "bounds": [
+              794,
+              487,
+              173,
+              18
+            ]
+          },
+          {
+            "name": "49:SKIP:5",
+            "bounds": [
+              898,
+              353,
+              70,
+              17
+            ]
+          },
+          {
+            "name": "49:VOICE:7",
+            "bounds": [
+              880,
+              397,
+              87,
+              18
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 12081,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "47:F10:1010",
+            "bounds": [
+              717,
+              602,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F11:1011",
+            "bounds": [
+              717,
+              647,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F12:1012",
+            "bounds": [
+              717,
+              691,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F1:1001",
+            "bounds": [
+              717,
+              206,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F2:1002",
+            "bounds": [
+              717,
+              248,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F3:1003",
+            "bounds": [
+              717,
+              291,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F4:1004",
+            "bounds": [
+              717,
+              332,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F5:1005",
+            "bounds": [
+              717,
+              378,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F6:1006",
+            "bounds": [
+              717,
+              425,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F7:1007",
+            "bounds": [
+              717,
+              469,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F8:1008",
+            "bounds": [
+              717,
+              513,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F9:1009",
+            "bounds": [
+              717,
+              558,
+              299,
+              32
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 12694,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "47:F10:1010",
+            "bounds": [
+              717,
+              602,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F11:1011",
+            "bounds": [
+              717,
+              647,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F12:1012",
+            "bounds": [
+              717,
+              691,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F1:1001",
+            "bounds": [
+              717,
+              206,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F2:1002",
+            "bounds": [
+              717,
+              248,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F3:1003",
+            "bounds": [
+              717,
+              291,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F4:1004",
+            "bounds": [
+              717,
+              332,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F5:1005",
+            "bounds": [
+              717,
+              378,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F6:1006",
+            "bounds": [
+              717,
+              425,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F7:1007",
+            "bounds": [
+              717,
+              469,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F8:1008",
+            "bounds": [
+              717,
+              513,
+              299,
+              32
+            ]
+          },
+          {
+            "name": "47:F9:1009",
+            "bounds": [
+              717,
+              558,
+              299,
+              32
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 13055,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": false,
+        "restore_audio": true,
+        "restore_screen": false
+      },
+      {
+        "kind": "system_command",
+        "token": 1,
+        "command": "config",
+        "elapsed_ms": 13707,
+        "delay_ms": -1,
+        "closed": false,
+        "has_frame": true,
+        "buttons": [
+          {
+            "name": "0:CLOSE:2000000002",
+            "bounds": [
+              839,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DEFAULT:100",
+            "bounds": [
+              1302,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:DIALOG:102",
+            "bounds": [
+              1369,
+              725,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:RESET:124",
+            "bounds": [
+              1072,
+              801,
+              212,
+              41
+            ]
+          },
+          {
+            "name": "0:SHORTCUT:103",
+            "bounds": [
+              1097,
+              724,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "0:VOICE:101",
+            "bounds": [
+              1134,
+              495,
+              97,
+              39
+            ]
+          },
+          {
+            "name": "10:Screen#0:1",
+            "bounds": [
+              364,
+              749,
+              167,
+              36
+            ]
+          },
+          {
+            "name": "10:Screen#1:2",
+            "bounds": [
+              571,
+              749,
+              166,
+              36
+            ]
+          },
+          {
+            "name": "11:ScreenSize#0:1",
+            "bounds": [
+              316,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#1:2",
+            "bounds": [
+              467,
+              702,
+              144,
+              35
+            ]
+          },
+          {
+            "name": "11:ScreenSize#2:3",
+            "bounds": [
+              620,
+              702,
+              143,
+              35
+            ]
+          },
+          {
+            "name": "12:BoxOpacity++:65292",
+            "bounds": [
+              698,
+              797,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity--:65293",
+            "bounds": [
+              371,
+              797,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "12:BoxOpacity:2000000001",
+            "bounds": [
+              430,
+              797,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS++:65292",
+            "bounds": [
+              1370,
+              194,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS--:65293",
+            "bounds": [
+              1043,
+              194,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "13:VolMAS:2000000001",
+            "bounds": [
+              1102,
+              194,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM++:65292",
+            "bounds": [
+              1370,
+              238,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM--:65293",
+            "bounds": [
+              1043,
+              238,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "14:VolBGM:2000000001",
+            "bounds": [
+              1102,
+              238,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE++:65292",
+            "bounds": [
+              1370,
+              275,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE--:65293",
+            "bounds": [
+              1043,
+              275,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "15:VolSE:2000000001",
+            "bounds": [
+              1102,
+              275,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV++:65292",
+            "bounds": [
+              1370,
+              324,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV--:65293",
+            "bounds": [
+              1043,
+              324,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "16:VolMV:2000000001",
+            "bounds": [
+              1102,
+              324,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "17:MuteMA:1",
+            "bounds": [
+              1456,
+              200,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "18:MuteBGM:1",
+            "bounds": [
+              1456,
+              246,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "19:MuteSE:1",
+            "bounds": [
+              1456,
+              282,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "1:TextSpeed++:65292",
+            "bounds": [
+              698,
+              190,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed--:65293",
+            "bounds": [
+              371,
+              190,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "1:TextSpeed:2000000001",
+            "bounds": [
+              430,
+              190,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "20:MuteMV:1",
+            "bounds": [
+              1456,
+              328,
+              66,
+              19
+            ]
+          },
+          {
+            "name": "21:VolVO++:65292",
+            "bounds": [
+              1370,
+              448,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO--:65293",
+            "bounds": [
+              1043,
+              448,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "21:VolVO:2000000001",
+            "bounds": [
+              1102,
+              448,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "25:KeepVoice:1",
+            "bounds": [
+              1133,
+              544,
+              123,
+              46
+            ]
+          },
+          {
+            "name": "26:Climax:1",
+            "bounds": [
+              1021,
+              662,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "27:AutoSelect:1",
+            "bounds": [
+              1401,
+              663,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "2:AutoSpeed++:65292",
+            "bounds": [
+              698,
+              235,
+              59,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed--:65293",
+            "bounds": [
+              371,
+              235,
+              60,
+              34
+            ]
+          },
+          {
+            "name": "2:AutoSpeed:2000000001",
+            "bounds": [
+              430,
+              235,
+              275,
+              34
+            ]
+          },
+          {
+            "name": "3:FontType#0:1",
+            "bounds": [
+              394,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "3:FontType#1:2",
+            "bounds": [
+              562,
+              276,
+              117,
+              35
+            ]
+          },
+          {
+            "name": "4:ReadedColor:1",
+            "bounds": [
+              349,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "5:SkipNoRead:1",
+            "bounds": [
+              650,
+              327,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "6:KeepAuto:1",
+            "bounds": [
+              348,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "7:KeepSkip:1",
+            "bounds": [
+              649,
+              390,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "8:Effect:1",
+            "bounds": [
+              291,
+              536,
+              120,
+              46
+            ]
+          },
+          {
+            "name": "9:SysEffect:1",
+            "bounds": [
+              649,
+              537,
+              120,
+              46
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "save_config": true,
+        "restore_audio": true,
+        "restore_screen": false
+      }
+    ],
+    "restored": {
+      "TextSpeed": 73,
+      "KeepVoice": 0,
+      "VolBGM": 41,
+      "VolVO": 100,
+      "VolSE": 75,
+      "VolENV": 75,
+      "VolSYS": 75,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1,
+      "AutoSpeed": 50,
+      "SkipNoRead": 0,
+      "ShortCuts": [
+        "AUTO",
+        "LOG",
+        "AUTO",
+        "SKIP",
+        "SAVE",
+        "LOAD",
+        "QSAVE",
+        "QLOAD",
+        "LOG",
+        "HIDE",
+        "",
+        ""
+      ],
+      "Dialog.DEFAULT": 1,
+      "Dialog.JUMP": 1,
+      "Dialog.LOAD": 1,
+      "Dialog.NEXT": 1,
+      "Dialog.OVERWRITE": 1,
+      "Dialog.QLOAD": 1,
+      "Dialog.QSAVE": 0,
+      "Dialog.QUIT": 1,
+      "Dialog.RESET": 1,
+      "VoiceMute.AR": 0,
+      "VoiceMute.HK": 1,
+      "VoiceMute.NM": 0,
+      "VoiceMute.SR": 0,
+      "VoiceMute.XX": 0,
+      "VoiceVolume.AR": 100,
+      "VoiceVolume.HK": 36,
+      "VoiceVolume.NM": 100,
+      "VoiceVolume.SR": 100,
+      "VoiceVolume.XX": 100,
+      "Climax": 1,
+      "MuteBGV": 0,
+      "MuteENV": 0,
+      "MuteMAS": 0,
+      "MuteMV": 0,
+      "MuteSE": 0,
+      "MuteSYS": 0,
+      "MuteVO": 0,
+      "ReadedColor": 1,
+      "ReadedFast": 0,
+      "VolBGV": 50,
+      "VolMAS": 100,
+      "VolMV": 41
+    },
+    "reload_run": "system-config-674e3250-reload",
+    "reset": {
+      "TextSpeed": 50,
+      "KeepVoice": 0,
+      "VolBGM": 75,
+      "VolVO": 100,
+      "VolSE": 75,
+      "VolENV": 75,
+      "VolSYS": 75,
+      "BoxOpacity": 191,
+      "Bold": 0,
+      "Border": 1,
+      "AutoSpeed": 50,
+      "SkipNoRead": 0,
+      "ShortCuts": [
+        "CONFIG",
+        "VOICE",
+        "AUTO",
+        "SKIP",
+        "SAVE",
+        "LOAD",
+        "QSAVE",
+        "QLOAD",
+        "LOG",
+        "HIDE",
+        "",
+        ""
+      ],
+      "Dialog.DEFAULT": 1,
+      "Dialog.JUMP": 1,
+      "Dialog.LOAD": 1,
+      "Dialog.NEXT": 1,
+      "Dialog.OVERWRITE": 1,
+      "Dialog.QLOAD": 1,
+      "Dialog.QSAVE": 1,
+      "Dialog.QUIT": 1,
+      "Dialog.RESET": 1,
+      "VoiceMute.AR": 0,
+      "VoiceMute.HK": 0,
+      "VoiceMute.NM": 0,
+      "VoiceMute.SR": 0,
+      "VoiceMute.XX": 0,
+      "VoiceVolume.AR": 100,
+      "VoiceVolume.HK": 100,
+      "VoiceVolume.NM": 100,
+      "VoiceVolume.SR": 100,
+      "VoiceVolume.XX": 100,
+      "Climax": 1,
+      "MuteBGV": 0,
+      "MuteENV": 0,
+      "MuteMAS": 0,
+      "MuteMV": 0,
+      "MuteSE": 0,
+      "MuteSYS": 0,
+      "MuteVO": 0,
+      "ReadedColor": 1,
+      "ReadedFast": 0,
+      "VolBGV": 50,
+      "VolMAS": 100,
+      "VolMV": 50
+    },
+    "reset_run": "system-config-674e3250-reset"
+  },
+  "remaining": [
+    "sysload/continue: Android save catalog, thumbnail native operations, original metadata schema projection, prepared Saved commit and stale token invalidation",
+    "room: production action parser/audio completion feedback/CG Commit and Render/replay boundary",
+    "same APK end-to-end tests for the remaining three commands"
+  ],
+  "viewed_game_images": false,
+  "read_recollection_prose": false
+}

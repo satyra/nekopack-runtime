@@ -95,6 +95,7 @@ internal class TitleRooms(
                                 "cg" -> "原版 CG 鉴赏"
                                 "scene" -> "原版回想鉴赏"
                                 "actor" -> "原版立绘鉴赏"
+                                "music" -> "原版音乐鉴赏"
                                 else -> "原版鉴赏"
                             }
                             view.present(checkNotNull(bitmap))

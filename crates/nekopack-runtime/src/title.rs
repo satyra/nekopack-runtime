@@ -1,5 +1,6 @@
 //! Interactive presentation of the observed normal-map title profile.
 //! The scenario remains pending until Start; the same machine/VM enters the story.
+mod native;
 mod room;
 use room::{Frame as RoomFrame, Room};
 
@@ -10,7 +11,7 @@ use nekopack_script::{
     system::SystemVm,
 };
 use std::{
-    collections::BTreeMap,
+    collections::{BTreeMap, VecDeque},
     error::Error,
     io::{Read, Seek},
 };
@@ -39,7 +40,14 @@ pub struct TitleSession<R: Read + Seek> {
     room: Option<Room>,
     room_destinations: BTreeMap<i32, String>,
     quit_action: Option<i32>,
+    settings_action: Option<i32>,
+    start_action: i32,
+    start_actions: std::collections::BTreeSet<i32>,
+    load_action: Option<i32>,
+    continue_action: Option<i32>,
+    native_title: Option<native::NativeTitle>,
     room_replay: Option<String>,
+    room_music: VecDeque<room::MusicCommand>,
     sound_cues: Vec<crate::message_log::Cue>,
     input_sequence: u64,
     settings: Option<crate::settings::Settings>,
@@ -51,11 +59,11 @@ impl<R: Read + Seek> TitleSession<R> {
     pub fn ui_sound(&mut self, id: u64, volume: i32) -> Result<Vec<u8>> {
         crate::message_log::sound_at(&mut self.store, id, volume)
     }
-    pub fn star_sound(&mut self) -> Result<Vec<u8>> {
+    pub fn star_sound(&mut self, action: u32) -> Result<Vec<u8>> {
         crate::message_log::audio(
             &mut self.store,
             &mut self.system,
-            crate::message_log::Audio::Star,
+            crate::message_log::Audio::Save(action),
         )
     }
     pub fn open_save_ui(&mut self) -> Result<Vec<u8>> {
@@ -141,7 +149,8 @@ impl<R: Read + Seek> TitleSession<R> {
         else {
             return Err("title requires pending map".into());
         };
-        if name != b"map" || args.first().is_none_or(|arg| arg != b"title") {
+        let native_title = name == b"title" && !rows.is_empty();
+        if !native_title && (name != b"map" || args.first().is_none_or(|arg| arg != b"title")) {
             return Err(format!("unsupported title map profile: {:?} {:?}", name, args).into());
         }
         if cleared {
@@ -156,20 +165,37 @@ impl<R: Read + Seek> TitleSession<R> {
             crate::unlocks::Unlocks::decode(progress)?.apply(&mut machine.variables);
         }
         let (source, map_line) = machine.location().ok_or("title location missing")?;
-        let (room_destinations, quit_action) =
-            room::destinations(&store.load(source)?.bytes, map_line)?;
-        system.eval_with_resources(
-            "title-plan",
-            &format!(
-                "TitleName <- {}\nTitleRows <- {}\n{}",
-                quote(&args[0])?,
-                array(&rows)?,
-                include_str!("../host/title.nut")
-            ),
-            &mut machine.variables,
-            &mut store,
-        )?;
-        let plan = system.result().to_owned();
+        let title_source = store.load(source)?.bytes;
+        let destinations = room::destinations(&title_source, map_line)?;
+        let native_title = if native_title {
+            Some(native::NativeTitle::open(
+                &mut store,
+                &mut system,
+                &mut machine.variables,
+                args.clone(),
+                rows.clone(),
+            )?)
+        } else {
+            None
+        };
+        let plan = if native_title.is_none() {
+            system
+                .eval_with_resources(
+                    "title-plan",
+                    &format!(
+                        "TitleName <- {}\nTitleRows <- {}\n{}",
+                        quote(&args[0])?,
+                        array(&rows)?,
+                        include_str!("../host/title.nut")
+                    ),
+                    &mut machine.variables,
+                    &mut store,
+                )
+                .map_err(|error| format!("title presentation script: {error}"))?;
+            system.result().to_owned()
+        } else {
+            String::new()
+        };
         let bytes = store.read("system", "title.mng")?;
         let mng = Mng::parse(&bytes, 100000)?;
         let sprites = mng.sprites()?;
@@ -231,9 +257,16 @@ impl<R: Read + Seek> TitleSession<R> {
             }
         }
         buttons.sort_by_key(|b| b.id);
-        if !buttons.iter().any(|b| b.id == 1 && b.enabled) {
-            return Err("title Start is unavailable".into());
-        }
+        let start_action = if let Some(view) = &native_title {
+            view.buttons()?.iter().find_map(|(id, enabled, _)| {
+                (destinations.starts.contains(id) && *enabled).then_some(*id)
+            })
+        } else {
+            buttons
+                .iter()
+                .find_map(|b| (destinations.starts.contains(&b.id) && b.enabled).then_some(b.id))
+        };
+        let start_action = start_action.ok_or("title Start is unavailable")?;
         Ok(Self {
             store,
             machine,
@@ -244,9 +277,16 @@ impl<R: Read + Seek> TitleSession<R> {
             buttons,
             pressed: None,
             room: None,
-            room_destinations,
-            quit_action,
+            room_destinations: destinations.rooms,
+            quit_action: destinations.quit,
+            settings_action: destinations.settings,
+            start_action,
+            start_actions: destinations.starts,
+            load_action: destinations.load,
+            continue_action: destinations.resume,
+            native_title,
             room_replay: None,
+            room_music: VecDeque::new(),
             sound_cues: Vec::new(),
             input_sequence: 0,
             settings: None,
@@ -273,7 +313,8 @@ impl<R: Read + Seek> TitleSession<R> {
     pub fn pointer(&mut self, kind: i32, x: i32, y: i32) -> Result<Option<i32>> {
         self.input_sequence += 1;
         if let Some(settings) = self.settings.as_mut() {
-            self.sound_cues = settings.script_input(&mut self.store, &mut self.system, kind, x, y)?;
+            self.sound_cues =
+                settings.script_input(&mut self.store, &mut self.system, kind, x, y)?;
             if settings.take_close_request() {
                 self.settings = None;
                 self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
@@ -281,11 +322,31 @@ impl<R: Read + Seek> TitleSession<R> {
             }
             return Ok(None);
         }
-        let hit = self.hit(x, y);
-        let action = update_pointer(&mut self.pressed, kind, hit)?;
-        if action == Some(3) {
+        let action = if let Some(view) = &mut self.native_title {
+            let hit = view.hit(x, y)?;
+            let confirmed = update_pointer(&mut self.pressed, kind, hit)?;
+            let (action, cues) = view.step(
+                &mut self.store,
+                &mut self.system,
+                &mut self.machine.variables,
+                if confirmed.is_some() { "ID_OK" } else { "0" },
+                x,
+                y,
+                0,
+            )?;
+            self.sound_cues = cues;
+            action
+        } else {
+            let hit = self.hit(x, y);
+            update_pointer(&mut self.pressed, kind, hit)?
+        };
+        if action.is_some() && action == self.settings_action {
             self.sound_cues = crate::message_log::page_cue(&mut self.system)?;
-            self.settings = Some(crate::settings::Settings::open(&mut self.store, &mut self.system, 1)?);
+            self.settings = Some(crate::settings::Settings::open(
+                &mut self.store,
+                &mut self.system,
+                1,
+            )?);
             return Ok(None);
         }
         Ok(action)
@@ -294,7 +355,11 @@ impl<R: Read + Seek> TitleSession<R> {
         self.packet_with_settings_format(action, false)
     }
 
-    pub fn packet_with_settings_format(&mut self, action: Option<i32>, raw: bool) -> Result<Vec<u8>> {
+    pub fn packet_with_settings_format(
+        &mut self,
+        action: Option<i32>,
+        raw: bool,
+    ) -> Result<Vec<u8>> {
         let cues = std::mem::take(&mut self.sound_cues);
         if let Some(settings) = &self.settings {
             let packet = settings.packet(
@@ -305,7 +370,20 @@ impl<R: Read + Seek> TitleSession<R> {
             )?;
             return crate::message_log::with_available_sounds(&mut self.store, packet, &cues);
         }
-        let mut canvas = RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?;
+        if action.is_none() {
+            if let Some(view) = self.native_title.as_mut().filter(|view| view.closed) {
+                view.restart(
+                    &mut self.store,
+                    &mut self.system,
+                    &mut self.machine.variables,
+                )?;
+            }
+        }
+        let mut canvas = if let Some(view) = &self.native_title {
+            view.render(self.size)?
+        } else {
+            RgbaImage::filled(self.size[0], self.size[1], [0, 0, 0, 255], BUDGET)?
+        };
         for &i in &self.bases {
             let image = &self.images[&i];
             canvas.draw(&image.pixels, image.position)
@@ -324,27 +402,38 @@ impl<R: Read + Seek> TitleSession<R> {
                 canvas.draw(&image.pixels, image.position)
             }
         }
-        let buttons = self
-            .buttons
-            .iter()
-            .map(|b| {
-                let image = &self.images[&b.area];
-                format!(
-                    "{{\"id\":{},\"enabled\":{},\"bounds\":[{},{},{},{}]}}",
-                    b.id,
-                    b.enabled,
-                    image.position[0],
-                    image.position[1],
-                    image.pixels.width(),
-                    image.pixels.height()
-                )
-            })
-            .collect::<Vec<_>>()
-            .join(",");
+        let buttons = if let Some(view) = &self.native_title {
+            view.buttons_json()?
+        } else {
+            self.buttons
+                .iter()
+                .map(|b| {
+                    let image = &self.images[&b.area];
+                    format!(
+                        "{{\"id\":{},\"enabled\":{},\"bounds\":[{},{},{},{}]}}",
+                        b.id,
+                        b.enabled,
+                        image.position[0],
+                        image.position[1],
+                        image.pixels.width(),
+                        image.pixels.height()
+                    )
+                })
+                .collect::<Vec<_>>()
+                .join(",")
+        };
         let (source, line) = self.machine.location().ok_or("title location missing")?;
-        let presentation = crate::preferences::presentation(&mut self.system)?;
-        let mut result=format!("{{\"kind\":\"title\",\"input_sequence\":{},\"width\":{},\"height\":{},\"source\":{},\"line\":{},\"steps\":{},\"pressed\":{},\"action\":{},\"chinese_scenario\":{},\"quit_action\":{},\"room_action\":{},\"replay_action\":{},\"buttons\":[{}]{presentation}}}\n",self.input_sequence,self.size[0],self.size[1],quote(source)?,line,self.machine.steps(),self.pressed.unwrap_or(0),action.unwrap_or(0),
+        let presentation = format!(
+            "{},\"tick_ms\":{}",
+            crate::preferences::presentation(&mut self.system)?,
+            self.native_title.as_ref().map_or(0, |view| view.delay())
+        );
+        let mut result=format!("{{\"kind\":\"title\",\"input_sequence\":{},\"width\":{},\"height\":{},\"source\":{},\"line\":{},\"steps\":{},\"pressed\":{},\"action\":{},\"chinese_scenario\":{},\"start_action\":{},\"load_action\":{},\"continue_action\":{},\"settings_action\":{},\"quit_action\":{},\"room_action\":{},\"replay_action\":{},\"buttons\":[{}]{presentation}}}\n",self.input_sequence,self.size[0],self.size[1],quote(source)?,line,self.machine.steps(),self.pressed.unwrap_or(0),action.unwrap_or(0),
             self.store.has_chinese_scenario_patch(),
+            self.start_action,
+            self.load_action.unwrap_or(0),
+            self.continue_action.unwrap_or(0),
+            self.settings_action.unwrap_or(0),
             self.quit_action.unwrap_or(0),
             action.is_some_and(|id| self.room_destinations.contains_key(&id)),
             self.room_destinations.iter().find_map(|(id, name)| (name == "scene").then_some(*id)).unwrap_or(0),
@@ -363,7 +452,29 @@ impl<R: Read + Seek> TitleSession<R> {
         self.packet(None)
     }
     pub fn settings_tick(&mut self, elapsed: u64) -> Result<Vec<u8>> {
-        let Some(settings) = self.settings.as_mut().filter(|settings| settings.tick_delay() > 0) else {
+        if self.settings.is_none() {
+            if let Some(view) = self.native_title.as_mut().filter(|view| view.delay() > 0) {
+                let (action, cues) = view.step(
+                    &mut self.store,
+                    &mut self.system,
+                    &mut self.machine.variables,
+                    "0",
+                    -1,
+                    -1,
+                    elapsed,
+                )?;
+                if action.is_some() {
+                    return Err("title timer returned an action without input".into());
+                }
+                self.sound_cues = cues;
+                return self.packet(None);
+            }
+        }
+        let Some(settings) = self
+            .settings
+            .as_mut()
+            .filter(|settings| settings.tick_delay() > 0)
+        else {
             return Ok(Vec::new());
         };
         self.sound_cues = settings.tick(&mut self.store, &mut self.system, elapsed)?;
@@ -418,6 +529,8 @@ impl<R: Read + Seek> TitleSession<R> {
         Ok(self.room_frame(frame))
     }
     fn room_frame(&mut self, outcome: room::Outcome) -> Vec<u8> {
+        let music_count = outcome.music.len();
+        self.room_music.extend(outcome.music);
         let mut packet = match outcome.frame {
             RoomFrame::Packet(packet) => packet,
             RoomFrame::Closed => {
@@ -430,16 +543,32 @@ impl<R: Read + Seek> TitleSession<R> {
                 br#"{"kind":"room_replay"}"#.to_vec()
             }
         };
-        if outcome.stop_music {
-            let mut with_stop = br#"{"stop_music":true,"#.to_vec();
-            with_stop.extend_from_slice(&packet[1..]);
-            packet = with_stop;
+        if music_count > 0 {
+            let mut header = format!("{{\"room_music_count\":{music_count},").into_bytes();
+            header.extend_from_slice(&packet[1..]);
+            packet = header;
         }
         if outcome.sounds.is_empty() {
             packet
         } else {
             crate::message_log::with_sounds(packet, &outcome.sounds)
         }
+    }
+    /// Drain original room music requests in script order on the VM worker.
+    pub fn next_room_music(&mut self) -> Result<Vec<u8>> {
+        let command = self.room_music.pop_front().ok_or("no pending room music request")?;
+        Ok(match command {
+            room::MusicCommand::Play { name, looped, volume } => {
+                let bytes = self.store.read("sound/bgm", &format!("{name}.ogg"))?;
+                if !bytes.starts_with(b"OggS") { return Err("invalid room music resource".into()); }
+                let category = crate::message_log::audio_volume(&mut self.system, "VolBGM")?;
+                let mut packet = format!("{{\"host_effect\":\"bgm\",\"name\":{},\"duration_ms\":0,\"loop\":{looped},\"volume_percent\":{volume},\"category_percent\":{category}}}\n", quote(name.as_bytes())?).into_bytes();
+                packet.extend(bytes);
+                packet
+            }
+            room::MusicCommand::Volume(volume) => format!("{{\"host_effect\":\"bgm_volume\",\"duration_ms\":0,\"volume_percent\":{volume}}}\n").into_bytes(),
+            room::MusicCommand::Stop => b"{\"host_effect\":\"bgm_stop\",\"duration_ms\":0}\n".to_vec(),
+        })
     }
     pub fn replay(mut self) -> Result<StorySession<R>> {
         let name = self.room_replay.take().ok_or("no pending room replay")?;
@@ -450,9 +579,24 @@ impl<R: Read + Seek> TitleSession<R> {
         story.mark_replay();
         Ok(story)
     }
-    pub fn start(mut self) -> Result<StorySession<R>> {
-        // Dispatch the real .map handler with ID 1; no manual PC/branch manipulation.
-        self.system.eval("title-choice", "InputChoice = 1")?;
+    pub fn start(self) -> Result<StorySession<R>> {
+        let action = self.start_action;
+        self.start_action(action)
+    }
+    pub fn is_start_action(&self, id: i32) -> bool {
+        self.start_actions.contains(&id)
+    }
+    pub fn start_action(mut self, action: i32) -> Result<StorySession<R>> {
+        if !self.is_start_action(action) {
+            return Err("not a title Start action".into());
+        }
+        if self.native_title.is_some() {
+            self.machine.complete(Some(action))?;
+            return StorySession::from_bootstrap(self.store, self.machine, self.system);
+        }
+        // Dispatch the selected branch through the real .map handler.
+        self.system
+            .eval("title-choice", &format!("InputChoice = {action}"))?;
         let (machine, system) = bootstrap_continue(
             &mut self.store,
             self.machine,

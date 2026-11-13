@@ -43,6 +43,7 @@ struct State {
  Arena arena;Io io;void*user;plm_t*plm=nullptr;bool failed=false;
  size_t io_left=0,calls=0,steps=0;double duration=0,video_time=0;
  uint8_t *rgba=nullptr;size_t rgba_len=0;int width=0,height=0;int16_t pcm[4608];size_t pcm_len=0;bool frame=false;
+ uint64_t audio_samples=0,video_frames=0;double video_end=0;
 };
 static int64_t input(State*s,int op,uint8_t*p,size_t n,uint64_t offset=0){
  if(++s->calls>4096||n>s->io_left)throw 2;
@@ -58,11 +59,13 @@ static size_t tell(plm_buffer_t*,void*u){return static_cast<size_t>(input(static
 static void video(plm_t*,plm_frame_t*f,void*u){
  auto*s=static_cast<State*>(u);if(s->frame||f->width!=s->width||f->height!=s->height)throw 3;
  plm_frame_to_rgba(f,s->rgba,f->width*4);s->video_time=f->time;s->frame=true;
+ ++s->video_frames;s->video_end=f->time+1.0/plm_get_framerate(s->plm);
 }
 static void audio(plm_t*,plm_samples_t*f,void*u){
  auto*s=static_cast<State*>(u);size_t n=f->count*2;if(s->pcm_len+n>4608)throw 3;
  for(size_t i=0;i<n;i++){float v=f->interleaved[i];if(!std::isfinite(v))throw 3;
   s->pcm[s->pcm_len++]=static_cast<int16_t>(v>=1?32767:v<=-1?-32768:std::lrint(v*32767));}
+ s->audio_samples+=f->count;
 }
 extern "C" void* neko_video_open(Io io,void*user,size_t length,size_t budget) noexcept {
  if(budget<sizeof(State))return nullptr;
@@ -96,3 +99,6 @@ extern "C" int neko_video_step(void*p,const uint8_t**rgba,size_t*rgba_len,const 
 extern "C" void neko_video_close(void*p) noexcept {auto*s=static_cast<State*>(p);clear(s->arena);s->~State();live_bytes-=sizeof(State);std::free(s);}
 
 extern "C" size_t neko_video_live_bytes() noexcept {return live_bytes;}
+extern "C" void neko_video_times(void*p,double*out) noexcept {
+ auto*s=static_cast<State*>(p);out[0]=double(s->audio_samples)/plm_get_samplerate(s->plm);out[1]=s->video_end;out[2]=double(s->video_frames);
+}

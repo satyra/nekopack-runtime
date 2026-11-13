@@ -1,0 +1,1538 @@
+{
+  "date": "2026-11-13",
+  "apk": ".local/android-probe/nekopack-shared-systems-arm64-debug.apk",
+  "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+  "source_input_count": 175,
+  "source_inputs_unchanged": true,
+  "source_hashes": ".local/system-integration/final-source-before.json",
+  "device": "127.0.0.1:5577",
+  "device_reports": {
+    "commands-device-final": {
+      "run": "system-command-b35d8417",
+      "passed": true,
+      "checks": [
+        "original date resumed and drew frames until its own timer returned",
+        "confirmation exited second original date",
+        "same coroutine resumed after two separate input waits and returned to scenario",
+        "pending original delay survived save and cold restart, then committed"
+      ],
+      "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+      "sound": {
+        "host_effect": "system",
+        "name": "se_CLICK",
+        "category_percent": 50,
+        "duration_ms": 0,
+        "loop": false,
+        "token": -1001,
+        "ui_audio": true
+      },
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 0,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 16,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 135,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 231,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 330,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 439,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 550,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 652,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 745,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 839,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 940,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1045,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1152,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1253,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1356,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1455,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1557,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1660,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1756,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1857,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 1964,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2061,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2152,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2246,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2334,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2422,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2531,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2618,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2713,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2806,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2900,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "date",
+          "elapsed_ms": 2989,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "date",
+          "elapsed_ms": 0,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "date",
+          "elapsed_ms": 16,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "date",
+          "elapsed_ms": 120,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "date",
+          "elapsed_ms": 220,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "date",
+          "elapsed_ms": 316,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "probe_wait",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "probe_wait",
+          "elapsed_ms": 219,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true
+        }
+      ],
+      "page": {
+        "sequence": 1,
+        "source": "story1",
+        "line": 6
+      },
+      "save": {
+        "saved": true,
+        "bytes": 14746,
+        "event": "saved",
+        "slot": 101,
+        "page": 0,
+        "saving": true,
+        "from_title": false,
+        "sequence": 2,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_system-command-b35d8417"
+      },
+      "pending_motion_before_restart": [
+        {
+          "event": "begin",
+          "sequence": 2,
+          "elapsed_ms": 0,
+          "finished": false,
+          "time_ms": 23156130
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 0,
+          "finished": false,
+          "time_ms": 23156131
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 65,
+          "finished": false,
+          "time_ms": 23156230
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 144,
+          "finished": false,
+          "time_ms": 23156310
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 227,
+          "finished": false,
+          "time_ms": 23156389
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 302,
+          "finished": false,
+          "time_ms": 23156463
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 371,
+          "finished": false,
+          "time_ms": 23156529
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 444,
+          "finished": false,
+          "time_ms": 23156616
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 541,
+          "finished": false,
+          "time_ms": 23156697
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 608,
+          "finished": false,
+          "time_ms": 23156770
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 695,
+          "finished": false,
+          "time_ms": 23156853
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 776,
+          "finished": false,
+          "time_ms": 23156935
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 858,
+          "finished": false,
+          "time_ms": 23157013
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 923,
+          "finished": false,
+          "time_ms": 23157080
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 995,
+          "finished": false,
+          "time_ms": 23157147
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1063,
+          "finished": false,
+          "time_ms": 23157221
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1144,
+          "finished": false,
+          "time_ms": 23157306
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1227,
+          "finished": false,
+          "time_ms": 23157404
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1360,
+          "finished": false,
+          "time_ms": 23157516
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1424,
+          "finished": false,
+          "time_ms": 23157584
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1511,
+          "finished": false,
+          "time_ms": 23157678
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1592,
+          "finished": false,
+          "time_ms": 23157759
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1682,
+          "finished": false,
+          "time_ms": 23157841
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1759,
+          "finished": false,
+          "time_ms": 23157922
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1844,
+          "finished": false,
+          "time_ms": 23158054
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 1980,
+          "finished": false,
+          "time_ms": 23159835
+        },
+        {
+          "event": "frame",
+          "sequence": 2,
+          "elapsed_ms": 2077,
+          "finished": false,
+          "time_ms": 23159954
+        }
+      ],
+      "loaded": {
+        "event": "loaded",
+        "slot": 101,
+        "page": 0,
+        "saving": false,
+        "from_title": true,
+        "sequence": 0,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_system-command-b35d8417"
+      },
+      "reload_run": "system-command-b35d8417-reload",
+      "restored_motion": {
+        "event": "finished",
+        "sequence": 1,
+        "elapsed_ms": 8079,
+        "finished": true,
+        "time_ms": 23170583
+      }
+    },
+    "audio-device-final": {
+      "run": "system-audio-e80aad21",
+      "serial": "127.0.0.1:5577",
+      "passed": true,
+      "pages": [
+        {
+          "run": "system-audio-e80aad21",
+          "label": "baseline",
+          "sequence": 1,
+          "source": "story1",
+          "line": 16
+        },
+        {
+          "run": "system-audio-e80aad21",
+          "label": "suppress_first",
+          "sequence": 2,
+          "source": "story1",
+          "line": 18
+        },
+        {
+          "run": "system-audio-e80aad21",
+          "label": "suppress_second",
+          "sequence": 3,
+          "source": "story1",
+          "line": 20
+        },
+        {
+          "run": "system-audio-e80aad21",
+          "label": "mute_bgv",
+          "sequence": 4,
+          "source": "story1",
+          "line": 23
+        },
+        {
+          "run": "system-audio-e80aad21",
+          "label": "mute_bgm",
+          "sequence": 5,
+          "source": "story1",
+          "line": 26
+        },
+        {
+          "run": "system-audio-e80aad21",
+          "label": "mute_master",
+          "sequence": 6,
+          "source": "story1",
+          "line": 29
+        },
+        {
+          "run": "system-audio-e80aad21",
+          "label": "reset_checkpoint",
+          "sequence": 7,
+          "source": "story1",
+          "line": 37
+        },
+        {
+          "run": "system-audio-e80aad21-reload",
+          "label": "reset_checkpoint",
+          "sequence": 1,
+          "source": "story1",
+          "line": 37
+        },
+        {
+          "run": "system-audio-e80aad21-reload",
+          "label": "saved_assertion",
+          "sequence": 2,
+          "source": "story1",
+          "line": 40
+        },
+        {
+          "run": "system-audio-e80aad21-reload",
+          "label": "stopped",
+          "sequence": 3,
+          "source": "story1",
+          "line": 44
+        }
+      ],
+      "checks": [
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.25,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 50,
+          "player": 30721870,
+          "time_ms": 23197185
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 36,
+          "output": 0.2628,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 10932335,
+          "time_ms": 23197213
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 36,
+          "output": 0.2196,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 258130300,
+          "time_ms": 23197234
+        },
+        {
+          "check": "four_bank_isolation",
+          "source_assertion": "audio_probe_banks.nut"
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 36,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 10932335,
+          "time_ms": 23199458
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 36,
+          "output": 0.2196,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 258130300,
+          "time_ms": 23199458
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.16,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 32,
+          "player": 30721870,
+          "time_ms": 23199455
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 36,
+          "output": 0.2628,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 10932335,
+          "time_ms": 23205522
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.25,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 50,
+          "player": 30721870,
+          "time_ms": 23205522
+        },
+        {
+          "check": "voice_suppression_and_restore",
+          "voice_token": 4,
+          "muted": "bgv1",
+          "unaffected": "bgv2"
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 36,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 258130300,
+          "time_ms": 23206017
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 36,
+          "output": 0.2628,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 10932335,
+          "time_ms": 23206016
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.16,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 32,
+          "player": 30721870,
+          "time_ms": 23206015
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 36,
+          "output": 0.2196,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 258130300,
+          "time_ms": 23212066
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.25,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 50,
+          "player": 30721870,
+          "time_ms": 23212065
+        },
+        {
+          "check": "voice_suppression_and_restore",
+          "voice_token": 5,
+          "muted": "bgv2",
+          "unaffected": "bgv1"
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.25,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 50,
+          "player": 30721870,
+          "time_ms": 23212624
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 0,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 10932335,
+          "time_ms": 23212624
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 0,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 258130300,
+          "time_ms": 23212625
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 0,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 30721870,
+          "time_ms": 23213276
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 36,
+          "output": 0.2628,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 10932335,
+          "time_ms": 23213277
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 36,
+          "output": 0.2196,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 258130300,
+          "time_ms": 23213277
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 0,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 30721870,
+          "time_ms": 23213946
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 0,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 10932335,
+          "time_ms": 23213947
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 0,
+          "output": 0,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 0,
+          "player": 258130300,
+          "time_ms": 23213948
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgm",
+          "token": 7,
+          "category_percent": 50,
+          "output": 0.25,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 50,
+          "player": 191874068,
+          "time_ms": 23214679
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv1",
+          "token": 8,
+          "category_percent": 36,
+          "output": 0.2628,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 130860221,
+          "time_ms": 23214697
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21",
+          "kind": "bgv2",
+          "token": 9,
+          "category_percent": 36,
+          "output": 0.2196,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 223316658,
+          "time_ms": 23214714
+        },
+        {
+          "check": "reset_local_banks_and_restart_audio",
+          "source_assertion": "audio_probe_reset.nut"
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21-reload",
+          "kind": "bgm",
+          "token": 1,
+          "category_percent": 50,
+          "output": 0.25,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 50,
+          "player": 124397943,
+          "time_ms": 23220812
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21-reload",
+          "kind": "bgv1",
+          "token": 2,
+          "category_percent": 36,
+          "output": 0.2628,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 165681636,
+          "time_ms": 23220833
+        },
+        {
+          "check": "gain",
+          "run": "system-audio-e80aad21-reload",
+          "kind": "bgv2",
+          "token": 3,
+          "category_percent": 36,
+          "output": 0.2196,
+          "fade": 1,
+          "duck": 1,
+          "voice_gain": 1,
+          "effective_category_percent": 36,
+          "player": 111586893,
+          "time_ms": 23220855
+        },
+        {
+          "check": "saved_bank_config_assertions_and_final_stop"
+        }
+      ],
+      "cold_save": true,
+      "deferred": [
+        "ordinary SKIP loop retention and NEXT/MegaSkip: runtime unit tests, not claimed as device coverage"
+      ],
+      "manifest_sha256": "71c8e6b56f0c4fc2193c8c92c6fd9d2e12150968c592a6eebb39f91c44d7739d",
+      "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+      "save": {
+        "saved": true,
+        "bytes": 7797,
+        "event": "saved",
+        "slot": 101,
+        "page": 0,
+        "saving": true,
+        "from_title": false,
+        "sequence": 7,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_system-audio-e80aad21"
+      },
+      "reload_run": "system-audio-e80aad21-reload",
+      "loaded": {
+        "event": "loaded",
+        "slot": 101,
+        "page": 0,
+        "saving": false,
+        "from_title": true,
+        "sequence": 0,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_system-audio-e80aad21"
+      }
+    },
+    "music-device-final": {
+      "run": "original-room-music-84eac147",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T09:14:55.219841+00:00",
+      "scope": "isolated engine command entry with mounted original room handler",
+      "actions": [
+        {
+          "id": 1,
+          "bounds": [
+            607,
+            526,
+            132,
+            50
+          ]
+        },
+        {
+          "id": 2,
+          "bounds": [
+            823,
+            87,
+            178,
+            40
+          ]
+        },
+        {
+          "id": 2000000001,
+          "bounds": [
+            113,
+            103,
+            231,
+            43
+          ]
+        },
+        {
+          "id": 2000000003,
+          "bounds": [
+            113,
+            344,
+            231,
+            42
+          ]
+        },
+        {
+          "id": 2000000004,
+          "bounds": [
+            113,
+            263,
+            231,
+            42
+          ]
+        },
+        {
+          "id": 2000000002,
+          "bounds": [
+            113,
+            184,
+            231,
+            42
+          ]
+        },
+        {
+          "id": 2,
+          "bounds": [
+            823,
+            87,
+            178,
+            40
+          ]
+        }
+      ],
+      "playback": [
+        {
+          "id": 2,
+          "token": -1003,
+          "name": "BGM022",
+          "sha256": "f0a213a04fe33decb0c59ea6a09b99a3a36462ce0c035ef6055bcd6b662aadeb",
+          "loop": true,
+          "player_looping": 1,
+          "volume_percent": 100,
+          "category_percent": 50,
+          "started": {
+            "event": "playing",
+            "kind": "bgm",
+            "token": -1003,
+            "time_ms": 23317251,
+            "value": 203077
+          },
+          "position": {
+            "event": "progress",
+            "kind": "bgm",
+            "token": -1003,
+            "time_ms": 23317453,
+            "value": 130
+          },
+          "gain": {
+            "kind": "bgm",
+            "token": -1003,
+            "category_percent": 50,
+            "output": 0.5,
+            "fade": 1,
+            "duck": 1,
+            "voice_gain": 1,
+            "effective_category_percent": 50,
+            "player": 30721870,
+            "time_ms": 23317250
+          },
+          "room_music_count": 1
+        },
+        {
+          "id": 2000000001,
+          "token": -1005,
+          "name": "BGM022",
+          "sha256": "f0a213a04fe33decb0c59ea6a09b99a3a36462ce0c035ef6055bcd6b662aadeb",
+          "loop": true,
+          "player_looping": 1,
+          "volume_percent": 100,
+          "category_percent": 50,
+          "started": {
+            "event": "playing",
+            "kind": "bgm",
+            "token": -1005,
+            "time_ms": 23319864,
+            "value": 203077
+          },
+          "position": {
+            "event": "progress",
+            "kind": "bgm",
+            "token": -1005,
+            "time_ms": 23320066,
+            "value": 162
+          },
+          "gain": {
+            "kind": "bgm",
+            "token": -1005,
+            "category_percent": 50,
+            "output": 0.5,
+            "fade": 1,
+            "duck": 1,
+            "voice_gain": 1,
+            "effective_category_percent": 50,
+            "player": 258130300,
+            "time_ms": 23319863
+          },
+          "room_music_count": 1
+        },
+        {
+          "id": 2000000003,
+          "token": -1007,
+          "name": "BGM001",
+          "sha256": "815b3f23e190eee7cc0b5e07e3127b2bce1bd7be4f8aeb29eaaa8c87adbf6d8f",
+          "loop": true,
+          "player_looping": 1,
+          "volume_percent": 100,
+          "category_percent": 50,
+          "started": {
+            "event": "playing",
+            "kind": "bgm",
+            "token": -1007,
+            "time_ms": 23322447,
+            "value": 178050
+          },
+          "position": {
+            "event": "progress",
+            "kind": "bgm",
+            "token": -1007,
+            "time_ms": 23322648,
+            "value": 158
+          },
+          "gain": {
+            "kind": "bgm",
+            "token": -1007,
+            "category_percent": 50,
+            "output": 0.5,
+            "fade": 1,
+            "duck": 1,
+            "voice_gain": 1,
+            "effective_category_percent": 50,
+            "player": 70912602,
+            "time_ms": 23322446
+          },
+          "room_music_count": 1
+        },
+        {
+          "id": 2000000004,
+          "token": -1009,
+          "name": "BGM022",
+          "sha256": "f0a213a04fe33decb0c59ea6a09b99a3a36462ce0c035ef6055bcd6b662aadeb",
+          "loop": true,
+          "player_looping": 1,
+          "volume_percent": 100,
+          "category_percent": 50,
+          "started": {
+            "event": "playing",
+            "kind": "bgm",
+            "token": -1009,
+            "time_ms": 23325120,
+            "value": 203077
+          },
+          "position": {
+            "event": "progress",
+            "kind": "bgm",
+            "token": -1009,
+            "time_ms": 23325322,
+            "value": 166
+          },
+          "gain": {
+            "kind": "bgm",
+            "token": -1009,
+            "category_percent": 50,
+            "output": 0.5,
+            "fade": 1,
+            "duck": 1,
+            "voice_gain": 1,
+            "effective_category_percent": 50,
+            "player": 181959016,
+            "time_ms": 23325119
+          },
+          "room_music_count": 1
+        },
+        {
+          "id": 2,
+          "token": -1013,
+          "name": "BGM022",
+          "sha256": "f0a213a04fe33decb0c59ea6a09b99a3a36462ce0c035ef6055bcd6b662aadeb",
+          "loop": true,
+          "player_looping": 1,
+          "volume_percent": 100,
+          "category_percent": 50,
+          "started": {
+            "event": "playing",
+            "kind": "bgm",
+            "token": -1013,
+            "time_ms": 23329796,
+            "value": 203077
+          },
+          "position": {
+            "event": "progress",
+            "kind": "bgm",
+            "token": -1013,
+            "time_ms": 23329997,
+            "value": 160
+          },
+          "gain": {
+            "kind": "bgm",
+            "token": -1013,
+            "category_percent": 50,
+            "output": 0.5,
+            "fade": 1,
+            "duck": 1,
+            "voice_gain": 1,
+            "effective_category_percent": 50,
+            "player": 50486887,
+            "time_ms": 23329796
+          },
+          "room_music_count": 1
+        }
+      ],
+      "passed": true,
+      "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+      "stop": {
+        "command": {
+          "host_effect": "bgm_stop",
+          "duration_ms": 0,
+          "token": -1011,
+          "ui_audio": true
+        },
+        "released": {
+          "event": "stopped",
+          "kind": "bgm_stop",
+          "token": -1011,
+          "time_ms": 23327630,
+          "value": 0
+        }
+      },
+      "exit": {
+        "command": {
+          "host_effect": "bgm_stop",
+          "duration_ms": 0,
+          "token": -1015,
+          "ui_audio": true
+        },
+        "released": {
+          "event": "stopped",
+          "kind": "bgm_stop",
+          "token": -1015,
+          "time_ms": 23330579,
+          "value": 0
+        }
+      }
+    },
+    "sorakoi-original-final": {
+      "run": "pk02-original-9aafb382",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T09:17:11.190544+00:00",
+      "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+      "translated": false,
+      "title_ready": true,
+      "width": 1600,
+      "height": 900,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_01",
+          "line": 19,
+          "speaker_chars": 3,
+          "dialogue_sha256": "a1eca4bca856e38bb4dd730a248f446aeee8e23f2055b308813e85729f821917"
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_01",
+          "line": 21,
+          "speaker_chars": 0,
+          "dialogue_sha256": "5bc9af515b68114df89334d520532beb50e74131f3c08c5c265df497b35c3f92"
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_01",
+          "line": 25,
+          "speaker_chars": 3,
+          "dialogue_sha256": "1477103e748238cfdbec92e48b919bc6ce9baa2fa209688845805434b4ec68a2"
+        }
+      ]
+    },
+    "sorakoi-translated-final": {
+      "run": "pk02-translated-0214322e",
+      "serial": "127.0.0.1:5577",
+      "checked_at": "2026-11-13T09:18:21.968595+00:00",
+      "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+      "translated": true,
+      "title_ready": true,
+      "width": 1600,
+      "height": 900,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_01",
+          "line": 19,
+          "speaker_chars": 3,
+          "dialogue_sha256": "03621c0d5ef1ff0e478a57a38ef1a82eca1295d7e4bb8b8ff8ebb98279143162"
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_01",
+          "line": 21,
+          "speaker_chars": 0,
+          "dialogue_sha256": "211fa8d9ded86257a91ea96b089ceff9e77994fdc328ce805305593832a63b60"
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_01",
+          "line": 25,
+          "speaker_chars": 3,
+          "dialogue_sha256": "9da19356109d9d9af0e91294900a40cce4ac92223de3e9670c65a0ca25d93910"
+        }
+      ]
+    },
+    "existing-translated-save-final": {
+      "run": "existing-save-0dd75996",
+      "passed": true,
+      "entry": "pk02-validation",
+      "slot": 101,
+      "original": false,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_17",
+          "line": 231
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_17",
+          "line": 236
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_17",
+          "line": 239
+        }
+      ],
+      "apk_sha256": "4e73c065e405df9510ef48f42243b2eb1b8ca941d685a36eb524d5db333b4af8",
+      "loaded": {
+        "event": "loaded",
+        "slot": 101,
+        "page": 0,
+        "saving": false,
+        "from_title": true,
+        "sequence": 0,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_zh"
+      }
+    }
+  },
+  "desktop_report": ".local/system-integration/final-desktop-r3/report.json",
+  "desktop_tests": {
+    "passed": 310,
+    "failed": 0,
+    "ignored": 20,
+    "original_titles": 5,
+    "msgbox_profiles": 6
+  },
+  "limitations": [
+    "Original date handler used an isolated synthetic scenario and synthetic eyecatch pixels, not evidence of original story invocation.",
+    "Choice/non-null return scenario branch contract remains unsupported.",
+    "Masked Trans and arbitrary nested GUI command paths are not fully recovered or device-verified.",
+    "Five legacy title regressions and six MsgBox profile regressions were desktop tests, not full Android playthroughs."
+  ],
+  "no_images_or_story_prose_viewed": true,
+  "committed": false,
+  "pushed": false,
+  "existing_save_format": "NKSV5",
+  "existing_quick_save_overwritten": false
+}

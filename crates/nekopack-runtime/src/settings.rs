@@ -1,9 +1,8 @@
 //! Observed normal config sprite profile; unsupported controls never mutate Config.
 use crate::{
-    GameResources,
     dat::DatGame,
-    preferences::{self, FIELDS, Result},
-    quote,
+    preferences::{self, Result, FIELDS},
+    quote, GameResources,
 };
 use nekopack_image::{Mng, RgbaImage};
 use nekopack_script::system::SystemVm;
@@ -12,7 +11,7 @@ use std::{
     io::{Read, Seek},
 };
 const BUDGET: usize = 32 * 1024 * 1024;
-mod script_view;
+pub(crate) mod script_view;
 
 struct Image {
     pixels: RgbaImage,
@@ -30,20 +29,29 @@ impl Scroll {
     fn from_script(script: &str, last: i32) -> Result<Self> {
         let declaration = |name: &str| {
             let prefix = format!("local {name} = ");
-            script.lines().find_map(|line| line.trim().strip_prefix(&prefix))
+            script
+                .lines()
+                .find_map(|line| line.trim().strip_prefix(&prefix))
                 .ok_or_else(|| format!("missing settings declaration {name}"))
         };
         let vertical = declaration("offset_y")?;
         let offset_y = vertical.replace("guibase.Get(\"PAGE\")", "index");
         let mut vm = SystemVm::try_new()?;
-        vm.eval("config-scroll", &format!(
-            "local pagespan = {}\nlocal offset_x = {}\n\
+        vm.eval(
+            "config-scroll",
+            &format!(
+                "local pagespan = {}\nlocal offset_x = {}\n\
              local index = 0\nlocal first_y = {offset_y}\n\
              index = 1\nlocal next_y = {offset_y}\n\
              return offset_x.tostring()+\" \"+first_y.tostring()+\" \"+(first_y-next_y).tostring()",
-            declaration("pagespan")?, declaration("offset_x")?,
-        ))?;
-        let values = vm.result().split_whitespace().map(str::parse::<i32>)
+                declaration("pagespan")?,
+                declaration("offset_x")?,
+            ),
+        )?;
+        let values = vm
+            .result()
+            .split_whitespace()
+            .map(str::parse::<i32>)
             .collect::<std::result::Result<Vec<_>, _>>()?;
         let [x, y, step] = values.as_slice() else {
             return Err("invalid settings scroll layout".into());
@@ -51,7 +59,12 @@ impl Scroll {
         if *step <= 0 || step.checked_mul(last).is_none() {
             return Err("invalid settings scroll range".into());
         }
-        Ok(Self { origin: [*x, *y], step: *step, last, index: 0 })
+        Ok(Self {
+            origin: [*x, *y],
+            step: *step,
+            last,
+            index: 0,
+        })
     }
 
     fn offset(&self) -> i32 {
@@ -104,7 +117,11 @@ impl Settings {
     ) -> Result<Self> {
         let mut settings = Self::open_layout(store, vm, page)?;
         settings.script_view = Some(script_view::ScriptView::open(
-            store, vm, settings.pages, settings.scroll.is_some(), page,
+            store,
+            vm,
+            settings.pages,
+            settings.scroll.is_some(),
+            page,
         )?);
         Ok(settings)
     }
@@ -116,13 +133,25 @@ impl Settings {
     ) -> Result<Self> {
         let script = String::from_utf8(store.system(b"config.nut")?)?;
         let scrolling = store.has_resource("system", "config_items.mng")?;
-        vm.eval("config-bindings-host", include_str!("../host/config_bindings.nut"))?;
-        vm.eval("config-bindings", &format!("return ConfigPageBindings({page})"))?;
-        let bindings = vm.result().lines().map(|line| {
-            let (name, range) = line.split_once('\t').ok_or("invalid settings binding")?;
-            Ok((name.to_owned(), range.parse()?))
-        }).collect::<Result<BTreeMap<_, _>>>()?;
-        let last = *bindings.get("PAGE").ok_or("missing original settings scrollbar")?;
+        vm.eval(
+            "config-bindings-host",
+            include_str!("../host/config_bindings.nut"),
+        )?;
+        vm.eval(
+            "config-bindings",
+            &format!("return ConfigPageBindings({page})"),
+        )?;
+        let bindings = vm
+            .result()
+            .lines()
+            .map(|line| {
+                let (name, range) = line.split_once('\t').ok_or("invalid settings binding")?;
+                Ok((name.to_owned(), range.parse()?))
+            })
+            .collect::<Result<BTreeMap<_, _>>>()?;
+        let last = *bindings
+            .get("PAGE")
+            .ok_or("missing original settings scrollbar")?;
         if !(1..i32::MAX).contains(&last) {
             return Err("invalid settings scrollbar range".into());
         }
@@ -235,23 +264,35 @@ impl Settings {
         y: i32,
     ) -> Result<Vec<crate::message_log::Cue>> {
         let event = match kind {
-            0 => { self.pointer_down = true; "0" }
+            0 => {
+                self.pointer_down = true;
+                "0"
+            }
             1 if self.pointer_down => "ID_DRAG",
             1 => "0",
             2 => {
                 if std::mem::take(&mut self.pointer_down) {
                     if self.editing.is_none() {
-                        let view = self.script_view.as_ref().ok_or("settings script is not running")?;
-                        self.editing = view.buttons.iter().find_map(|(name, &[left, top, w, h])| {
-                            let slot: usize = name.strip_prefix('F')?.parse().ok()?;
-                            crate::title::contains([left, top], [w as u32, h as u32], [x, y])
-                                .then_some(slot)
-                        });
+                        let view = self
+                            .script_view
+                            .as_ref()
+                            .ok_or("settings script is not running")?;
+                        self.editing =
+                            view.buttons.iter().find_map(|(name, &[left, top, w, h])| {
+                                let slot: usize = name.strip_prefix('F')?.parse().ok()?;
+                                crate::title::contains([left, top], [w as u32, h as u32], [x, y])
+                                    .then_some(slot)
+                            });
                     }
                     "ID_OK"
-                } else { "0" }
+                } else {
+                    "0"
+                }
             }
-            3 => { self.pointer_down = false; "0" }
+            3 => {
+                self.pointer_down = false;
+                "0"
+            }
             4 => "ConfigPageHost.cancel",
             _ => return Err("invalid settings input".into()),
         };
@@ -267,7 +308,10 @@ impl Settings {
         y: i32,
         elapsed: u64,
     ) -> Result<Vec<crate::message_log::Cue>> {
-        let view = self.script_view.as_mut().ok_or("settings script is not running")?;
+        let view = self
+            .script_view
+            .as_mut()
+            .ok_or("settings script is not running")?;
         let cues = view.step(store, vm, event, x, y, elapsed)?;
         if view.page == 0 {
             self.editing = None;
@@ -281,8 +325,13 @@ impl Settings {
         if let (Some(scroll), Some(view)) = (&mut self.scroll, &self.script_view) {
             scroll.index = view.index.clamp(0, scroll.last);
         }
-        if self.editing.is_some() && self.script_view.as_ref().is_some_and(|view|
-            !view.buttons.keys().any(|name| name.eq_ignore_ascii_case("DELETE")))
+        if self.editing.is_some()
+            && self.script_view.as_ref().is_some_and(|view| {
+                !view
+                    .buttons
+                    .keys()
+                    .any(|name| name.eq_ignore_ascii_case("DELETE"))
+            })
         {
             self.editing = None;
         }
@@ -303,14 +352,24 @@ impl Settings {
             2 => "= ResetShortcut",
             _ => return Err("unknown settings command".into()),
         };
-        let Some(image) = self.images.get(name) else { return Ok(Vec::new()) };
+        let Some(image) = self.images.get(name) else {
+            return Ok(Vec::new());
+        };
         let [x, y] = self.position(image);
-        self.run_script(store, vm, "ID_OK", x + image.pixels.width() as i32 / 2,
-            y + image.pixels.height() as i32 / 2, 0)
+        self.run_script(
+            store,
+            vm,
+            "ID_OK",
+            x + image.pixels.width() as i32 / 2,
+            y + image.pixels.height() as i32 / 2,
+            0,
+        )
     }
 
     pub fn tick_delay(&self) -> u64 {
-        self.script_view.as_ref().map_or(0, |view| view.delay.max(0) as u64)
+        self.script_view
+            .as_ref()
+            .map_or(0, |view| view.delay.max(0) as u64)
     }
 
     pub fn tick<R: Read + Seek>(
@@ -393,14 +452,19 @@ impl Settings {
             return Some(Control::Reset);
         }
         if self.scroll.is_some() {
-            if self.hit_image("= ResetShortcut", x, y) { return Some(Control::ResetShortcuts); }
+            if self.hit_image("= ResetShortcut", x, y) {
+                return Some(Control::ResetShortcuts);
+            }
             for slot in 2..=12 {
                 if self.hit_image(&format!("= F{slot}"), x, y) {
                     return Some(Control::Shortcut(slot));
                 }
             }
         }
-        for tag in voices.keys().filter(|_| self.bindings.contains_key("VoiceCheck")) {
+        for tag in voices
+            .keys()
+            .filter(|_| self.bindings.contains_key("VoiceCheck"))
+        {
             for value in 0..=1 {
                 if self.hit_image(&format!("= {tag}#{value}"), x, y) {
                     return Some(Control::VoiceRadio(tag.clone(), value));
@@ -423,7 +487,9 @@ impl Settings {
             return Some(Control::Track);
         }
         for (i, name) in FIELDS.iter().enumerate() {
-            let Some(&range) = self.bindings.get(*name) else { continue };
+            let Some(&range) = self.bindings.get(*name) else {
+                continue;
+            };
             if preferences::maximum(i) == 1 {
                 for v in 0..range {
                     let key = match *name {
@@ -446,8 +512,15 @@ impl Settings {
                 }
             }
         }
-        for name in preferences::EXTENDED.into_iter().chain(preferences::READING).chain(preferences::INPUT).chain(preferences::PRESENTATION) {
-            let Some(&count) = self.bindings.get(name) else { continue };
+        for name in preferences::EXTENDED
+            .into_iter()
+            .chain(preferences::READING)
+            .chain(preferences::INPUT)
+            .chain(preferences::PRESENTATION)
+        {
+            let Some(&count) = self.bindings.get(name) else {
+                continue;
+            };
             for value in 0..count {
                 if self.hit_image(&format!("= {name}#{value}"), x, y) {
                     return Some(Control::ExtendedRadio(name, value));
@@ -631,8 +704,16 @@ impl Settings {
                 ));
             }
         }
-        let config = FIELDS.into_iter()
-            .chain(preferences::INPUT.into_iter().chain(preferences::READING).chain(preferences::EXTENDED).chain(preferences::PRESENTATION).filter(|k| values.contains_key(*k)))
+        let config = FIELDS
+            .into_iter()
+            .chain(
+                preferences::INPUT
+                    .into_iter()
+                    .chain(preferences::READING)
+                    .chain(preferences::EXTENDED)
+                    .chain(preferences::PRESENTATION)
+                    .filter(|k| values.contains_key(*k)),
+            )
             .chain(voices.keys().map(String::as_str))
             .map(|k| {
                 Ok(format!(
@@ -687,18 +768,27 @@ impl Settings {
             "null".into()
         };
         let shortcuts = shortcuts.join(",");
-        let script_areas = self.script_view.iter().flat_map(|view| view.buttons.iter())
+        let script_areas = self
+            .script_view
+            .iter()
+            .flat_map(|view| view.buttons.iter())
             .map(|(name, [x, y, w, h])| {
                 Ok(format!("{}:[{x},{y},{w},{h}]", quote(name.as_bytes())?))
-            }).collect::<Result<Vec<_>>>()?.join(",");
+            })
+            .collect::<Result<Vec<_>>>()?
+            .join(",");
         let tick_ms = self.tick_delay();
         let pixels = if raw {
             format!(",\"bounds\":[0,0,{},{}]", self.size[0], self.size[1])
         } else {
             String::new()
         };
-        let mut packet=format!("{{\"kind\":\"settings\",\"scroll\":{},\"page\":{},\"editing_slot\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"preview\":{preview},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}},\"tick_ms\":{tick_ms},\"script_areas\":{{{script_areas}}}{pixels}}}\n",self.scroll.as_ref().map_or(0, Scroll::offset),self.page,self.editing.unwrap_or(0),self.unsupported).into_bytes();
-        let frame = self.script_view.as_ref().ok_or("settings script is not running")?
+        let audio_config = String::from_utf8(crate::audio_config::packet(vm)?)?;
+        let mut packet=format!("{{\"kind\":\"settings\",\"scroll\":{},\"page\":{},\"editing_slot\":{},\"input_sequence\":{input_sequence},\"unsupported\":{},\"config\":{{{config}}},\"audio_config\":{audio_config},\"preview\":{preview},\"shortcuts\":[{shortcuts}],\"areas\":{{{areas}}},\"tick_ms\":{tick_ms},\"script_areas\":{{{script_areas}}}{pixels}}}\n",self.scroll.as_ref().map_or(0, Scroll::offset),self.page,self.editing.unwrap_or(0),self.unsupported).into_bytes();
+        let frame = self
+            .script_view
+            .as_ref()
+            .ok_or("settings script is not running")?
             .render(self.size, font)?;
         if raw {
             packet.extend_from_slice(frame.pixels());
@@ -753,40 +843,74 @@ mod tests {
     #[ignore = "requires original DAT resources"]
     fn original_config_page_runs_past_wait() {
         let directory = std::env::var_os("NEKO_CONFIG_TEST_DAT").unwrap();
-        let files = std::fs::read_dir(directory).unwrap().map(|entry| entry.unwrap().path())
-            .filter(|path| matches!(path.file_name().and_then(|name| name.to_str()),
-                Some("actor.dat" | "image.dat" | "script.dat" | "sound.dat" | "system.dat" | "voice.dat")))
-            .map(|path| std::fs::File::open(path).unwrap()).collect::<Vec<_>>();
+        let files = std::fs::read_dir(directory)
+            .unwrap()
+            .map(|entry| entry.unwrap().path())
+            .filter(|path| {
+                matches!(
+                    path.file_name().and_then(|name| name.to_str()),
+                    Some(
+                        "actor.dat"
+                            | "image.dat"
+                            | "script.dat"
+                            | "sound.dat"
+                            | "system.dat"
+                            | "voice.dat"
+                    )
+                )
+            })
+            .map(|path| std::fs::File::open(path).unwrap())
+            .collect::<Vec<_>>();
         let mut store = DatGame::mount(files).unwrap();
-        let (_, mut vm) = crate::bootstrap_begin(&mut store, 1, &mut std::io::sink(), true).unwrap();
+        let (_, mut vm) =
+            crate::bootstrap_begin(&mut store, 1, &mut std::io::sink(), true).unwrap();
         let mut settings = Settings::open(&mut store, &mut vm, 1).unwrap();
         let original = preferences::values(&mut vm).unwrap()["SkipNoRead"];
         let image = &settings.images[&format!("= SkipNoRead#{}", 1 - original)];
         let [x, y] = settings.position(image);
-        let [x, y] = [x + image.pixels.width() as i32 / 2, y + image.pixels.height() as i32 / 2];
+        let [x, y] = [
+            x + image.pixels.width() as i32 / 2,
+            y + image.pixels.height() as i32 / 2,
+        ];
         settings.script_input(&mut store, &mut vm, 0, x, y).unwrap();
         settings.script_input(&mut store, &mut vm, 2, x, y).unwrap();
-        assert_eq!(preferences::values(&mut vm).unwrap()["SkipNoRead"], 1 - original);
+        assert_eq!(
+            preferences::values(&mut vm).unwrap()["SkipNoRead"],
+            1 - original
+        );
         if settings.scroll.is_some() {
             settings.script_command(&mut store, &mut vm, 1).unwrap();
             let view = settings.script_view.as_ref().unwrap();
-            let [x, y, w, h] = view.buttons.iter().find(|(name, _)| name.eq_ignore_ascii_case("cancel"))
-                .unwrap_or_else(|| panic!("confirmation frame buttons: {:?}", view.buttons)).1;
+            let [x, y, w, h] = view
+                .buttons
+                .iter()
+                .find(|(name, _)| name.eq_ignore_ascii_case("cancel"))
+                .unwrap_or_else(|| panic!("confirmation frame buttons: {:?}", view.buttons))
+                .1;
             let (x, y) = (x + w / 2, y + h / 2);
             settings.script_input(&mut store, &mut vm, 0, x, y).unwrap();
             settings.script_input(&mut store, &mut vm, 2, x, y).unwrap();
-            assert_eq!(preferences::values(&mut vm).unwrap()["SkipNoRead"], 1 - original);
+            assert_eq!(
+                preferences::values(&mut vm).unwrap()["SkipNoRead"],
+                1 - original
+            );
         } else {
             let image = &settings.images["= PAGE++"];
             let [x, y] = settings.position(image);
-            let (x, y) = (x + image.pixels.width() as i32 / 2, y + image.pixels.height() as i32 / 2);
+            let (x, y) = (
+                x + image.pixels.width() as i32 / 2,
+                y + image.pixels.height() as i32 / 2,
+            );
             settings.script_input(&mut store, &mut vm, 0, x, y).unwrap();
             settings.script_input(&mut store, &mut vm, 2, x, y).unwrap();
             assert_eq!(settings.page, 2);
             let bold = preferences::values(&mut vm).unwrap()["Bold"];
             let image = &settings.images[&format!("= BOLD#{}", 1 - bold)];
             let [x, y] = settings.position(image);
-            let (x, y) = (x + image.pixels.width() as i32 / 2, y + image.pixels.height() as i32 / 2);
+            let (x, y) = (
+                x + image.pixels.width() as i32 / 2,
+                y + image.pixels.height() as i32 / 2,
+            );
             settings.script_input(&mut store, &mut vm, 0, x, y).unwrap();
             settings.script_input(&mut store, &mut vm, 2, x, y).unwrap();
             assert_eq!(preferences::values(&mut vm).unwrap()["Bold"], 1 - bold);
@@ -798,9 +922,14 @@ mod tests {
     #[test]
     fn original_setup_selects_bindings_and_restores_the_host() {
         let mut vm = SystemVm::try_new().unwrap();
-        vm.eval("config-bindings-host", include_str!("../host/config_bindings.nut"))
-            .unwrap();
-        vm.eval("config-bindings-fixture", r#"
+        vm.eval(
+            "config-bindings-host",
+            include_str!("../host/config_bindings.nut"),
+        )
+        .unwrap();
+        vm.eval(
+            "config-bindings-fixture",
+            r#"
 function wait(time) { return 42 }
 function ViewConfigPage(page) {
     local gui = GUI()
@@ -811,7 +940,9 @@ function ViewConfigPage(page) {
     throw "unexpected event loop entry"
 }
 return ConfigPageBindings(2) + wait(0).tostring()
-"#).unwrap();
+"#,
+        )
+        .unwrap();
         assert_eq!(vm.result(), "Bold\t2\n42");
     }
 
@@ -872,7 +1003,7 @@ return ConfigPageBindings(2) + wait(0).tostring()
             script_view: None,
         };
         let mut vm = SystemVm::try_new().unwrap();
-        vm.eval("setup","Config <- {VolSYS=40,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();
+        vm.eval("setup","Config <- {VolBGM=50,VolVO=50,VolSE=50,VolENV=50,VolSYS=40,VoiceCheck={},ShortCuts=[\"CONFIG\",\"MENU\",\"RESET\",\"QUIT\",\"SAVE\",\"LOAD\",\"QSAVE\",\"QLOAD\",\"LOG\",\"HIDE\",\"AUTO\",\"SKIP\"]}").unwrap();
         page.pointer(&mut vm, 0, 5, 5).unwrap();
         assert_eq!(page.pointer(&mut vm, 2, 5, 5).unwrap(), (None, vec![]));
         assert_eq!(page.editing, Some(3));

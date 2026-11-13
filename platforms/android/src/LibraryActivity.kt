@@ -134,14 +134,16 @@ class LibraryActivity : Activity() {
         } ?: error("系统文件选择器无法读取目录")
     }
 
-    private fun datFiles(entries: List<Entry>) = entries.filter { !it.directory && it.name.endsWith(".dat", true) && !it.name.equals("unins000.dat", true) }
+    private fun datFiles(entries: List<Entry>) = entries.filter { !it.directory &&
+        (it.name.endsWith(".dat", true) || it.name.endsWith(".pk2", true)) && !it.name.equals("unins000.dat", true) }
 
     private fun inspectGame(game: Game, original: Boolean, candidate: Candidate? = null, entries: List<Entry>? = null): JSONObject {
         System.loadLibrary("nekopack_host")
         val descriptors = mutableListOf<ParcelFileDescriptor>()
         try {
             if (candidate != null) descriptors.add(ParcelFileDescriptor.open(candidate.file, ParcelFileDescriptor.MODE_READ_ONLY))
-            val archives = datFiles(entries ?: children(game.tree, game.id))
+            val available = entries ?: children(game.tree, game.id)
+            val archives = datFiles(available) + available.filter { !it.directory && it.name.endsWith(".exe", true) }
             for (entry in archives) {
                 try {
                     descriptors.add(contentResolver.openFileDescriptor(Docs.buildDocumentUriUsingTree(game.tree, entry.id), "r")

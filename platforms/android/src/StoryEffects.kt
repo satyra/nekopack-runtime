@@ -21,15 +21,30 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     private var bgmAnimator:ValueAnimator?=null
     private val gains=mutableMapOf<String,AudioGain>()
     private val categoryVolumes=mutableMapOf<String,Int>()
+    private val bgvVoiceTags=mutableMapOf<String,String>()
+    private val audioNames=mutableMapOf<String,String>()
     private var voiceDuck=false
+    private var voiceBgmPercent:Int?=null
+    private val voiceMusicGain=VoiceMusicGain()
+    private var voiceGainEpoch=0L
     private var masterGain=1f
+    private var musicCommandVolume=100
     fun configureAudio(config:JSONObject) {
         voiceDuck=config.optBoolean("voice_duck")
+        voiceBgmPercent=if(config.has("voice_bgm_percent"))config.getInt("voice_bgm_percent").also{check(it in 0..100)}else null
         masterGain=config.optInt("host_master",100)/100f
         for(kind in listOf("bgm","voice","se","env","system")){
             val percent=config.getInt(kind);check(percent in 0..100)
             categoryVolumes[kind]=percent
         }
+        if(config.has("bgv")){
+            val percent=config.getInt("bgv");check(percent in 0..100)
+            categoryVolumes["bgv1"]=percent;categoryVolumes["bgv2"]=percent
+        }
+        config.optJSONObject("bgv_voice_tags")?.let{tags->
+            for(kind in listOf("bgv1","bgv2"))bgvVoiceTags[kind]=tags.getString(kind)
+        }
+        updateVoiceGain()
         for(kind in gains.keys)applyGain(kind)
     }
     private val focusPaused=mutableSetOf<String>()
@@ -54,9 +69,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         if(old!=0L&&!motionFinished)motionLog("cancelled",old,0)
     }
     // Runs alongside the visible dialogue and voice; no host-effect ACK or script advancement.
-    fun runMotion(sequence:Long,duration:Long){
+    fun runMotion(sequence:Long,duration:Long,delayed:Boolean=false){
         stopMotion();motionSequence=sequence;motionFinished=false
-        if(!sceneEffects){
+        if(!sceneEffects&&!delayed){
             wipeFrame("motion",sequence,duration){value,finished->
                 if(isMotionActive(sequence)){
                     image.setImageBitmap(value);motionFinished=finished
@@ -88,12 +103,29 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
 
     private val audio=context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var focused=false
+    private fun voiceActive()=players["voice"]?.first?.isPlaying==true || (focusPaused.contains("voice")&&!pendingStart.containsKey("voice"))
+    private fun updateVoiceGain(){
+        val changed=voiceMusicGain.setActive(voiceDuck&&voiceActive(),audioTimeline.now())
+        if(gains.containsKey("bgm"))applyGain("bgm")
+        for(kind in listOf("bgv1","bgv2"))if(gains.containsKey(kind))applyGain(kind)
+        if(!changed)return
+        val epoch=++voiceGainEpoch
+        fun step(){
+            if(closed||epoch!=voiceGainEpoch)return
+            if(gains.containsKey("bgm"))applyGain("bgm")
+            if(voiceMusicGain.pending(audioTimeline.now()))audioTimeline.post(16){step()}
+        }
+        if(voiceMusicGain.pending(audioTimeline.now()))audioTimeline.post(16){step()}
+    }
     private fun applyGain(kind:String) {
         val gain=gains.getValue(kind)
-        gain.category=categoryVolumes.getValue(kind)/100f*masterGain
-        gain.duck=if(ducked || kind=="bgm" && voiceDuck && players["voice"]?.first?.isPlaying==true).2f else 1f
+        val suppressed=kind in bgvVoiceTags && voiceActive() && audioNames.getValue("voice").contains(bgvVoiceTags.getValue(kind))
+        val category=if(suppressed)0 else if(kind=="bgm"&&voiceActive())voiceBgmPercent ?: categoryVolumes.getValue(kind) else categoryVolumes.getValue(kind)
+        gain.category=category/100f*masterGain
+        gain.duck=if(ducked).2f else 1f
+        gain.voice=if(kind=="bgm")voiceMusicGain.value(audioTimeline.now())else 1f
         players.getValue(kind).first.setVolume(gain.output,gain.output)
-        if(diagnostics)File(root,"audio-gain-events.jsonl").appendText(JSONObject().put("kind",kind).put("token",audioTokens.getValue(kind)).put("category_percent",categoryVolumes.getValue(kind)).put("output",gain.output).put("fade",gain.fade).put("duck",gain.duck).put("player",System.identityHashCode(players.getValue(kind).first)).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
+        if(diagnostics)File(root,"audio-gain-events.jsonl").appendText(JSONObject().put("kind",kind).put("token",audioTokens.getValue(kind)).put("category_percent",categoryVolumes.getValue(kind)).put("output",gain.output).put("fade",gain.fade).put("duck",gain.duck).put("voice_gain",gain.voice).put("effective_category_percent",category).put("player",System.identityHashCode(players.getValue(kind).first)).put("time_ms",SystemClock.elapsedRealtime()).toString()+"\n")
     }
     private fun regainFocus() {
         if(audioPaused){focused=false;return}
@@ -110,6 +142,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
             focusPaused.remove(kind)
         }
         if(!storyAudioPaused)bgmAnimator?.resume()
+        updateVoiceGain()
     }
     private val focus=AudioManager.OnAudioFocusChangeListener { change->
         if(!closed) {
@@ -179,6 +212,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         if(focused){audio.abandonAudioFocus(focus);focused=false}
         log("stopped_all","movie",token,players.size.toLong())
     }
+    fun musicPlaying()=players["bgm"]?.first?.isPlaying==true || focusPaused.contains("bgm") || pendingStart.containsKey("bgm")
     internal fun audioSnapshot():JSONObject {
         val player=players.getValue("bgm").first
         return JSONObject().put("playing",player.isPlaying).put("position",player.currentPosition)
@@ -197,7 +231,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
         event.put("retained",player!=null && players["voice"]?.first===player).put("playing_after",players["voice"]?.first?.isPlaying ?: false)
         if(diagnostics)File(root,"voice-next-events.jsonl").appendText(event.toString()+"\n")
     }
-    private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"};if(kind=="voice"&&gains.containsKey("bgm"))applyGain("bgm")}}
+    private fun release(kind:String){if(kind=="bgm"){bgmAnimator?.cancel();bgmAnimator=null};focusPaused.remove(kind);pendingStart.remove(kind);audioTokens.remove(kind);audioNames.remove(kind);gains.remove(kind);players.remove(kind)?.let{(player,file)->player.release();check(file.delete()){"cannot delete audio cache"};if(kind=="voice")updateVoiceGain()}}
     internal fun cleanupState():JSONObject = JSONObject().put("closed",closed).put("players",players.size)
         .put("pending_start",pendingStart.size).put("paused_players",focusPaused.size).put("gains",gains.size).put("tokens",audioTokens.size)
         .put("focused",focused).put("motion_active",motionSequence!=0L).put("animator",animator!=null).put("bgm_animator",bgmAnimator!=null)
@@ -213,7 +247,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
     fun close(){
         if(closed)return
         stopMotion();closed=true;timeline.close();animator?.cancel();animator=null;bgmAnimator?.cancel();bgmAnimator=null
-        val owned=players.values.toList();players.clear();gains.clear();focusPaused.clear();pendingStart.clear();audioTokens.clear()
+        val owned=players.values.toList();players.clear();audioNames.clear();gains.clear();focusPaused.clear();pendingStart.clear();audioTokens.clear()
         for((player,_) in owned)player.release()
         if(focused)audio.abandonAudioFocus(focus)
         focused=false
@@ -270,12 +304,33 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                         frame()
                     }
                 }
-                "env_stop","se_stop"->{
+                "reset"->{
+                    animator?.cancel();animator=null
+                    bgmAnimator?.cancel();bgmAnimator=null
+                    for(channel in players.keys.toList())release(channel)
+                    image.setImageDrawable(null);overlay.setImageDrawable(null)
+                    image.translationX=0f;image.translationY=0f
+                    overlay.translationX=0f;overlay.translationY=0f;overlay.alpha=0f
+                    log("reset","all",token,players.size.toLong())
+                    done()
+                }
+                "bgv_stop"->{
+                    release("bgv1");release("bgv2")
+                    log("stopped",kind,token)
+                    done()
+                }
+                "env_stop","se_stop","bgv1_stop","bgv2_stop"->{
                     val channel=kind.removeSuffix("_stop")
                     release(channel)
                     log("stopped",kind,token,if(players.containsKey(channel))1 else 0)
                     players["bgm"]?.first?.let{if(it.isPlaying)log("peer_playing","bgm",token,it.currentPosition.toLong())}
                     done()
+                }
+                "bgm_volume"->{
+                    val percent=meta.getInt("volume_percent");check(percent in 0..100)
+                    musicCommandVolume=percent
+                    gains["bgm"]?.let{it.command=percent/100f;applyGain("bgm")}
+                    log("command_volume","bgm",token,percent.toLong());done()
                 }
                 "bgm_stop"->{
                     release("bgm")
@@ -352,11 +407,13 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                     }})
                     animation.start()
                 }
-                "bgm","env","se","voice","system"->{
+                "bgm","env","se","voice","system","bgv1","bgv2"->{
                     check(file!=null)
+                    if(kind=="bgm")musicCommandVolume=meta.getInt("volume_percent")
                     if(meta.optBoolean("ui_audio"))categoryVolumes.getOrPut(kind){meta.getInt("category_percent")}
                     if(!focused&&!channelPaused(kind)){check(audio.requestAudioFocus(focus,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)==AudioManager.AUDIOFOCUS_REQUEST_GRANTED){"audio focus denied"};regainFocus()}
                     release(kind)
+                    audioNames[kind]=meta.getString("name")
                     val player=ChannelPlayer(shortClip);players[kind]=player to file
                     player.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(if(kind=="voice")AudioAttributes.CONTENT_TYPE_SPEECH else AudioAttributes.CONTENT_TYPE_MUSIC).build())
                     player.setDataSource(file.absolutePath)
@@ -365,9 +422,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                             try{
                                 audioTokens[kind]=token
                                 if(player.pcmFrames!=null){log("pcm_frames",kind,token,player.pcmFrames!!.toLong());log("pcm_rate",kind,token,player.pcmRate!!.toLong())}
-                                if(kind=="bgm" || kind=="env" || kind=="se"){
+                                if(kind in listOf("bgm","env","se","bgv1","bgv2")){
                                     it.isLooping=meta.getBoolean("loop")
-                                    val percent=meta.getInt("volume_percent")
+                                    val percent=if(kind=="bgm")musicCommandVolume else meta.getInt("volume_percent")
                                     val gain=AudioGain(percent/100f);gains[kind]=gain
                                     if(kind=="bgm" && duration>0)gain.fade=0f
                                     it.setVolume(gain.output,gain.output);log("gain",kind,token,percent.toLong())
@@ -377,7 +434,7 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                     if(meta.optBoolean("ui_audio"))categoryVolumes[kind]=meta.getInt("category_percent")
                                     applyGain(kind)
                                     it.start();val playbackStarted=SystemClock.elapsedRealtime();check(it.isPlaying){"audio did not start"};log("playing",kind,token,it.duration.toLong(),playbackStarted)
-                                    if(kind=="voice"&&gains.containsKey("bgm"))applyGain("bgm")
+                                    if(kind=="voice")updateVoiceGain()
                                     if(kind=="bgm" && duration>0){
                                         val gain=gains.getValue(kind)
                                         val ramp=ValueAnimator.ofFloat(0f,1f)
@@ -394,11 +451,11 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                 }
                                 if(focusSuspended||channelPaused(kind)){applyGain(kind);focusPaused.add(kind);pendingStart[kind]={startAudio()};log("focus_pending",kind,token)}
                                 else startAudio()
-                                if(kind=="env" || kind=="se"){
+                                if(kind in listOf("bgm","env","se","bgv1","bgv2")){
                                     log("looping",kind,token,if(it.isLooping)1 else 0)
                                     players["bgm"]?.first?.let{peer->if(peer.isPlaying)log("peer_playing","bgm",token,peer.currentPosition.toLong())}
                                 }
-                                val sampleDelay=if(kind=="env" || (kind=="se"&&player.isLooping))200L else 50L
+                                val sampleDelay=if(kind in listOf("bgm","env","bgv1","bgv2") || (kind=="se"&&player.isLooping))200L else 50L
                                 val progress=object:Runnable {
                                     private var samples=0
                                     private var previousPosition=-1L
@@ -408,9 +465,9 @@ class StoryEffects(private val context:Context,private val image:ImageView,priva
                                         val position=player.currentPosition.toLong();samples++
                                         player.playbackHead?.let{head->log("pcm_head",kind,token,head)}
                                         log("progress",kind,token,position)
-                                        if((kind=="env" || kind=="se") && position<previousPosition)log("looped",kind,token,position)
+                                        if(kind in listOf("bgm","env","se","bgv1","bgv2") && position<previousPosition)log("looped",kind,token,position)
                                         previousPosition=position
-                                        if(kind=="env" || (kind=="se" && player.isLooping) || (position==0L&&samples*sampleDelay<5000))audioTimeline.post(sampleDelay){run()}
+                                        if((diagnostics && (kind in listOf("bgm","env","bgv1","bgv2") || (kind=="se" && player.isLooping))) || (position==0L&&samples*sampleDelay<5000))audioTimeline.post(sampleDelay){run()}
                                     }
                                 };audioTimeline.post(sampleDelay){progress.run()}}
                             catch(error:Throwable){failure(error)}

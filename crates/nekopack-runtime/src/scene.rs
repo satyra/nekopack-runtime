@@ -1,4 +1,7 @@
 //! Observed Tiny Dungeon layer profile; unverified actor modifiers remain rejected.
+mod composite;
+pub(crate) use composite::read_visual;
+
 use crate::quote;
 use nekopack_image::RgbaImage;
 use std::collections::BTreeMap;
@@ -54,6 +57,38 @@ mod tests {
             .pixels()
             .to_vec()
     }
+    #[test]
+    fn transparent_visual_blends_over_retained_background_and_actors() {
+        let mut scene = Scene::new([1, 1]);
+        scene.background_color = Some([0, 0, 200, 255]);
+        scene
+            .set_visual(
+                "#Synthetic&0000".into(),
+                RgbaImage::filled(1, 1, [200, 0, 0, 128], 4).unwrap(),
+            )
+            .unwrap();
+        assert_eq!(pixel(&mut scene), [100, 0, 100, 255]);
+        scene.put(layer(1, [0, 200, 0, 255]), Order::Front).unwrap();
+        assert_eq!(pixel(&mut scene), [100, 100, 0, 255]);
+        let mut writer = nekopack_script::checkpoint::Writer::default();
+        scene.save(&mut writer).unwrap();
+        let mut reader = nekopack_script::checkpoint::Reader::new(&writer.0).unwrap();
+        let mut restored = Scene::load(&mut reader, [1, 1]).unwrap();
+        reader.finish().unwrap();
+        assert_eq!(
+            restored.visual.as_ref().unwrap().1.pixels(),
+            &[200, 0, 0, 128]
+        );
+        assert_eq!(pixel(&mut restored), [100, 100, 0, 255]);
+        restored
+            .set_visual(
+                "transparent".into(),
+                RgbaImage::transparent(1, 1, 4).unwrap(),
+            )
+            .unwrap();
+        assert_eq!(pixel(&mut restored), [0, 200, 0, 255]);
+    }
+
     #[test]
     fn opaque_visual_taller_than_the_canvas_is_clipped() {
         let mut scene = Scene::new([1, 1]);
@@ -543,16 +578,8 @@ impl Scene {
         Ok(())
     }
     pub fn set_visual(&mut self, name: String, image: RgbaImage) -> Result<(), String> {
-        if image.width() < self.dimensions[0]
-            || image.height() < self.dimensions[1]
-            || image
-                .pixels()
-                .as_chunks::<4>()
-                .0
-                .iter()
-                .any(|p| p[3] != 255)
-        {
-            return Err("unsupported visual size or transparency".into());
+        if image.width() < self.dimensions[0] || image.height() < self.dimensions[1] {
+            return Err("unsupported visual size".into());
         }
         let old = self.visual.as_ref().map_or(0, |(_, i)| i.pixels().len());
         if self.bytes() - old + image.pixels().len() > RETAINED_BUDGET {
@@ -598,10 +625,22 @@ impl Scene {
         canvas.write_png(&mut png)?;
         Ok(png)
     }
+    pub(crate) fn commit_filters(&mut self) {
+        if self.overlay.is_none() {
+            for layer in &mut self.actors {
+                if layer.filter_pending {
+                    self.filter.apply(&mut layer.image);
+                    layer.filter = self.filter;
+                    layer.filter_pending = false;
+                }
+            }
+        }
+    }
     pub fn render_pixels(
         &mut self,
         positions: &[(u8, [i32; 2])],
     ) -> Result<RgbaImage, Box<dyn std::error::Error>> {
+        self.commit_filters();
         let mut canvas = RgbaImage::filled(
             self.dimensions[0],
             self.dimensions[1],
@@ -625,11 +664,6 @@ impl Scene {
                 }
             }
             for l in &mut self.actors {
-                if l.filter_pending {
-                    self.filter.apply(&mut l.image);
-                    l.filter = self.filter;
-                    l.filter_pending = false;
-                }
                 let anchor = positions
                     .iter()
                     .find(|(slot, _)| *slot == l.slot)

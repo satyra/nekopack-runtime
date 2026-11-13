@@ -37,6 +37,8 @@ class MainActivity : Activity() {
     private val storyPointer by lazy { StoryPointer(48f * resources.displayMetrics.density) }
     private var storyInputArea: ((android.view.MotionEvent) -> Boolean)? = null
     private var storyInputAction: ((StoryAction) -> Unit)? = null
+    private var systemCommandPresentation:SystemCommandPresentation?=null
+    private var systemCommandTouch:((android.view.MotionEvent)->Boolean)?=null
     private var storySpace: ((Boolean) -> Boolean)? = null
     private var rightMouseAction = StoryAction.HIDE
     private var roomBack: (() -> Boolean)? = null
@@ -68,7 +70,7 @@ class MainActivity : Activity() {
             startStory(Uri.parse(saved), intent.getIntExtra("title_game", 0), true)
             return
         }
-        if(intent.hasExtra("movie_probe_game")){
+        if(intent.hasExtra("movie_probe_game") || intent.hasExtra("movie_probe_name")){
             val saved=getPreferences(MODE_PRIVATE).getString("dat_tree",null) ?: error("select DAT tree through SAF first")
             val game=intent.getIntExtra("movie_probe_game",0);require(game in 0..3)
             val runId=intent.getStringExtra("run_id") ?: "movie-manual";require(Regex("[a-zA-Z0-9_-]{1,64}").matches(runId))
@@ -76,10 +78,12 @@ class MainActivity : Activity() {
             val stage=FrameLayout(this);setContentView(stage)
             val tree=Uri.parse(saved);val top=children(tree,DocumentsContract.getTreeDocumentId(tree))
             val items=if(top.any{it.first.endsWith(".dat",true)})top else children(tree,DocumentsContract.getDocumentId(top.single{it.first==game.toString()}.second))
-            val uri=items.single{it.first.equals("op.mpg",true)}.second
+            val movieName=intent.getStringExtra("movie_probe_name") ?: "op.mpg"
+            require(movieName.isNotEmpty() && !movieName.contains('/') && !movieName.contains('\\'))
+            val uri=items.single{it.first.equals(movieName,true)}.second
             System.loadLibrary("nekopack_host")
             lifecycleFailure={error->File(root,"error.txt").writeText(error.toString());movieHost?.close()}
-            movieHost=MovieHost(this,stage,root)
+            movieHost=MovieHost(this,stage,root,true)
             movieHost!!.start(uri,1,intent.getBooleanExtra("movie_left_skip",false),{reason->File(root,"movie-complete.json").writeText(JSONObject().put("reason",reason).toString());val text=TextView(this);text.text="视频验证完成";setContentView(text)},{error->File(root,"error.txt").writeText(error.toString())})
             return
         }
@@ -170,7 +174,7 @@ class MainActivity : Activity() {
                     val opened=mutableListOf<ParcelFileDescriptor>()
                     try {
                         val archives=items.filter{it.first.endsWith(".dat",true)}.sortedBy{it.first}
-                        require(archives.isNotEmpty()){"no DAT archives in $name"}
+                    require(archives.isNotEmpty()){"no DAT archives in $name"}
                         for((_,uri) in archives)opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("provider returned no descriptor"))
                         for(choice in listOf(1,999)) {
                             val output=String(runDat(opened.map{it.fd}.toIntArray(),choice),Charsets.UTF_8)
@@ -262,7 +266,6 @@ class MainActivity : Activity() {
         val worker=Executors.newSingleThreadExecutor();storyWorker=worker
         val preferenceKey="runtime_config_v1_${gameLocation}_$game"
         fun persistConfig(){
-            if(!titleFirst)return
             val bytes=story(intArrayOf(),20,0)
             check(bytes.size>=5 && bytes.copyOfRange(0,4).contentEquals(byteArrayOf(78,75,67,70))){String(bytes,Charsets.UTF_8)}
             val encoded=android.util.Base64.encodeToString(bytes,android.util.Base64.NO_WRAP)
@@ -272,6 +275,8 @@ class MainActivity : Activity() {
             }
         }
         var replaying=false
+        val nestedReplayCallers=java.util.ArrayDeque<Pair<Long,Boolean>>()
+        var lastNativeChildReturn=0L
         val clearKey="runtime_clear_${gameLocation}_${game}"
         val probeSuffix=intent.getStringExtra("read_history_probe").let{if(it==null)"" else "_probe_$it"}
         val readKey="runtime_read_v1_${gameLocation}_${game}"+probeSuffix
@@ -300,9 +305,13 @@ class MainActivity : Activity() {
         var selectedFiles:List<Pair<String,Uri>> = emptyList()
 
         lateinit var show:(ByteArray)->Unit
+        lateinit var closeOriginalGame:()->Unit
         lateinit var dialogue:DialoguePresentation
         var systemEffects = false
         var confirmActions = false
+        var actionConfirmations:JSONObject? = null
+        // Original ViewDialog skips only an explicitly disabled table entry.
+        fun confirmAction(name:String) = actionConfirmations?.optBoolean(name,true) ?: confirmActions
         var refreshShortcutIcons: () -> Unit = {}
         fun applyPresentation(config:JSONObject) {
             val mode = config.optInt("Screen")
@@ -315,7 +324,8 @@ class MainActivity : Activity() {
             overlay.scaleType=scale
             dialogueView.screenMode=mode
             systemEffects=config.optInt("SysEffect",0)!=0
-            confirmActions=config.optInt("Dialog",0)!=0
+            actionConfirmations=config.optJSONObject("Dialog")
+            confirmActions=actionConfirmations==null && config.optInt("Dialog",0)!=0
             storyEffects?.sceneEffects=config.optInt("Effect",1)!=0
             if(diagnostics)File(root,"presentation-events.jsonl").appendText(
                 JSONObject().put("event","applied").put("screen",mode).put("scene_scale",scale.name)
@@ -367,9 +377,11 @@ class MainActivity : Activity() {
             }}}
         }
         var audioConfig:JSONObject?=null
+        var lastStoryAudioConfig:ByteArray?=null
         fun applyAudioConfig(bytes:ByteArray,scheduler:SessionTimeline=timeline) {
             persistConfig()
             val config=JSONObject(String(bytes,Charsets.UTF_8));check(!config.has("error")){config.optString("error")}
+            lastStoryAudioConfig=bytes.copyOf()
             if(volumeOverride>=0)config.put("host_master",volumeOverride)
             runOnUiThread{scheduler.post{if(!storyClosing){
                 storyEffects!!.configureAudio(config);audioConfig=config;settings.isEnabled=true
@@ -377,12 +389,22 @@ class MainActivity : Activity() {
             }}}
         }
         fun fail(error:Throwable) {
-            storyClosing=true
+            if(storyClosing)return
+            storyClosing=true;systemCommandPresentation?.finish()
             File(root,"error.txt").writeText(error.stackTraceToString())
             if(storyLoaded)story(intArrayOf(),3,0)
             runOnUiThread{movieHost?.close();storyEffects?.close();if(!isDestroyed){text.visibility=android.view.View.VISIBLE;text.text="无法继续：${error.message}";next.isEnabled=false}}
         }
         lifecycleFailure={error->worker.execute{fail(error)}}
+        val commandPresentation=SystemCommandPresentation(timeline,{bitmap->image.setImageBitmap(bitmap)}){token,elapsed,event->
+            val musicPlaying=storyEffects?.musicPlaying()==true
+            worker.execute{try{if(!storyClosing){
+                val feedback=JSONObject(String(story(intArrayOf(if(musicPlaying)1 else 0),81,token),Charsets.UTF_8))
+                check(feedback.optBoolean("updated")){feedback.toString()}
+                show(story(event,75,token,elapsed))
+            }}catch(error:Throwable){fail(error)}}
+        }
+        systemCommandPresentation=commandPresentation
         dialogue=DialoguePresentation(dialogueView,timeline,root,traceDialogue,{op,token,elapsed,painted,done->
             val frameOp=if(storyEffects!!.voiceFinished())op+16 else op
             worker.execute{try{if(!storyClosing){
@@ -394,12 +416,13 @@ class MainActivity : Activity() {
                     check(getPreferences(MODE_PRIVATE).edit().putString(readKey,android.util.Base64.encodeToString(history,android.util.Base64.NO_WRAP)).commit()){"read history save failed"}
                 }
                 val visible=state.getLong("visible")
-                val (bitmap,geometry)=if((advancing&&!legacyControls)||visible==painted){
+                val (bitmap,geometry)=if((advancing&&!legacyControls)||(visible==painted&&!state.optBoolean("message_animating"))){
                     null to JSONObject()
                 }else{
                     val frame=story(intArrayOf(),16,token,if(legacyControls)0 else 1)
                     val split=frame.indexOf(10.toByte());check(split>=0){String(frame,Charsets.UTF_8)}
                     val geometry=JSONObject(String(frame,0,split,Charsets.UTF_8))
+                    if(traceDialogue)File(root,"dialogue-$token.json").writeText(geometry.toString())
                     val bitmap=if(legacyControls){
                         val png=frame.copyOfRange(split+1,frame.size)
                         File(root,"dialogue-$token.json").writeText(geometry.toString())
@@ -505,7 +528,9 @@ class MainActivity : Activity() {
         var uiAudioToken=-1000L
         fun playUiAudio(packet:ByteArray,afterStartVolume:Int?=null){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
-            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()};val token=--uiAudioToken
+            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()}
+            if(meta.optBoolean("audio_unavailable"))return
+            val token=--uiAudioToken
             meta.put("token",token).put("ui_audio",true)
             if(afterStartVolume!=null)meta.put("restore_category_percent",afterStartVolume)
             val bytes=packet.copyOfRange(split+1,packet.size);val file=File(root,"audio-$token.ogg");file.writeBytes(bytes)
@@ -517,8 +542,35 @@ class MainActivity : Activity() {
                 storyEffects!!.run(meta,null,file,clip){File(root,"ui-audio-events.jsonl").appendText(meta.toString()+"\n")}
             }}}
         }
+        fun playOriginalRoomAudio(packet:ByteArray){
+            val split=packet.indexOf(10.toByte());check(split>=0)
+            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()}
+            val token=--uiAudioToken;meta.put("token",token).put("ui_audio",true)
+            val kind=meta.getString("host_effect")
+            val file=if(kind=="bgm")File(root,"audio-$token.ogg").also{it.writeBytes(packet.copyOfRange(split+1,packet.size))}else null
+            if(traceDialogue){
+                if(file!=null)meta.put("sha256",java.security.MessageDigest.getInstance("SHA-256").digest(file.readBytes()).joinToString(""){"%02x".format(it.toInt() and 255)})
+                File(root,"room-native-audio.jsonl").appendText(meta.toString()+"\n")
+            }
+            runOnUiThread{timeline.post(cancel={file?.delete()}){if(storyClosing){file?.delete()}else{
+                storyEffects!!.run(meta,null,file,null){if(traceDialogue)File(root,"room-native-audio-complete.jsonl").appendText(meta.toString()+"\n")}
+            }}}
+        }
+        var lastMenuAudioConfig=""
         fun playSystemSounds(meta:JSONObject){
-            val volume=if(meta.optString("kind")=="settings")meta.getJSONObject("config").getInt("VolSYS")else null
+            val config=meta.optJSONObject("audio_config")
+            val volume=config?.getInt("system")
+            if(config!=null){
+                if(volumeOverride>=0)config.put("host_master",volumeOverride)
+                val encoded=config.toString()
+                if(encoded!=lastMenuAudioConfig){
+                    lastMenuAudioConfig=encoded
+                    runOnUiThread{menuTimeline.post{if(!storyClosing){
+                        storyEffects!!.configureAudio(config)
+                        File(root,"audio-config-events.jsonl").appendText(encoded+"\n")
+                    }}}
+                }
+            }
             val cues=meta.optJSONArray("system_sounds")
             if(cues==null||cues.length()==0){
                 if(volume!=null)runOnUiThread{menuTimeline.post{if(!storyClosing)storyEffects!!.configureCategory("system",volume)}}
@@ -527,6 +579,20 @@ class MainActivity : Activity() {
             for(i in 0 until cues.length()){
                 val cue=cues.getJSONObject(i)
                 playUiAudio(story(intArrayOf(cue.getInt("category_percent")),56,cue.getLong("id")),volume)
+            }
+        }
+        fun playRoomMusic(packet:ByteArray){
+            val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
+            val meta=JSONObject(String(packet,0,split,Charsets.UTF_8))
+            check(!meta.has("error")){meta.toString()}
+            if(meta.getString("host_effect")=="bgm"){
+                playUiAudio(packet)
+            }else{
+                check(split==packet.size-1){"unexpected room music control payload"}
+                meta.put("token",--uiAudioToken).put("ui_audio",true)
+                runOnUiThread{menuTimeline.post{if(!storyClosing){
+                    storyEffects!!.run(meta,null,null){File(root,"room-music-events.jsonl").appendText(meta.toString()+"\n")}
+                }}}
             }
         }
         fun openLog(){
@@ -573,11 +639,12 @@ class MainActivity : Activity() {
             check(directory.isDirectory||directory.mkdirs())
             return directory
         }
+        lateinit var titleView:TitleView
         lateinit var returnTitleFromSave:(ByteArray)->Unit
         lateinit var enterLoadedStory:(ByteArray)->Unit
         fun openSaveSlots(initialSave:Boolean,fromTitle:Boolean=false,quick:Boolean=false,resume:Int=0,confirmed:Boolean=false){
-            if(quick&&!initialSave&&confirmActions&&!confirmed){
-                confirmOriginal("读取快捷存档？"){openSaveSlots(initialSave,fromTitle,quick,resume,true)}
+            if(quick&&(!initialSave||actionConfirmations!=null)&&confirmAction(if(initialSave)"QSAVE" else "QLOAD")&&!confirmed){
+                confirmOriginal(if(initialSave)"保存快捷存档？" else "读取快捷存档？",true){openSaveSlots(initialSave,fromTitle,quick,resume,true)}
                 return
             }
             if(replaying){
@@ -585,11 +652,12 @@ class MainActivity : Activity() {
                 return
             }
             storySaveOpen=true
-            if(!fromTitle)dialogue.suspend()
+            if(fromTitle)titleView.accepting=false else dialogue.suspend()
             timeline.pause();controls.visibility=android.view.View.GONE
             val directory=saveDirectory()
             val quickSlots=QuickSlots(directory)
             var saving=initialSave;var page=0;var busy=true
+            var visibleSlotIds=emptyList<Int>()
             val cached=mutableMapOf<Int,Pair<Long,Long>>()
             lateinit var view:TitleView
             lateinit var present:(ByteArray,Boolean)->Unit
@@ -608,7 +676,7 @@ class MainActivity : Activity() {
                 runOnUiThread{menuTimeline.post{if(!storyClosing){busy=false;view.accepting=true;publish("error",0,JSONObject().put("message",error.message));android.widget.Toast.makeText(this,"存读档失败：${error.message}",android.widget.Toast.LENGTH_LONG).show()}}}
             }
             fun refresh():ByteArray {
-                for(id in page*10+1..page*10+10){
+                for(id in visibleSlotIds){
                     val file=slotFile(id);val signature=(file?.lastModified() ?: 0L) to (file?.length() ?: 0L)
                     if(cached[id]!=signature){
                         val bytes=if(file!=null && file.isFile){
@@ -629,7 +697,7 @@ class MainActivity : Activity() {
             fun operate(id:Int){
                 busy=true;view.accepting=false;val saveMode=saving
                 worker.execute{try{
-                    playUiAudio(story(intArrayOf(),54,0))
+                    playUiAudio(story(intArrayOf(),54,if(quick){if(saveMode)0L else 1L}else{if(saveMode)2L else 3L}))
                     val result=if(saveMode){
                         var state=JSONObject()
                         fun export(file:File){
@@ -662,6 +730,7 @@ class MainActivity : Activity() {
                 val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
                 val meta=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!meta.has("error")){meta.toString()}
                 saving=meta.getBoolean("saving");page=meta.getInt("page")
+                val ids=meta.getJSONArray("slot_ids");visibleSlotIds=(0 until ids.length()).map{ids.getInt(it)}
                 if(meta.getBoolean("refresh")){present(refresh(),unlock)}else{
                     val png=packet.copyOfRange(split+1,packet.size);val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid save UI bitmap")
                     if(diagnostics)File(root,"save-ui.png").writeBytes(png)
@@ -669,9 +738,10 @@ class MainActivity : Activity() {
                         presentSystem(view,bitmap,!view.hasFrame);if(unlock){busy=false;view.accepting=true}
                         val tmp=File(root,"save-ui-presented.tmp");tmp.writeText(meta.put("accepting",unlock).toString());check(tmp.renameTo(File(root,"save-ui-presented.json")))
                         val action=meta.getInt("action")
-                        when{action==-1->cancelSlots();action in 1..110->{
+                        when{action==-1->cancelSlots();action in visibleSlotIds->{
                                 busy=false;view.accepting=true
-                                confirmOriginal(if(saving)"保存到此存档？" else "读取此存档？"){operate(action)}
+                                val confirm=if(saving)confirmAction("OVERWRITE") && (actionConfirmations==null || slotFile(action)?.isFile==true) else confirmAction("LOAD")
+                                confirmOriginal(if(saving)"保存到此存档？" else "读取此存档？",confirm){operate(action)}
                             }}
                     }else bitmap.recycle()}}
                 }
@@ -703,9 +773,17 @@ class MainActivity : Activity() {
         lateinit var sideView:SideMenuView
         lateinit var shortcutReset: () -> Unit
         fun sideAvailable()=next.isEnabled&&!storyClosing&&!storySaveOpen&&!storyLogOpen&&!storyConfigOpen&&!menuOpen&&!dialogueHidden&&!autoEnabled&&!skipEnabled&&!timeline.paused
+        fun navigateShortcut(back:Boolean,token:Long){
+            next.isEnabled=false
+            dialogue.stop()
+            storyEffects!!.stopMotion()
+            storyEffects!!.stopVoice()
+            worker.execute{try{show(story(intArrayOf(),if(back)73 else 72,token))}catch(error:Throwable){fail(error)}}
+        }
         fun presentSide(packet:ByteArray,token:Long){
             val split=packet.indexOf(10.toByte());check(split>=0){String(packet,Charsets.UTF_8)}
             val meta=JSONObject(String(packet,0,split,Charsets.UTF_8))
+            check(!meta.has("error")){meta.getString("error")}
             val png=packet.copyOfRange(split+1,packet.size);val bitmap=BitmapFactory.decodeByteArray(png,0,png.size) ?: error("invalid side menu bitmap")
             if(diagnostics)File(root,"side-menu.png").writeBytes(png)
             runOnUiThread{timeline.post(cancel={bitmap.recycle()}){if(!storyClosing){
@@ -715,6 +793,8 @@ class MainActivity : Activity() {
                 if(action.isNotEmpty()&&sequence==token&&sideAvailable()){
                     sideView.collapse()
                     when(action){
+                        "NEXT"->confirmOriginal("跳到下一个选项？",confirmAction("NEXT")){navigateShortcut(false,token)}
+                        "BACK"->confirmOriginal("返回上一个选项？",confirmAction("BACK")){navigateShortcut(true,token)}
                         "QSAVE"->openSaveSlots(true,quick=true)
                         "QLOAD"->openSaveSlots(false,quick=true)
                         "SAVE"->openSaveSlots(true)
@@ -724,7 +804,7 @@ class MainActivity : Activity() {
                         "CONFIG"->originalSettings.performClick()
                         "LOG"->openLog()
                         "HIDE"->hide.performClick()
-                        "RESET"->confirmOriginal("返回标题？"){worker.execute{try{
+                        "RESET"->confirmOriginal("返回标题？",confirmAction("RESET")){worker.execute{try{
                             val reset=JSONObject(String(story(intArrayOf(),64,token),Charsets.UTF_8))
                             check(reset.optBoolean("reset")){reset.toString()}
                             runOnUiThread{timeline.post{if(!storyClosing)shortcutReset()}}
@@ -746,7 +826,7 @@ class MainActivity : Activity() {
         })
         stage.addView(sideView,FrameLayout.LayoutParams(-1,-1))
         fun returnToTitle(){
-            storyClosing=true;shortcutKey=null;storyMenuBack=null;hiddenBack=null;settingsBack=null
+            storyClosing=true;systemCommandPresentation?.finish();shortcutKey=null;storyMenuBack=null;hiddenBack=null;settingsBack=null
             controls.visibility=android.view.View.GONE;dialogue.stop();movieHost?.close()
             storyEffects!!.lifecycleAudio("return_title_before_close");storyEffects!!.close()
             val audioClosed=storyEffects!!.cleanupState()
@@ -805,7 +885,7 @@ class MainActivity : Activity() {
                         "LOG"->openLog()
                         "QSAVE"->openSaveSlots(true,quick=true)
                         "QLOAD"->openSaveSlots(false,quick=true)
-                        "RESET"->confirmOriginal("返回标题？",action=::returnToTitle)
+                        "RESET"->confirmOriginal("返回标题？",confirmAction("RESET"),action=::returnToTitle)
                         "QUIT"->close.performClick()
                         else->dialogue.resume()
                     }
@@ -855,13 +935,16 @@ class MainActivity : Activity() {
                             else if((action=="QSAVE"||action=="QLOAD")&&sequence==token){openSaveSlots(action=="QSAVE",quick=true);result.put("delivery","quick")}
                             else if((action=="SAVE"||action=="LOAD")&&sequence==token){openSaveSlots(action=="SAVE");result.put("delivery","slots")}
                             else if(action=="RESET"&&sequence==token){
-                                confirmOriginal("返回标题？"){worker.execute{try{
+                                confirmOriginal("返回标题？",confirmAction("RESET")){worker.execute{try{
                                     val reset=JSONObject(String(story(intArrayOf(),64,token),Charsets.UTF_8))
                                     check(reset.optBoolean("reset")){reset.toString()}
                                     runOnUiThread{timeline.post{if(!storyClosing)shortcutReset()}}
                                 }catch(error:Throwable){fail(error)}}}
                                 result.put("delivery","reset")
                             }
+                            else if(action=="NEXT"&&sequence==token){confirmOriginal("跳到下一个选项？",confirmAction("NEXT")){navigateShortcut(false,token)};result.put("delivery","next")}
+                            else if(action=="BACK"&&sequence==token){confirmOriginal("返回上一个选项？",confirmAction("BACK")){navigateShortcut(true,token)};result.put("delivery","back")}
+                            else if(action=="VOICE"&&sequence==token){worker.execute{try{playUiAudio(story(intArrayOf(),65,token))}catch(error:Throwable){fail(error)}};result.put("delivery","voice")}
                             else if(action=="LOG"&&sequence==token){openLog();result.put("delivery","log")}
                             else if(action=="QUIT"){close.performClick();result.put("delivery","quit")}
                             else result.put("delivery","busy")
@@ -896,15 +979,40 @@ class MainActivity : Activity() {
                 }
             }catch(error:Throwable){fail(error)}}
         },audioTimeline=menuTimeline,diagnostics=diagnostics){error->worker.execute{fail(error)}}
-        show={packet->
+        show=show@{packet->
             if(storyClosing) Unit else {
                 val split=packet.indexOf(10.toByte());check(split>=0)
                 val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8))
                 if(metadata.has("error"))File(root,"boundary.json").writeText(metadata.toString())
                 check(!metadata.has("error")){metadata.optString("error")}
+                if(metadata.optBoolean("native_child_return")){
+                    val returned=metadata.getLong("native_child_return_id")
+                    if(returned!=lastNativeChildReturn){
+                        val caller=nestedReplayCallers.removeLast()
+                        check(caller.first==metadata.getLong("native_child_return_token")){"native replay caller mismatch"}
+                        replaying=caller.second;lastNativeChildReturn=returned
+                    }
+                }
+                if(traceDialogue)metadata.put("platform_replaying",replaying)
+                val currentAudioConfig=story(intArrayOf(),9,0)
+                if(lastStoryAudioConfig?.contentEquals(currentAudioConfig)!=true)applyAudioConfig(currentAudioConfig)
                 persistUnlocks()
+                while(true){
+                    val sound=story(intArrayOf(),77,0)
+                    val boundary=sound.indexOf(10.toByte());check(boundary>=0)
+                    val soundMeta=JSONObject(String(sound,0,boundary,Charsets.UTF_8));check(!soundMeta.has("error")){soundMeta.toString()}
+                    if(soundMeta.optBoolean("empty"))break
+                    playUiAudio(sound)
+                }
+                while(true){
+                    val roomAudio=story(intArrayOf(),80,0);val boundary=roomAudio.indexOf(10.toByte());check(boundary>=0)
+                    val roomMeta=JSONObject(String(roomAudio,0,boundary,Charsets.UTF_8));check(!roomMeta.has("error")){roomMeta.toString()}
+                    if(roomMeta.optBoolean("empty"))break
+                    playOriginalRoomAudio(roomAudio)
+                }
                 if(diagnostics&&!routeReplay)check(packet.contentEquals(story(intArrayOf(),1,0))){"poll advanced story"}
                 val payload=packet.copyOfRange(split+1,packet.size)
+                if(metadata.optString("kind")!="system_command")runOnUiThread{timeline.post{commandPresentation.finish()}}
                 if(metadata.optString("kind")=="story_return_title") {
                     val checkpoint=metadata.getJSONObject("checkpoint")
                     File(root,"story-ending.json").writeText(checkpoint.toString())
@@ -917,12 +1025,48 @@ class MainActivity : Activity() {
                         check(getPreferences(MODE_PRIVATE).edit().putBoolean(clearKey,true).commit())
                     }
                     runOnUiThread{timeline.post{if(!storyClosing)returnToTitle()}}
+                }else if(metadata.optString("kind")=="system_exit") {
+                    check(metadata.getString("reason")=="original_quit")
+                    if(traceDialogue)File(root,"system-command-events.jsonl").appendText(metadata.toString()+"\n")
+                    runOnUiThread{timeline.post{if(!storyClosing)closeOriginalGame()}}
+                }else if(metadata.optString("kind")=="system_command") {
+                    if(metadata.optBoolean("load_catalog")){
+                        val directory=saveDirectory();val quick=QuickSlots(directory)
+                        val date=java.text.SimpleDateFormat("yyyy/MM/dd",java.util.Locale.ROOT)
+                        val time=java.text.SimpleDateFormat("H:mm",java.util.Locale.ROOT)
+                        for(id in (1..100).toList()+(101..110).toList()){
+                            val slot=if(id<=100)File(directory,"slot-%03d.nksv".format(id))else quick.slot(id-100)
+                            if(slot!=null && slot.isFile){
+                                val stamp=slot.lastModified();val fields="$stamp\t${date.format(java.util.Date(stamp))}\t${time.format(java.util.Date(stamp))}".toByteArray(Charsets.UTF_8)
+                                val result=ParcelFileDescriptor.open(slot,ParcelFileDescriptor.MODE_READ_ONLY).use{fd->JSONObject(String(story(intArrayOf(fd.fd)+fields.map{it.toInt() and 255}.toIntArray(),78,id.toLong()),Charsets.UTF_8))}
+                                check(result.optBoolean("registered")){result.toString()}
+                            }
+                        }
+                        val result=JSONObject(String(story(intArrayOf(),79,metadata.getLong("token")),Charsets.UTF_8));check(result.optBoolean("installed")){result.toString()}
+                    }
+                    if(metadata.optBoolean("room_replay")){
+                        if(traceDialogue)File(root,"system-command-events.jsonl").appendText(metadata.toString()+"\n")
+                        if(intent.getBooleanExtra("room_metadata_only",false)){
+                            runOnUiThread{timeline.post{commandPresentation.finish();next.isEnabled=false}}
+                        }else {
+                            nestedReplayCallers.addLast(metadata.getLong("token") to replaying);replaying=true
+                            show(story(intArrayOf(),82,metadata.getLong("token")))
+                        }
+                        return@show
+                    }
+                    if(metadata.optBoolean("save_config") || metadata.optBoolean("restore_screen"))applyTextConfig(story(intArrayOf(),13,0))
+                    val bitmap=if(metadata.getBoolean("has_frame"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid system command bitmap") else null
+                    if(traceDialogue)File(root,"system-command-events.jsonl").appendText(metadata.toString()+"\n")
+                    runOnUiThread{timeline.post(cancel={bitmap?.recycle()}){if(storyClosing){bitmap?.recycle()}else{
+                        dialogue.stop();next.isEnabled=false
+                        commandPresentation.accept(metadata,bitmap)
+                    }}}
                 }else if(metadata.has("host_effect")) {
                     val token=metadata.getLong("token");val kind=metadata.getString("host_effect")
                     if(diagnostics)File(root,"effect-$token.json").writeText(metadata.toString())
                     if(diagnostics&&kind in listOf("fade","wipe","shake","flash"))File(root,"effect-$token.png").writeBytes(payload)
                     val bitmap=if(kind in listOf("fade","wipe","shake","flash"))BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid fade bitmap") else null
-                    val file=if(kind in listOf("bgm","env","se","voice","staffroll"))File(root,"audio-$token.ogg").also{
+                    val file=if(kind in listOf("bgm","env","se","voice","staffroll","bgv1","bgv2"))File(root,"audio-$token.ogg").also{
                         it.writeBytes(payload)
                         if(diagnostics){
                         val digest=java.security.MessageDigest.getInstance("SHA-256").digest(payload).joinToString(""){b->"%02x".format(b.toInt() and 255)}
@@ -960,6 +1104,7 @@ class MainActivity : Activity() {
                                     }
                                     .setCancelable(false)
                                     .show()
+                                if(traceDialogue)File(root,"selection-presented.json").writeText(JSONObject(metadata.toString()).put("options_count",rows.length()).toString())
                                 if(metadata.optBoolean("focus_first")&&options.isNotEmpty()){
                                     choices.listView.requestFocus()
                                     choices.listView.setSelection(0)
@@ -990,7 +1135,7 @@ class MainActivity : Activity() {
                                 val quickVisibility=quickPanel.visibility
                                 controls.visibility=android.view.View.GONE
                                 quickPanel.visibility=android.view.View.GONE
-                                movieHost=MovieHost(this,stage,root)
+                                movieHost=MovieHost(this,stage,root,traceDialogue)
                                 movieHost!!.start(movieUri!!,token,metadata.getBoolean("movie_left_skip"),{reason->
                                     movieHost=null
                                     controls.visibility=controlsVisibility
@@ -1006,10 +1151,12 @@ class MainActivity : Activity() {
                     val token=metadata.getLong("sequence")
                     val bitmap=BitmapFactory.decodeByteArray(payload,0,payload.size) ?: error("invalid story bitmap")
                     if(traceDialogue)File(root,"page-$token.json").writeText(metadata.toString())
+                    loadSide()
                     if(diagnostics&&!routeReplay)File(root,"page-$token.png").writeBytes(payload)
                     runOnUiThread {timeline.post(cancel={bitmap.recycle()}){if(!isDestroyed&&!storyClosing){sequence=token;dialogue.show(token,metadata.getString("speaker"))
                         if(metadata.has("motion")){
-                            storyEffects!!.runMotion(token,metadata.getJSONObject("motion").getLong("duration_ms"))
+                            val motion=metadata.getJSONObject("motion")
+                            storyEffects!!.runMotion(token,motion.getLong("duration_ms"),motion.optBoolean("delayed"))
                         }else image.setImageBitmap(bitmap)
                         if(token==13L&&intent.getBooleanExtra("audio_state_probe",false)){
                             next.isEnabled=false
@@ -1044,7 +1191,6 @@ class MainActivity : Activity() {
         val configNotice=TextView(this);configNotice.text="已接通：文字/自动速度、跳过未读、粗体/边框、动态示例、透明度、音量、语音保留、快捷键编辑；快捷执行支持剧情菜单、设置、快捷存读、隐藏、自动、快进、退出。";configControls.addView(configNotice)
         val configButtons=LinearLayout(this);val configBack=Button(this);configBack.text="返回标题";val configReset=Button(this);configReset.text="所有设定初始化"
         configButtons.addView(configBack,LinearLayout.LayoutParams(0,-2,1f));configButtons.addView(configReset,LinearLayout.LayoutParams(0,-2,1f));configControls.addView(configButtons);if(legacyControls)layout.addView(configControls)
-        lateinit var titleView:TitleView
         lateinit var rooms:TitleRooms
         fun playReplay() {
             replaying=true
@@ -1067,7 +1213,7 @@ class MainActivity : Activity() {
             val metadata=JSONObject(String(packet,0,split,Charsets.UTF_8));check(!metadata.has("error")){metadata.optString("error")}
             val isSettings=metadata.optString("kind")=="settings"
             val dragFrame=isSettings&&metadata.has("bounds")
-            if(!dragFrame || (metadata.optJSONArray("system_sounds")?.length() ?: 0)>0)playSystemSounds(metadata)
+            if(isSettings || !dragFrame || (metadata.optJSONArray("system_sounds")?.length() ?: 0)>0)playSystemSounds(metadata)
             if(metadata.optString("kind")=="story_settings_closed"){
                 check(metadata.getLong("sequence")==sequence){"settings changed dialogue token"}
                 check(story(intArrayOf(),1,0).contentEquals(File(root,"settings-story-checkpoint.bin").readBytes())){"settings advanced the script"}
@@ -1111,11 +1257,12 @@ class MainActivity : Activity() {
                         presentSystem(titleView,bitmap,transition);if(unlock)titleView.accepting=true
                     }
                     val tickDelay=metadata.optLong("tick_ms")
-                    if(isSettings&&!dragFrame&&tickDelay>0&&!settingsTickPending){
+                    if((isSettings||metadata.optString("kind")=="title")&&!dragFrame&&tickDelay>0&&!settingsTickPending){
                         settingsTickPending=true
                         val scheduledAt=menuTimeline.now()
                         menuTimeline.post(tickDelay.coerceAtLeast(66)){
-                            if(!storyClosing&&titleView.accepting&&!titleView.isTracking&&configControls.visibility==android.view.View.VISIBLE){
+                            if(!storyClosing&&titleView.accepting&&!titleView.isTracking&&
+                                titleView.contentDescription==(if(isSettings)"原版设置页" else "游戏标题菜单")){
                                 val elapsed=menuTimeline.now()-scheduledAt
                                 worker.execute{try{
                                     val update=story(intArrayOf(),70,elapsed)
@@ -1124,6 +1271,10 @@ class MainActivity : Activity() {
                                 }catch(error:Throwable){fail(error)}}
                             }else settingsTickPending=false
                         }
+                    }
+                    if(previewTick&&!isSettings&&tickDelay<=0){
+                        val snapshot=File(root,"title-presented.tmp");snapshot.writeText(metadata.toString())
+                        check(snapshot.renameTo(File(root,"title-presented.json"))){"cannot publish completed title animation"}
                     }
                     if(previewTick || dragFrame && !diagnostics)return@post
                     val snapshot=File(root,"$prefix-presented.tmp");snapshot.writeText(metadata.toString())
@@ -1140,7 +1291,7 @@ class MainActivity : Activity() {
                         val slot=resumeSlot;resumeSlot=0
                         openSaveSlots(false,true,resume=slot)
                     }
-                    else if(action==2)openSaveSlots(false,true)
+                    else if(action!=0 && action==metadata.optInt("load_action",0))openSaveSlots(false,true)
                     else if(action!=0 && action==metadata.optInt("quit_action",4))close.performClick()
                     else if(metadata.optBoolean("room_action"))rooms.open(action)
                     else if(!isSettings && reopenReplay){
@@ -1194,9 +1345,7 @@ class MainActivity : Activity() {
         rooms=TitleRooms(this,stage,titleView,worker,
             {operation,indexes,id->story(indexes,operation,id)},
             {metadata->
-                if(metadata.optBoolean("stop_music"))runOnUiThread{
-                    menuTimeline.post{if(!storyClosing)storyEffects?.stopMusic()}
-                }
+                repeat(metadata.optInt("room_music_count")){playRoomMusic(story(intArrayOf(),74,0))}
                 playSystemSounds(metadata)
             },
             {metadata->
@@ -1240,7 +1389,8 @@ class MainActivity : Activity() {
                 }else null
                 var packet=try {
                     if(progressFile!=null)opened.add(ParcelFileDescriptor.open(progressFile,ParcelFileDescriptor.MODE_READ_ONLY))
-                    val archives=selected.filter{it.first.endsWith(".dat",true)&&!it.first.equals("unins000.dat",true)}
+                    val archives=selected.filter{(it.first.endsWith(".dat",true)||it.first.endsWith(".pk2",true))&&!it.first.equals("unins000.dat",true)} + selected.filter{it.first.endsWith(".exe",true)}
+                    if(traceDialogue)File(root,"mount-inputs.json").writeText(org.json.JSONArray(archives.map{it.first}).toString())
                     require(archives.isNotEmpty()){"游戏目录中没有可读取的 DAT，请检查目录位置和授权"}
                     for((_,uri) in archives)opened.add(contentResolver.openFileDescriptor(uri,"r") ?: error("missing file descriptor"))
                     val cleared=titleFirst && getPreferences(MODE_PRIVATE).getBoolean(clearKey,false)
@@ -1266,16 +1416,40 @@ class MainActivity : Activity() {
         val stageBounds=android.graphics.Rect()
         val floatingBounds=android.graphics.Rect()
         val decorPosition=IntArray(2)
+        systemCommandTouch={event->
+            if(!commandPresentation.active||storyInputArea?.invoke(event)!=true)false
+            else {
+                val location=IntArray(2);image.getLocationOnScreen(location)
+                val point=floatArrayOf(event.rawX-location[0]-image.paddingLeft,event.rawY-location[1]-image.paddingTop)
+                val inverse=android.graphics.Matrix()
+                check(image.imageMatrix.invert(inverse)){"system command image matrix is singular"}
+                inverse.mapPoints(point)
+                val action=when(event.actionMasked){
+                    android.view.MotionEvent.ACTION_DOWN->1
+                    android.view.MotionEvent.ACTION_MOVE->3
+                    else->0
+                }
+                commandPresentation.pointer(action,point[0].toInt(),point[1].toInt())
+            }
+        }
         storyInputArea={event->
             window.decorView.getLocationOnScreen(decorPosition)
             val x=(event.x+decorPosition[0]).toInt()
             val y=(event.y+decorPosition[1]).toInt()
             !storyClosing&&!storyConfigOpen&&!storySaveOpen&&!storyLogOpen&&!menuOpen&&
-                !dialogueHidden&&!hideBusy&&!timeline.paused&&movieHost?.isActive!=true&&sequence>0&&
+                !dialogueHidden&&!hideBusy&&!timeline.paused&&movieHost?.isActive!=true&&(sequence>0||commandPresentation.active)&&
                 stage.getGlobalVisibleRect(stageBounds)&&stageBounds.contains(x,y)&&
                 !(quickPanel.visibility==android.view.View.VISIBLE&&quickPanel.getGlobalVisibleRect(floatingBounds)&&floatingBounds.contains(x,y))
         }
-        storyInputAction={ action ->
+        storyInputAction=action@{ action ->
+            if(commandPresentation.active){
+                when(action){
+                    StoryAction.NEXT->commandPresentation.input(1)
+                    StoryAction.MENU,StoryAction.HIDE->commandPresentation.input(2)
+                    else->Unit
+                }
+                return@action
+            }
             val button=when(action){
                 StoryAction.NEXT->next
                 StoryAction.MENU->menu
@@ -1300,7 +1474,8 @@ class MainActivity : Activity() {
         }
         next.setOnClickListener {dialogue.click()}
         image.setOnClickListener {
-            if(next.isEnabled&&!storyClosing&&!storyConfigOpen&&!storySaveOpen&&!storyLogOpen&&!menuOpen&&!dialogueHidden&&!hideBusy&&!timeline.paused){
+            if(commandPresentation.input(1))Unit
+            else if(next.isEnabled&&!storyClosing&&!storyConfigOpen&&!storySaveOpen&&!storyLogOpen&&!menuOpen&&!dialogueHidden&&!hideBusy&&!timeline.paused){
                 next.performClick()
             }
         }
@@ -1427,7 +1602,7 @@ class MainActivity : Activity() {
         }
         openEmulatorMenu={openDrawer("")}
         fun closeGame(){
-            next.isEnabled=false;close.isEnabled=false;storyClosing=true;dialogue.stop();movieHost?.close();storyEffects?.close()
+            next.isEnabled=false;close.isEnabled=false;storyClosing=true;systemCommandPresentation?.finish();dialogue.stop();movieHost?.close();storyEffects?.close()
             worker.execute{try{
                 if(storyLoaded && JSONObject(String(story(intArrayOf(),66,0),Charsets.UTF_8)).optBoolean("ready")){
                     QuickSlots(saveDirectory()).write{file->
@@ -1444,9 +1619,11 @@ class MainActivity : Activity() {
                 finish()
             }}catch(error:Throwable){fail(error)}}
         }
-        close.setOnClickListener{confirmOriginal("退出游戏？",confirmActions&&!exitToLibrary,action=::closeGame)}
+        closeOriginalGame=::closeGame
+        close.setOnClickListener{confirmOriginal("退出游戏？",confirmAction("QUIT")&&!exitToLibrary,action=::closeGame)}
     }
     override fun dispatchTouchEvent(event:android.view.MotionEvent):Boolean {
+        if(systemCommandTouch?.invoke(event)==true)return true
         val deliver=storyInputAction
         if(deliver!=null && storyPointer.touch(event,storyInputArea?.invoke(event)==true,inputBindings,deliver)){
             if(event.actionMasked==android.view.MotionEvent.ACTION_UP){
@@ -1472,6 +1649,10 @@ class MainActivity : Activity() {
         return super.onKeyDown(keyCode,event)
     }
     override fun dispatchKeyEvent(event:android.view.KeyEvent):Boolean {
+        if(systemCommandPresentation?.active==true && event.keyCode in listOf(android.view.KeyEvent.KEYCODE_SPACE,android.view.KeyEvent.KEYCODE_ENTER,android.view.KeyEvent.KEYCODE_DPAD_CENTER)){
+            if(event.action==android.view.KeyEvent.ACTION_UP&&!event.isCanceled)systemCommandPresentation!!.input(1)
+            return true
+        }
         if(event.keyCode==android.view.KeyEvent.KEYCODE_SPACE){
             if(movieHost?.isActive==true)return true
             if(storySpace?.invoke(event.action==android.view.KeyEvent.ACTION_UP&&!event.isCanceled)==true)return true
@@ -1489,6 +1670,7 @@ class MainActivity : Activity() {
     }
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
+        if(systemCommandPresentation?.input(2)==true)return
         if(roomBack?.invoke()==true || storyLogBack?.invoke()==true || storySaveBack?.invoke()==true || storyMenuBack?.invoke()==true ||
             hiddenBack?.invoke()==true || settingsBack?.invoke()==true)return
         val open=openEmulatorMenu
@@ -1550,7 +1732,7 @@ class MainActivity : Activity() {
         openEmulatorMenu=null
         roomBack=null
         settingsBack=null;shortcutKey=null;hiddenBack=null;storyMenuBack=null;storySaveBack=null;storyLogBack=null
-        storyClosing=true;menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
+        storyClosing=true;systemCommandPresentation?.finish();menuTimeline.close();timeline.close();movieHost?.close();storyEffects?.close()
         storyWorker?.let {worker->worker.execute{if(storyLoaded){val result=story(intArrayOf(),3,0);File(storyRunRoot!!,"lifecycle-closed.json").writeBytes(result)}};worker.shutdown()}
         super.onDestroy()
     }

@@ -1,0 +1,16 @@
+   Compiling nekopack-runtime v0.1.0 (D:\codex\neko\crates\nekopack-runtime)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.20s
+     Running unittests src\lib.rs (target\debug\deps\nekopack_runtime-4f59b3be3bb48fd2.exe)
+
+running 8 tests
+test story::native_load::tests::thumbnail_has_original_dimensions_and_preserves_pixels ... ok
+test story::native_load::tests::corrupt_catalog_record_is_not_silently_removed_or_committed ... ok
+test story::native_load::tests::empty_catalog_continues_without_preparing_a_load ... ok
+test story::native_load::tests::nksv9_preserves_real_back_checkpoints_and_selection_history ... ok
+test story::native_load::tests::legacy_nksv8_restores_known_history_without_inventing_back_points ... ok
+test story::native_load::tests::original_saveload_continue_restores_real_nksv ... ok
+test story::native_load::tests::original_load_transaction_restores_real_nksv_after_sleep_without_completing_old_machine ... ok
+test story::native_load::tests::five_other_original_load_data_handlers_restore_real_nksv ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 266 filtered out; finished in 0.06s
+
