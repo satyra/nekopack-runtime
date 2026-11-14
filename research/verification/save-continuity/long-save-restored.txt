@@ -1,0 +1,22 @@
+   Compiling nekopack-runtime v0.1.0 (D:\codex\neko\crates\nekopack-runtime)
+warning: associated items `open`, `open_with_screen`, and `into_mask_state` are never used
+   --> crates\nekopack-runtime\src\system_command.rs:92:19
+    |
+ 91 | impl SystemCommand {
+    | ------------------ associated items in this implementation
+ 92 |     pub(crate) fn open<R: Read + Seek>(
+    |                   ^^^^
+...
+106 |     pub(crate) fn open_with_screen<R:Read+Seek>(
+    |                   ^^^^^^^^^^^^^^^^
+...
+200 |     pub(crate) fn into_mask_state(self) -> mask::MaskState { self.mask }
+    |                   ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nekopack-runtime` (lib) generated 1 warning
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 29.02s
+     Running `target\debug\examples\saved_title_resume.exe .local/sorakoi-import/game/ソラコイ .local/system-integration/old-save-continuity-failed.nksv image.dat voice.dat patch101.dat sound.dat system.dat sorakoi_chs.pk2 script.dat sorakoi.exe`
+prepared checkpoint
+restored title checkpoint

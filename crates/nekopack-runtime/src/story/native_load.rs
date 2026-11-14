@@ -31,7 +31,7 @@ impl NativeMessage {
             quote(self.text.as_bytes())?, quote(face.as_bytes())?, self.climax.map(|value| format!(",climax={value}")).unwrap_or_default()))
     }
 }
-struct Record { bytes: Vec<u8>, expression: String }
+struct Record { bytes: Vec<u8>, expression: String, messages: Vec<String>, back: Vec<String> }
 #[derive(Default)]
 pub(super) struct NativeLoad {
     records: BTreeMap<String, Record>,
@@ -78,9 +78,13 @@ impl<R: Read + Seek> StorySession<R> {
         let prefix = format!("{{path=SavePath({}),modified={},state_id={}", quote(filename.as_bytes())?,
             quote(timestamp.as_bytes())?, quote(state_id.as_bytes())?);
         let decoded = saves::Saved::decode(bytes, &mut self.store, self.scene.dimensions, false);
+        let mut messages=Vec::new();
+        let mut back=Vec::new();
         let expression = match decoded {
             Ok(saved) => {
-                let values = saved.native_values(date, time, &mut self.store, self.scene.dimensions)?;
+                let values = saved.native_values(date, time)?;
+                messages = saved.native_message_expressions()?;
+                back = saved.native_back_expressions(&mut self.store, self.scene.dimensions)?;
                 self.system.eval("native-thumbnail-size", "return SystemLoadDimensions()")?;
                 let dimensions = self.system.result();
                 let (width,height) = dimensions.split_once(',').ok_or("invalid original thumbnail dimensions")?;
@@ -92,14 +96,32 @@ impl<R: Read + Seek> StorySession<R> {
             }
             Err(error) => format!("{prefix},error={}}}", quote(error.to_string().as_bytes())?),
         };
-        self.native_load.records.insert(state_id, Record { bytes: bytes.to_vec(), expression });
+        self.native_load.records.insert(state_id, Record { bytes: bytes.to_vec(), expression, messages, back });
         Ok(())
     }
 
     /// Installs records while the coroutine is suspended. Host event 6 resumes the original caller.
     pub fn system_load_catalog_install(&mut self) -> Result<(), Box<dyn Error>> {
-        let records = self.native_load.records.values().map(|record| record.expression.as_str()).collect::<Vec<_>>().join(",");
-        self.system.eval("native-save-catalog", &format!("SystemLoadInstall([{records}])"))?;
+        // Compile one bounded metadata entry at a time. The aggregate history
+        // and catalog can legitimately exceed the VM's module source limit.
+        self.system.eval("native-save-catalog", "NekoLoadRecords <- []")?;
+        for record in self.native_load.records.values() {
+            self.system.eval("native-save-record", &format!("NekoLoadRecords.append({})",record.expression))?;
+            for entry in &record.messages {
+                self.system.eval("native-save-message", &format!("NekoLoadRecords.top().metadata.globals.MessageLog.append({entry})"))?;
+            }
+            for entry in &record.back {
+                self.system.eval("native-save-back", &format!("NekoLoadRecords.top().metadata.globals.SkipBackData.append({entry})"))?;
+            }
+            self.system.eval("native-save-project", r#"
+                local record=NekoLoadRecords.top()
+                if("metadata" in record){
+                    record.values <- SystemLoadProject(record.metadata)
+                    record.rawdelete("metadata")
+                }
+            "#)?;
+        }
+        self.system.eval("native-save-catalog-install", "SystemLoadInstall(NekoLoadRecords);getroottable().rawdelete(\"NekoLoadRecords\")")?;
         let thumbnails = self.take_system_load_thumbnails();
         self.system_command.as_mut().ok_or("native catalog without system command")?.command.install_save_thumbnails(thumbnails);
         Ok(())
@@ -283,6 +305,94 @@ mod tests {
         assert_eq!(restored.machine.variables.get(b"marker").unwrap(),0);
         assert!(restored.navigation_back.is_empty());
         assert!(restored.message_history.entries.is_empty());
+    }
+
+    #[test]
+    fn long_message_history_restores_through_native_vm() {
+        let mut source=configured(SCRIPT);
+        source.poll_packet().unwrap();source.text_frame(1,0,false).unwrap();
+        source.dialogue_modal=true;
+        let current=source.message_history.entries[0].clone();
+        let current_native=source.native_load.messages[0].clone();
+        let mut entry=current.clone();
+        let mut native=current_native.clone();
+        entry.text="long history ".repeat(250);
+        native.text=entry.text.clone();
+        for _ in 1..512 {
+            source.message_history.push(entry.clone()).unwrap();
+            source.native_load.messages.push(native.clone());
+        }
+        source.message_history.push(current).unwrap();
+        source.native_load.messages.push(current_native);
+        let bytes=source.export_save().unwrap();
+        let mut restored=configured(SCRIPT);
+        restored.restore_route_preview(&bytes).unwrap();
+        assert_eq!(restored.message_history.entries.len(),513);
+        assert_eq!(restored.native_load.messages.len(),513);
+        restored.system.eval("long-history-size","return MessageLog.len().tostring()").unwrap();
+        assert_eq!(restored.system.result(),"513");
+        restored.system.eval("long-history-content","return MessageLog[1].text.len()+\":\"+MessageLog.top().text").unwrap();
+        assert_eq!(restored.system.result(),format!("{}:restored",entry.text.len()));
+
+        let mut catalog=configured(b".continue\nold-machine");
+        catalog.poll_packet().unwrap();
+        for id in 1..=2 {
+            catalog.system_load_catalog_slot(id,u64::from(id),"2026/11/14","12:00",&bytes).unwrap();
+        }
+        catalog.system_load_catalog_install().unwrap();
+        assert!(has(&catalog.system_command_step(1,0,6).unwrap(),"\"native_ack\":true"));
+        catalog.system.eval("catalog-history","return MessageLog.len()+\":\"+MessageLog[1].text.len()").unwrap();
+        assert_eq!(catalog.system.result(),format!("513:{}",entry.text.len()));
+        catalog.system_command_step(1,0,6).unwrap();
+        let packet=catalog.system_command_step(1,1000,0).unwrap();
+        assert!(has(&packet,"restored"));
+        assert_eq!(catalog.native_load.messages.len(),513);
+    }
+
+    #[test]
+    fn large_back_checkpoint_keeps_full_state_across_repeated_save_and_load() {
+        let script=b".var L1 marker\n.select\none\ntwo\n.case 1\n? marker = 9\nchosen\n.case 2\nother\n.end";
+        let make=||{
+            let mut story=configured(script);
+            story.store=DatGame::mount([resource_pack(b"script",b"test.txt",script)]).unwrap();
+            story
+        };
+        let mut source=make();
+        source.poll_packet().unwrap();
+        let text="checkpoint history ".repeat(150);
+        for _ in 0..256 {
+            source.message_history.push(crate::message_log::Entry {
+                name:String::new(),voice:String::new(),face:String::new(),text:text.clone(),
+            }).unwrap();
+            source.native_load.messages.push(NativeMessage {
+                size:42,name:String::new(),voice:String::new(),mask:"saved-mask".into(),text:text.clone(),climax:Some(3),
+            });
+        }
+        source.capture_selection_checkpoint().unwrap();
+        let checkpoint=source.navigation_back[0].clone();
+        assert!(checkpoint.len()>1024*1024);
+        let identity=format!("NKSC:{:016x}",nekopack_script::checkpoint::digest(&checkpoint));
+        source.machine.complete(Some(1)).unwrap();source.pending_effect=None;
+        source.poll_packet().unwrap();source.text_frame(1,0,false).unwrap();source.dialogue_modal=true;
+        let mut bytes=source.export_save().unwrap();
+        for _ in 0..2 {
+            let mut restored=make();
+            restored.restore_route_preview(&bytes).unwrap();
+            assert_eq!(restored.navigation_back,[checkpoint.clone()]);
+            restored.system.eval("back-identity","return SkipBackData[0].pos+\":\"+SkipBackData[0].data").unwrap();
+            assert_eq!(restored.system.result(),format!("256:{identity}"));
+            let sequence=restored.page.as_ref().unwrap().sequence;
+            restored.text_frame(sequence,0,false).unwrap();restored.dialogue_modal=true;
+            bytes=restored.export_save().unwrap();
+            restored.dialogue_modal=false;
+            restored.request_shortcut_back(sequence).unwrap();
+            assert_eq!(restored.machine.variables.get(b"marker").unwrap(),0);
+            assert!(restored.navigation_back.is_empty());
+            assert_eq!(restored.message_history.entries.len(),256);
+            assert_eq!(restored.message_history.entries[255].text,text);
+            assert_eq!(restored.native_load.messages[255].mask,"saved-mask");
+            assert_eq!(restored.native_load.messages[255].climax,Some(3));
+        }
     }
 
     #[test]

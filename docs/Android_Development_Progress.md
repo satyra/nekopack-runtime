@@ -1,8 +1,26 @@
 # NekoPack Android 开发进度
 
-更新日期：2026-11-13
+更新日期：2026-11-14
 
-## sysload / continue 真实恢复与 room 平台动作完成（2026-11-13，当前）
+## 空恋旧档与连续剧情实测：修复长流程新档无法冷读回（2026-11-14）
+
+用户选择先跳过真机，实际测试设备为模拟器 `127.0.0.1:5577`，本轮没有真机覆盖升级结论。未查看图片、剧情或回想正文，没有进入回想。
+
+从原版、PK02 汉化版各自的真实 NKSV5 快捷存档开始，旧 APK 各推进 200 页后生成 NKSV9；两版均在标题冷读回时失败，Android 显示 `no story session`。真实 6,601,742 字节存档的桌面复现定位到 `module source exceeds 1 MiB limit`：完整 BACK checkpoint 被编码成巨大的 Squirrel 源码。修正共用运行时的恢复和读档目录构建，逐条注入 MessageLog/BACK 元数据，BACK 使用稳定不透明引用，完整 checkpoint 继续保存在 NKSV/Rust；没有抬高 VM 预算。Android 同时先检查进入剧情的原操作错误，避免 capability 查询掩盖根因。原生 LoadBlob 尚未接入这一已有边界不变。
+
+修复后，使用同一 APK 完成：
+
+- 两份此前失败的新档直接冷读回并各继续 3 页，不需要转换或重新开档。
+- 原版 NKSV5 → 200 页、一次选择 → 新 NKSV9 → 冷启动读回；保存／恢复均为 `CS01_C_17:740`。
+- 汉化版 NKSV5 → 200 页、一次选择 → 新 NKSV9 → 冷启动读回；保存／恢复均为 `CS01_C_18:69`。
+- 两版均使用独立 save_probe，原存档目录测试前后全部文件摘要一致。
+- 原 sysload／continue 的确认取消、实际恢复、最新普通档排除快捷档、冷启动和空目录共 32 步通过。
+
+工作区 **383 通过、0 失败、27 默认跳过**；额外 native_load 与原技术脚本契约 18 项通过。新增长日志、大 BACK 检查点连续两次保存读回及实际 BACK 状态验证。源码 133 项摘要与构建时一致，设备 APK 和包内 native 库与构建记录一致。
+
+本轮替代包为 `.local/android-probe/nekopack-save-restore-arm64-debug.apk`，SHA256 `33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c`。此前 `c42b9ff4…` 为本次复现问题的旧包，不应继续作为最终交付包。完整记录见 [连续剧情与恢复验证](../research/save-continuity-verification.json)。本轮修改与验证记录已整理提交；这是两版各 200 页的实测，不是全部路线通关证明。
+
+## sysload / continue 真实恢复与 room 平台动作完成（2026-11-13，历史轮次）
 
 本轮沿原技术脚本接入共用运行时，没有按游戏名称分派。原 `SaveInfo.Save` 决定虚拟读档字段顺序，原缩略图实例决定尺寸；Android 真实目录映射普通槽和快捷槽，LoadState 准备成功后继续原 Sleep(1000)／null 展开，再提交真实 NKSV 恢复，旧协程 token 作废。NKSV9 保留原消息字段与实际 BACK 检查点，旧版本继续读取；不声称 Windows `.sav` 二进制兼容。
 

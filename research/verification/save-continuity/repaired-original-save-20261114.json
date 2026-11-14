@@ -1,0 +1,34 @@
+{
+  "run": "existing-save-f0bff498",
+  "passed": true,
+  "entry": "pk02-validation",
+  "slot": 101,
+  "original": true,
+  "pages": [
+    {
+      "sequence": 1,
+      "source": "CS01_C_17",
+      "line": 740
+    },
+    {
+      "sequence": 2,
+      "source": "CS01_C_17",
+      "line": 745
+    },
+    {
+      "sequence": 3,
+      "source": "CS01_C_17",
+      "line": 748
+    }
+  ],
+  "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+  "loaded": {
+    "event": "loaded",
+    "slot": 101,
+    "page": 0,
+    "saving": false,
+    "from_title": true,
+    "sequence": 0,
+    "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_old-save-continuity-121d6c97"
+  }
+}

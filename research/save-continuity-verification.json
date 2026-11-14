@@ -1,0 +1,160 @@
+{
+  "date": "2026-11-14",
+  "device": "127.0.0.1:5577",
+  "physical_device_upgrade": "skipped at user request",
+  "game": "Sorakoi",
+  "apk": ".local/android-probe/nekopack-save-restore-arm64-debug.apk",
+  "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+  "installed_apk_matches": true,
+  "packaged_native_matches_build": true,
+  "source_manifest": "research/verification/save-continuity/source-worktree-sha256.json",
+  "source_files_rechecked": 133,
+  "base_commit": "e2cc2114cdf632ae9a76e332def9a9d59d21391f",
+  "working_tree_fixes_not_committed": false,
+  "bug": {
+    "before": "NKSV5 old save -> 200 pages -> NKSV9 quick save -> cold title load failed on both original and translated",
+    "displayed_error": "no story session",
+    "root_cause": "module source exceeds 1 MiB limit",
+    "fix": "bounded entry-wise MessageLog/catalog construction; stable opaque BACK references with full checkpoints retained in Rust/NKSV; surface original entry packet error",
+    "raised_vm_budget": false,
+    "actual_failed_save_bytes": 6601742,
+    "actual_failed_save_sha256": "9fdb4ea8c9ed825a677580d37658867115035eaf2219c48d7fdec8a49dc878be"
+  },
+  "tests": {
+    "workspace": {
+      "passed": 383,
+      "failed": 0,
+      "ignored": 27
+    },
+    "additional_native_load_and_original_contracts": {
+      "passed": 18,
+      "failed": 0
+    }
+  },
+  "android": {
+    "original": {
+      "passed": true,
+      "run": "old-save-continuity-db4ff474",
+      "report": "research/verification/save-continuity/continuity-original-fixed-20261114.json",
+      "sha256": "3ab35c60aebd940602a2b17598c6d4c25e890ce7ce6df8a1033a9ecf4d52acea",
+      "old_save_version": 5,
+      "new_save_version": 9,
+      "pages": 200,
+      "choices": 1,
+      "first": {
+        "sequence": 1,
+        "source": "CS01_C_16",
+        "line": 1036
+      },
+      "last": {
+        "sequence": 200,
+        "source": "CS01_C_17",
+        "line": 740
+      },
+      "restored": {
+        "sequence": 1,
+        "source": "CS01_C_17",
+        "line": 740
+      },
+      "original_files_unchanged": true
+    },
+    "translated": {
+      "passed": true,
+      "run": "old-save-continuity-befb1a46",
+      "report": "research/verification/save-continuity/continuity-zh-fixed-20261114.json",
+      "sha256": "48996750e469c74c32fe63fc263e5b7d7156627a0380474d22490c368028fcee",
+      "old_save_version": 5,
+      "new_save_version": 9,
+      "pages": 200,
+      "choices": 1,
+      "first": {
+        "sequence": 1,
+        "source": "CS01_C_17",
+        "line": 231
+      },
+      "last": {
+        "sequence": 200,
+        "source": "CS01_C_18",
+        "line": 69
+      },
+      "restored": {
+        "sequence": 1,
+        "source": "CS01_C_18",
+        "line": 69
+      },
+      "original_files_unchanged": true
+    },
+    "repaired_original": {
+      "passed": true,
+      "run": "existing-save-f0bff498",
+      "report": "research/verification/save-continuity/repaired-original-save-20261114.json",
+      "sha256": "1dd2ad9f13fcf108a325b919177b9404336a49026bf93532de0d2679cc6d9904",
+      "checks": [],
+      "steps": 0,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_17",
+          "line": 740
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_17",
+          "line": 745
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_17",
+          "line": 748
+        }
+      ]
+    },
+    "repaired_translated": {
+      "passed": true,
+      "run": "existing-save-587c410d",
+      "report": "research/verification/save-continuity/repaired-zh-save-20261114.json",
+      "sha256": "8127cc0c1b2b48f230ef6058e46fa209aba5674deb87ad27912ef6cf86592745",
+      "checks": [],
+      "steps": 0,
+      "pages": [
+        {
+          "sequence": 1,
+          "source": "CS01_C_18",
+          "line": 69
+        },
+        {
+          "sequence": 2,
+          "source": "CS01_C_18",
+          "line": 74
+        },
+        {
+          "sequence": 3,
+          "source": "CS01_C_18",
+          "line": 79
+        }
+      ]
+    },
+    "native_load": {
+      "passed": true,
+      "run": "native-load-7f57aeb8",
+      "report": "research/verification/save-continuity/native-load-fixed-20261114.json",
+      "sha256": "07ba076c069e8ded71b35ca27d302eff36478ce702e8a8ad137320120602bcaa",
+      "checks": [],
+      "steps": 32,
+      "pages": []
+    }
+  },
+  "logs": [
+    "research/verification/save-continuity/long-save-repro.txt",
+    "research/verification/save-continuity/long-save-restored.txt",
+    "research/verification/save-continuity/continuity-workspace7.txt"
+  ],
+  "boundaries": {
+    "original_pictures_viewed": false,
+    "original_scenario_or_recollection_text_inspected": false,
+    "recollection_entered": false,
+    "full_route_completion_claimed": false,
+    "original_LoadBlob_implemented": false
+  },
+  "source_git_manifest": "research/verification/save-continuity/source-git-sha256.json"
+}

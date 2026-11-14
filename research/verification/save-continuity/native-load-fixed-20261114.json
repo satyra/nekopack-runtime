@@ -1,0 +1,3594 @@
+{
+  "run": "native-load-7f57aeb8",
+  "passed": true,
+  "steps": [
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8",
+      "sequence": 1,
+      "source": "story1",
+      "line": 3
+    },
+    {
+      "name": "real_quick_save",
+      "run": "native-load-7f57aeb8",
+      "state": {
+        "saved": true,
+        "bytes": 7045,
+        "event": "saved",
+        "slot": 101,
+        "page": 0,
+        "saving": true,
+        "from_title": false,
+        "sequence": 1,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-7f57aeb8"
+      },
+      "path": "files/saves/6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-7f57aeb8/quick-1fec6696-1e49-4d6d-ab54-ab177d4096b3.nksv",
+      "sha256": "a7d1c7c94ad9f877b11f44d8328707a480c3e657a300233d12325aa151156ff2"
+    },
+    {
+      "name": "isolated_ordinary_slot",
+      "run": "native-load-7f57aeb8",
+      "slot": 2,
+      "stat": "1704042000:7045",
+      "sha256": "a7d1c7c94ad9f877b11f44d8328707a480c3e657a300233d12325aa151156ff2"
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8",
+      "sequence": 2,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "real_quick_save",
+      "run": "native-load-7f57aeb8",
+      "state": {
+        "saved": true,
+        "bytes": 7149,
+        "event": "saved",
+        "slot": 101,
+        "page": 0,
+        "saving": true,
+        "from_title": false,
+        "sequence": 2,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-7f57aeb8"
+      },
+      "path": "files/saves/6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-7f57aeb8/quick-296fb746-500a-433f-8698-0993e4ea14da.nksv",
+      "sha256": "a1efe96f79a929477ac998ea0e09ff759300c59dd18c1fe6554ec5892b99a72e"
+    },
+    {
+      "name": "isolated_ordinary_slot",
+      "run": "native-load-7f57aeb8",
+      "slot": 1,
+      "stat": "1704045600:7149",
+      "sha256": "a1efe96f79a929477ac998ea0e09ff759300c59dd18c1fe6554ec5892b99a72e"
+    },
+    {
+      "name": "load_confirmation_cancel_preserves_original_page",
+      "run": "native-load-7f57aeb8",
+      "token": 1
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8",
+      "sequence": 3,
+      "source": "story1",
+      "line": 3
+    },
+    {
+      "name": "original_confirmed_load",
+      "run": "native-load-7f57aeb8",
+      "slot": 2,
+      "sleep": {
+        "kind": "system_command",
+        "token": 1,
+        "command": "sysload",
+        "elapsed_ms": 4263,
+        "delay_ms": 1000,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [
+          {
+            "name": "3:CANCEL:2000000002",
+            "bounds": [
+              818,
+              426,
+              230,
+              47
+            ]
+          },
+          {
+            "name": "3:OK:2000000001",
+            "bounds": [
+              550,
+              426,
+              230,
+              47
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "room_actions": [],
+        "room_replay": false,
+        "room_audio": 0,
+        "load_catalog": false,
+        "native_ack": false,
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false,
+        "platform_replaying": false
+      },
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 2951,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 3044,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 3331,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 3927,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 4120,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 4263,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8",
+      "sequence": 4,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8",
+      "sequence": 5,
+      "source": "story1",
+      "line": 8
+    },
+    {
+      "name": "original_sysload_cancel",
+      "run": "native-load-7f57aeb8",
+      "events": []
+    },
+    {
+      "name": "real_quick_save",
+      "run": "native-load-7f57aeb8",
+      "state": {
+        "saved": true,
+        "bytes": 7281,
+        "event": "saved",
+        "slot": 101,
+        "page": 0,
+        "saving": true,
+        "from_title": false,
+        "sequence": 5,
+        "directory": "6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-7f57aeb8"
+      },
+      "path": "files/saves/6f33503529a10aede6066437ca82a993c3e6a15b94d0b4999a542ecd13387a00_probe_native-load-7f57aeb8/quick-4fe54e27-8393-4975-9ac1-a7dc810ac856.nksv",
+      "sha256": "5b6e3255420f88948123b8cbf00d7bb2a42766cf6431768d3a2b6de65fd68f71"
+    },
+    {
+      "name": "mtime_order_differs_from_slot_order_and_newer_quick",
+      "run": "native-load-7f57aeb8",
+      "mtime_seconds": {
+        "slot1": 1704045600,
+        "slot2": 1704042000,
+        "quick": 1704049200
+      }
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8",
+      "sequence": 6,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "continue_uses_latest_ordinary",
+      "run": "native-load-7f57aeb8",
+      "sleep": {
+        "kind": "system_command",
+        "token": 3,
+        "command": "continue",
+        "elapsed_ms": 37,
+        "delay_ms": 1000,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [],
+        "size": [
+          1600,
+          900
+        ],
+        "room_actions": [],
+        "room_replay": false,
+        "room_audio": 0,
+        "load_catalog": false,
+        "native_ack": false,
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false,
+        "platform_replaying": false
+      },
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 37,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ]
+    },
+    {
+      "name": "warm_cycle_passed",
+      "run": "native-load-7f57aeb8",
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 42,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 781,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 882,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1148,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1684,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1922,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1940,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 2951,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 3044,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 3331,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 3927,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 4120,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 4263,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "3:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "3:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "sysload",
+          "elapsed_ms": 39,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 37,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ],
+      "audio": [
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1001,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1002,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1003,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_ON_MOUSE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1004,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_NO",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1005,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1006,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_ON_MOUSE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1007,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1008,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1009,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1010,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-cold",
+      "sequence": 1,
+      "source": "story1",
+      "line": 3
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-cold",
+      "sequence": 2,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-cold",
+      "sequence": 3,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "original_confirmed_load",
+      "run": "native-load-7f57aeb8-cold",
+      "slot": 1,
+      "sleep": {
+        "kind": "system_command",
+        "token": 1,
+        "command": "sysload",
+        "elapsed_ms": 1805,
+        "delay_ms": 1000,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [
+          {
+            "name": "2:CANCEL:2000000002",
+            "bounds": [
+              818,
+              426,
+              230,
+              47
+            ]
+          },
+          {
+            "name": "2:OK:2000000001",
+            "bounds": [
+              550,
+              426,
+              230,
+              47
+            ]
+          }
+        ],
+        "size": [
+          1600,
+          900
+        ],
+        "room_actions": [],
+        "room_replay": false,
+        "room_audio": 0,
+        "load_catalog": false,
+        "native_ack": false,
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false,
+        "platform_replaying": false
+      },
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 714,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 830,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1086,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1533,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1687,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1805,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-cold",
+      "sequence": 4,
+      "source": "story1",
+      "line": 8
+    },
+    {
+      "name": "original_sysload_cancel",
+      "run": "native-load-7f57aeb8-cold",
+      "events": []
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-cold",
+      "sequence": 5,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "continue_uses_latest_ordinary",
+      "run": "native-load-7f57aeb8-cold",
+      "sleep": {
+        "kind": "system_command",
+        "token": 3,
+        "command": "continue",
+        "elapsed_ms": 31,
+        "delay_ms": 1000,
+        "closed": false,
+        "has_frame": false,
+        "buttons": [],
+        "size": [
+          1600,
+          900
+        ],
+        "room_actions": [],
+        "room_replay": false,
+        "room_audio": 0,
+        "load_catalog": false,
+        "native_ack": false,
+        "save_config": false,
+        "restore_audio": false,
+        "restore_screen": false,
+        "platform_replaying": false
+      },
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 31,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ]
+    },
+    {
+      "name": "cold_cycle_passed",
+      "run": "native-load-7f57aeb8-cold",
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 37,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 714,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 830,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1086,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1533,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1687,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 1,
+          "command": "sysload",
+          "elapsed_ms": 1805,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [
+            {
+              "name": "2:CANCEL:2000000002",
+              "bounds": [
+                818,
+                426,
+                230,
+                47
+              ]
+            },
+            {
+              "name": "2:OK:2000000001",
+              "bounds": [
+                550,
+                426,
+                230,
+                47
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "sysload",
+          "elapsed_ms": 0,
+          "delay_ms": 0,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "sysload",
+          "elapsed_ms": 36,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": true,
+          "buttons": [
+            {
+              "name": "0:PAGE#0:1",
+              "bounds": [
+                404,
+                113,
+                30,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#1:2",
+              "bounds": [
+                478,
+                113,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#2:3",
+              "bounds": [
+                559,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#3:4",
+              "bounds": [
+                638,
+                113,
+                47,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#4:5",
+              "bounds": [
+                721,
+                114,
+                46,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#5:6",
+              "bounds": [
+                800,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#6:7",
+              "bounds": [
+                884,
+                114,
+                45,
+                55
+              ]
+            },
+            {
+              "name": "0:PAGE#7:8",
+              "bounds": [
+                963,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#8:9",
+              "bounds": [
+                1044,
+                113,
+                46,
+                56
+              ]
+            },
+            {
+              "name": "0:PAGE#9:10",
+              "bounds": [
+                1121,
+                113,
+                81,
+                56
+              ]
+            },
+            {
+              "name": "1::1",
+              "bounds": [
+                118,
+                184,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1::2",
+              "bounds": [
+                118,
+                334,
+                636,
+                156
+              ]
+            },
+            {
+              "name": "1:CLOSE:2000000002",
+              "bounds": [
+                839,
+                804,
+                212,
+                41
+              ]
+            },
+            {
+              "name": "1:RESET:124",
+              "bounds": [
+                1072,
+                804,
+                212,
+                41
+              ]
+            }
+          ],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": true,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        },
+        {
+          "kind": "system_command",
+          "token": 3,
+          "command": "continue",
+          "elapsed_ms": 31,
+          "delay_ms": 1000,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": false,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ],
+      "audio": [
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1001,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_ON_MOUSE",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1002,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1003,
+          "ui_audio": true
+        },
+        {
+          "host_effect": "system",
+          "name": "se_OK",
+          "category_percent": 50,
+          "duration_ms": 0,
+          "loop": false,
+          "token": -1004,
+          "ui_audio": true
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-empty",
+      "sequence": 1,
+      "source": "story1",
+      "line": 3
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-empty",
+      "sequence": 2,
+      "source": "story1",
+      "line": 5
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-empty",
+      "sequence": 3,
+      "source": "story1",
+      "line": 8
+    },
+    {
+      "name": "original_sysload_cancel",
+      "run": "native-load-7f57aeb8-empty",
+      "events": []
+    },
+    {
+      "name": "page",
+      "run": "native-load-7f57aeb8-empty",
+      "sequence": 4,
+      "source": "story1",
+      "line": 11
+    },
+    {
+      "name": "empty_continue_returns_to_scenario",
+      "run": "native-load-7f57aeb8-empty",
+      "events": [
+        {
+          "kind": "system_command",
+          "token": 2,
+          "command": "continue",
+          "elapsed_ms": 0,
+          "delay_ms": -1,
+          "closed": false,
+          "has_frame": false,
+          "buttons": [],
+          "size": [
+            1600,
+            900
+          ],
+          "room_actions": [],
+          "room_replay": false,
+          "room_audio": 0,
+          "load_catalog": true,
+          "native_ack": false,
+          "save_config": false,
+          "restore_audio": false,
+          "restore_screen": false,
+          "platform_replaying": false
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "run": "native-load-7f57aeb8",
+      "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+      "save_probe": "native-load-7f57aeb8"
+    },
+    {
+      "run": "native-load-7f57aeb8-cold",
+      "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+      "save_probe": "native-load-7f57aeb8"
+    },
+    {
+      "run": "native-load-7f57aeb8-empty",
+      "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+      "save_probe": "native-load-7f57aeb8-empty"
+    }
+  ],
+  "fixture": {
+    "synthetic_scenario": true,
+    "ui_sounds": [
+      {
+        "present": true,
+        "archive": "D:\\codex\\neko\\.local\\sorakoi-import\\game\\ソラコイ\\sound.dat",
+        "ordinal": 6,
+        "name": "sound/se/se_OK.ogg",
+        "sha256": "b1b3675a55a9d180d7f763405dce6dda07c41bf68539270bccf5892c35016a05",
+        "bytes": 15569
+      },
+      {
+        "present": true,
+        "archive": "D:\\codex\\neko\\.local\\sorakoi-import\\game\\ソラコイ\\sound.dat",
+        "ordinal": 26,
+        "name": "sound/se/se_NO.ogg",
+        "sha256": "395cc51f95135003d8a86d67cba778df8a5adc162831e9178dd8f9d2260e5991",
+        "bytes": 12476
+      },
+      {
+        "present": true,
+        "archive": "D:\\codex\\neko\\.local\\sorakoi-import\\game\\ソラコイ\\sound.dat",
+        "ordinal": 48,
+        "name": "sound/se/se_ON_MOUSE.ogg",
+        "sha256": "25bc2da0bbc11a4424f3931b566a1f19809b271f4845d4dd9b29904de19d6b7a",
+        "bytes": 9874
+      },
+      {
+        "name": "se_CLICK.ogg",
+        "present": false
+      },
+      {
+        "name": "se_PAGE.ogg",
+        "present": false
+      },
+      {
+        "name": "se_SELECT.ogg",
+        "present": false
+      },
+      {
+        "name": "se_CANCEL.ogg",
+        "present": false
+      }
+    ],
+    "original_handlers": [
+      "sysload",
+      "ViewSavePage",
+      "SaveInfo",
+      "LoadData",
+      "continue"
+    ],
+    "source_start": {
+      "archive": "D:\\codex\\neko\\.local\\sorakoi-import\\game\\ソラコイ\\script.dat",
+      "ordinal": 49,
+      "name": "script/start.txt",
+      "sha256": "8f399b74f2ed18d1d92dc0ec9cd50d43205704d75955958842a43118f79bd942",
+      "bytes": 613
+    },
+    "files": [
+      {
+        "name": "native_load_probe.dat",
+        "sha256": "0253a012e80e058c86457dbc7fa1603f874cc1f76f3d76ca4deaa5aaa4c3067e",
+        "bytes": 39047
+      },
+      {
+        "name": "sorakoi.exe",
+        "sha256": "9a30908aedf0f10b41ebf1a22c16f48eee840f1d949d2f7b7d8394de20a86d2f",
+        "bytes": 4235776
+      },
+      {
+        "name": "system.dat",
+        "sha256": "7c8139223cc7859e97928210ba7f6b2fd30911d758d8c01b85babc4175e77bd2",
+        "bytes": 25146532
+      }
+    ]
+  },
+  "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c"
+}

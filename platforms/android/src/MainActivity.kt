@@ -1167,6 +1167,9 @@ class MainActivity : Activity() {
             }
         }
         fun enterStory(packet:ByteArray){
+                val boundary=packet.indexOf(10.toByte());check(boundary>=0){"invalid story entry packet"}
+                val entry=JSONObject(String(packet,0,boundary,Charsets.UTF_8))
+                check(!entry.has("error")){entry.getString("error")}
                 val capability=JSONObject(String(story(intArrayOf(),63,0),Charsets.UTF_8))
                 check(!capability.has("error")){capability.getString("error")}
                 classicStoryMenu=capability.getBoolean("classic_story_menu")

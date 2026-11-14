@@ -128,6 +128,18 @@ python platforms/android/regression/build-original-room-music-fixture.py --outpu
 
 `build-system-command-fixture.py` 现额外生成合成 PNG mask 和 dialog MNG，保留挂载包原 `ViewDialog`；合成双参数处理器等待该原确认框返回后选第二 case。`verify-system-commands.py` 使用实际安卓触摸坐标确认，再验证延迟快速存档及冷恢复。夹具不读取剧情或原图片；不要把该验证称为原 choice 控件或完整设置页已全覆盖。结果见 `research/shared-system-branches-verification.json`。
 
+### 真机覆盖升级
+
+`verify-device-upgrade.py --serial <真机序列号> --apk <最终APK> --output <新的本地私有目录>` 先停止应用并备份 `files/saves` 与 `shared_prefs`，再执行 `adb install -r`，核对安装包及升级前后全部存档、配置文件摘要。输出目录须不存在，建议放 `.local`；备份包含用户数据，不提交仓库。脚本拒绝本地模拟器和同 APK 重装，不使用卸载、降级或清除数据来绕过签名／版本限制。旧包必须支持 run-as，否则在安装前停止，不能跳过备份。
+
+安装验证通过仅证明数据在升级时保留；还必须用 `verify-existing-save.py` 在该真机实际读取旧档，随后分别验证原版、汉化版连续推进。2026-11-14 未发现 USB 真机，用户选择先跳过真机；脚本仅完成语法与参数检查，不能记为覆盖升级通过。
+
+### 真实旧档连续推进与新档冷读回
+
+`verify-existing-save-continuity.py --serial <设备> --entry <游戏库ID> --scope <存档目录名> --apk <安装包> --pages 200 --output <报告>`；原版另加 `--original`，汉化版 scope 包含 `_zh`。脚本只读取旧档五字节版本头和摘要，将最新快捷档复制到新的 `save_probe` 目录，用原场景运行、按页面完成推进、按元数据选择第一项。末尾通过原快捷存档动作保存并冷启动读取，对比脚本位置，核验原存档目录前后全部摘要一致。报告不包含剧情、选项正文或图片；脚本不接入回想入口。
+
+`verify-existing-save.py` 增加 `--save-probe`，可只读复测此前隔离长流程生成的档。`saved_title_resume` 桌面示例用于复现标题读档错误，要求 `NEKO_TEST_FONT`，可指定与 Android 相同的挂载文件顺序；仅输出准备／恢复状态，不打印页面内容。
+
 ### 原 sysload / continue / room 真实设备回归
 
 以下脚本使用同一个已安装 APK，真实操作原系统页面；只读取按钮、状态、存档及音频哈希，不获取截图或原剧情正文。先用对应 `build-*-fixture.py` 构建并部署独立夹具，不能将夹具覆盖到用户游戏目录。

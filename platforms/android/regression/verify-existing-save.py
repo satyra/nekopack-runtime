@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--original',action='store_true')
     parser.add_argument('--slot',type=int,default=101)
     parser.add_argument('--pages',type=int,default=3)
+    parser.add_argument('--save-probe',help='existing isolated test save scope')
     parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args()
     assert args.pages>0
@@ -27,9 +28,10 @@ def main():
     try:
         apk=p.adb('shell','pm','path','org.nekopack.probe').decode().strip().removeprefix('package:')
         result['apk_sha256']=p.adb('shell','sha256sum',shlex.quote(apk)).split()[0].decode()
+        extras=['--es','save_probe',shlex.quote(args.save_probe),'--es','read_history_probe',shlex.quote(args.save_probe)] if args.save_probe else []
         p.start_activity('--ei','title_game','0','--es','library_entry',args.entry,
                          '--ez','library_original',str(args.original).lower(),
-                         '--ei','library_resume_slot',str(args.slot),'--ez','dialogue_probe','true')
+                         '--ei','library_resume_slot',str(args.slot),'--ez','dialogue_probe','true',*extras)
         for sequence in range(1,args.pages+1):
             page=p.wait('saved route source position',lambda:p.obj(f'page-{sequence}.json'))
             result['pages'].append(page)

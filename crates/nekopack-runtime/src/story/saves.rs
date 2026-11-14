@@ -295,8 +295,10 @@ impl<R: Read + Seek> StorySession<R> {
     }
     pub(crate) fn apply_saved(&mut self, saved: Saved) -> Result<Vec<u8>, Box<dyn Error>> {
         let mut saved = saved;
-        let native_back = saved.native_back_expression(&mut self.store, self.scene.dimensions)?;
-        self.system.eval("restore-native-back", &format!("SkipBackData <- {native_back}"))?;
+        self.system.eval("restore-native-back", "SkipBackData <- []")?;
+        for entry in saved.native_back_expressions(&mut self.store, self.scene.dimensions)? {
+            self.system.eval("restore-native-back-entry", &format!("SkipBackData.append({entry})"))?;
+        }
         for (name, value) in &saved.system_state {
             self.system.eval("restore-original-message-state", &format!("getroottable()[{}]={value}", quote(name.as_bytes())?))?;
         }
@@ -321,10 +323,11 @@ impl<R: Read + Seek> StorySession<R> {
         if !selection {
             self.navigation_back = std::mem::take(&mut saved.navigation_back);
         }
+        self.system.eval("restore-native-message-log", "MessageLog <- []")?;
+        for entry in saved.native_message_expressions()? {
+            self.system.eval("restore-native-message-entry", &format!("MessageLog.append({entry})"))?;
+        }
         self.native_load.messages = std::mem::take(&mut saved.native_messages);
-        let native_log = self.native_load.messages.iter().enumerate().map(|(index,entry)| entry.expression(saved.history.as_ref()
-            .map(|history| history.entries[index].face.as_str()).unwrap_or_default())).collect::<Result<Vec<_>,_>>()?.join(",");
-        self.system.eval("restore-native-message-log", &format!("MessageLog <- [{native_log}]"))?;
         self.system
             .eval("restore-navigation", "MegaSkip <- false")?;
         self.rebuilding_page = !selection && saved.history.is_some();
@@ -671,26 +674,28 @@ impl Saved {
         saved.scene.render()?;
         Ok(saved)
     }
-    pub(super) fn native_values<R: Read + Seek>(&self, date: &str, time: &str,
-        store: &mut DatGame<R>, dimensions: [u32; 2]) -> Result<String, Box<dyn Error>> {
-        let log = self.native_messages.iter().enumerate().map(|(index,entry)| entry.expression(self.history.as_ref()
-            .map(|history| history.entries[index].face.as_str()).unwrap_or_default())).collect::<Result<Vec<_>, _>>()?.join(",");
-        let back = self.native_back_expression(store, dimensions)?;
-        Ok(format!("{{fields={{sdate={},stime={},route={},title={},text={},stamp={}}},globals={{MessageLog=[{}],ClimaxCount={},SkipBackData={}}}}}", quote(date.as_bytes())?, quote(time.as_bytes())?,
+    pub(super) fn native_values(&self, date: &str, time: &str) -> Result<String, Box<dyn Error>> {
+        Ok(format!("{{fields={{sdate={},stime={},route={},title={},text={},stamp={}}},globals={{MessageLog=[],ClimaxCount={},SkipBackData=[]}}}}", quote(date.as_bytes())?, quote(time.as_bytes())?,
             quote(self.labels.route.as_bytes())?, quote(self.labels.title.as_bytes())?,
             quote(self.native_messages.last().map(|entry| entry.text.as_bytes()).unwrap_or_default())?,
             quote(format!("{date} {time}").as_bytes())?,
-            log, self.system_state.get("ClimaxCount").copied().unwrap_or(0), back))
+            self.system_state.get("ClimaxCount").copied().unwrap_or(0)))
     }
-    fn native_back_expression<R: Read + Seek>(&self, store: &mut DatGame<R>, dimensions: [u32; 2]) -> Result<String, Box<dyn Error>> {
+    pub(super) fn native_message_expressions(&self) -> Result<Vec<String>, Box<dyn Error>> {
+        self.native_messages.iter().enumerate().map(|(index,entry)| entry.expression(self.history.as_ref()
+            .map(|history| history.entries[index].face.as_str()).unwrap_or_default())).collect()
+    }
+    pub(super) fn native_back_expressions<R: Read + Seek>(&self, store: &mut DatGame<R>, dimensions: [u32; 2]) -> Result<Vec<String>, Box<dyn Error>> {
         let mut entries = Vec::new();
         for bytes in &self.navigation_back {
             let checkpoint = Self::decode_kind(bytes, store, dimensions, false, true)?;
-            let mut data = String::from("NKSC:");
-            for byte in bytes { use std::fmt::Write; write!(&mut data, "{byte:02x}")?; }
+            // Rust/NKSV owns the complete checkpoint. The original metadata only
+            // needs its position and opaque identity, not a second scene-sized
+            // copy compiled as Squirrel source. Native LoadBlob is not supported.
+            let data = format!("NKSC:{:016x}", digest(bytes));
             entries.push(format!("{{pos={},data={}}}", checkpoint.native_messages.len(), quote(data.as_bytes())?));
         }
-        Ok(format!("[{}]", entries.join(",")))
+        Ok(entries)
     }
     pub(crate) fn preview(self, stamp: String) -> Result<crate::save_ui::Slot, Box<dyn Error>> {
         self.preview_size(stamp, [128,72])

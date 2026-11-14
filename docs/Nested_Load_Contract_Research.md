@@ -55,7 +55,7 @@ Sorakoi `SaveInfo.Save` 的顺序：缩略图，sdate，stime，route，title，
 
 NKSV 仍是平台格式，不与原 EXE `.sav`／SaveBlob 二进制兼容。NKSV9 在已有 Machine、场景、音频、History、ClimaxCount 等状态上增加原消息的 size/mask/可选 climax，以及真实 `navigation_back` NKSC 选择检查点。name/voice/text 来自实际消息，TD 使用的 face 来自已有 History.face；公共投影同时提供这些已保存语义，避免 TD 原日志访问缺失 face。
 
-读取新存档会验证原消息与 Runtime History 的 name/voice/text 一致，验证每个 BACK 检查点；选择快照自身不嵌套保存整条返回链。`SkipBackData` 投影保持 `{pos,data}` 结构，pos 是对应检查点的历史长度，data 为真实 NKSC bytes 的 `NKSC:` 十六进制 opaque 表示；Rust BACK 已验证恢复选择状态、变量及历史。**原 Squirrel LoadBlob 尚不能直接读取该平台 opaque 表示**，不能据此宣称原 EXE blob 兼容或原 SkipBack 全函数已验收。
+读取新存档会验证原消息与 Runtime History 的 name/voice/text 一致，验证每个 BACK 检查点；选择快照自身不嵌套保存整条返回链。`SkipBackData` 投影保持 `{pos,data}` 结构，pos 是对应检查点的历史长度，data 为完整 NKSC bytes 的稳定 `NKSC:<digest>` 不透明引用，完整 bytes 仍持久化在 NKSV 和 Rust 返回栈中；Rust BACK 已验证恢复选择状态、变量及历史。**原 Squirrel LoadBlob 尚不能直接读取该平台 opaque 表示**，不能据此宣称原 EXE blob 兼容或原 SkipBack 全函数已验收。
 
 旧 NKSV1～8 继续可读。旧格式未保存的 size/mask/逐条 climax 不能恢复：当前迁移保留实际文本／语音／History.face，将缺失 size/mask 置为既定迁移默认值 30／空字符串，不声称还原原字体或角色 mask；未保存的 BACK 链为空，明确不可回退。NKSV8 已保存的 ClimaxCount 仍恢复。新旧格式均以真实 Saved 恢复 Machine，不能用空历史表冒充旧档中已经存在的历史。
 
@@ -77,3 +77,9 @@ NKSV 仍是平台格式，不与原 EXE `.sav`／SaveBlob 二进制兼容。NKSV
 - Android APK6 的 [真实读档报告](../research/verification/native-load-room/real-native-load-final6.json) 为 `passed:true`。使用独立存档目录，实际创建 NKSV、构造与槽号顺序不同的普通槽 mtime 及更新的 quick；已通过原 LOAD 确认取消保留原页、确认后真实恢复、原 1000ms 等待、continue 选择最新普通槽、无档 continue 返回。证据只包含槽、按钮、token、时间、source/line 和摘要，不读取剧情正文。
 
 最终设备构建 SHA256 为 `c42b9ff4098f4d3540c6c9e56a83d5e6ec2de1fcd0b2e585f3507e531c397135`。原 LOAD / continue 的 warm、cold、empty 共 32 步通过；这些结果不等于原 Windows .sav 二进制兼容或全部游戏内容通关。
+
+## 2026-11-14 长流程读回修复
+
+实测从 NKSV5 旧档推进 200 页后生成 NKSV9，原版与汉化版均在标题冷读回失败。桌面真实样本复现原因为 `module source exceeds 1 MiB limit`：恢复时把完整 BACK checkpoint 编码进脚本源码。现在 VM 只接收不透明引用；MessageLog、BACK 与原生读档目录均按条目构建，不提高 VM 预算。Android 进入剧情前先检查原操作返回错误，避免后续 capability 查询以 `no story session` 掩盖根因。
+
+新增超过 1 MiB 的长日志、单 BACK checkpoint 回归；检查连续两次保存读回后的真实 BACK、变量、历史和元数据，以及长目录投影。实际失败档也已在桌面恢复成功；最终 Android 原版和汉化版各 200 页、新档保存／冷读回及原 sysload／continue 32 步均通过，见 [长流程验证记录](../research/save-continuity-verification.json)。
