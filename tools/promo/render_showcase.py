@@ -47,7 +47,7 @@ def mark(image, x, y, size):
         draw.polygon(pts(ear), fill='#F2DDFB')
 
 
-def plate(path, title, subtitle, ending=False, legal_note='请自备合法游戏资源'):
+def plate(path, title, subtitle, ending=False, legal_note='请自备合法游戏资源', verification_note='兼容性持续完善'):
     image = Image.new('RGB', (W,H), BG)
     draw = ImageDraw.Draw(image)
     mark(image, 852, 250 if not ending else 225, 216)
@@ -55,7 +55,7 @@ def plate(path, title, subtitle, ending=False, legal_note='请自备合法游戏
     centered(draw, 632 if not ending else 607, subtitle, 32, MUTED)
     if ending:
         centered(draw, 726, 'NekoPack 引擎兼容项目 · Android ARM64 预览版', 23, MUTED)
-        centered(draw, 785, '兼容性持续完善', 24, MUTED)
+        centered(draw, 785, verification_note, 24, MUTED)
         centered(draw, 842, legal_note, 22, MUTED)
     image.save(path)
 
@@ -166,7 +166,14 @@ def main():
     if not scenes:
         raise ValueError('scenes must include real Android recordings')
     sources = []
+    layout_qa = []
     for scene in scenes:
+        title_width = font(43, True).getlength(scene['title'])
+        tag = f"{len(layout_qa)+1:02d} / {len(scenes):02d}    {scene.get('tag','')}"
+        tag_left = 1720-font(22).getlength(tag)
+        if 198+title_width+32 > tag_left:
+            raise ValueError(f"Scene {scene['id']} title overlaps tag")
+        layout_qa.append({'id':scene['id'], 'title_right':198+title_width, 'tag_left':tag_left, 'minimum_gap':32, 'passed':True})
         source = (args.scenes.parent/scene['file']).resolve()
         metadata = info(source)
         if scene.get('start',0)<0 or scene['duration']<=0 or scene.get('start',0)+scene['duration']>metadata['duration']+.05:
@@ -180,10 +187,11 @@ def main():
         with source.open('rb') as source_file:
             digest = hashlib.file_digest(source_file,'sha256').hexdigest()
         sources.append({'id':scene['id'],'file':str(source),'sha256':digest,
+                        'capture_metadata':scene.get('capture_metadata',config.get('capture_metadata',{})),
                         'source':scene['source'],'media':metadata,'start':scene.get('start',0),'duration':scene['duration']})
     capture_label = config.get('capture_label','Android 模拟器录制')
     plate(work/'intro.png',config.get('title','NekoPack'),config.get('subtitle','Android 上的视觉小说兼容运行时'))
-    plate(work/'outro.png','NekoPack','让下一段故事，从这里继续',True,config.get('legal_note','请自备合法游戏资源'))
+    plate(work/'outro.png','NekoPack',config.get('outro_subtitle','让下一段故事，从这里继续'),True,config.get('legal_note','请自备合法游戏资源'),config.get('verification_note','兼容性持续完善'))
     segments = [work/'intro.mp4']; durations = [3.5]
     encode_static(work/'intro.png',segments[0],durations[0],args.crf)
     for i,(scene,source) in enumerate(zip(scenes,sources)):
@@ -241,7 +249,9 @@ def main():
               'cover_time':config.get('cover_time',shots[cover_scene+1][1]),'legal_note':config.get('legal_note','请自备合法游戏资源'),'audio':'Original NumPy synthesized ambient; no speech or borrowed music',
               'audio_qa':audio_qa,'audio_gain_db':20*np.log10(5),
               'brand_mark':'Project Android platforms/android/res/drawable/neko_mark.xml, raster recreation',
-              'validation':{'full_decode':'passed','dimensions':'1920x1080','duration':'passed'},'qa_samples':shots}
+              'validation':{'full_decode':'passed','dimensions':'1920x1080','duration':'passed',
+                            'title_layout':layout_qa,'visual_inspection':'not performed'},'qa_samples':shots,
+              'verification_note':config.get('verification_note','兼容性持续完善')}
     (out/'source-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'output':str(final),'duration':result['duration'],'qa':str(out/'contact-sheet.jpg')},ensure_ascii=False))
 

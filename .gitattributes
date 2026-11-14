@@ -4,3 +4,4 @@
 # Verification evidence retains the exact bytes referenced by SHA-256 records.
 /research/verification/native-load-room/** -text
 /research/verification/save-continuity/** -text
+/tools/promo/evidence/v3/** -text

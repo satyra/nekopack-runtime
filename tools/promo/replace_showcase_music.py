@@ -1,5 +1,6 @@
 """Replace showcase audio with the official CC BY 4.0 Carefree recording."""
 from pathlib import Path
+import argparse
 import hashlib
 import json
 import subprocess
@@ -15,10 +16,15 @@ CREDIT = ('Carefree by Kevin MacLeod (incompetech.com)\n'
 
 
 def main():
-    source = OUT / 'nekopack-showcase-zh.mp4'
-    music = OUT / 'music/Carefree.mp3'
-    target = OUT / 'nekopack-showcase-carefree.mp4'
-    duration = json.loads((OUT / 'source-manifest.json').read_text(encoding='utf-8'))['media']['duration']
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--out',type=Path,default=OUT)
+    parser.add_argument('--music',type=Path,default=OUT/'music/Carefree.mp3')
+    args = parser.parse_args()
+    out = args.out.resolve()
+    source = out / 'nekopack-showcase-zh.mp4'
+    music = args.music.resolve()
+    target = out / 'nekopack-showcase-carefree.mp4'
+    duration = json.loads((out / 'source-manifest.json').read_text(encoding='utf-8'))['media']['duration']
     filters = (f'atrim=duration={duration},asetpts=PTS-STARTPTS,'
                'loudnorm=I=-19:TP=-2:LRA=9,'
                f'afade=t=in:d=0.6,afade=t=out:st={duration-3.5}:d=3.5')
@@ -33,11 +39,13 @@ def main():
                                         '-map', '0:v:0', '-c:v', 'copy', '-f', 'hash', '-']).decode().strip()
     original_hash, final_hash = video_hash(source), video_hash(target)
     assert original_hash == final_hash, 'Video stream changed'
-    (OUT / 'music/CREDITS.txt').write_text(CREDIT+'\n', encoding='utf-8')
-    (OUT / 'carefree-delivery.json').write_text(json.dumps({
+    (out / 'music').mkdir(exist_ok=True)
+    (out / 'music/CREDITS.txt').write_text(CREDIT+'\n', encoding='utf-8')
+    (out / 'carefree-delivery.json').write_text(json.dumps({
         'output': str(target), 'duration_seconds': duration,
         'sha256': hashlib.sha256(target.read_bytes()).hexdigest(),
         'music_sha256': hashlib.sha256(music.read_bytes()).hexdigest(),
+        'music_source': str(music),
         'credit': CREDIT, 'audio_filter': filters,
         'full_decode': 'passed', 'video_stream_unchanged': True,
         'video_stream_hash': final_hash,

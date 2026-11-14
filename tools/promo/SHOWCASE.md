@@ -50,3 +50,20 @@ python tools/promo/render_showcase.py
 - `render/`：可复核的背景、分段、原创音乐与抽帧。
 
 工具自动执行整片解码、分辨率与时长校验。交付前仍需人工检查联系表和实际视频，确认标题、模拟器标签与画面操作一致，关键文字可读，且没有被误切的界面、未授权游戏片段或虚构兼容/通关结论。不要依据静态抽帧宣称已经验证所有动态操作。
+
+
+## v3：新增空恋原版与 PK02 汉化标题
+
+`scenes-v3.example.json` 是可提交的纯配置示例，复制到 `.local/promo-v3/scenes.json` 后使用；录屏、配乐、成片、背景图和联系表保存在忽略的 `.local/`，不随源码分发。示例依赖仍保留的 `.local/promo-v2/captures/` 六段旧素材，以及新目录下 `captures/sorakoi-original-title.mp4` 与 `captures/sorakoi-translated-title.mp4`。两段新素材各取 1–7 秒，在旧开场后加入；含淡化成片约 88.1 秒。
+
+旧镜头 APK 为 `c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78`；新增空恋镜头 APK 为 `33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c`。逐幕 `capture_metadata` 写入来源清单，不把旧 BLACK 和 UI 镜头视为新 APK 证明。空恋仅展示原标题与汉化标题，不录回想或正文。片尾“空恋原汉各 200 页 · 一次选择 · 冷启动读档已验证（非通关）”依据 `research/save-continuity-verification.json`，只关联新 APK 的空恋测试；标题录屏本身不证明这些操作或通关。
+
+继续使用已经保存在本机、SHA-256 为 `8433b770a630d9b1594fd484442c677907ece899a4d149954cd2e74fd733e311` 的 Carefree，不需要重新下载。生成命令：
+
+```powershell
+python tools/promo/render_showcase.py --scenes .local/promo-v3/scenes.json --out .local/promo-v3
+python tools/promo/replace_showcase_music.py --out .local/promo-v3 --music .local/promo-v2/music/Carefree.mp3
+python tools/promo/validate_showcase.py --out .local/promo-v3
+```
+
+`outro_subtitle`、`verification_note` 可定制片尾文字；未指定时保持原版。渲染器计算标题与右上标签间距，发现重叠直接报错，来源清单保存这些边界数据。最终验证脚本完整解码轻快配乐版，核对 1920×1080 / 30 fps、时长、双声道 48kHz 音频和削波，计算片尾文字宽度，并对空恋原始录屏与成片执行 blackdetect 和亮度统计。`qa-report.json` 只代表技术检查；不打开联系图或游戏图时必须明确写出未进行视觉审阅，不得称视觉验收通过。`source-manifest.json` 对应换配乐前的成片，`carefree-delivery.json` 与 `qa-report.json` 对应最终轻快配乐版；发布时使用最终 MP4，并保留 `music/CREDITS.txt` 全部署名。

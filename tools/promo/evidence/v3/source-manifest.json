@@ -1,0 +1,564 @@
+{
+  "output": "D:\\codex\\neko\\.local\\promo-v3\\nekopack-showcase-zh.mp4",
+  "media": {
+    "duration": 88.1,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 588 kb/s, 30 fps, 30 tbr, 15360 tbn (default)"
+  },
+  "expected_duration": 88.1,
+  "fps": 30,
+  "capture_label": "Android 模拟器实录",
+  "sources": [
+    {
+      "id": "launch",
+      "file": "D:\\codex\\neko\\.local\\promo-v2\\captures\\game-showcase.mp4",
+      "sha256": "e9eec0ad459843b0d9b01ea6427f4568a04debd24b97a84e34956e6911e5a9f9",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      },
+      "source": "BLACK实录剪辑：launch.mp4的0~2.8秒标题、menu.mp4的0~3.7秒及12~16秒普通开场；省略加载等待，未用于启动速度比较，没有回想或敏感画面。",
+      "media": {
+        "duration": 11.97,
+        "width": 1280,
+        "height": 720,
+        "fps": 30.0,
+        "stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, gbr/unknown/unknown, progressive), 1280x720 [SAR 1:1 DAR 16:9], 472 kb/s, 30 fps, 30 tbr, 15360 tbn (default)"
+      },
+      "start": 0,
+      "duration": 10.5
+    },
+    {
+      "id": "sorakoi-original",
+      "file": "D:\\codex\\neko\\.local\\promo-v3\\captures\\sorakoi-original-title.mp4",
+      "sha256": "f3972a2ca83d90d992ce97d3feb229fcf1c2845cbe4e964541e02909426bcaf9",
+      "capture_metadata": {
+        "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+        "emulator": "127.0.0.1:5577",
+        "game": "空恋 (Sorakoi)",
+        "scope": "title screen only; no recollection or story content",
+        "verification_record": "research/save-continuity-verification.json",
+        "verification_scope": "原版与PK02汉化版各推进200页、一次选择、冷启动读档；不表示通关",
+        "variant": "原版"
+      },
+      "source": "新APK 33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c，Android模拟器127.0.0.1:5577实录；空恋原版标题画面，仅取1至7秒；标题实录不代表通关，验证记录单独注明。",
+      "media": {
+        "duration": 11.94,
+        "width": 1280,
+        "height": 720,
+        "fps": 1.34,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 159 kb/s, SAR 1:1 DAR 16:9, 1.34 fps, 240 tbr, 90k tbn (default)"
+      },
+      "start": 1,
+      "duration": 6
+    },
+    {
+      "id": "sorakoi-translated",
+      "file": "D:\\codex\\neko\\.local\\promo-v3\\captures\\sorakoi-translated-title.mp4",
+      "sha256": "d662847b8a6cf7b2a61a902abaf9d56ddc7946eb1e645123cbc47c92d593784e",
+      "capture_metadata": {
+        "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+        "emulator": "127.0.0.1:5577",
+        "game": "空恋 (Sorakoi)",
+        "scope": "title screen only; no recollection or story content",
+        "verification_record": "research/save-continuity-verification.json",
+        "verification_scope": "原版与PK02汉化版各推进200页、一次选择、冷启动读档；不表示通关",
+        "variant": "PK02 汉化"
+      },
+      "source": "新APK 33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c，Android模拟器127.0.0.1:5577实录；空恋PK02 汉化标题画面，仅取1至7秒；标题实录不代表通关，验证记录单独注明。",
+      "media": {
+        "duration": 11.93,
+        "width": 1280,
+        "height": 720,
+        "fps": 1.43,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 186 kb/s, SAR 1:1 DAR 16:9, 1.43 fps, 60 tbr, 90k tbn (default)"
+      },
+      "start": 1,
+      "duration": 6
+    },
+    {
+      "id": "library",
+      "file": "D:\\codex\\neko\\.local\\promo-v2\\captures\\library.mp4",
+      "sha256": "caeba78276c0a3549e85a96783dba7805d7a0f38ea93e90ca9d9a5dc1abe652e",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      },
+      "source": "同一发布候选 APK，Android 模拟器实录；滚动现有作品，搜索 Endless。",
+      "media": {
+        "duration": 15.96,
+        "width": 1280,
+        "height": 720,
+        "fps": 1.69,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 87 kb/s, SAR 1:1 DAR 16:9, 1.69 fps, 60 tbr, 90k tbn (default)"
+      },
+      "start": 0,
+      "duration": 14.5
+    },
+    {
+      "id": "scan",
+      "file": "D:\\codex\\neko\\.local\\promo-v2\\captures\\scan-results.mp4",
+      "sha256": "9105aa972c31d4d5b81edf8dec7abd98d10478bcba071666a7a2b2bbde2ce9c9",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      },
+      "source": "真实授权目录扫描完成后的结果；原始等待过程未入片，结果包括实际游戏和故意缺少 image.dat 的音频测试目录；未伪造识别或速度。",
+      "media": {
+        "duration": 10.11,
+        "width": 1280,
+        "height": 720,
+        "fps": 1.09,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 69 kb/s, SAR 1:1 DAR 16:9, 1.09 fps, 3.42 tbr, 90k tbn (default)"
+      },
+      "start": 0,
+      "duration": 9.7
+    },
+    {
+      "id": "details",
+      "file": "D:\\codex\\neko\\.local\\promo-v2\\captures\\details.mp4",
+      "sha256": "9a7e7a175e37e62014f88fc5d591082b5898f5a81e65c6bdb092362840c12d24",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      },
+      "source": "Endless Dungeon 详情页连续上下滚动；未改变游戏或存档数据。",
+      "media": {
+        "duration": 13.09,
+        "width": 1280,
+        "height": 720,
+        "fps": 0.92,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 67 kb/s, SAR 1:1 DAR 16:9, 0.92 fps, 60 tbr, 90k tbn (default)"
+      },
+      "start": 0,
+      "duration": 11.5
+    },
+    {
+      "id": "menu",
+      "file": "D:\\codex\\neko\\.local\\promo-v2\\captures\\menu.mp4",
+      "sha256": "d804142d471f6ecdf3937b4fc03a70757411f504178a15375572f0fa920944b1",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      },
+      "source": "同一APK，BLACK新游戏普通开场，推进对白、打开与关闭软件右侧菜单；没有回想内容。",
+      "media": {
+        "duration": 17.2,
+        "width": 1280,
+        "height": 720,
+        "fps": 1.4,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 364 kb/s, SAR 1:1 DAR 16:9, 1.40 fps, 60 tbr, 90k tbn (default)"
+      },
+      "start": 0,
+      "duration": 17
+    },
+    {
+      "id": "input",
+      "file": "D:\\codex\\neko\\.local\\promo-v2\\captures\\input.mp4",
+      "sha256": "e007a9b93ca2fdddc10f32cd6194d190892237c223bbae28d657c6625eeb9650",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      },
+      "source": "鼠标与手势对话框，打开鼠标右键可选命令，再取消；没有修改原有绑定。",
+      "media": {
+        "duration": 9.78,
+        "width": 1280,
+        "height": 720,
+        "fps": 1.43,
+        "stream": "Stream #0:0[0x1](eng): Video: h264 (Constrained Baseline) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1280x720, 69 kb/s, SAR 1:1 DAR 16:9, 1.43 fps, 60 tbr, 90k tbn (default)"
+      },
+      "start": 0,
+      "duration": 9.4
+    }
+  ],
+  "scenes": [
+    {
+      "id": "launch",
+      "file": "../promo-v2/captures/game-showcase.mp4",
+      "title": "让故事，在 Android 上继续",
+      "tag": "BLACK · 标题与普通场景",
+      "start": 0,
+      "duration": 10.5,
+      "source": "BLACK实录剪辑：launch.mp4的0~2.8秒标题、menu.mp4的0~3.7秒及12~16秒普通开场；省略加载等待，未用于启动速度比较，没有回想或敏感画面。",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      }
+    },
+    {
+      "id": "sorakoi-original",
+      "file": "captures/sorakoi-original-title.mp4",
+      "title": "新增空恋 · 原版与汉化",
+      "tag": "Sorakoi · 原版标题",
+      "start": 1,
+      "duration": 6,
+      "source": "新APK 33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c，Android模拟器127.0.0.1:5577实录；空恋原版标题画面，仅取1至7秒；标题实录不代表通关，验证记录单独注明。",
+      "capture_metadata": {
+        "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+        "emulator": "127.0.0.1:5577",
+        "game": "空恋 (Sorakoi)",
+        "scope": "title screen only; no recollection or story content",
+        "verification_record": "research/save-continuity-verification.json",
+        "verification_scope": "原版与PK02汉化版各推进200页、一次选择、冷启动读档；不表示通关",
+        "variant": "原版"
+      }
+    },
+    {
+      "id": "sorakoi-translated",
+      "file": "captures/sorakoi-translated-title.mp4",
+      "title": "新增空恋 · 原版与汉化",
+      "tag": "Sorakoi · PK02 汉化标题",
+      "start": 1,
+      "duration": 6,
+      "source": "新APK 33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c，Android模拟器127.0.0.1:5577实录；空恋PK02 汉化标题画面，仅取1至7秒；标题实录不代表通关，验证记录单独注明。",
+      "capture_metadata": {
+        "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+        "emulator": "127.0.0.1:5577",
+        "game": "空恋 (Sorakoi)",
+        "scope": "title screen only; no recollection or story content",
+        "verification_record": "research/save-continuity-verification.json",
+        "verification_scope": "原版与PK02汉化版各推进200页、一次选择、冷启动读档；不表示通关",
+        "variant": "PK02 汉化"
+      }
+    },
+    {
+      "id": "library",
+      "file": "../promo-v2/captures/library.mp4",
+      "title": "从游戏库，开始",
+      "tag": "浏览与搜索",
+      "start": 0,
+      "duration": 14.5,
+      "crop": [
+        0,
+        24,
+        1280,
+        696
+      ],
+      "source": "同一发布候选 APK，Android 模拟器实录；滚动现有作品，搜索 Endless。",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      }
+    },
+    {
+      "id": "scan",
+      "file": "../promo-v2/captures/scan-results.mp4",
+      "title": "识别结果，逐项可查",
+      "tag": "扫描结果 · 含缺档测试样本",
+      "start": 0,
+      "duration": 9.7,
+      "crop": [
+        0,
+        24,
+        1280,
+        696
+      ],
+      "source": "真实授权目录扫描完成后的结果；原始等待过程未入片，结果包括实际游戏和故意缺少 image.dat 的音频测试目录；未伪造识别或速度。",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      }
+    },
+    {
+      "id": "details",
+      "file": "../promo-v2/captures/details.mp4",
+      "title": "每款游戏，单独管理",
+      "tag": "目录 · 存档 · 独立设置",
+      "start": 0,
+      "duration": 11.5,
+      "crop": [
+        0,
+        24,
+        1280,
+        696
+      ],
+      "source": "Endless Dungeon 详情页连续上下滚动；未改变游戏或存档数据。",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      }
+    },
+    {
+      "id": "menu",
+      "file": "../promo-v2/captures/menu.mp4",
+      "title": "常用操作，就在手边",
+      "tag": "连续阅读 · 右侧快捷菜单",
+      "start": 0,
+      "duration": 17,
+      "source": "同一APK，BLACK新游戏普通开场，推进对白、打开与关闭软件右侧菜单；没有回想内容。",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      }
+    },
+    {
+      "id": "input",
+      "file": "../promo-v2/captures/input.mp4",
+      "title": "操作方式，由你选择",
+      "tag": "鼠标与手势",
+      "start": 0,
+      "duration": 9.4,
+      "crop": [
+        0,
+        24,
+        1280,
+        696
+      ],
+      "source": "鼠标与手势对话框，打开鼠标右键可选命令，再取消；没有修改原有绑定。",
+      "capture_metadata": {
+        "apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+        "apk_version": "0.1.0-preview.1",
+        "native_resolution": [
+          1280,
+          720
+        ],
+        "density_dpi": 160,
+        "commercial_gameplay_included": true,
+        "reference": "https://www.bilibili.com/video/BV1JWxH64Ec9/",
+        "reference_use": "Visual pacing and restrained presentation only; no reference footage or audio reused.",
+        "gameplay_scope": "User-authorized BLACK title and ordinary new-game opening only; no recollection scenes.",
+        "source_generation": "promo-v2; preserved old footage, not the current APK"
+      }
+    }
+  ],
+  "capture_metadata": {
+    "mixed_apk_versions": true,
+    "old_apk_sha256": "c44f940415b1685ce343f68a47380bb729e06fe2d594203ef3494f4e9f80fa78",
+    "sorakoi_apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+    "note": "Each scene has its own capture_metadata; legacy BLACK/UI footage remains from promo-v2."
+  },
+  "cover_time": 4.2,
+  "legal_note": "游戏画面版权归原权利人所有 · 请自备有权使用的资源",
+  "audio": "Original NumPy synthesized ambient; no speech or borrowed music",
+  "audio_qa": {
+    "peak_dbfs": -10.78933982494343,
+    "rms_dbfs": -22.340708264111477,
+    "clipped_samples": 0
+  },
+  "audio_gain_db": 13.979400086720377,
+  "brand_mark": "Project Android platforms/android/res/drawable/neko_mark.xml, raster recreation",
+  "validation": {
+    "full_decode": "passed",
+    "dimensions": "1920x1080",
+    "duration": "passed",
+    "title_layout": [
+      {
+        "id": "launch",
+        "title_right": 745.0,
+        "tag_left": 1374.984375,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "sorakoi-original",
+        "title_right": 630.0,
+        "tag_left": 1431.0,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "sorakoi-translated",
+        "title_right": 630.0,
+        "tag_left": 1371.0,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "library",
+        "title_right": 499.0,
+        "tag_left": 1507.0,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "scan",
+        "title_right": 585.0,
+        "tag_left": 1356.0,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "details",
+        "title_right": 585.0,
+        "tag_left": 1403.0,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "menu",
+        "title_right": 585.0,
+        "tag_left": 1378.0,
+        "minimum_gap": 32,
+        "passed": true
+      },
+      {
+        "id": "input",
+        "title_right": 585.0,
+        "tag_left": 1507.0,
+        "minimum_gap": 32,
+        "passed": true
+      }
+    ],
+    "visual_inspection": "not performed"
+  },
+  "qa_samples": [
+    [
+      "片头",
+      1.5
+    ],
+    [
+      "让故事，在 Android 上继续",
+      8.25
+    ],
+    [
+      "新增空恋 · 原版与汉化",
+      16.0
+    ],
+    [
+      "新增空恋 · 原版与汉化",
+      21.5
+    ],
+    [
+      "从游戏库，开始",
+      31.25
+    ],
+    [
+      "识别结果，逐项可查",
+      42.85
+    ],
+    [
+      "每款游戏，单独管理",
+      52.95
+    ],
+    [
+      "常用操作，就在手边",
+      66.7
+    ],
+    [
+      "操作方式，由你选择",
+      79.4
+    ],
+    [
+      "中段",
+      44.05
+    ],
+    [
+      "片尾",
+      86.1
+    ]
+  ],
+  "verification_note": "空恋原汉各 200 页 · 一次选择 · 冷启动读档已验证（非通关）"
+}

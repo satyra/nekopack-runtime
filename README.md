@@ -1,8 +1,8 @@
 # NekoPack Runtime
 
-在 Android 上运行 NekoPack 游戏资源的兼容运行时。共享 Rust 核心负责封包、脚本和演出语义，Android 宿主负责游戏库、输入、显示、音频与目录授权。原版系统脚本用于驱动标题、设置、存读档等界面。
+在 Android 上运行 NekoPack 游戏资源的开源兼容运行时。已验证样本包括 Tiny Dungeon 四部、Endless Dungeon 和空恋（Sorakoi）。共享 Rust 核心负责封包、脚本和演出语义，Android 宿主负责游戏库、输入、显示、音频与目录授权；标题、设置、存读档等界面沿用原版系统脚本。
 
-**当前阶段：Android ARM64 预览版准备中。** 这是持续开发的兼容项目，不代表所有同引擎游戏均可运行，也不是原游戏或其厂商的官方产品。
+**当前阶段：Android ARM64 开发预览版。** 这是持续开发的兼容项目，不代表所有同引擎游戏均可运行，也不是原游戏或其厂商的官方产品。
 
 ## 主要功能
 
@@ -10,6 +10,7 @@
 - 原版菜单与设置、存读档、自动播放、快进、语音／BGM／环境音控制。
 - 右侧快捷菜单、鼠标与手势设置；独立快捷面板默认关闭。
 - 已验证汉化档的加载、中文姓名显示、原版／汉化版存档区分。
+- 空恋 PK02 汉化补丁加载、文字排版与 NEXT/BACK、WMV 播放。
 - 目录重新授权和存档**导出备份**；目前不宣称已实现完整备份导入流程。
 
 项目不提供游戏、汉化补丁、CG、语音或字体文件。请自行准备有权使用的资源。
@@ -25,14 +26,22 @@
 
 ## 已验证范围
 
-样本包括 Tiny Dungeon 的 BLACK（黑白羽翼）、BLESS、BIRTH、BRAVE，以及 Endless Dungeon。
+样本包括 Tiny Dungeon 的 BLACK（黑白羽翼）、BLESS、BIRTH、BRAVE，Endless Dungeon，以及空恋（Sorakoi）。
 
 - BLESS 在一次已记录的构建中完成一条主线；不能由此推断其他四款均已通关。
 - 已记录五款角色语音矩阵、原版设置及重启恢复测试；BIRTH KA 原录音的缺口已另行补测。
 - 最新姓名修复构建验证了五款汉化版的实际中文姓名页、存档重启和文字样式重绘；BLACK 中文新游戏还通过 PGKM10／Android 15 真机复测。
 - 不同构建的结果分开记录。历史 50 次冷启动／100 次恢复、86 个语音控件／172 个状态，不能移用为以后每个 APK 的验收结论。
+- 2026-11-14：空恋原版、PK02 汉化版在同一调试 APK 上各从 NKSV5 旧档推进 200 页，完成选择、新档保存和冷启动读回；原存档未改变。这是连续流程验证，不是整条路线通关。
+- 本轮修复长流程新档恢复超过 VM 源码限制的问题；此前失败的两份存档直接恢复成功，原 sysload／continue 32 步回归通过。详见 [长流程与恢复验证](research/save-continuity-verification.json)。本轮尚未完成真机覆盖升级验收。
 
 版本、APK 哈希和限制见 [Android 开发记录](docs/Android_Development_Progress.md)。测试脚本与资源前置条件见 [Android 回归说明](platforms/android/regression/README.md)。
+
+## 项目介绍视频
+
+新版展示片在原有 BLACK 标题、普通开场和启动器操作镜头中加入空恋原版、汉化版标题实录，沿用《Carefree》轻快配乐。所有画面均标注 Android 模拟器录制，旧镜头与新增镜头的 APK 来源分别记录；不包含回想内容，也不用于比较启动性能。
+
+制作说明、可复用配置及音乐署名见 [视频说明](tools/promo/SHOWCASE.md)。仓库提交制作代码与验证记录，不附带商业游戏录屏、音乐或游戏资源。
 
 ## 当前限制
 
@@ -71,4 +80,4 @@ cargo run -p nekopack-cli -- inspect-overlays path/to/system.dat path/to/patch.d
 
 项目原创源码采用 **GNU GPL v3，仅第 3 版（`GPL-3.0-only`）**，完整条款见 [LICENSE](LICENSE)。第三方组件保留各自的许可与声明；此许可不涵盖外部游戏资源或汉化补丁。分发 APK 时，应同时提供该版本的完整对应源码、构建脚本及依赖说明，具体交付步骤见 [发布指南](docs/RELEASING.md)。
 
-第三方来源和修改说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。Android 包内附对应第三方许可快照，不包含商业游戏资源。介绍视频使用原创功能示意动画，与实际游戏录屏区分。
+第三方来源和修改说明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。Android 包内附对应第三方许可快照，不包含商业游戏资源。实录视频的游戏画面与配乐保留各自权利及署名，不适用项目源码许可。

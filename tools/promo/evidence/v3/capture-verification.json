@@ -1,0 +1,24 @@
+[
+  {
+    "file": "sorakoi-original-title.mp4",
+    "original": true,
+    "title_kind": "title",
+    "chinese_scenario": false,
+    "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+    "sha256": "f3972a2ca83d90d992ce97d3feb229fcf1c2845cbe4e964541e02909426bcaf9",
+    "duration_requested_seconds": 12,
+    "recollection_opened": false,
+    "game_start_action_sent": false
+  },
+  {
+    "file": "sorakoi-translated-title.mp4",
+    "original": false,
+    "title_kind": "title",
+    "chinese_scenario": true,
+    "apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+    "sha256": "d662847b8a6cf7b2a61a902abaf9d56ddc7946eb1e645123cbc47c92d593784e",
+    "duration_requested_seconds": 12,
+    "recollection_opened": false,
+    "game_start_action_sent": false
+  }
+]

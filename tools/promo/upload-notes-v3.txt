@@ -1,0 +1,19 @@
+标题：NekoPack：新增空恋原版与汉化，在 Android 上继续视觉小说
+
+简介：
+NekoPack 是面向 NekoPack 引擎游戏的开源兼容运行时，目前提供 Android ARM64 预览版。新增空恋（Sorakoi）原版与 PK02 汉化版本，共用引擎运行。
+本片新增空恋原版与汉化标题实录；新 APK 对两版分别完成 200 页推进、一次选择及冷启动读档验证，不表示通关或完整兼容性保证。验证操作记录见项目研究文档，标题镜头不包含这些操作过程。
+原片保留 BLACK 标题与普通开场、游戏库搜索、目录扫描结果、单游戏详情、右侧快捷菜单、鼠标与手势设置，均来自旧 APK（c44f9404…），不能作为新增版本相同行为的证明。空恋新增镜头来自新 APK（33392575…）。
+
+画面均为 Android 模拟器实录，剪辑省略加载和扫描等待，不用于启动速度比较。未展示回想；项目不附带游戏资源或汉化补丁，请自行准备有权使用的资源。
+项目仍在完善兼容性，已验证范围与限制请见仓库说明。
+
+项目源码：https://github.com/satyra/nekopack-runtime
+源码许可：GPL-3.0-only
+游戏画面版权归原权利人所有。
+BGM：Carefree — Kevin MacLeod (incompetech.com)
+曲目来源：https://www.incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037
+许可：CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+音乐已截取、调整响度并添加淡入淡出。未使用参考视频的音乐或画面。
+
+标签建议：开源、Android、视觉小说、NekoPack、空恋、Sorakoi、模拟器

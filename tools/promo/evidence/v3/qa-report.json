@@ -1,0 +1,139 @@
+{
+  "output": "D:\\codex\\neko\\.local\\promo-v3\\nekopack-showcase-carefree.mp4",
+  "sha256": "06673251d1f17203029a04b6a0765edaaaaab413ef426249aab3a925238e3662",
+  "media": {
+    "duration": 88.1,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30.0,
+    "stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 588 kb/s, 30 fps, 30 tbr, 15360 tbn (default)"
+  },
+  "expected_duration": 88.1,
+  "full_decode": "passed",
+  "audio": {
+    "peak_dbfs": -4.141125699669168,
+    "rms_dbfs": -21.444254418301018,
+    "clipped_samples": 0,
+    "channels": 2,
+    "sample_rate": 48000,
+    "duration": 88.1
+  },
+  "scene_title_layout": [
+    {
+      "id": "launch",
+      "title_right": 745.0,
+      "tag_left": 1374.984375,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "sorakoi-original",
+      "title_right": 630.0,
+      "tag_left": 1431.0,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "sorakoi-translated",
+      "title_right": 630.0,
+      "tag_left": 1371.0,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "library",
+      "title_right": 499.0,
+      "tag_left": 1507.0,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "scan",
+      "title_right": 585.0,
+      "tag_left": 1356.0,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "details",
+      "title_right": 585.0,
+      "tag_left": 1403.0,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "menu",
+      "title_right": 585.0,
+      "tag_left": 1378.0,
+      "minimum_gap": 32,
+      "passed": true
+    },
+    {
+      "id": "input",
+      "title_right": 585.0,
+      "tag_left": 1507.0,
+      "minimum_gap": 32,
+      "passed": true
+    }
+  ],
+  "outro_text_layout": [
+    {
+      "text": "共用 NekoPack 引擎 · 新增空恋原版与汉化",
+      "width_px": 611.96875,
+      "horizontal_margin_px": 654.015625
+    },
+    {
+      "text": "空恋原汉各 200 页 · 一次选择 · 冷启动读档已验证（非通关）",
+      "width_px": 648.0,
+      "horizontal_margin_px": 636.0
+    },
+    {
+      "text": "游戏画面版权归原权利人所有 · 请自备有权使用的资源",
+      "width_px": 525.0,
+      "horizontal_margin_px": 697.5
+    }
+  ],
+  "source_count": 8,
+  "source_manifest_sha256": "5f8934801c7eab882d4cad3e2c0ace273f90a0d87f8e428d8e2f5599b86870d7",
+  "config_sha256": "677abfc2433e368b65704f150da1fa47541e2369944d9010508b8abce3a9379b",
+  "visual_inspection": "not performed; no contact sheet or game image opened",
+  "limitations": "Technical checks do not certify frame content, dynamic operation, or visual readability.",
+  "signal_checks": [
+    {
+      "file": "D:\\codex\\neko\\.local\\promo-v3\\nekopack-showcase-carefree.mp4",
+      "frames_analyzed": 2643,
+      "yavg_min": 99.7969,
+      "yavg_max": 219.173,
+      "yavg_mean": 173.93032951191827,
+      "black_intervals": [],
+      "nonblack_signal": "passed",
+      "scope": "numeric signal only; does not identify title content"
+    },
+    {
+      "file": "D:\\codex\\neko\\.local\\promo-v3\\captures\\sorakoi-original-title.mp4",
+      "frames_analyzed": 16,
+      "yavg_min": 18.4306,
+      "yavg_max": 183.795,
+      "yavg_mean": 138.72655625,
+      "black_intervals": [],
+      "nonblack_signal": "passed",
+      "scope": "numeric signal only; does not identify title content"
+    },
+    {
+      "file": "D:\\codex\\neko\\.local\\promo-v3\\captures\\sorakoi-translated-title.mp4",
+      "frames_analyzed": 17,
+      "yavg_min": 18.4306,
+      "yavg_max": 184.072,
+      "yavg_mean": 141.31540588235293,
+      "black_intervals": [
+        {
+          "start": 0.0,
+          "end": 0.375522,
+          "duration": 0.375522
+        }
+      ],
+      "nonblack_signal": "passed",
+      "scope": "numeric signal only; does not identify title content"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "output": "D:\\codex\\neko\\.local\\promo-v3\\nekopack-showcase-carefree.mp4",
+  "duration_seconds": 88.1,
+  "sha256": "06673251d1f17203029a04b6a0765edaaaaab413ef426249aab3a925238e3662",
+  "music_sha256": "8433b770a630d9b1594fd484442c677907ece899a4d149954cd2e74fd733e311",
+  "music_source": "D:\\codex\\neko\\.local\\promo-v2\\music\\Carefree.mp3",
+  "credit": "Carefree by Kevin MacLeod (incompetech.com)\nhttps://www.incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037\nLicensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/\nChanges: excerpted, loudness adjusted, fade-in and fade-out applied.",
+  "audio_filter": "atrim=duration=88.1,asetpts=PTS-STARTPTS,loudnorm=I=-19:TP=-2:LRA=9,afade=t=in:d=0.6,afade=t=out:st=84.6:d=3.5",
+  "full_decode": "passed",
+  "video_stream_unchanged": true,
+  "video_stream_hash": "SHA256=926077a8f80dc015b64b07679e30ca21e57cf377e80ad5842d7cb2ed00939580"
+}
