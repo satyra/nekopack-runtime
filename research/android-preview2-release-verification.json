@@ -1,0 +1,62 @@
+{
+  "version": "0.1.0-preview.2",
+  "apk_sha256": "94c22eb4b9efe50343f048cad15aed6e0884cdb5f84a01b6141a22ee00d21926",
+  "signed_apk_verified": true,
+  "signer_certificate_sha256": "368417ca4a7b7e7fc56aa0eb9c61a3d2dbb121ab59ddcd9f3a43a18fb69296d3",
+  "same_signer_as_preview1": true,
+  "native_libraries_equal_tested_debug": {
+    "libnekopack_probe.so": true,
+    "libnekopack_host.so": true,
+    "libc++_shared.so": true,
+    "libavformat.so": true,
+    "libavcodec.so": true,
+    "libavutil.so": true,
+    "libswscale.so": true,
+    "libswresample.so": true
+  },
+  "license_files": 49,
+  "game_or_key_assets_in_apk": false,
+  "source_base_commit": "928f118c0eca0114b5d5d9f06af4dde173b5b19b",
+  "physical_device_test": "skipped at user request; emulator smoke is separate",
+  "debug_deep_regression": "research/save-continuity-verification.json",
+  "passed": true,
+  "release_smoke": {
+    "version": "0.1.0-preview.2",
+    "passed": true,
+    "device": "127.0.0.1:5577",
+    "apk_sha256": "94c22eb4b9efe50343f048cad15aed6e0884cdb5f84a01b6141a22ee00d21926",
+    "checks": [
+      "in-place install succeeded without uninstall or clearing data",
+      "run-as rejected for non-debuggable release",
+      "external MainActivity launch rejected",
+      "原版: normal library launch reached original title control",
+      "中文补丁: normal library launch reached original title control",
+      "registered game remains in library after both normal launches"
+    ],
+    "scope": "release packaging and normal launcher/title smoke; not full story regression",
+    "library_before": [
+      153,
+      524,
+      697,
+      720
+    ],
+    "previous_apk_sha256": "94c22eb4b9efe50343f048cad15aed6e0884cdb5f84a01b6141a22ee00d21926",
+    "library_after": [
+      153,
+      524,
+      697,
+      720
+    ]
+  },
+  "upgrade_from_debug_apk_sha256": "33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c",
+  "upgrade_install_before_smoke": [
+    "in-place install succeeded without uninstall or clearing data",
+    "run-as rejected for non-debuggable release",
+    "external MainActivity launch rejected"
+  ],
+  "test_harness_corrections": [
+    "separate force-stop/start raced with Android task removal; replaced by am start -W -S",
+    "recently-played section clipped the game tile; scroll to reveal before tapping"
+  ],
+  "deep_regression_scope": "Same native libraries as debug APK 33392575680ed8fc0ad6c71184b62263f82cd57a2a5080020402d860ff3ec51c; full 200+200-page tests were not repeated in release mode."
+}
